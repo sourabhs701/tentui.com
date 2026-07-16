@@ -1,0 +1,16 @@
+{
+	"extends": ["//"],
+	"tasks": {
+		"build": {
+			"dependsOn": ["$TURBO_EXTENDS$", "registry:build"]
+		},
+		"registry:build": {
+			"outputs": [
+				"registry.json",
+				"src/registry/__index__.tsx",
+				"src/registry/__blocks__.json",
+				"public/r/**"
+			]
+		}
+	}
+}

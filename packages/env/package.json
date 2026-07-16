@@ -1,21 +1,21 @@
 {
-  "name": "@tentui.com/env",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "exports": {
-    "./server": "./src/server.ts",
-    "./web": "./src/web.ts"
-  },
-  "dependencies": {
-    "@t3-oss/env-nextjs": "^0.13.11",
-    "dotenv": "catalog:",
-    "zod": "catalog:"
-  },
-  "devDependencies": {
-    "@tentui.com/config": "workspace:*",
-    "@tentui.com/infra": "workspace:*",
-    "@types/node": "^22.13.14",
-    "typescript": "catalog:"
-  }
+	"name": "@tentui.com/env",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		"./server": "./src/server.ts",
+		"./web": "./src/web.ts"
+	},
+	"dependencies": {
+		"@t3-oss/env-nextjs": "^0.13.11",
+		"dotenv": "catalog:",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@tentui.com/config": "workspace:*",
+		"@tentui.com/infra": "workspace:*",
+		"@types/node": "^22.13.14",
+		"typescript": "catalog:"
+	}
 }

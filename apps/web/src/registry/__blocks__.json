@@ -1,0 +1,12 @@
+[
+	{
+		"name": "agency-hero-01",
+		"description": "Animated agency hero with availability badge, CTAs, background art, and tech carousel.",
+		"categories": ["marketing"]
+	},
+	{
+		"name": "gradient-hero-01",
+		"description": "A simple centered hero with a warm cinematic gradient, compact badge, short copy, and two actions.",
+		"categories": ["marketing"]
+	}
+]

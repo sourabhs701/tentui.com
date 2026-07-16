@@ -1,28 +1,28 @@
 {
-  "name": "@tentui.com/db",
-  "type": "module",
-  "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    },
-    "./*": {
-      "default": "./src/*.ts"
-    }
-  },
-  "scripts": {
-    "db:generate": "drizzle-kit generate"
-  },
-  "dependencies": {
-    "@libsql/client": "0.17.4",
-    "@tentui.com/env": "workspace:*",
-    "dotenv": "catalog:",
-    "drizzle-orm": "^0.45.2",
-    "libsql": "0.5.29",
-    "zod": "catalog:"
-  },
-  "devDependencies": {
-    "@tentui.com/config": "workspace:*",
-    "drizzle-kit": "^0.31.10",
-    "typescript": "catalog:"
-  }
+	"name": "@tentui.com/db",
+	"type": "module",
+	"exports": {
+		".": {
+			"default": "./src/index.ts"
+		},
+		"./*": {
+			"default": "./src/*.ts"
+		}
+	},
+	"scripts": {
+		"db:generate": "drizzle-kit generate"
+	},
+	"dependencies": {
+		"@libsql/client": "0.17.4",
+		"@tentui.com/env": "workspace:*",
+		"dotenv": "catalog:",
+		"drizzle-orm": "^0.45.2",
+		"libsql": "0.5.29",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@tentui.com/config": "workspace:*",
+		"drizzle-kit": "^0.31.10",
+		"typescript": "catalog:"
+	}
 }
