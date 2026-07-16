@@ -79,7 +79,6 @@ import {
 	TabletIcon,
 	TerminalIcon,
 } from "@/components/icons";
-import { OpenInV0Button } from "@/components/v0-open-button";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { trackEvent } from "@/lib/events";
 import type {
@@ -344,7 +343,7 @@ function BlockViewerToolbar() {
 				/>
 
 				<Button
-					className="w-fit gap-1.5 px-2 font-mono font-normal text-[0.8125rem] shadow-none active:scale-none [&_svg]:text-muted-foreground"
+					className="w-fit gap-1.5 rounded-md px-2 font-mono font-normal text-[0.8125rem] shadow-none active:scale-none [&_svg]:text-muted-foreground"
 					variant="outline"
 					size="sm"
 					onClick={() => {
@@ -366,13 +365,6 @@ function BlockViewerToolbar() {
 						{getRegistryItemNamespace(item.name)}
 					</span>
 				</Button>
-
-				<Separator
-					orientation="vertical"
-					className="ml-2 data-vertical:h-4 data-vertical:self-center"
-				/>
-
-				<OpenInV0Button url={getRegistryItemUrl(item.name)} />
 			</div>
 		</div>
 	);
