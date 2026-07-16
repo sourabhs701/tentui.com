@@ -1,0 +1,24 @@
+{
+  "name": "@tentui.com/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@tentui.com/db": "workspace:*",
+    "@tentui.com/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@tentui.com/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
