@@ -27,27 +27,6 @@
         "hero"
       ],
       "type": "registry:block"
-    },
-    {
-      "name": "gradient-hero-01",
-      "title": "Gradient Hero 01",
-      "description": "A simple centered hero with a warm cinematic gradient, compact badge, short copy, and two actions.",
-      "files": [
-        {
-          "path": "src/registry/blocks/gradient-hero-01/gradient-hero-01.tsx",
-          "type": "registry:component",
-          "target": "@components/gradient-hero-01.tsx"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-06-30",
-        "iframeHeight": 760,
-        "previewClassName": "min-h-screen"
-      },
-      "categories": [
-        "hero"
-      ],
-      "type": "registry:block"
     }
   ]
 }

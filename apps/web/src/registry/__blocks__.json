@@ -5,12 +5,5 @@
     "categories": [
       "hero"
     ]
-  },
-  {
-    "name": "gradient-hero-01",
-    "description": "A simple centered hero with a warm cinematic gradient, compact badge, short copy, and two actions.",
-    "categories": [
-      "hero"
-    ]
   }
 ]

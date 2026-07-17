@@ -22,24 +22,4 @@ export const blocks: Registry["items"] = [
 			previewClassName: "min-h-screen",
 		},
 	},
-	{
-		name: "gradient-hero-01",
-		title: "Gradient Hero 01",
-		description:
-			"A simple centered hero with a warm cinematic gradient, compact badge, short copy, and two actions.",
-		type: "registry:block",
-		files: [
-			{
-				path: "blocks/gradient-hero-01/gradient-hero-01.tsx",
-				target: "@components/gradient-hero-01.tsx",
-				type: "registry:component",
-			},
-		],
-		categories: ["hero"],
-		meta: {
-			createdAt: "2026-06-30",
-			iframeHeight: 760,
-			previewClassName: "min-h-screen",
-		},
-	},
 ];
