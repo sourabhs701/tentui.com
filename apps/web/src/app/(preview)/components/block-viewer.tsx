@@ -190,7 +190,7 @@ function BlockViewerToolbar() {
 	const { state, copy } = useCopyToClipboard();
 
 	return (
-		<div className="flex w-full items-center gap-2 px-2 max-lg:hidden">
+		<div className="flex w-full items-center gap-2 max-lg:hidden">
 			<TabsList variant="line">
 				<TabsTrigger className="px-3" value="preview">
 					Preview

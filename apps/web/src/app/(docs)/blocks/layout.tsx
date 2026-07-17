@@ -7,10 +7,7 @@ export default function BlocksListLayout({
 }) {
 	return (
 		<div>
-			<div className="h-px border-line border-t" />
 			<BlocksNav />
-			<div className="h-px border-line border-t" />
-
 			{children}
 		</div>
 	);

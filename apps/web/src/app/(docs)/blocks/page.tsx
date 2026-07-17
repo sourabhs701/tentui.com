@@ -5,12 +5,14 @@ import { BlockDisplay } from "@/app/(preview)/components/block-display";
 import {
 	absoluteUrl,
 	breadcrumbJsonLd,
+	JSON_LD_ID,
 	JsonLdScript,
-} from "@/components/blocks/routes/json-ld";
+} from "@/lib/json-ld";
 import blocks from "@/registry/__blocks__.json";
 
 type BlockSummary = {
 	name: string;
+	description?: string;
 	categories: string[];
 };
 
@@ -58,9 +60,11 @@ function collectionPageJsonLd() {
 			itemListElement: blockItems.map((block, index) => ({
 				"@type": "ListItem",
 				position: index + 1,
-				url: absoluteUrl(`/blocks/${block.categories[0]}/${block.name}`),
+				name: block.name,
+				description: block.description,
 			})),
 		},
+		isPartOf: { "@id": JSON_LD_ID.website },
 	};
 }
 

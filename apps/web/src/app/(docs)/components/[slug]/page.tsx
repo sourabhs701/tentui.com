@@ -21,11 +21,18 @@ import {
 	ComponentContentCol,
 	ComponentRightCol,
 } from "@/components/sidebar/component-page-layout";
+import { SITE_INFO, SOURCE_CODE_GITHUB_URL } from "@/config/site";
 import {
 	findNeighbour,
 	getComponentDocBySlug,
 	getComponentDocs,
 } from "@/lib/documents";
+import {
+	absoluteUrl,
+	breadcrumbJsonLd,
+	JSON_LD_ID,
+	JsonLdScript,
+} from "@/lib/json-ld";
 
 export const revalidate = false;
 export const dynamic = "force-static";
@@ -43,17 +50,69 @@ export async function generateMetadata({
 	const { slug } = await params;
 	const doc = getComponentDocBySlug(slug);
 	if (!doc) notFound();
+	const { title, description, image, createdAt, updatedAt } = doc.metadata;
+	const url = `/components/${doc.slug}`;
+	const ogImage =
+		image ||
+		`/og/simple?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
 
 	return {
-		title: doc.metadata.title,
-		description: doc.metadata.description,
-		alternates: { canonical: `/components/${doc.slug}` },
+		title,
+		description,
+		alternates: { canonical: url },
 		openGraph: {
+			title,
+			description,
 			type: "article",
-			url: `/components/${doc.slug}`,
-			images: doc.metadata.image
-				? [{ url: doc.metadata.image, alt: doc.metadata.title }]
-				: undefined,
+			url,
+			publishedTime: new Date(createdAt).toISOString(),
+			modifiedTime: new Date(updatedAt).toISOString(),
+			images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
+		},
+		twitter: {
+			card: "summary_large_image",
+			title,
+			description,
+			images: [ogImage],
+		},
+	};
+}
+
+function softwareSourceCodeJsonLd(
+	doc: ReturnType<typeof getComponentDocBySlug>,
+) {
+	if (!doc) return null;
+
+	const url = `/components/${doc.slug}`;
+	const ogImage =
+		doc.metadata.image ||
+		`/og/simple?title=${encodeURIComponent(doc.metadata.title)}&description=${encodeURIComponent(doc.metadata.description)}`;
+
+	return {
+		"@context": "https://schema.org",
+		"@type": "SoftwareSourceCode",
+		"@id": absoluteUrl(url),
+		name: doc.metadata.title,
+		description: doc.metadata.description,
+		image: absoluteUrl(ogImage),
+		url: absoluteUrl(url),
+		datePublished: new Date(doc.metadata.createdAt).toISOString(),
+		dateModified: new Date(doc.metadata.updatedAt).toISOString(),
+		codeRepository: SOURCE_CODE_GITHUB_URL,
+		programmingLanguage: "TypeScript",
+		runtimePlatform: "React",
+		keywords: ["react", "shadcn", "component"],
+		author: {
+			"@type": "Organization",
+			name: SITE_INFO.name,
+			url: SITE_INFO.url,
+		},
+		isPartOf: {
+			"@type": "CollectionPage",
+			"@id": absoluteUrl("/components"),
+			name: "Components",
+			url: absoluteUrl("/components"),
+			isPartOf: { "@id": JSON_LD_ID.website },
 		},
 	};
 }
@@ -73,6 +132,17 @@ export default async function ComponentPage({
 	return (
 		<div className="flex min-w-0">
 			<ComponentContentCol className="md:max-w-3xl">
+				<JsonLdScript data={softwareSourceCodeJsonLd(doc)} />
+				<JsonLdScript
+					data={breadcrumbJsonLd([
+						{ name: "Home", href: "/" },
+						{ name: "Components", href: "/components" },
+						{
+							name: doc.metadata.title,
+							href: `/components/${doc.slug}`,
+						},
+					])}
+				/>
 				<DocKeyboardShortcuts
 					previous={previous ? (`/components/${previous.slug}` as Route) : null}
 					next={next ? (`/components/${next.slug}` as Route) : null}

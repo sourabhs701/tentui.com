@@ -20,7 +20,10 @@ export async function GET(
 	return new Response(
 		`# ${doc.metadata.title}\n\n${doc.metadata.description}\n\n${doc.content}`,
 		{
-			headers: { "Content-Type": "text/markdown;charset=utf-8" },
+			headers: {
+				"Content-Type": "text/markdown;charset=utf-8",
+				"X-Robots-Tag": "noindex, follow",
+			},
 		},
 	);
 }

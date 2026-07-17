@@ -10,7 +10,7 @@ export default function BlocksRootLayout({
 		<div className="group/layout relative isolate grid min-h-svh min-w-0 grid-rows-[auto_1fr] overflow-x-clip">
 			<SiteHeader />
 			<main
-				className="container mx-auto overflow-x-clip px-2"
+				className="container mx-auto overflow-x-clip"
 				data-slot="layout-wide"
 			>
 				{children}

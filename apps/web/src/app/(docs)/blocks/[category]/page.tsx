@@ -3,13 +3,9 @@ import { notFound } from "next/navigation";
 import { Fragment } from "react";
 
 import { BlockDisplay } from "@/app/(preview)/components/block-display";
-import {
-	absoluteUrl,
-	breadcrumbJsonLd,
-	JsonLdScript,
-} from "@/components/blocks/routes/json-ld";
 import { blockCategories } from "@/config/registry";
-import { getAllBlockIds } from "@/lib/blocks";
+import { getAllBlocks } from "@/lib/blocks";
+import { absoluteUrl, breadcrumbJsonLd, JsonLdScript } from "@/lib/json-ld";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -69,7 +65,7 @@ export default async function BlocksCategoryPage({
 
 	if (!categoryItem) notFound();
 
-	const blockIds = await getAllBlockIds(["registry:block"], [category]);
+	const blocks = await getAllBlocks(["registry:block"], [category]);
 	const categoryUrl = `/blocks/${category}`;
 
 	return (
@@ -84,11 +80,12 @@ export default async function BlocksCategoryPage({
 					url: absoluteUrl(categoryUrl),
 					mainEntity: {
 						"@type": "ItemList",
-						numberOfItems: blockIds.length,
-						itemListElement: blockIds.map((blockId, index) => ({
+						numberOfItems: blocks.length,
+						itemListElement: blocks.map((block, index) => ({
 							"@type": "ListItem",
 							position: index + 1,
-							url: absoluteUrl(`/blocks/${category}/${blockId}`),
+							name: block.name,
+							description: block.description,
 						})),
 					},
 					isPartOf: { "@id": absoluteUrl("/blocks") },
@@ -102,9 +99,9 @@ export default async function BlocksCategoryPage({
 				])}
 			/>
 
-			{blockIds.map((blockId) => (
-				<Fragment key={blockId}>
-					<BlockDisplay name={blockId} />
+			{blocks.map((block) => (
+				<Fragment key={block.name}>
+					<BlockDisplay name={block.name} />
 				</Fragment>
 			))}
 		</>

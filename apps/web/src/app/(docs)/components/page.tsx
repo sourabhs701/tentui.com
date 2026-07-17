@@ -1,21 +1,73 @@
-"use client";
+import type { Metadata } from "next";
+import { getComponentDocs } from "@/lib/documents";
+import {
+	absoluteUrl,
+	breadcrumbJsonLd,
+	JSON_LD_ID,
+	JsonLdScript,
+} from "@/lib/json-ld";
 
-import { MotionConfig } from "motion/react";
-import { components } from "@/registry/components/_registry";
-import { ComponentCard } from "./component-card";
+import { ComponentsGrid } from "./components-grid";
+
+const title = "Components";
+const description =
+	"Beautiful, open-source React components for modern web applications.";
+const ogImage = `/og/simple?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
+
+export const metadata: Metadata = {
+	title,
+	description,
+	alternates: { canonical: "/components" },
+	openGraph: {
+		title,
+		description,
+		url: "/components",
+		type: "website",
+		images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
+	},
+	twitter: {
+		card: "summary_large_image",
+		title,
+		description,
+		images: [ogImage],
+	},
+};
+
+function collectionPageJsonLd() {
+	const docs = getComponentDocs();
+
+	return {
+		"@context": "https://schema.org",
+		"@type": "CollectionPage",
+		"@id": absoluteUrl("/components"),
+		name: title,
+		description,
+		url: absoluteUrl("/components"),
+		mainEntity: {
+			"@type": "ItemList",
+			numberOfItems: docs.length,
+			itemListElement: docs.map((doc, index) => ({
+				"@type": "ListItem",
+				position: index + 1,
+				name: doc.metadata.title,
+				url: absoluteUrl(`/components/${doc.slug}`),
+			})),
+		},
+		isPartOf: { "@id": JSON_LD_ID.website },
+	};
+}
 
 export default function ComponentsPage() {
 	return (
-		<MotionConfig reducedMotion="user">
-			<div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-				{components.map((component, index) => (
-					<ComponentCard
-						key={component.name}
-						component={component}
-						index={index}
-					/>
-				))}
-			</div>
-		</MotionConfig>
+		<>
+			<JsonLdScript data={collectionPageJsonLd()} />
+			<JsonLdScript
+				data={breadcrumbJsonLd([
+					{ name: "Home", href: "/" },
+					{ name: title, href: "/components" },
+				])}
+			/>
+			<ComponentsGrid />
+		</>
 	);
 }

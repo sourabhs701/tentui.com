@@ -112,7 +112,7 @@
 	--sidebar-ring: oklch(0.708 0 0);
 
 	/* Layout */
-	--header-height: --spacing(14);
+	--header-height: --spacing(12);
 	--fade-bottom-height: --spacing(24);
 	--chart-1: oklch(0.87 0 0);
 	--chart-2: oklch(0.556 0 0);

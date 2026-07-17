@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { type ComponentType, cache } from "react";
 
-import { absoluteUrl } from "@/components/blocks/routes/json-ld";
+import { absoluteUrl } from "@/lib/json-ld";
 import { getRegistryItem } from "@/lib/registry";
 import { cn } from "@/lib/utils";
 import { Index } from "@/registry/__index__";

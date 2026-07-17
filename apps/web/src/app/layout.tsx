@@ -4,7 +4,8 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "../index.css";
 import { cn } from "@tentui.com/ui/lib/utils";
 import Providers from "@/components/providers";
-import { META_THEME_COLORS } from "@/config/site";
+import { META_THEME_COLORS, SITE_INFO } from "@/config/site";
+import { JsonLdScript, websiteJsonLd } from "@/lib/json-ld";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -33,13 +34,32 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	metadataBase: new URL("https://tentui.com"),
+	metadataBase: new URL(SITE_INFO.url),
 	title: {
-		default: "TentUI",
-		template: "%s – TentUI",
+		default: SITE_INFO.name,
+		template: `%s – ${SITE_INFO.name}`,
 	},
-	description:
-		"Beautiful, open-source interface blocks for modern web applications.",
+	description: SITE_INFO.description,
+	openGraph: {
+		siteName: SITE_INFO.name,
+		url: "/",
+		type: "website",
+		locale: "en_US",
+		images: [
+			{
+				url: `/og/simple?title=${encodeURIComponent(SITE_INFO.name)}&description=${encodeURIComponent(SITE_INFO.description)}`,
+				width: 1200,
+				height: 630,
+				alt: SITE_INFO.name,
+			},
+		],
+	},
+	twitter: {
+		card: "summary_large_image",
+		images: [
+			`/og/simple?title=${encodeURIComponent(SITE_INFO.name)}&description=${encodeURIComponent(SITE_INFO.description)}`,
+		],
+	},
 };
 
 export const viewport: Viewport = {
@@ -66,6 +86,7 @@ export default function RootLayout({
 			suppressHydrationWarning
 		>
 			<head>
+				<JsonLdScript data={websiteJsonLd()} />
 				<script
 					type="text/javascript"
 					dangerouslySetInnerHTML={{ __html: darkModeScript }}
