@@ -18,7 +18,7 @@ export function useSound(
 		volume = 0.5,
 		playbackRate = 1,
 		interrupt = false,
-		soundEnabled: enabled = true,
+		soundEnabled: _soundEnabled = true,
 		onPlay,
 		onEnd,
 		onPause,
@@ -34,27 +34,36 @@ export function useSound(
 	const bufferRef = useRef<AudioBuffer | null>(null);
 
 	const shouldReduceMotion = useReducedMotion();
-	const soundEnabled = enabled && !shouldReduceMotion;
+	const soundEnabled = _soundEnabled && !shouldReduceMotion;
 
 	useEffect(() => {
 		let cancelled = false;
-		decodeAudioData(sound.dataUri).then((buffer) => {
-			if (!cancelled) {
-				bufferRef.current = buffer;
-				setDuration(buffer.duration);
-			}
-		});
+
+		void decodeAudioData(sound.dataUri)
+			.then((buffer) => {
+				if (!cancelled) {
+					bufferRef.current = buffer;
+					setDuration(buffer.duration);
+				}
+			})
+			.catch(() => {
+				if (!cancelled) {
+					bufferRef.current = null;
+					setDuration(sound.duration ?? null);
+				}
+			});
+
 		return () => {
 			cancelled = true;
 		};
-	}, [sound.dataUri]);
+	}, [sound.dataUri, sound.duration]);
 
 	const stop = useCallback(() => {
 		if (sourceRef.current) {
 			try {
 				sourceRef.current.stop();
 			} catch {
-				// The source has already stopped.
+				// Already stopped
 			}
 			sourceRef.current = null;
 		}
@@ -66,22 +75,31 @@ export function useSound(
 		(overrides?: { volume?: number; playbackRate?: number }) => {
 			if (!soundEnabled || !bufferRef.current) return;
 
-			const context = getAudioContext();
-			if (context.state === "suspended") void context.resume();
+			const ctx = getAudioContext();
 
-			if (interrupt && sourceRef.current) stop();
+			if (ctx.state === "suspended") {
+				ctx.resume();
+			}
 
-			const source = context.createBufferSource();
-			const gain = context.createGain();
+			if (interrupt && sourceRef.current) {
+				stop();
+			}
+
+			const source = ctx.createBufferSource();
+			const gain = ctx.createGain();
+
 			source.buffer = bufferRef.current;
 			source.playbackRate.value = overrides?.playbackRate ?? playbackRate;
 			gain.gain.value = overrides?.volume ?? volume;
+
 			source.connect(gain);
-			gain.connect(context.destination);
+			gain.connect(ctx.destination);
+
 			source.onended = () => {
 				setIsPlaying(false);
 				onEnd?.();
 			};
+
 			source.start(0);
 			sourceRef.current = source;
 			gainRef.current = gain;
@@ -97,7 +115,9 @@ export function useSound(
 	}, [stop, onPause]);
 
 	useEffect(() => {
-		if (gainRef.current) gainRef.current.gain.value = volume;
+		if (gainRef.current) {
+			gainRef.current.gain.value = volume;
+		}
 	}, [volume]);
 
 	useEffect(() => {
@@ -106,7 +126,7 @@ export function useSound(
 				try {
 					sourceRef.current.stop();
 				} catch {
-					// The source has already stopped.
+					// Already stopped
 				}
 			}
 		};

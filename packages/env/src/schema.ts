@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const webEnvSchema = z.object({
+	GITHUB_API_TOKEN: z.string().min(1),
 	NEXT_PUBLIC_SERVER_URL: z.url(),
 });
 

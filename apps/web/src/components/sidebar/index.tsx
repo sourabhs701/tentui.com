@@ -12,8 +12,9 @@ import { motion } from "motion/react";
 import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useMetalClickSound } from "@/hooks/soundcn/use-metal-click-sound";
 import { cn } from "@/lib/utils";
 
 import type { SidebarIconHandle } from "./sidebar-icon";
@@ -23,10 +24,16 @@ const DEFAULT_SIDEBAR_OPEN = true;
 
 export function Sidebar({ children }: { children: React.ReactNode }) {
 	const [isOpen, setIsOpen] = useState(DEFAULT_SIDEBAR_OPEN);
+	const [click] = useMetalClickSound();
 
 	const sidebarIconref = useRef<SidebarIconHandle>(null);
 
-	useHotkeys("s", () => setIsOpen((prev) => !prev));
+	const toggleSidebar = useCallback(() => {
+		click();
+		setIsOpen((previousIsOpen) => !previousIsOpen);
+	}, [click]);
+
+	useHotkeys("s", toggleSidebar);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -43,7 +50,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 				"[--sidebar-width:--spacing(60)]",
 				"[--sidebar-radius:var(--radius-xl)]",
 				// "[--sidebar-top:--spacing(1)]",
-				"[--sidebar-top:var(--header-height)]",
+				"[--sidebar-top:calc(var(--header-height)+(--spacing(2)))]",
 				"sticky top-(--sidebar-top) isolate flex flex-col max-lg:fixed max-lg:left-2 max-lg:z-50 max-lg:data-[open=false]:pointer-events-none",
 			)}
 		>
@@ -60,7 +67,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 							)}
 							variant="ghost"
 							size="icon-sm"
-							onClick={() => setIsOpen((prev) => !prev)}
+							onClick={toggleSidebar}
 						>
 							<SidebarIcon
 								ref={sidebarIconref}

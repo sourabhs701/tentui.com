@@ -186,7 +186,7 @@ export default async function ComponentPage({
 			</ComponentContentCol>
 
 			<ComponentRightCol>
-				<div className="sticky top-(--header-height) translate-x-2">
+				<div className="sticky top-[calc(var(--header-height)+(--spacing(2)))] translate-x-2">
 					<TOCMinimap items={toc} />
 				</div>
 			</ComponentRightCol>

@@ -36,7 +36,7 @@ export default function ComponentPageLayout({
 }) {
 	return (
 		<ComponentPageRoot>
-			<div className="relative flex w-full gap-2 overflow-x-clip pt-12">
+			<div className="relative mt-2 flex w-full gap-2 overflow-x-clip">
 				<ComponentLeftCol className="max-lg:block max-lg:w-0">
 					<Sidebar>
 						<SidebarContent groups={sidebarGroups} />

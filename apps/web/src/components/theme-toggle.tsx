@@ -7,24 +7,26 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@tentui.com/ui/components/tooltip";
-import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useHotkeys } from "react-hotkeys-hook";
-
 import { META_THEME_COLORS } from "@/config/site";
-import { useClickSound } from "@/hooks/soundcn/use-click-sound";
+import { useMetalClickSound } from "@/hooks/soundcn/use-metal-click-sound";
 import { useMetaColor } from "@/hooks/use-meta-color";
+import { MoonIcon } from "./animated-icons/moon-icon";
+import { SunMediumIcon } from "./animated-icons/sun-medium-icon";
 
 export function ThemeToggle() {
 	const { resolvedTheme, systemTheme, setTheme } = useTheme();
+
 	const { setMetaColor } = useMetaColor();
-	const [click] = useClickSound();
+
+	const [click] = useMetalClickSound();
 
 	const switchTheme = () => {
-		const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
+		const next = resolvedTheme === "dark" ? "light" : "dark";
 
 		click();
-		setTheme(nextTheme === systemTheme ? "system" : nextTheme);
+		setTheme(next === systemTheme ? "system" : next);
 		setMetaColor(
 			resolvedTheme === "dark"
 				? META_THEME_COLORS.light
@@ -32,7 +34,7 @@ export function ThemeToggle() {
 		);
 	};
 
-	useHotkeys("d", switchTheme);
+	useHotkeys("d", () => switchTheme());
 
 	return (
 		<Tooltip>
@@ -43,14 +45,20 @@ export function ThemeToggle() {
 						variant="ghost"
 						size="icon-sm"
 						aria-label="Toggle mode"
-						onClick={switchTheme}
-					/>
+						onClick={() => switchTheme()}
+					>
+						<span
+							className="absolute pointer-fine:hidden size-12"
+							aria-hidden
+						/>
+						<MoonIcon className="hidden [html.dark_&]:block" aria-hidden />
+						<SunMediumIcon
+							className="hidden [html.light_&]:block"
+							aria-hidden
+						/>
+					</Button>
 				}
-			>
-				<span className="absolute pointer-fine:hidden size-12" aria-hidden />
-				<MoonIcon className="hidden size-4 [html.dark_&]:block" aria-hidden />
-				<SunIcon className="hidden size-4 [html.light_&]:block" aria-hidden />
-			</TooltipTrigger>
+			/>
 			<TooltipContent className="pr-2 pl-3">
 				<div className="flex items-center gap-3">
 					Toggle mode
