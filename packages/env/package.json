@@ -5,7 +5,9 @@
 	"type": "module",
 	"exports": {
 		"./server": "./src/server.ts",
-		"./web": "./src/web.ts"
+		"./web": "./src/web.ts",
+		"./load": "./src/load.ts",
+		"./schema": "./src/schema.ts"
 	},
 	"dependencies": {
 		"@t3-oss/env-nextjs": "^0.13.11",

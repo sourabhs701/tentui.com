@@ -15,7 +15,7 @@
 		"dev:web": "turbo run dev -F web",
 		"dev:server": "turbo run dev -F server",
 		"db:generate": "turbo run db:generate -F @tentui.com/db",
-		"deploy": "turbo run deploy -F @tentui.com/infra",
+		"deploy": "turbo run deploy",
 		"destroy": "turbo run destroy -F @tentui.com/infra",
 		"check": "biome check --write .",
 		"prepare": "husky"

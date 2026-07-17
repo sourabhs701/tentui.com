@@ -7,21 +7,8 @@ export const registryConfig = {
 
 export const blockCategories = [
 	{
-		name: "marketing",
-		title: "Marketing",
-		description:
-			"Landing pages, sections, blog templates, and high-converting testimonial blocks.",
-	},
-	{
-		name: "application",
-		title: "Application",
-		description:
-			"Dashboard layouts, metric cards, settings pages, and core web app interfaces.",
-	},
-	{
-		name: "ecommerce",
-		title: "Ecommerce",
-		description:
-			"Product grids, shopping carts, filters, and streamlined checkout components.",
+		name: "hero",
+		title: "Hero",
+		description: "Hero sections for polished, production-ready landing pages.",
 	},
 ] as const;

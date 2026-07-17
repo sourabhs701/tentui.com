@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { type ComponentType, cache } from "react";
 
-import { PreviewProvider } from "@/app/(preview)/components/preview-provider";
-import { getCachedThemes } from "@/app/(preview)/lib/get-themes";
 import { absoluteUrl } from "@/components/blocks/routes/json-ld";
 import { getRegistryItem } from "@/lib/registry";
 import { cn } from "@/lib/utils";
@@ -75,19 +73,14 @@ export default async function PreviewPage({
 	params: Promise<{ name: string }>;
 }) {
 	const { name } = await params;
-	const [item, themes] = await Promise.all([
-		getCachedRegistryItem(name),
-		getCachedThemes(),
-	]);
+	const item = await getCachedRegistryItem(name);
 	const Component = previewIndex[name]?.component;
 
 	if (!item || !Component) notFound();
 
 	return (
 		<div className={cn("style-preview min-h-svh", item.meta?.previewClassName)}>
-			<PreviewProvider themes={themes}>
-				<Component />
-			</PreviewProvider>
+			<Component />
 		</div>
 	);
 }

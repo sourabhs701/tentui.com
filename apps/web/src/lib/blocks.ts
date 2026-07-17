@@ -1,6 +1,7 @@
 import type { RegistryItem } from "shadcn/schema";
 
 import { blockCategories } from "@/config/registry";
+import { listRegistryDisplayItems } from "@/lib/registry";
 
 type DatedBlock = {
 	meta?: ({ createdAt?: string } & Record<string, unknown>) | undefined;
@@ -15,18 +16,13 @@ export function compareBlocksByCreatedAtDesc(a: DatedBlock, b: DatedBlock) {
 export async function getAllBlockStaticParams(): Promise<
 	Array<{ category: string; name: string }>
 > {
-	const { Index } = await import("@/registry/__index__");
+	const blocks = await getAllBlocks(["registry:block"]);
 	const params: Array<{ category: string; name: string }> = [];
 
-	for (const category of blockCategories) {
-		for (const item of Object.values(Index)) {
-			if (
-				item.type === "registry:block" &&
-				item.categories?.some(
-					(itemCategory: string) => itemCategory === category.name,
-				)
-			) {
-				params.push({ category: category.name, name: item.name });
+	for (const block of blocks) {
+		for (const category of blockCategories) {
+			if (block.categories?.includes(category.name)) {
+				params.push({ category: category.name, name: block.name });
 			}
 		}
 	}
@@ -46,15 +42,7 @@ export async function getAllBlocks(
 	types: RegistryItem["type"][] = ["registry:block"],
 	categories: string[] = [],
 ) {
-	const { Index } = await import("@/registry/__index__");
-	const { registryItemSchema } = await import("shadcn/schema");
-
-	return Object.values(Index)
-		.map((item) => {
-			const result = registryItemSchema.safeParse(item);
-			return result.success ? result.data : null;
-		})
-		.filter((item): item is RegistryItem => item !== null)
+	return listRegistryDisplayItems()
 		.filter(
 			(item) =>
 				types.includes(item.type) &&

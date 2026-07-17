@@ -1,5 +1,3 @@
-// Thanks @shadcn for the inspiration and code references in this file.
-
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import {
@@ -7,24 +5,17 @@ import {
 	type RegistryItem,
 	registrySchema,
 } from "shadcn/schema";
+import { codeToHtml } from "shiki";
 
-import { registry } from "@/registry/index";
-
-/**
- * First stage of TentUI's registry pipeline.
- *
- * Authored source:
- * - src/registry/index.ts
- * - src/registry/blocks/**
- *
- * Persistent outputs:
- * - registry.json (source registry consumed by `shadcn build`)
- * - src/registry/__index__.tsx (lazy component index used by previews)
- * - src/registry/__blocks__.json (small block listing payload)
- *
- * The package's `registry:build` task runs `shadcn build` after this script to
- * produce public/r/registry.json and public/r/{name}.json.
- */
+import { formatCode } from "../src/lib/format-code";
+import {
+	basename,
+	dirname,
+	normalizeProjectPath,
+	relativePath,
+} from "../src/lib/registry-paths";
+import { processFileContent } from "../src/lib/registry-transform";
+import { registry } from "../src/registry/index";
 
 const appRoot = process.cwd();
 const registryPath = path.join(appRoot, "src/registry");
@@ -64,14 +55,162 @@ function serialize(value: unknown) {
 	return JSON.stringify(value);
 }
 
+function languageFromPath(filePath: string) {
+	const ext = basename(filePath).split(".").pop()?.toLowerCase();
+	switch (ext) {
+		case "ts":
+			return "ts";
+		case "tsx":
+			return "tsx";
+		case "js":
+			return "js";
+		case "jsx":
+			return "jsx";
+		case "css":
+			return "css";
+		case "json":
+			return "json";
+		case "md":
+		case "mdx":
+			return "markdown";
+		default:
+			return "tsx";
+	}
+}
+
+async function highlightCode(code: string, language: string) {
+	return codeToHtml(code, {
+		lang: language,
+		themes: {
+			dark: "vesper",
+			light: "github-light",
+		},
+		defaultColor: false,
+		transformers: [
+			{
+				pre(node) {
+					node.properties.style = "";
+				},
+				code(node) {
+					node.properties["data-line-numbers"] = "";
+					node.properties.style = "display: grid";
+				},
+				line(node) {
+					node.properties["data-line"] = "";
+				},
+			},
+		],
+	});
+}
+
+function getFileTarget(
+	file: NonNullable<RegistryItem["files"]>[number],
+): string {
+	if (file.target) {
+		return file.target.replace(
+			/^@(components|ui|hooks|lib)\/(.+)$/,
+			(_original, type: string, rest: string) => {
+				if (type === "components") return `components/${rest}`;
+				if (type === "ui") return `components/ui/${rest}`;
+				if (type === "hooks") return `hooks/${rest}`;
+				if (type === "lib") return `lib/${rest}`;
+				return _original;
+			},
+		);
+	}
+
+	const fileName = basename(file.path);
+	if (
+		file.type === "registry:block" ||
+		file.type === "registry:component" ||
+		file.type === "registry:example"
+	) {
+		return `components/${fileName}`;
+	}
+	if (file.type === "registry:ui") return `components/ui/${fileName}`;
+	if (file.type === "registry:hook") return `hooks/${fileName}`;
+	if (file.type === "registry:lib") return `lib/${fileName}`;
+	return "";
+}
+
+function fixDisplayFilePaths(
+	files: Array<
+		NonNullable<RegistryItem["files"]>[number] & {
+			content: string;
+			highlightedContent: string;
+		}
+	>,
+) {
+	if (files.length === 0) return [];
+
+	const normalized = files.map((file) => ({
+		...file,
+		path: normalizeProjectPath(file.path),
+	}));
+	const firstDir = dirname(normalized[0].path);
+
+	return normalized.map((file) => ({
+		...file,
+		path: relativePath(firstDir, file.path),
+		target: getFileTarget(file),
+	}));
+}
+
+async function readSourceFile(relativeOrAbsolute: string) {
+	const absolutePath = path.isAbsolute(relativeOrAbsolute)
+		? relativeOrAbsolute
+		: path.join(appRoot, relativeOrAbsolute);
+	return fs.readFile(absolutePath, "utf8");
+}
+
+/**
+ * Build edge-safe display payload for one registry item.
+ * Content + syntax highlighting are baked in so Workers never call fs/shiki/ts-morph.
+ */
+async function buildDisplayItem(item: RegistryItem) {
+	const localItem = withLocalFilePaths(item);
+
+	const preparedFiles = await Promise.all(
+		(localItem.files ?? []).map(async (file) => {
+			const raw = await readSourceFile(file.path);
+			const processed = processFileContent(file.type, raw);
+			// formatCode uses ts-morph (Node-only) — fine here at build time.
+			const formatted = await formatCode(processed, "base-lyra");
+			const highlightedContent = await highlightCode(
+				formatted,
+				languageFromPath(file.path),
+			);
+
+			return {
+				...file,
+				content: formatted,
+				highlightedContent,
+			};
+		}),
+	);
+
+	const files = fixDisplayFilePaths(preparedFiles);
+
+	return {
+		name: localItem.name,
+		title: localItem.title,
+		description: localItem.description ?? "",
+		type: localItem.type,
+		files,
+		categories: localItem.categories,
+		meta: localItem.meta,
+		dependencies: localItem.dependencies,
+		registryDependencies: localItem.registryDependencies,
+	};
+}
+
+/** Slim index: lazy components + metadata only (no source content). */
 function buildIndexSource(items: RegistryItem[]) {
 	const entries = items
 		.filter((item) => item.files?.length)
 		.map((item) => {
 			const localItem = withLocalFilePaths(item);
 			const componentImportPath = getComponentImportPath(item);
-			// Blocks are authored as `export default`. Do not probe named exports —
-			// that hides missing defaults and makes the generated index harder to trust.
 			const component = componentImportPath
 				? `React.lazy(async () => {
 			const module = await import(${serialize(componentImportPath)});
@@ -82,12 +221,21 @@ function buildIndexSource(items: RegistryItem[]) {
 		})`
 				: "null";
 
+			// Paths only (no content) — display uses __items__.json
+			const filesMeta = (localItem.files ?? []).map(
+				({ path: filePath, type, target }) => ({
+					path: filePath,
+					type,
+					target,
+				}),
+			);
+
 			return `${serialize(item.name)}: {
 		name: ${serialize(localItem.name)},
 		title: ${serialize(localItem.title)},
 		description: ${serialize(localItem.description ?? "")},
 		type: ${serialize(localItem.type)},
-		files: ${serialize(localItem.files ?? [])},
+		files: ${serialize(filesMeta)},
 		component: ${component},
 		categories: ${serialize(localItem.categories)},
 		meta: ${serialize(localItem.meta)},
@@ -96,6 +244,7 @@ function buildIndexSource(items: RegistryItem[]) {
 
 	return `// This file is autogenerated by scripts/build-registry.mts.
 // Do not edit this file directly.
+// Component index for previews. File contents live in __items__.json (Workers-safe).
 
 import * as React from "react";
 
@@ -159,6 +308,13 @@ export async function buildRegistry(sourceRegistry: Registry) {
 			.map(withLocalFilePaths),
 	};
 
+	const displayEntries = await Promise.all(
+		parsed.data.items
+			.filter((item) => item.files?.length)
+			.map(async (item) => [item.name, await buildDisplayItem(item)] as const),
+	);
+	const displayItems = Object.fromEntries(displayEntries);
+
 	const outputs = [
 		{
 			path: path.join(appRoot, "registry.json"),
@@ -167,6 +323,10 @@ export async function buildRegistry(sourceRegistry: Registry) {
 		{
 			path: path.join(registryPath, "__index__.tsx"),
 			content: buildIndexSource(parsed.data.items),
+		},
+		{
+			path: path.join(registryPath, "__items__.json"),
+			content: `${JSON.stringify(displayItems, null, 2)}\n`,
 		},
 		{
 			path: path.join(registryPath, "__blocks__.json"),

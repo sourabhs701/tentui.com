@@ -7,19 +7,6 @@ import {
 	CollapsibleTrigger,
 } from "@tentui.com/ui/components/collapsible";
 import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-} from "@tentui.com/ui/components/command";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@tentui.com/ui/components/popover";
-import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
@@ -47,26 +34,11 @@ import {
 	ToggleGroup,
 	ToggleGroupItem,
 } from "@tentui.com/ui/components/toggle-group";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@tentui.com/ui/components/tooltip";
 import { CheckIcon, ChevronRightIcon, CopyIcon, XIcon } from "lucide-react";
 import type React from "react";
-import {
-	createContext,
-	useContext,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
+import { createContext, useContext, useMemo, useRef, useState } from "react";
 import type { PanelImperativeHandle } from "react-resizable-panels";
 import type { RegistryItem } from "shadcn/schema";
-import { sendToIframe } from "@/app/(preview)/hooks/use-iframe-sync";
-import type { PreviewSearchParams } from "@/app/(preview)/lib/search-params";
-import { serializePreviewSearchParams } from "@/app/(preview)/lib/search-params";
 import { CopyButton, CopyStateIcon } from "@/components/copy-button";
 import {
 	DesktopIcon,
@@ -86,7 +58,7 @@ import type {
 	FileTree,
 } from "@/lib/registry";
 import { cn } from "@/lib/utils";
-import { getRegistryItemNamespace, getRegistryItemUrl } from "@/utils/registry";
+import { getRegistryItemNamespace } from "@/utils/registry";
 
 type View = "preview" | "code";
 
@@ -109,10 +81,6 @@ type BlockViewerContext = {
 	setIframeKey?: React.Dispatch<React.SetStateAction<number>>;
 
 	resizablePanelRef: React.RefObject<PanelImperativeHandle | null> | null;
-
-	themes: Map<string, RegistryItem>;
-	theme: PreviewSearchParams["theme"];
-	setTheme: (theme: PreviewSearchParams["theme"]) => void;
 };
 
 const BlockViewerContext = createContext<BlockViewerContext | null>(null);
@@ -131,13 +99,11 @@ function BlockViewerProvider({
 	item,
 	tree,
 	highlightedFiles,
-	themes,
 	children,
-}: Pick<BlockViewerContext, "item" | "tree" | "highlightedFiles" | "themes"> & {
+}: Pick<BlockViewerContext, "item" | "tree" | "highlightedFiles"> & {
 	children: React.ReactNode;
 }) {
 	const [view, setView] = useState<View>("preview");
-	const [theme, setTheme] = useState<PreviewSearchParams["theme"]>(null);
 
 	const [activeFile, setActiveFile] = useState<
 		BlockViewerContext["activeFile"]
@@ -160,9 +126,6 @@ function BlockViewerProvider({
 				iframeKey,
 				setIframeKey,
 				resizablePanelRef,
-				themes,
-				theme,
-				setTheme,
 			}}
 		>
 			<div
@@ -198,14 +161,13 @@ function BlockViewerProvider({
 
 type BlockViewerProps = Pick<
 	BlockViewerContext,
-	"item" | "tree" | "highlightedFiles" | "themes"
+	"item" | "tree" | "highlightedFiles"
 >;
 
 export function BlockViewer({
 	item,
 	tree,
 	highlightedFiles,
-	themes,
 	...props
 }: BlockViewerProps) {
 	return (
@@ -213,7 +175,6 @@ export function BlockViewer({
 			item={item}
 			tree={tree}
 			highlightedFiles={highlightedFiles}
-			themes={themes}
 			{...props}
 		>
 			<BlockViewerToolbar />
@@ -226,8 +187,7 @@ export function BlockViewer({
 }
 
 function BlockViewerToolbar() {
-	const { setView, item, resizablePanelRef, setIframeKey, theme } =
-		useBlockViewer();
+	const { setView, item, resizablePanelRef, setIframeKey } = useBlockViewer();
 
 	const { state, copy } = useCopyToClipboard();
 
@@ -256,8 +216,6 @@ function BlockViewerToolbar() {
 			</a>
 
 			<div className="ml-auto flex items-center gap-2">
-				<ThemePicker />
-
 				<div className="flex h-8 items-center gap-0.75 rounded-lg border p-0.75">
 					<ToggleGroup
 						className="gap-0.75 *:data-[slot=toggle-group-item]:h-6 *:data-[slot=toggle-group-item]:min-w-6 *:data-[slot=toggle-group-item]:rounded-sm! *:data-[slot=toggle-group-item]:px-0"
@@ -296,9 +254,7 @@ function BlockViewerToolbar() {
 						nativeButton={false}
 						render={
 							<a
-								href={serializePreviewSearchParams(`/preview/${item.name}`, {
-									theme,
-								})}
+								href={`/preview/${item.name}`}
 								target="_blank"
 								rel="noopener"
 								aria-label="Open in New Tab"
@@ -409,52 +365,13 @@ function BlockViewerView() {
 }
 
 function BlockViewerIframe({ className }: { className?: string }) {
-	const { iframeKey, item, theme } = useBlockViewer();
-
-	const iframeRef = useRef<HTMLIFrameElement>(null);
-
-	useEffect(() => {
-		const iframe = iframeRef.current;
-		if (!iframe) {
-			return;
-		}
-
-		const sendParams = () => {
-			sendToIframe(iframe, "preview-params", { theme });
-		};
-
-		if (iframe.contentWindow) {
-			sendParams();
-		}
-
-		iframe.addEventListener("load", sendParams);
-		return () => {
-			iframe.removeEventListener("load", sendParams);
-		};
-	}, [theme]);
-
-	// Recompute only when the iframe is explicitly refreshed. Theme updates are
-	// delivered through postMessage so they do not reset preview state.
-	// biome-ignore lint/correctness/useExhaustiveDependencies: iframeKey is the intentional reload boundary.
-	const iframeSrc = useMemo(
-		() => {
-			// The iframe src needs to include the serialized preview params
-			// for the initial load, but not be reactive to them as it would cause
-			// full-iframe reloads on every param change (flashes & loss of state).
-			// Further updates of the search params will be sent to the iframe
-			// via a postMessage channel, for it to sync its own history onto the host's.
-			return serializePreviewSearchParams(`/preview/${item.name}`, { theme });
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[iframeKey],
-	);
+	const { iframeKey, item } = useBlockViewer();
 
 	return (
 		<iframe
 			key={iframeKey}
-			ref={iframeRef}
 			className={cn("no-scrollbar w-full bg-background", className)}
-			src={iframeSrc}
+			src={`/preview/${item.name}`}
 			title={`${item.title ?? item.name} preview`}
 			loading="lazy"
 			height={item.meta?.iframeHeight ?? 768}
@@ -660,147 +577,6 @@ function BlockViewerMobile() {
 			<div className="relative overflow-hidden rounded-xl border">
 				<BlockViewerIframe />
 			</div>
-		</div>
-	);
-}
-
-function ThemePicker() {
-	const { item, themes, theme, setTheme } = useBlockViewer();
-
-	const themeItem = theme ? themes.get(theme) : null;
-
-	const { shadcnThemes, tweakcnThemes } = useMemo(() => {
-		const themesArray = Array.from(themes.values());
-		return {
-			shadcnThemes: themesArray.filter((t) => t.meta?.source === "shadcn"),
-			tweakcnThemes: themesArray.filter((t) => t.meta?.source === "tweakcn"),
-		};
-	}, [themes]);
-
-	const handleThemeSelect = (value: PreviewSearchParams["theme"]) => {
-		setTheme(value);
-		trackEvent({
-			name: "block_viewer_theme_change",
-			properties: { block: item.name, theme: value ?? "default" },
-		});
-	};
-
-	return (
-		<Popover modal>
-			<Tooltip>
-				<TooltipTrigger
-					render={
-						<PopoverTrigger
-							render={
-								<Button
-									className="bg-transparent px-1.75 shadow-none dark:border-border dark:bg-transparent dark:aria-expanded:bg-input/50"
-									variant="outline"
-									size="sm"
-									aria-label="Theme"
-								>
-									<ThemePalette cssVars={themeItem?.cssVars} />
-								</Button>
-							}
-						/>
-					}
-				/>
-				<TooltipContent>
-					{themeItem?.title || themeItem?.name || "Default"}
-				</TooltipContent>
-			</Tooltip>
-
-			<PopoverContent
-				className="rounded-2xl p-0"
-				align="start"
-				alignOffset={-8}
-			>
-				<Command
-					className={cn(
-						"**:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-input-wrapper]_svg]:size-5 **:[[cmdk-input]]:h-10",
-						"**:[[cmdk-group]]:px-2",
-						"**:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-muted-foreground",
-						"[&_[cmdk-item]_svg]:size-5 **:[[cmdk-item]]:px-2 **:[[cmdk-item]]:py-2",
-					)}
-				>
-					<CommandInput placeholder="Search theme…" />
-
-					<CommandList className="scroll-fade min-h-80">
-						<CommandEmpty>No results found.</CommandEmpty>
-
-						<CommandGroup heading="Current theme">
-							<CommandItem onSelect={() => handleThemeSelect(null)}>
-								<ThemePalette />
-								Default
-								{!theme && <CheckIcon className="ml-auto" strokeWidth={3} />}
-							</CommandItem>
-						</CommandGroup>
-
-						<ThemePickerGroup
-							title="shadcn/ui"
-							themes={shadcnThemes}
-							activeTheme={theme}
-							onThemeSelect={handleThemeSelect}
-						/>
-
-						<ThemePickerGroup
-							title="tweakcn"
-							themes={tweakcnThemes}
-							activeTheme={theme}
-							onThemeSelect={handleThemeSelect}
-						/>
-					</CommandList>
-				</Command>
-			</PopoverContent>
-		</Popover>
-	);
-}
-
-function ThemePickerGroup({
-	title,
-	themes,
-	activeTheme,
-	onThemeSelect,
-}: {
-	title: string;
-	themes: RegistryItem[];
-	activeTheme: PreviewSearchParams["theme"];
-	onThemeSelect: (theme: PreviewSearchParams["theme"]) => void;
-}) {
-	return (
-		<CommandGroup heading={`${title} themes (${themes.length})`}>
-			{themes.map((item) => (
-				<CommandItem key={item.name} onSelect={() => onThemeSelect(item.name)}>
-					<ThemePalette cssVars={item.cssVars} />
-					{item.title || item.name}
-					{activeTheme === item.name && (
-						<CheckIcon className="ml-auto" strokeWidth={3} />
-					)}
-				</CommandItem>
-			))}
-		</CommandGroup>
-	);
-}
-
-const THEME_PALETTE_KEYS = ["primary", "accent", "muted", "secondary"] as const;
-
-function ThemePalette({ cssVars }: { cssVars?: RegistryItem["cssVars"] }) {
-	return (
-		<div className="flex shrink-0 gap-0.5">
-			{THEME_PALETTE_KEYS.map((key) => (
-				<div
-					key={key}
-					className={cn(
-						"inset-ring-1 inset-ring-foreground/15 flex h-4 w-2.5 shrink-0 rounded-xs",
-						"bg-(--color-palette) dark:bg-(--color-palette-dark)",
-					)}
-					style={
-						{
-							"--color-palette": cssVars?.light?.[key] ?? `var(--${key})`,
-							"--color-palette-dark": cssVars?.dark?.[key] ?? `var(--${key})`,
-						} as React.CSSProperties
-					}
-				/>
-			))}
 		</div>
 	);
 }

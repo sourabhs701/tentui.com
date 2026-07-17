@@ -4,7 +4,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "@tentui.com/ui/components/sonner";
 import { TooltipProvider } from "@tentui.com/ui/components/tooltip";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { queryClient } from "@/utils/trpc";
 
@@ -22,7 +21,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 		>
 			<TooltipProvider>
 				<QueryClientProvider client={queryClient}>
-					<NuqsAdapter>{children}</NuqsAdapter>
+					{children}
 					<ReactQueryDevtools />
 				</QueryClientProvider>
 			</TooltipProvider>

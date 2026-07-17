@@ -4,10 +4,14 @@
 		"build": {
 			"dependsOn": ["$TURBO_EXTENDS$", "registry:build"]
 		},
+		"deploy": {
+			"dependsOn": ["@tentui.com/infra#deploy"]
+		},
 		"registry:build": {
 			"outputs": [
 				"registry.json",
 				"src/registry/__index__.tsx",
+				"src/registry/__items__.json",
 				"src/registry/__blocks__.json",
 				"public/r/**"
 			]

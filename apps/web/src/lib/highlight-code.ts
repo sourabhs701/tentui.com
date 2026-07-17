@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { LRUCache } from "lru-cache";
 import { codeToHtml } from "shiki";
 
@@ -7,10 +6,16 @@ const highlightCache = new LRUCache<string, string>({
 	ttl: 1000 * 60 * 60,
 });
 
+async function hashKey(input: string): Promise<string> {
+	const data = new TextEncoder().encode(input);
+	const digest = await crypto.subtle.digest("SHA-256", data);
+	return [...new Uint8Array(digest)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("");
+}
+
 export async function highlightCode(code: string, language = "tsx") {
-	const cacheKey = createHash("sha256")
-		.update(`${language}:${code}`)
-		.digest("hex");
+	const cacheKey = await hashKey(`${language}:${code}`);
 	const cached = highlightCache.get(cacheKey);
 
 	if (cached) {

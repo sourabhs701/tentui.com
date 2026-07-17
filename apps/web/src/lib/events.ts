@@ -6,7 +6,6 @@ const eventSchema = z.object({
 		"block_viewer_resize",
 		"block_viewer_open_preview",
 		"block_viewer_refresh_preview",
-		"block_viewer_theme_change",
 		"copy_block_code",
 		"copy_npm_command",
 	]),

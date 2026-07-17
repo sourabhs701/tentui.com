@@ -15,7 +15,7 @@ export const blocks: Registry["items"] = [
 				type: "registry:component",
 			},
 		],
-		categories: ["marketing"],
+		categories: ["hero"],
 		meta: {
 			createdAt: "2026-07-17",
 			iframeHeight: 760,
@@ -35,7 +35,7 @@ export const blocks: Registry["items"] = [
 				type: "registry:component",
 			},
 		],
-		categories: ["marketing"],
+		categories: ["hero"],
 		meta: {
 			createdAt: "2026-06-30",
 			iframeHeight: 760,

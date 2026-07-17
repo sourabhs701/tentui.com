@@ -6,7 +6,7 @@ export default function BlocksListLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<>
+		<div>
 			<div className="h-px border-line border-t" />
 			<BlocksNav />
 			<div className="h-px border-line border-t" />
@@ -15,6 +15,6 @@ export default function BlocksListLayout({
 			</div>
 
 			{children}
-		</>
+		</div>
 	);
 }

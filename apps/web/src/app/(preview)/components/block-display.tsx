@@ -1,34 +1,24 @@
 import { cache } from "react";
-import type { RegistryItem } from "shadcn/schema";
 import { BlockViewer } from "@/app/(preview)/components/block-viewer";
-import { getCachedThemes } from "@/app/(preview)/lib/get-themes";
-import { formatCode } from "@/lib/format-code";
-import { highlightCode } from "@/lib/highlight-code";
 import {
 	createFileTreeForRegistryItemFiles,
 	getRegistryItem,
+	type HighlightedRegistryFile,
 } from "@/lib/registry";
 
 export async function BlockDisplay({ name }: { name: string }) {
 	const item = await getCachedRegistryItem(name);
 
-	if (!item?.files) {
+	if (!item?.files?.length) {
 		return null;
 	}
 
-	const [tree, highlightedFiles, themes] = await Promise.all([
-		getCachedFileTree(item.files),
-		getCachedHighlightedFiles(item.files),
-		getCachedThemes(),
-	]);
+	const tree = await getCachedFileTree(item.files);
+
+	const highlightedFiles = item.files as HighlightedRegistryFile[];
 
 	return (
-		<BlockViewer
-			item={item}
-			tree={tree}
-			highlightedFiles={highlightedFiles}
-			themes={themes}
-		/>
+		<BlockViewer item={item} tree={tree} highlightedFiles={highlightedFiles} />
 	);
 }
 
@@ -38,23 +28,6 @@ const getCachedRegistryItem = cache(async (name: string) =>
 
 const getCachedFileTree = cache(
 	async (files: Array<{ path: string; target?: string }>) => {
-		if (!files) {
-			return null;
-		}
-
 		return createFileTreeForRegistryItemFiles(files);
-	},
-);
-
-const getCachedHighlightedFiles = cache(
-	async (files: NonNullable<RegistryItem["files"]>) => {
-		return await Promise.all(
-			files.map(async (file) => ({
-				...file,
-				highlightedContent: await highlightCode(
-					await formatCode(file.content ?? "", "base-lyra"),
-				),
-			})),
-		);
 	},
 );

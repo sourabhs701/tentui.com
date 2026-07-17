@@ -8,7 +8,8 @@
 		"registry:build": "tsx ./scripts/build-registry.mts && shadcn build",
 		"registry:validate": "shadcn registry validate ./public/r/registry.json",
 		"start": "next start",
-		"dev:bare": "next dev --port 3001"
+		"dev": "next dev --port 3001",
+		"deploy": "opennextjs-cloudflare build && wrangler deploy"
 	},
 	"dependencies": {
 		"@opennextjs/cloudflare": "^1.20.1",
@@ -23,13 +24,11 @@
 		"@trpc/tanstack-react-query": "^11.18.0",
 		"babel-plugin-react-compiler": "^1.0.0",
 		"better-auth": "catalog:",
-		"dotenv": "catalog:",
 		"lru-cache": "^11.5.2",
 		"lucide-react": "catalog:",
 		"motion": "^12.42.2",
 		"next": "^16.2.0",
 		"next-themes": "catalog:",
-		"nuqs": "^2.9.0",
 		"openpanel": "^0.2.94",
 		"react": "catalog:",
 		"react-dom": "catalog:",

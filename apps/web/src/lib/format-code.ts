@@ -1,7 +1,7 @@
 import { transformIcons } from "shadcn/utils";
 import { Project, ScriptKind } from "ts-morph";
 
-import { fixImport } from "@/lib/registry";
+import { fixImport } from "@/lib/registry-transform";
 
 function buildDisplayConfig(styleName: string) {
 	return {

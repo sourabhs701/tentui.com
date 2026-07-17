@@ -1,112 +1,76 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
-import { LRUCache } from "lru-cache";
-import { type RegistryItem, registryItemSchema } from "shadcn/schema";
+import type { RegistryItem } from "shadcn/schema";
+import { registryItemSchema } from "shadcn/schema";
 
-import { Index } from "@/registry/__index__";
+import {
+	basename,
+	dirname,
+	normalizeProjectPath,
+	relativePath,
+} from "@/lib/registry-paths";
+import items from "@/registry/__items__.json";
 
-const registryCache = new LRUCache<string, RegistryItem | false>({
-	max: 500,
-	ttl: 1000 * 60 * 5,
-});
+export { fixImport, processFileContent } from "@/lib/registry-transform";
 
-export async function getRegistryItem(name: string) {
-	const cached = registryCache.get(name);
-	if (cached !== undefined) {
-		return cached || null;
-	}
+export type HighlightedRegistryFile = NonNullable<
+	RegistryItem["files"]
+>[number] & {
+	highlightedContent: string;
+};
 
-	const item = Index[name as keyof typeof Index];
-	if (!item) {
-		registryCache.set(name, false);
-		return null;
-	}
+export type RegistryDisplayItem = RegistryItem & {
+	files: HighlightedRegistryFile[];
+};
+
+const displayItems = items as Record<string, RegistryDisplayItem>;
+
+export async function getRegistryItem(
+	name: string,
+): Promise<RegistryDisplayItem | null> {
+	const item = displayItems[name];
+	if (!item) return null;
 
 	const result = registryItemSchema.safeParse(item);
 	if (!result.success) {
-		registryCache.set(name, false);
+		console.error(`[registry] Invalid item "${name}":`, result.error.message);
 		return null;
 	}
 
-	const files = fixFilePaths(
-		await Promise.all(
-			result.data.files?.map(async (file) => ({
-				...file,
-				path: path.relative(process.cwd(), file.path),
-				content: await getFileContent(file),
-			})) ?? [],
-		),
-	);
+	const files = (result.data.files ?? []).map((file, index) => ({
+		...file,
+		highlightedContent: item.files[index]?.highlightedContent ?? "",
+	}));
 
-	const parsed = registryItemSchema.safeParse({
+	return {
 		...result.data,
 		files,
-	});
-
-	if (!parsed.success) {
-		console.error(parsed.error.message);
-		registryCache.set(name, false);
-		return null;
-	}
-
-	registryCache.set(name, parsed.data);
-	return parsed.data;
+	} as RegistryDisplayItem;
 }
 
-async function getFileContent(
-	file: NonNullable<RegistryItem["files"]>[number],
-) {
-	let code = await fs.readFile(file.path, "utf8");
-
-	if (file.type !== "registry:page") {
-		code = code.replaceAll("export default", "export");
-	}
-
-	return fixImport(code);
+export function getRegistryDisplayItem(
+	name: string,
+): RegistryDisplayItem | null {
+	return displayItems[name] ?? null;
 }
 
-export function fixImport(content: string) {
-	let fixed = content
-		.replaceAll("@tentui.com/ui/components/", "@/components/ui/")
-		.replaceAll("@tentui.com/ui/hooks/", "@/hooks/")
-		.replaceAll("@tentui.com/ui/lib/", "@/lib/");
-
-	const registryAlias =
-		/@\/(.+?)\/((?:.*?\/)?(?:components|ui|hooks|lib))\/([\w/-]+)/g;
-
-	fixed = fixed.replace(
-		registryAlias,
-		(match, _registryPath: string, type: string, itemPath: string) => {
-			if (type.endsWith("components")) {
-				return `@/components/${itemPath}`;
-			}
-			if (type.endsWith("ui")) {
-				return `@/components/ui/${itemPath}`;
-			}
-			if (type.endsWith("hooks")) {
-				return `@/hooks/${itemPath}`;
-			}
-			if (type.endsWith("lib")) {
-				return `@/lib/${itemPath}`;
-			}
-
-			return match;
-		},
-	);
-
-	return fixed;
+export function listRegistryDisplayItems(): RegistryDisplayItem[] {
+	return Object.values(displayItems);
 }
 
-function fixFilePaths(files: NonNullable<RegistryItem["files"]>) {
+export function fixFilePaths(files: NonNullable<RegistryItem["files"]>) {
 	if (files.length === 0) {
 		return [];
 	}
 
-	const firstFilePathDir = path.dirname(files[0].path);
-
-	return files.map((file) => ({
+	const normalized = files.map((file) => ({
 		...file,
-		path: path.relative(firstFilePathDir, file.path),
+		path: normalizeProjectPath(file.path),
+	}));
+
+	const firstFilePathDir = dirname(normalized[0].path);
+
+	return normalized.map((file) => ({
+		...file,
+		path: relativePath(firstFilePathDir, file.path),
 		target: getFileTarget(file),
 	}));
 }
@@ -116,7 +80,7 @@ function getFileTarget(file: NonNullable<RegistryItem["files"]>[number]) {
 		return normalizeAliasTarget(file.target);
 	}
 
-	const fileName = path.basename(file.path);
+	const fileName = basename(file.path);
 
 	if (
 		file.type === "registry:block" ||

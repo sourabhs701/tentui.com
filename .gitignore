@@ -13,6 +13,7 @@ apps/web/src/routeTree.gen.ts
 
 # Environment variables
 .env
+.env.prod
 .env*.local
 
 # IDEs and editors
@@ -40,7 +41,7 @@ lerna-debug.log*
 .turbo
 .nx
 
-# Better-T-Stack
+# Alchemy / Cloudflare
 .alchemy
 .vercel
 

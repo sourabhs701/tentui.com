@@ -23,7 +23,6 @@
 .nitro/
 
 # Deployment
-.vercel
 .netlify
 .wrangler
 .alchemy

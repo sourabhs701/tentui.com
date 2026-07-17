@@ -30,8 +30,9 @@
 			"!**/convex/_generated",
 			"!apps/web/public/r",
 			"!apps/web/registry.json",
-			"!apps/web/registry/__blocks__.json",
-			"!apps/web/registry/__index__.tsx"
+			"!apps/web/src/registry/__blocks__.json",
+			"!apps/web/src/registry/__index__.tsx",
+			"!apps/web/src/registry/__items__.json"
 		]
 	},
 	"formatter": {
