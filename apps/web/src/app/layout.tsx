@@ -13,8 +13,8 @@ const darkModeScript = String.raw`
 	} catch (_) {}
 `;
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
+const geist = Geist({
+	variable: "--font-geist",
 	subsets: ["latin"],
 });
 
@@ -48,7 +48,7 @@ export default function RootLayout({
 	return (
 		<html
 			lang="en"
-			className={`${geistSans.variable} ${geistMono.variable}`}
+			className={`${geist.variable} ${geistMono.variable}`}
 			suppressHydrationWarning
 		>
 			<head>

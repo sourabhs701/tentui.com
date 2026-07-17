@@ -178,7 +178,6 @@ export function BlockViewer({
 			{...props}
 		>
 			<BlockViewerToolbar />
-			<div className="screen-line-top h-px max-lg:hidden" />
 			<BlockViewerView />
 			<BlockViewerCode />
 			<BlockViewerMobile />

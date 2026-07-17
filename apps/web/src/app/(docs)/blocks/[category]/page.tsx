@@ -105,17 +105,8 @@ export default async function BlocksCategoryPage({
 			{blockIds.map((blockId) => (
 				<Fragment key={blockId}>
 					<BlockDisplay name={blockId} />
-					<Separator />
 				</Fragment>
 			))}
 		</>
-	);
-}
-
-function Separator() {
-	return (
-		<div className="screen-line-top screen-line-bottom">
-			<div className="stripe-divider" />
-		</div>
 	);
 }

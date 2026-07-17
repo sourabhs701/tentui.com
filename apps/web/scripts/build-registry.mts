@@ -213,7 +213,9 @@ function buildIndexSource(items: RegistryItem[]) {
 			const componentImportPath = getComponentImportPath(item);
 			const component = componentImportPath
 				? `React.lazy(async () => {
-			const module = await import(${serialize(componentImportPath)});
+			const module = (await import(${serialize(componentImportPath)})) as unknown as {
+				default?: React.ComponentType;
+			};
 			if (!module.default) {
 				throw new Error(${serialize(`No default export found for ${item.name}`)});
 			}

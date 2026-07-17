@@ -10,9 +10,6 @@ export default function BlocksListLayout({
 			<div className="h-px border-line border-t" />
 			<BlocksNav />
 			<div className="h-px border-line border-t" />
-			<div className="screen-line-top screen-line-bottom">
-				<div className="stripe-divider" />
-			</div>
 
 			{children}
 		</div>

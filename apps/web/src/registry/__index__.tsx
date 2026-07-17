@@ -12,7 +12,9 @@ export const Index = {
 		type: "registry:block",
 		files: [{"path":"src/registry/blocks/agency-hero-01/agency-hero-01.tsx","type":"registry:component","target":"@components/agency-hero-01.tsx"}],
 		component: React.lazy(async () => {
-			const module = await import("@/registry/blocks/agency-hero-01/agency-hero-01");
+			const module = (await import("@/registry/blocks/agency-hero-01/agency-hero-01")) as unknown as {
+				default?: React.ComponentType;
+			};
 			if (!module.default) {
 				throw new Error("No default export found for agency-hero-01");
 			}
@@ -28,7 +30,9 @@ export const Index = {
 		type: "registry:block",
 		files: [{"path":"src/registry/blocks/gradient-hero-01/gradient-hero-01.tsx","type":"registry:component","target":"@components/gradient-hero-01.tsx"}],
 		component: React.lazy(async () => {
-			const module = await import("@/registry/blocks/gradient-hero-01/gradient-hero-01");
+			const module = (await import("@/registry/blocks/gradient-hero-01/gradient-hero-01")) as unknown as {
+				default?: React.ComponentType;
+			};
 			if (!module.default) {
 				throw new Error("No default export found for gradient-hero-01");
 			}

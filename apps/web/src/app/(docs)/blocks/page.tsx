@@ -78,17 +78,8 @@ export default function BlocksPage() {
 			{blockItems.map(({ name }) => (
 				<Fragment key={name}>
 					<BlockDisplay name={name} />
-					<Separator />
 				</Fragment>
 			))}
 		</>
-	);
-}
-
-function Separator() {
-	return (
-		<div className="screen-line-top screen-line-bottom">
-			<div className="stripe-divider" />
-		</div>
 	);
 }

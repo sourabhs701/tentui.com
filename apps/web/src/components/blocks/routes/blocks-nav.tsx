@@ -18,7 +18,7 @@ export function BlocksNav() {
 	const pathname = usePathname();
 
 	return (
-		<div className="no-scrollbar overflow-x-auto">
+		<div className="no-scrollbar overflow-x-auto border-x">
 			<nav
 				aria-label="Block categories"
 				className="flex w-max items-center whitespace-nowrap pr-2"
