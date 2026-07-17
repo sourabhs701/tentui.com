@@ -38,11 +38,13 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 
 	return (
 		<div
+			data-open={isOpen}
 			className={cn(
 				"[--sidebar-width:--spacing(60)]",
 				"[--sidebar-radius:var(--radius-xl)]",
-				"[--sidebar-top:calc(var(--header-height)+(--spacing(12))+(--spacing(0.75)))]",
-				"sticky top-(--sidebar-top) isolate flex flex-col max-xl:hidden",
+				// "[--sidebar-top:--spacing(1)]",
+				"[--sidebar-top:var(--header-height)]",
+				"sticky top-(--sidebar-top) isolate flex flex-col max-lg:fixed max-lg:left-2 max-lg:z-50 max-lg:data-[open=false]:pointer-events-none",
 			)}
 		>
 			<Tooltip>
@@ -53,7 +55,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 							className={cn(
 								"[--trigger-inset:--spacing(1.5)]",
 								"[--trigger-radius:calc(var(--sidebar-radius)-var(--trigger-inset)+1px)]",
-								"absolute top-(--trigger-inset) left-(--trigger-inset) z-10 size-7 rounded-(--trigger-radius) border-none",
+								"pointer-events-auto absolute top-(--trigger-inset) left-(--trigger-inset) z-10 size-7 rounded-(--trigger-radius) border-none",
 								"data-[sidebar-open=false]:inset-ring-1 data-[sidebar-open=false]:inset-ring-border",
 							)}
 							variant="ghost"

@@ -1,10 +1,7 @@
 "use client";
 import type { Route } from "next";
 import { Sidebar, SidebarContent } from "@/components/sidebar";
-import {
-	ComponentGrid,
-	ComponentLeftCol,
-} from "@/components/sidebar/component-page-layout";
+import { ComponentLeftCol } from "@/components/sidebar/component-page-layout";
 import { ComponentPageRoot } from "@/components/sidebar/component-page-root";
 import { components } from "@/registry/components/_registry";
 import { isNewComponent } from "@/utils/registry";
@@ -39,15 +36,17 @@ export default function ComponentPageLayout({
 }) {
 	return (
 		<ComponentPageRoot>
-			<ComponentGrid className="pt-20">
-				<ComponentLeftCol className="-translate-x-1 pb-3.75">
+			<div className="relative flex w-full gap-2 overflow-x-clip pt-12">
+				<ComponentLeftCol className="max-lg:block max-lg:w-0">
 					<Sidebar>
 						<SidebarContent groups={sidebarGroups} />
 					</Sidebar>
 				</ComponentLeftCol>
 
-				{children}
-			</ComponentGrid>
+				<div className="z-0 h-full min-h-full w-full min-w-0 flex-1">
+					{children}
+				</div>
+			</div>
 		</ComponentPageRoot>
 	);
 }

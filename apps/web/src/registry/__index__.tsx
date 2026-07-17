@@ -22,6 +22,42 @@ export const Index = {
 		}),
 		categories: ["hero"],
 		meta: {"createdAt":"2026-07-17","iframeHeight":760,"previewClassName":"min-h-screen"},
+	},
+	"logos-carousel": {
+		name: "logos-carousel",
+		title: "Logos Carousel",
+		description: "Cycle through logos column by column in a staggered wave.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/logos-carousel/logos-carousel.tsx","type":"registry:component","target":"@components/logos-carousel.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/logos-carousel/logos-carousel")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for logos-carousel");
+			}
+			return { default: module.default };
+		}),
+		categories: ["marketing"],
+		meta: {"createdAt":"2026-06-25"},
+	},
+	"logos-carousel-demo": {
+		name: "logos-carousel-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/logos-carousel-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/logos-carousel-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for logos-carousel-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	}
 } as const;
 

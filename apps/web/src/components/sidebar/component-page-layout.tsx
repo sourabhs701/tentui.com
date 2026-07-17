@@ -7,10 +7,7 @@ export function ComponentContainer({
 	return (
 		<div
 			data-slot="Component-container"
-			className={cn(
-				"mx-auto w-full border-line border-x md:max-w-3xl",
-				className,
-			)}
+			className={cn("mx-auto w-full md:max-w-6xl", className)}
 			{...props}
 		/>
 	);
@@ -24,7 +21,7 @@ export function ComponentGrid({
 		<div
 			data-slot="Component-grid"
 			className={cn(
-				"mx-auto grid w-full grid-cols-1 lg:grid-cols-[1fr_var(--container-6xl)_1fr]",
+				"mx-auto grid w-full grid-cols-1 lg:grid-cols-2",
 				className,
 			)}
 			{...props}

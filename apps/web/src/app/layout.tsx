@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 
 import "../index.css";
+import { cn } from "@tentui.com/ui/lib/utils";
 import Providers from "@/components/providers";
 import { META_THEME_COLORS } from "@/config/site";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const darkModeScript = String.raw`
 	try {
@@ -48,7 +51,12 @@ export default function RootLayout({
 	return (
 		<html
 			lang="en"
-			className={`${geist.variable} ${geistMono.variable}`}
+			className={cn(
+				geist.variable,
+				geistMono.variable,
+				"font-sans",
+				inter.variable,
+			)}
 			suppressHydrationWarning
 		>
 			<head>

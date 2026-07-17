@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 
 const markerVariants = cva(
-	"group/marker relative flex min-h-4 w-full items-center gap-2 text-left text-muted-foreground text-xs [&_svg:not([class*='size-'])]:size-3.5 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground",
+	"group/marker relative flex min-h-4 w-full items-center gap-2 text-left text-muted-foreground text-sm [&_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground",
 	{
 		variants: {
 			variant: {
@@ -46,7 +46,7 @@ function MarkerIcon({ className, ...props }: React.ComponentProps<"span">) {
 			data-slot="marker-icon"
 			aria-hidden="true"
 			className={cn(
-				"size-3.5 shrink-0 [&_svg:not([class*='size-'])]:size-3.5",
+				"size-4 shrink-0 [&_svg:not([class*='size-'])]:size-4",
 				className,
 			)}
 			{...props}

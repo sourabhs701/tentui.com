@@ -26,7 +26,6 @@ import {
 import {
 	Tabs,
 	TabsContent,
-	TabsIndicator,
 	TabsList,
 	TabsTrigger,
 } from "@tentui.com/ui/components/tabs";
@@ -192,14 +191,13 @@ function BlockViewerToolbar() {
 
 	return (
 		<div className="flex w-full items-center gap-2 px-2 max-lg:hidden">
-			<TabsList>
+			<TabsList variant="line">
 				<TabsTrigger className="px-3" value="preview">
 					Preview
 				</TabsTrigger>
 				<TabsTrigger className="px-3" value="code">
 					Code
 				</TabsTrigger>
-				<TabsIndicator />
 			</TabsList>
 
 			<Separator
@@ -247,7 +245,7 @@ function BlockViewerToolbar() {
 					/>
 
 					<Button
-						className="rounded-sm border-none dark:hover:bg-muted"
+						className="border-none dark:hover:bg-muted"
 						variant="ghost"
 						size="icon-xs"
 						nativeButton={false}
@@ -275,7 +273,7 @@ function BlockViewerToolbar() {
 					/>
 
 					<Button
-						className="rounded-sm border-none dark:hover:bg-muted"
+						className="border-none dark:hover:bg-muted"
 						variant="ghost"
 						size="icon-xs"
 						aria-label="Refresh Preview"
@@ -298,7 +296,7 @@ function BlockViewerToolbar() {
 				/>
 
 				<Button
-					className="w-fit gap-1.5 rounded-md px-2 font-mono font-normal text-[0.8125rem] shadow-none active:scale-none [&_svg]:text-muted-foreground"
+					className="w-fit gap-1.5 px-2 font-mono font-normal text-[0.8125rem] shadow-none active:scale-none [&_svg]:text-muted-foreground"
 					variant="outline"
 					size="sm"
 					onClick={() => {

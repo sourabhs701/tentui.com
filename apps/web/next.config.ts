@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
 	turbopack: {
 		root: path.resolve(import.meta.dirname, "../.."),
 	},
+	async rewrites() {
+		return [
+			{
+				source: "/components/:slug.mdx",
+				destination: "/doc.mdx/:slug",
+			},
+		];
+	},
 };
 
 export default nextConfig;

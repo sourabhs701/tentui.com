@@ -58,7 +58,7 @@ export function ComponentCard({
 				onMouseLeave={stopPreview}
 				onFocus={startPreview}
 				onBlur={stopPreview}
-				className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-muted shadow-card transition-all duration-300 hover:border-input hover:shadow-card-hover"
+				className="group relative flex flex-col overflow-hidden rounded-xl border bg-muted shadow-card transition-all duration-300"
 			>
 				{/* ── Expandable hover info (upper side) ── */}
 				<motion.div
@@ -109,7 +109,7 @@ export function ComponentCard({
 							duration: 0.5,
 							ease: [0.22, 1, 0.36, 1],
 						}}
-						className="relative w-full overflow-hidden rounded-xl bg-zinc-50 shadow-surface-inset transition-colors group-hover:bg-zinc-100/50 dark:bg-zinc-900/80 dark:group-hover:bg-zinc-800/80"
+						className="relative w-full overflow-hidden rounded-xl bg-background shadow-surface-inset transition-colors"
 					>
 						{videoBase &&
 							themes.map((theme, index) => (
@@ -140,6 +140,13 @@ export function ComponentCard({
 									unoptimized
 								/>
 							))}
+						{!videoBase && !imageBase && (
+							<div className="flex items-center justify-center p-4">
+								<p className="text-muted-foreground text-sm">
+									{component.title ?? component.name}
+								</p>
+							</div>
+						)}
 					</motion.div>
 				</div>
 			</Link>
