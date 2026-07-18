@@ -1,7 +1,9 @@
 import type { Route } from "next";
 import Link from "next/link";
 import { TentUiMark } from "@/components/tentui-mark";
+import { blockCategories } from "@/config/registry";
 import { cn } from "@/lib/utils";
+import { components } from "@/registry/components/_registry";
 import FooterBigLogo from "./footer-big-logo";
 import Marker from "./marker";
 import Section from "./section";
@@ -12,11 +14,17 @@ type FooterLink = {
 	external?: boolean;
 };
 
-const productLinks: FooterLink[] = [
-	{ label: "Components", href: "/components" },
-	{ label: "Blocks", href: "/blocks" },
-	{ label: "Status", href: "https://status.srb.codes", external: true },
-];
+const componentLinks: FooterLink[] = components
+	.slice(0, 10)
+	.map((component) => ({
+		label: component.title ?? component.name,
+		href: `/components/${component.name}`,
+	}));
+
+const blockCategoryLinks: FooterLink[] = blockCategories.map((category) => ({
+	label: category.title,
+	href: `/blocks/${category.name}`,
+}));
 
 const legalLinks: FooterLink[] = [
 	{ label: "License", href: "/license" },
@@ -24,8 +32,6 @@ const legalLinks: FooterLink[] = [
 	{ label: "Privacy", href: "/privacy" },
 	{ label: "Copyright", href: "/copyright" },
 ];
-
-const companyLinks: FooterLink[] = [];
 
 const socialLinks: FooterLink[] = [
 	{
@@ -80,35 +86,38 @@ function Footer() {
 			<Section line={false} borderClassName="border-primary-foreground/15">
 				<Grain opacity={0.1} />
 				<div className="flex flex-col divide-y divide-dashed divide-primary-foreground/15 md:flex-row md:divide-x md:divide-y-0">
-					<div className="flex items-center gap-2 px-4 py-7 md:basis-1/5">
-						<TentUiMark className="h-5 w-auto text-white" />
-						<span className="ml-1 font-mono text-[12px] text-white tracking-tight">
-							&copy; 2026
-						</span>
+					<div className="px-4 py-7 md:basis-1/4">
+						<div className="flex items-center gap-2">
+							<TentUiMark className="h-5 w-auto text-white" />
+							<span className="font-mono text-[12px] text-white tracking-tight">
+								TentUI
+							</span>
+							<span className="text-primary-foreground/35">&middot;</span>
+							<span className="font-mono text-[12px] text-primary-foreground/65 tracking-tight">
+								&copy; 2026
+							</span>
+						</div>
+						<LinkList links={socialLinks} />
 					</div>
 
-					<div className="relative px-4 py-7 md:basis-1/5">
+					<div className="relative px-4 py-7 md:basis-1/4">
 						<Marker position="top-left" />
-						<h3 className="font-mono text-[12px] tracking-tight">Product</h3>
-						<LinkList links={productLinks} />
+						<h3 className="font-mono text-[12px] tracking-tight">Components</h3>
+						<LinkList links={componentLinks} />
 					</div>
 
-					<div className="relative px-4 py-7 md:basis-1/5">
+					<div className="relative px-4 py-7 md:basis-1/4">
+						<Marker position="top-left" />
+						<h3 className="font-mono text-[12px] tracking-tight">
+							Shadcn Compatible Blocks
+						</h3>
+						<LinkList links={blockCategoryLinks} />
+					</div>
+
+					<div className="relative px-4 py-7 md:basis-1/4">
 						<Marker position="top-left" />
 						<h3 className="font-mono text-[12px] tracking-tight">Legal</h3>
 						<LinkList links={legalLinks} />
-					</div>
-
-					<div className="relative px-4 py-7 md:basis-1/5">
-						<Marker position="top-left" />
-						<h3 className="font-mono text-[12px] tracking-tight">Company</h3>
-						<LinkList links={companyLinks} />
-					</div>
-
-					<div className="relative px-4 py-7 md:basis-1/5">
-						<Marker position="top-left" />
-						<h3 className="font-mono text-[12px] tracking-tight">Social</h3>
-						<LinkList links={socialLinks} />
 					</div>
 				</div>
 				<FooterBigLogo />

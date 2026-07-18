@@ -53,7 +53,7 @@ export function SiteHeader({ showGutters = true }: SiteHeaderProps) {
 					<div className="screen-line-top screen-line-bottom mx-auto flex h-(--header-height) items-center gap-2 border-line px-2 group-has-data-[slot=layout-wide]/layout:container after:z-1 after:bg-border group-has-data-[slot=layout-6xl]/layout:max-w-6xl sm:gap-4">
 						<BrandContextMenu>
 							<Link href="/" aria-label="TentUI home">
-								<TentUiMark className="size-6 w-auto shrink-0 text-foreground" />
+								<TentUiMark className="size-6 w-auto shrink-0 text-primary" />
 							</Link>
 						</BrandContextMenu>
 

@@ -8,11 +8,13 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@tentui.com/ui/components/tooltip";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { motion } from "motion/react";
 import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useMetalClickSound } from "@/hooks/soundcn/use-metal-click-sound";
 import { cn } from "@/lib/utils";
@@ -21,9 +23,13 @@ import type { SidebarIconHandle } from "./sidebar-icon";
 import { SidebarIcon } from "./sidebar-icon";
 
 const DEFAULT_SIDEBAR_OPEN = true;
+const sidebarOpenAtom = atomWithStorage(
+	"tentui:sidebar-open:v1",
+	DEFAULT_SIDEBAR_OPEN,
+);
 
 export function Sidebar({ children }: { children: React.ReactNode }) {
-	const [isOpen, setIsOpen] = useState(DEFAULT_SIDEBAR_OPEN);
+	const [isOpen, setIsOpen] = useAtom(sidebarOpenAtom);
 	const [click] = useMetalClickSound();
 
 	const sidebarIconref = useRef<SidebarIconHandle>(null);
@@ -31,7 +37,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 	const toggleSidebar = useCallback(() => {
 		click();
 		setIsOpen((previousIsOpen) => !previousIsOpen);
-	}, [click]);
+	}, [click, setIsOpen]);
 
 	useHotkeys("s", toggleSidebar);
 
