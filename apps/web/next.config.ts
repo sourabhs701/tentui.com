@@ -13,6 +13,15 @@ const nextConfig: NextConfig = {
 	turbopack: {
 		root: path.resolve(import.meta.dirname, "../.."),
 	},
+	images: {
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "cdn.dribbble.com",
+				pathname: "/userupload/**",
+			},
+		],
+	},
 	async rewrites() {
 		return [
 			{

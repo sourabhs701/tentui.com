@@ -1,13 +1,12 @@
 "use client";
 
 import { cn } from "@tentui.com/ui/lib/utils";
+import { DownloadIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { GITHUB_REPOSITORY } from "@/config/site";
 import { copyText } from "@/utils/copy";
 
-import { GitHubIcon } from "./icons";
 import { getTentUiMarkSVG, TentUiMark } from "./tentui-mark";
 
 type MenuPosition = {
@@ -59,6 +58,19 @@ export function BrandContextMenu({ children }: { children: React.ReactNode }) {
 		toast.error("Unable to copy the TentUI mark");
 	};
 
+	const downloadMark = () => {
+		setPosition(null);
+
+		const downloadUrl = URL.createObjectURL(
+			new Blob([getTentUiMarkSVG()], { type: "image/svg+xml" }),
+		);
+		const downloadLink = document.createElement("a");
+		downloadLink.href = downloadUrl;
+		downloadLink.download = "tentui-mark.svg";
+		downloadLink.click();
+		URL.revokeObjectURL(downloadUrl);
+	};
+
 	return (
 		<>
 			<span
@@ -95,19 +107,15 @@ export function BrandContextMenu({ children }: { children: React.ReactNode }) {
 						Copy mark as SVG
 					</button>
 
-					<div aria-hidden className="my-1 h-px bg-border" />
-
-					<a
+					<button
+						type="button"
 						role="menuitem"
-						href={`https://github.com/${GITHUB_REPOSITORY}`}
-						target="_blank"
-						rel="noopener noreferrer"
-						className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground"
-						onClick={() => setPosition(null)}
+						onClick={downloadMark}
+						className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground"
 					>
-						<GitHubIcon className="size-4" />
-						View source code
-					</a>
+						<DownloadIcon className="size-4" />
+						Download mark as SVG
+					</button>
 				</div>
 			)}
 		</>

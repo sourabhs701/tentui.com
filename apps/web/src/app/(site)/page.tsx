@@ -1,25 +1,9 @@
-"use client";
-
-import Section from "@/components/section";
+import { Hero } from "./_components/hero";
 
 export default function Home() {
 	return (
 		<div className="relative isolate min-h-svh overflow-hidden bg-background text-foreground">
-			<Section className="overflow-hidden">
-				<div className="h-100" />
-			</Section>
-			<Section className="overflow-hidden">
-				<div className="h-100" />
-			</Section>
-			<Section className="overflow-hidden">
-				<div className="h-100" />
-			</Section>
-			<Section className="overflow-hidden">
-				<div className="h-100" />
-			</Section>
-			<Section className="overflow-hidden">
-				<div className="h-100" />
-			</Section>
+			<Hero />
 			<div className="py-1.5" />
 		</div>
 	);

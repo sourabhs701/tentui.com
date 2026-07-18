@@ -25,7 +25,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 					<ReactQueryDevtools />
 				</QueryClientProvider>
 			</TooltipProvider>
-			<Toaster richColors />
+			<Toaster />
 		</ThemeProvider>
 	);
 }
