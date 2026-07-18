@@ -14,8 +14,7 @@ export const experiments: WorkbenchExperiment[] = [
 	{
 		slug: "agency-hero-01",
 		title: "Agency Hero 01",
-		description:
-			"Animated agency hero with availability badge, CTAs, background art, and tech carousel.",
+		description: "Animated agency hero with availability badge.",
 		fullBleed: true,
 		component: AgencyHero01,
 	},

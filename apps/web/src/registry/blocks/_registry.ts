@@ -4,8 +4,7 @@ export const blocks: Registry["items"] = [
 	{
 		name: "agency-hero-01",
 		title: "Agency Hero 01",
-		description:
-			"Animated agency hero with availability badge, CTAs, background art, and tech carousel.",
+		description: "Animated agency hero.",
 		type: "registry:block",
 		dependencies: ["motion", "react-fast-marquee"],
 		files: [

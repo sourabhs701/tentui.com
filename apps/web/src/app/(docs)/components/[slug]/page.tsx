@@ -130,8 +130,8 @@ export default async function ComponentPage({
 	const { previous, next } = findNeighbour(getComponentDocs(), slug);
 
 	return (
-		<div className="flex min-w-0">
-			<ComponentContentCol className="md:max-w-3xl">
+		<div className="flex min-w-0 px-2">
+			<ComponentContentCol>
 				<JsonLdScript data={softwareSourceCodeJsonLd(doc)} />
 				<JsonLdScript
 					data={breadcrumbJsonLd([
@@ -149,7 +149,7 @@ export default async function ComponentPage({
 				/>
 				<div className="flex items-center justify-between">
 					<Button
-						className="h-7 gap-2 border-none px-0 text-muted-foreground tracking-wider hover:text-foreground hover:no-underline"
+						className="h-7 gap-2 border-none pr-0 pl-6 text-muted-foreground tracking-wider hover:text-foreground hover:no-underline sm:pl-0"
 						variant="link"
 						size="sm"
 						nativeButton={false}
@@ -238,13 +238,13 @@ export default async function ComponentPage({
 				<div className="py-4">
 					<h1
 						data-slot="doc-title"
-						className="text-balance px-4 font-medium text-4xl tracking-tight"
+						className="text-balance font-medium text-4xl tracking-tight"
 					>
 						{doc.metadata.title}
 					</h1>
 				</div>
 
-				<Prose className="px-(--page-padding) pt-8 [--page-padding:--spacing(4)]">
+				<Prose className="pt-8 [--page-padding:--spacing(4)]">
 					<p className="text-muted-foreground">{doc.metadata.description}</p>
 
 					<TOCInline className="xl:hidden" items={toc} />

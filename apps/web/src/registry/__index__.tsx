@@ -8,7 +8,7 @@ export const Index = {
 	"agency-hero-01": {
 		name: "agency-hero-01",
 		title: "Agency Hero 01",
-		description: "Animated agency hero with availability badge, CTAs, background art, and tech carousel.",
+		description: "Animated agency hero.",
 		type: "registry:block",
 		files: [{"path":"src/registry/blocks/agency-hero-01/agency-hero-01.tsx","type":"registry:component","target":"@components/agency-hero-01.tsx"}],
 		component: React.lazy(async () => {

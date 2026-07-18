@@ -35,7 +35,7 @@ export default function ComponentPageLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<ComponentPageRoot>
+		<ComponentPageRoot className="px-2">
 			<div className="relative mt-2 flex w-full gap-2 overflow-x-clip">
 				<ComponentLeftCol className="max-lg:block max-lg:w-0">
 					<Sidebar>
