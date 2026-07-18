@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const LEGAL = [
+	{ href: "/license" as Route, label: "License" },
 	{ href: "/terms" as Route, label: "Terms" },
 	{ href: "/privacy" as Route, label: "Privacy" },
 	{ href: "/copyright" as Route, label: "Copyright" },

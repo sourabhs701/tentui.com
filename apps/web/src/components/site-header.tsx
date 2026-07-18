@@ -20,20 +20,29 @@ import { SiteNavigation } from "./site-navigation";
 import { TentUiMark } from "./tentui-mark";
 import { ThemeToggle } from "./theme-toggle";
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+	showGutters?: boolean;
+};
+
+export function SiteHeader({ showGutters = true }: SiteHeaderProps) {
 	return (
 		<header className="sticky top-0 z-50 mt-2 max-w-screen overflow-x-clip bg-background">
 			<div
 				className={cn(
-					"relative isolate mx-auto w-full px-2 lg:w-[calc(100%-4rem)]",
-					"border-border lg:border-x lg:border-dashed",
+					"relative isolate mx-auto w-full px-2",
+					showGutters &&
+						"border-border lg:w-[calc(100%-4rem)] lg:border-x lg:border-dashed",
 				)}
 			>
-				<HeaderGutterGrain />
-				<Marker position="bottom-left" className="hidden lg:block" />
-				<Marker position="bottom-right" className="hidden lg:block" />
-				<Marker position="top-left" className="hidden lg:block" />
-				<Marker position="top-right" className="hidden lg:block" />
+				{showGutters && (
+					<>
+						<HeaderGutterGrain />
+						<Marker position="bottom-left" className="hidden lg:block" />
+						<Marker position="bottom-right" className="hidden lg:block" />
+						<Marker position="top-left" className="hidden lg:block" />
+						<Marker position="top-right" className="hidden lg:block" />
+					</>
+				)}
 				<div
 					className={cn(
 						"relative mx-auto max-w-6xl group-has-data-[slot=layout-wide]/layout:container",

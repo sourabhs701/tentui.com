@@ -8,7 +8,7 @@ export default function BlocksRootLayout({
 }) {
 	return (
 		<div className="group/layout relative isolate grid min-h-svh min-w-0 grid-rows-[auto_1fr] overflow-x-clip">
-			<SiteHeader />
+			<SiteHeader showGutters={false} />
 			<main
 				className="container mx-auto overflow-x-clip"
 				data-slot="layout-wide"

@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		{ url: SITE_INFO.url },
 		{ url: `${SITE_INFO.url}/components` },
 		{ url: `${SITE_INFO.url}/blocks` },
+		{ url: `${SITE_INFO.url}/license` },
 		{ url: `${SITE_INFO.url}/terms` },
 		{ url: `${SITE_INFO.url}/privacy` },
 		{ url: `${SITE_INFO.url}/copyright` },

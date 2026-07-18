@@ -19,6 +19,7 @@ const productLinks: FooterLink[] = [
 ];
 
 const legalLinks: FooterLink[] = [
+	{ label: "License", href: "/license" },
 	{ label: "Terms of Service", href: "/terms" },
 	{ label: "Privacy", href: "/privacy" },
 	{ label: "Copyright", href: "/copyright" },
