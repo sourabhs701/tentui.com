@@ -15,9 +15,9 @@ export const components: Registry["items"] = [
 				target: "@components/world-map.tsx",
 			},
 			{
-				path: "components/world-map/world-map.geo.json",
+				path: "public/data/world-map.geo.json",
 				type: "registry:file",
-				target: "@components/world-map.geo.json",
+				target: "~/public/data/world-map.geo.json",
 			},
 		],
 		categories: [],

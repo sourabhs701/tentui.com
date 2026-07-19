@@ -4,7 +4,7 @@ description: Explore countries with zoom, pan, selection, and hover details.
 image: https://cdn.srb.codes/images/components/world-map-light.webp
 new: true
 createdAt: 2026-05-05
-updatedAt: 2026-05-05
+updatedAt: 2026-07-19
 ---
 
 <ComponentPreview name="world-map-demo" />
@@ -52,14 +52,14 @@ npm install --save-dev @types/react-simple-maps
   collapsible="false"
 />
 
-<Step>Copy and paste the component and geography data into your project</Step>
+<Step>Copy and paste the component into your project</Step>
 
 <ComponentSource name="world-map" title="components/world-map.tsx" />
 
-<ComponentSource
-  src="src/registry/components/world-map/world-map.geo.json"
-  title="components/world-map.geo.json"
-/>
+<Step>Add the geography data to your public directory</Step>
+
+Download [world-map.geo.json](/data/world-map.geo.json) and save it as
+`public/data/world-map.geo.json`.
 
 <Step>Update the import paths to match your project setup</Step>
 

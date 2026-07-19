@@ -28,7 +28,7 @@ export const Index = {
 		title: "Interactive World Map",
 		description: "Explore countries with zoom, pan, selection, and hover details.",
 		type: "registry:component",
-		files: [{"path":"src/registry/components/world-map/world-map.tsx","type":"registry:component","target":"@components/world-map.tsx"},{"path":"src/registry/components/world-map/world-map.geo.json","type":"registry:file","target":"@components/world-map.geo.json"}],
+		files: [{"path":"src/registry/components/world-map/world-map.tsx","type":"registry:component","target":"@components/world-map.tsx"},{"path":"public/data/world-map.geo.json","type":"registry:file","target":"~/public/data/world-map.geo.json"}],
 		component: React.lazy(async () => {
 			const module = (await import("@/registry/components/world-map/world-map")) as unknown as {
 				default?: React.ComponentType;

@@ -10,7 +10,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
-import worldGeoData from "./world-map.geo.json";
+const WORLD_MAP_GEOGRAPHY_URL = "/data/world-map.geo.json";
 
 export interface GeoFeature {
 	rsmKey: string;
@@ -56,7 +56,7 @@ export function WorldMap({
 		(userCounts && tooltipContent && userCounts[tooltipContent]) ?? 0;
 
 	const renderGeographies = () => (
-		<Geographies geography={worldGeoData}>
+		<Geographies geography={WORLD_MAP_GEOGRAPHY_URL}>
 			{({ geographies }: { geographies: GeoFeature[] }) =>
 				geographies.map((geo) => {
 					const countryName = geo.properties.name;

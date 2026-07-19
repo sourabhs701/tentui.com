@@ -26,9 +26,10 @@ function withLocalFilePaths(item: RegistryItem): RegistryItem {
 		files:
 			item.files?.map((file) => ({
 				...file,
-				path: file.path.startsWith("src/")
-					? file.path
-					: `src/registry/${file.path}`,
+				path:
+					file.path.startsWith("src/") || file.path.startsWith("public/")
+						? file.path
+						: `src/registry/${file.path}`,
 			})) ?? [],
 	};
 }
