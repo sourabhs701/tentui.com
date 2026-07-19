@@ -2,9 +2,8 @@
 title: Contextful Save Button
 description: Show async save progress and outcomes without leaving the button.
 image: https://cdn.srb.codes/images/components/animated-save-button-light.webp
-new: true
 createdAt: 2026-07-19
-updatedAt: 2026-07-19
+updatedAt: 2026-07-20
 ---
 
 <ComponentPreview name="contextful-save-button-demo" />
@@ -86,10 +85,13 @@ remove transforms and stop the loading icon's rotation.
 
 ### ContextfulSaveButton
 
-<AutoTypeTable
-  path="src/registry/components/contextful-save-button/contextful-save-button.tsx"
-  name="ContextfulSaveButtonProps"
-/>
+| Prop       | Type                               | Default         | Description                                                   |
+| ---------- | ---------------------------------- | --------------- | ------------------------------------------------------------- |
+| `onClick`  | `(event) => void \| Promise<void>` | —               | Runs the save action; rejection shows the error state.        |
+| `labels`   | `ContextfulSaveButtonLabels`       | Built-in labels | Overrides the `idle`, `loading`, `success`, or `error` label. |
+| `disabled` | `boolean`                          | `false`         | Prevents the save action.                                     |
+
+All other native `button` props except `children` are forwarded to the button.
 
 ## Examples
 

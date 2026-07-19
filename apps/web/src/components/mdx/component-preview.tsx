@@ -1,5 +1,7 @@
 "use client";
 
+import "dialkit/styles.css";
+
 import { Button } from "@tentui.com/ui/components/button";
 import {
 	Tabs,
@@ -13,12 +15,18 @@ import {
 	TooltipTrigger,
 } from "@tentui.com/ui/components/tooltip";
 import { Code as CodeInline } from "@tentui.com/ui/components/typography";
-import { Repeat, Settings2 } from "lucide-react";
+import { RotateCcw, Settings2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import React, { useMemo, useState } from "react";
+import { trackEvent } from "@/lib/events";
 import { cn } from "@/lib/utils";
 import { Index } from "@/registry/__index__";
+import { FullScreenIcon } from "../icons";
 import { CodeCollapsibleWrapper } from "./code-collapsible-wrapper";
+
+const DialRoot = React.lazy(() =>
+	import("dialkit").then((module) => ({ default: module.DialRoot })),
+);
 
 const registryIndex = Index as unknown as Record<
 	string,
@@ -29,7 +37,8 @@ export function ComponentPreview({
 	className,
 	name,
 	customizeUrl,
-	canReplay = false,
+	canReload = false,
+	canConfigure = false,
 	prose = false,
 	codeCollapsible = false,
 	remountOnThemeChange = false,
@@ -38,17 +47,24 @@ export function ComponentPreview({
 }: React.ComponentProps<"div"> & {
 	name: string;
 	customizeUrl?: string;
-	canReplay?: boolean;
+	canReload?: boolean;
+	canConfigure?: boolean;
 	prose?: boolean;
 	codeCollapsible?: boolean;
 	remountOnThemeChange?: boolean;
 }) {
 	const { resolvedTheme } = useTheme();
 
-	const [replay, setReplay] = useState(0);
+	const [reloadKey, setReloadKey] = useState(0);
+	const [reloadRotation, setReloadRotation] = useState(0);
+	const [isConfiguring, setIsConfiguring] = useState(false);
 
 	const Codes = React.Children.toArray(children) as React.ReactElement[];
 	const Code = Codes[0];
+	const dialKitTheme =
+		resolvedTheme === "dark" || resolvedTheme === "light"
+			? resolvedTheme
+			: "system";
 
 	const Preview = useMemo(() => {
 		const Component = registryIndex[name]?.component;
@@ -74,7 +90,7 @@ export function ComponentPreview({
 			{...props}
 		>
 			<Tabs defaultValue="preview" className="gap-0">
-				<div className="z-1 px-4">
+				<div className="z-1 flex items-center justify-between px-4">
 					<TabsList
 						variant="line"
 						className="inset-ring-0 h-10 rounded-none bg-transparent p-0 dark:bg-transparent [&_svg]:me-2 [&_svg]:size-4 [&_svg]:text-muted-foreground"
@@ -86,20 +102,42 @@ export function ComponentPreview({
 							Code
 						</TabsTrigger>
 					</TabsList>
+					<Button
+						className="border-none dark:hover:bg-muted"
+						variant="ghost"
+						size="icon-xs"
+						nativeButton={false}
+						render={
+							<a
+								href={`/preview/${name}`}
+								target="_blank"
+								rel="noopener"
+								aria-label="Open in New Tab"
+								onClick={() =>
+									trackEvent({
+										name: "block_viewer_open_preview",
+										properties: { block: name },
+									})
+								}
+							>
+								<FullScreenIcon className="size-4" />
+							</a>
+						}
+					/>
 				</div>
 
 				<TabsContent className="px-1 pb-1" value="preview">
 					<div
 						data-slot="preview"
-						data-show-buttons={canReplay || !!customizeUrl}
+						data-show-buttons={canReload || canConfigure || !!customizeUrl}
 						className="relative rounded-[9px] border bg-background p-2 data-[show-buttons=true]:py-8.75"
 					>
-						{(canReplay || customizeUrl) && (
+						{(canReload || canConfigure || customizeUrl) && (
 							<div
 								data-slot="buttons"
 								className="absolute top-0.75 right-0.75 flex items-center"
 							>
-								{canReplay && (
+								{canReload && (
 									<Tooltip>
 										<TooltipTrigger
 											render={
@@ -107,14 +145,53 @@ export function ComponentPreview({
 													className="size-7 rounded-[5px] border-none"
 													variant="ghost"
 													size="icon-sm"
-													aria-label="Replay"
-													onClick={() => setReplay((v) => v + 1)}
+													aria-label="Reload preview"
+													onClick={(event) => {
+														setReloadKey((value) => value + 1);
+														if (event.detail > 0) {
+															setReloadRotation((value) => value + 180);
+														}
+													}}
 												>
-													<Repeat />
+													<span
+														aria-hidden="true"
+														className="motion-reduce:transform-none! inline-flex transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none"
+														style={{
+															transform: `rotate(${reloadRotation}deg)`,
+														}}
+													>
+														<RotateCcw />
+													</span>
 												</Button>
 											}
 										/>
-										<TooltipContent>Replay</TooltipContent>
+										<TooltipContent>Reload preview</TooltipContent>
+									</Tooltip>
+								)}
+
+								{canConfigure && (
+									<Tooltip>
+										<TooltipTrigger
+											render={
+												<Button
+													className="size-7 rounded-[5px] border-none"
+													variant="ghost"
+													size="icon-sm"
+													aria-label={
+														isConfiguring
+															? "Close preview configuration"
+															: "Configure preview"
+													}
+													aria-pressed={isConfiguring}
+													onClick={() => setIsConfiguring((value) => !value)}
+												>
+													<Settings2 />
+												</Button>
+											}
+										/>
+										<TooltipContent>
+											{isConfiguring ? "Close configuration" : "Configure"}
+										</TooltipContent>
 									</Tooltip>
 								)}
 
@@ -147,7 +224,7 @@ export function ComponentPreview({
 						)}
 
 						<div
-							key={`${replay}-${remountOnThemeChange ? (resolvedTheme ?? "system") : "static"}`}
+							key={`${reloadKey}-${remountOnThemeChange ? (resolvedTheme ?? "system") : "static"}`}
 							data-slot="component-preview"
 							className="flex min-h-72 items-center justify-center font-sans"
 						>
@@ -181,6 +258,17 @@ export function ComponentPreview({
 					)}
 				</TabsContent>
 			</Tabs>
+
+			{isConfiguring && (
+				<React.Suspense fallback={null}>
+					<DialRoot
+						defaultOpen
+						onOpenChange={setIsConfiguring}
+						productionEnabled
+						theme={dialKitTheme}
+					/>
+				</React.Suspense>
+			)}
 		</div>
 	);
 }

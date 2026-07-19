@@ -2,9 +2,8 @@
 title: Interactive World Map
 description: Explore countries with zoom, pan, selection, and hover details.
 image: https://cdn.srb.codes/images/components/world-map-light.webp
-new: true
 createdAt: 2026-05-05
-updatedAt: 2026-07-19
+updatedAt: 2026-07-20
 ---
 
 <ComponentPreview name="world-map-demo" />
@@ -102,10 +101,14 @@ do not rely on color or hover tooltips alone to communicate state.
 
 ### WorldMap
 
-<AutoTypeTable
-  path="src/registry/components/world-map/world-map.tsx"
-  name="WorldMapProps"
-/>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `selectedCountries` | `Set<string>` | Required | Country names to highlight. |
+| `onCountryClick` | `(geo: GeoFeature) => void` | — | Runs when an interactive country is clicked. |
+| `static` | `boolean` | `false` | Disables zoom, pan, clicks, and tooltips. |
+| `userCounts` | `Record<string, number>` | — | Counts keyed by country name for hover tooltips. |
+
+All other native `div` props are forwarded to the map container.
 
 ## Examples
 

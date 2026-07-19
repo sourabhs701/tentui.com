@@ -1,0 +1,85 @@
+---
+title: 3D Button
+description: Add physical depth and responsive press feedback to primary actions.
+image: https://cdn.srb.codes/images/components/3d-button-light.webp
+createdAt: 2026-07-20
+updatedAt: 2026-07-20
+---
+
+<ComponentPreview name="3d-button-demo" canReload />
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/3d-button
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install class-variance-authority clsx tailwind-merge
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="3d-button" title="components/3d-button.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ThreeDButton } from "@/components/3d-button";
+```
+
+```tsx
+<ThreeDButton>Continue</ThreeDButton>
+```
+
+## Accessibility
+
+`ThreeDButton` renders a native `button`, preserving browser keyboard, focus, and
+disabled behavior. Add an accessible label to icon-only buttons and set
+`type="submit"` explicitly when submitting a form.
+
+Reduced-motion preferences remove movement while preserving a short opacity
+transition.
+
+## API reference
+
+### ThreeDButton
+
+| Prop       | Type                                      | Default    | Description                    |
+| ---------- | ----------------------------------------- | ---------- | ------------------------------ |
+| `children` | `ReactNode`                               | —          | Button content.                |
+| `variant`  | `"solid" \| "secondary" \| "destructive"` | `"solid"`  | Visual treatment.              |
+| `size`     | `"sm" \| "md" \| "lg" \| "icon"`          | `"md"`     | Button dimensions and spacing. |
+| `type`     | `"button" \| "submit" \| "reset"`         | `"button"` | Native button behavior.        |
+
+All other native `button` props are forwarded to the underlying element.

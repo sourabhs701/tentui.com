@@ -151,7 +151,7 @@ export function SidebarContent({ groups }: { groups: MenuGroup<Route>[] }) {
 						{!!group.newCount && (
 							<Badge
 								variant="secondary"
-								className="h-auto rounded-full bg-muted px-1.5 py-0.5 font-bold text-[9px] tracking-normal"
+								className="h-auto rounded-full bg-linear-to-b from-blue-400 to-blue-500 px-1.5 py-0.5 font-bold text-[9px] text-white tracking-normal"
 							>
 								New {group.newCount}
 							</Badge>

@@ -23,6 +23,24 @@ export const Index = {
 		categories: ["hero"],
 		meta: {"createdAt":"2026-07-17","iframeHeight":760,"previewClassName":"min-h-screen"},
 	},
+	"3d-button": {
+		name: "3d-button",
+		title: "3D Button",
+		description: "Add physical depth and responsive press feedback to primary actions.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/3d-button/3d-button.tsx","type":"registry:component","target":"@components/3d-button.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/3d-button/3d-button")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for 3d-button");
+			}
+			return { default: module.default };
+		}),
+		categories: ["buttons"],
+		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/3d-button-light","video":"https://cdn.srb.codes/videos/components/3d-button-light"},
+	},
 	"world-map": {
 		name: "world-map",
 		title: "Interactive World Map",
@@ -77,6 +95,42 @@ export const Index = {
 		categories: [],
 		meta: {"createdAt":"2026-07-19","video":"https://cdn.srb.codes/videos/components/animated-arrow","image":"https://cdn.srb.codes/images/components/animated-arrow"},
 	},
+	"scribbled-text": {
+		name: "scribbled-text",
+		title: "Scribbled Text",
+		description: "Mark inline text with colorful hand-drawn annotations.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/scribbled-text/scribbled-text.tsx","type":"registry:component","target":"@components/scribbled-text.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/scribbled-text/scribbled-text")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text");
+			}
+			return { default: module.default };
+		}),
+		categories: ["typography"],
+		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
+	},
+	"3d-button-demo": {
+		name: "3d-button-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/3d-button-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/3d-button-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for 3d-button-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[40rem] w-full p-0"},
+	},
 	"world-map-demo": {
 		name: "world-map-demo",
 		title: undefined,
@@ -130,6 +184,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-demo": {
+		name: "scribbled-text-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[56rem] w-full p-0"},
 	}
 } as const;
 

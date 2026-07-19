@@ -1,0 +1,108 @@
+---
+title: Scribbled Text
+description: Mark inline text with colorful hand-drawn annotations.
+image: https://cdn.srb.codes/images/components/world-map-light.webp
+createdAt: 2026-07-20
+updatedAt: 2026-07-20
+---
+
+<ComponentPreview name="scribbled-text-demo" canReload canConfigure />
+
+## Features
+
+- Includes twelve underline, highlight, enclosure, and cancellation marks.
+- Inherits typography and text color from the surrounding content.
+- Draws each annotation once when it enters the viewport.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/scribbled-text
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install clsx motion tailwind-merge
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="scribbled-text" title="components/scribbled-text.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ScribbledText } from "@/components/scribbled-text";
+```
+
+```tsx
+<p>
+  This detail is <ScribbledText variant="circle">important</ScribbledText>.
+</p>
+```
+
+Each phrase stays on one line so its mark remains aligned. Keep annotated phrases
+short enough to fit their container.
+
+Customize the mark without changing the surrounding text styles.
+
+```tsx
+<ScribbledText variant="arrowUnderline" scribbleClassName="text-rose-400">
+  Read the announcement
+</ScribbledText>
+```
+
+Render a complete mark without the drawing animation.
+
+```tsx
+<ScribbledText variant="box" animated={false}>
+  Always visible
+</ScribbledText>
+```
+
+## Accessibility
+
+Scribble graphics are hidden from assistive technology, leaving the wrapped text
+unchanged. The component is visual-only; use semantic elements such as `mark` or
+`del` when the annotation conveys meaning.
+
+With reduced motion enabled, every annotation renders complete without its
+drawing animation.
+
+## API reference
+
+### ScribbledText
+
+<AutoTypeTable
+  path="src/registry/components/scribbled-text/scribbled-text.tsx"
+  name="ScribbledTextProps"
+/>
