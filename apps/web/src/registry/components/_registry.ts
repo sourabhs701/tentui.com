@@ -2,22 +2,25 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
-		name: "logos-carousel",
+		name: "animated-arrow",
 		type: "registry:component",
-		title: "Logos Carousel",
-		description: "Cycle through logos column by column in a staggered wave.",
-		dependencies: ["motion"],
+		title: "Animated Arrow",
+		description:
+			"Slide an arrow across its container when its parent is hovered.",
+		dependencies: ["lucide-react"],
 		files: [
 			{
-				path: "components/logos-carousel/logos-carousel.tsx",
+				path: "components/animated-arrow/animated-arrow.tsx",
 				type: "registry:component",
-				target: "@components/logos-carousel.tsx",
+				target: "@components/animated-arrow.tsx",
 			},
 		],
-		categories: ["marketing"],
+		categories: [],
 		meta: {
-			createdAt: "2026-06-25",
+			createdAt: "2026-07-19",
+			video: "https://cdn.srb.codes/videos/components/animated-arrow",
+			image: "https://cdn.srb.codes/images/components/animated-arrow",
 		},
-		docs: "https://tentui.com/components/logos-carousel",
+		docs: "https://tentui.com/components/animated-arrow",
 	},
 ];

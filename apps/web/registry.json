@@ -29,26 +29,26 @@
       "type": "registry:block"
     },
     {
-      "name": "logos-carousel",
-      "title": "Logos Carousel",
-      "description": "Cycle through logos column by column in a staggered wave.",
+      "name": "animated-arrow",
+      "title": "Animated Arrow",
+      "description": "Slide an arrow across its container when its parent is hovered.",
       "dependencies": [
-        "motion"
+        "lucide-react"
       ],
       "files": [
         {
-          "path": "src/registry/components/logos-carousel/logos-carousel.tsx",
+          "path": "src/registry/components/animated-arrow/animated-arrow.tsx",
           "type": "registry:component",
-          "target": "@components/logos-carousel.tsx"
+          "target": "@components/animated-arrow.tsx"
         }
       ],
       "meta": {
-        "createdAt": "2026-06-25"
+        "createdAt": "2026-07-19",
+        "video": "https://cdn.srb.codes/videos/components/animated-arrow",
+        "image": "https://cdn.srb.codes/images/components/animated-arrow"
       },
-      "docs": "https://tentui.com/components/logos-carousel",
-      "categories": [
-        "marketing"
-      ],
+      "docs": "https://tentui.com/components/animated-arrow",
+      "categories": [],
       "type": "registry:component"
     }
   ]

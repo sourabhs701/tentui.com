@@ -23,36 +23,36 @@ export const Index = {
 		categories: ["hero"],
 		meta: {"createdAt":"2026-07-17","iframeHeight":760,"previewClassName":"min-h-screen"},
 	},
-	"logos-carousel": {
-		name: "logos-carousel",
-		title: "Logos Carousel",
-		description: "Cycle through logos column by column in a staggered wave.",
+	"animated-arrow": {
+		name: "animated-arrow",
+		title: "Animated Arrow",
+		description: "Slide an arrow across its container when its parent is hovered.",
 		type: "registry:component",
-		files: [{"path":"src/registry/components/logos-carousel/logos-carousel.tsx","type":"registry:component","target":"@components/logos-carousel.tsx"}],
+		files: [{"path":"src/registry/components/animated-arrow/animated-arrow.tsx","type":"registry:component","target":"@components/animated-arrow.tsx"}],
 		component: React.lazy(async () => {
-			const module = (await import("@/registry/components/logos-carousel/logos-carousel")) as unknown as {
+			const module = (await import("@/registry/components/animated-arrow/animated-arrow")) as unknown as {
 				default?: React.ComponentType;
 			};
 			if (!module.default) {
-				throw new Error("No default export found for logos-carousel");
+				throw new Error("No default export found for animated-arrow");
 			}
 			return { default: module.default };
 		}),
-		categories: ["marketing"],
-		meta: {"createdAt":"2026-06-25"},
+		categories: [],
+		meta: {"createdAt":"2026-07-19","video":"https://cdn.srb.codes/videos/components/animated-arrow","image":"https://cdn.srb.codes/images/components/animated-arrow"},
 	},
-	"logos-carousel-demo": {
-		name: "logos-carousel-demo",
+	"animated-arrow-demo": {
+		name: "animated-arrow-demo",
 		title: undefined,
 		description: "",
 		type: "registry:example",
-		files: [{"path":"src/registry/examples/logos-carousel-demo.tsx","type":"registry:example"}],
+		files: [{"path":"src/registry/examples/animated-arrow-demo.tsx","type":"registry:example"}],
 		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/logos-carousel-demo")) as unknown as {
+			const module = (await import("@/registry/examples/animated-arrow-demo")) as unknown as {
 				default?: React.ComponentType;
 			};
 			if (!module.default) {
-				throw new Error("No default export found for logos-carousel-demo");
+				throw new Error("No default export found for animated-arrow-demo");
 			}
 			return { default: module.default };
 		}),

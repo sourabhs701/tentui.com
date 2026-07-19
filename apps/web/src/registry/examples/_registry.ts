@@ -4,12 +4,12 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
-		name: "logos-carousel-demo",
+		name: "animated-arrow-demo",
 		type: "registry:example",
-		registryDependencies: [getRegistryItemUrl("logos-carousel")],
+		registryDependencies: [getRegistryItemUrl("animated-arrow")],
 		files: [
 			{
-				path: "examples/logos-carousel-demo.tsx",
+				path: "examples/animated-arrow-demo.tsx",
 				type: "registry:example",
 			},
 		],

@@ -1,0 +1,80 @@
+---
+title: Animated Arrow
+description: Slide an arrow across its container when its parent is hovered.
+new: true
+createdAt: 2026-07-19
+updatedAt: 2026-07-19
+---
+
+<ComponentPreview name="animated-arrow-demo" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/animated-arrow
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install lucide-react clsx tailwind-merge
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="animated-arrow" title="components/animated-arrow.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+Add `group/animated-arrow` to the parent that should trigger the animation.
+
+```tsx
+import { AnimatedArrow } from "@/components/animated-arrow";
+```
+
+```tsx
+<button
+  type="button"
+  className="group/animated-arrow inline-flex items-center gap-2"
+>
+  Learn more
+  <AnimatedArrow />
+</button>
+```
+
+## API reference
+
+### AnimatedArrow
+
+<AutoTypeTable
+  path="src/registry/components/animated-arrow/animated-arrow.tsx"
+  name="AnimatedArrowProps"
+/>
