@@ -69,7 +69,7 @@ function TypeTableItem({ name, item }: { name: string; item: TypeNode }) {
 					{!item.required ? "?" : ""}
 				</code>
 				<span className="flex items-center justify-between gap-3 text-muted-foreground">
-					{item.type}
+					<span className="min-w-0">{item.type}</span>
 					<ChevronDownIcon className="size-4 transition-transform group-data-open:rotate-180" />
 				</span>
 			</CollapsibleTrigger>

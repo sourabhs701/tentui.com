@@ -139,7 +139,7 @@ export function Hero() {
 						<h2 className="font-medium text-5xl text-neutral-900 leading-[1.15] tracking-tight sm:text-[5rem] dark:text-neutral-100">
 							Landing pages that feel {<br />}hand crafted.
 						</h2>
-						<p className="mb-8 text-md text-neutral-800 sm:mb-10 sm:text-xl dark:text-neutral-400">
+						<p className="mb-8 max-w-2xl text-md text-neutral-800 sm:mb-10 sm:text-xl dark:text-neutral-400">
 							100+ production-ready components, blocks, and templates to give
 							your site a polished, designer-built feel. Copy, paste, customize.
 						</p>

@@ -186,7 +186,7 @@ export default function AgencyHero01() {
 							<div className="text-center">
 								<motion.div variants={fadeUp}>
 									<Link
-										className="group/animated-arrow mx-auto mb-8 inline-flex items-center gap-2 rounded-full border bg-muted py-1 pr-1 pl-3 text-sm shadow-md shadow-zinc-950/5 transition-[transform,background-color,border-color] duration-[160ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-background active:scale-[0.98] dark:border-t-white/5 dark:shadow-zinc-950 dark:hover:border-t-border"
+										className="group/animated-arrow mx-auto mb-8 inline-flex items-center gap-2 rounded-full border bg-muted py-1 pr-1 pl-3 text-sm shadow-md shadow-zinc-950/5 transition-[transform,background-color,border-color] duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-background active:scale-[0.98] dark:border-t-white/5 dark:shadow-zinc-950 dark:hover:border-t-border"
 										href="#pricing"
 									>
 										<span className="relative flex size-2">
@@ -222,13 +222,13 @@ export default function AgencyHero01() {
 									variants={fadeUp}
 								>
 									<Link
-										className="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-5 font-semibold text-primary-foreground text-sm shadow-[0_1px_0_rgba(255,255,255,0.24)_inset,0_18px_60px_rgba(0,0,0,0.12)] transition-[transform,opacity] duration-[160ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:opacity-90 active:scale-[0.97]"
+										className="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-5 font-semibold text-primary-foreground text-sm shadow-[0_1px_0_rgba(255,255,255,0.24)_inset,0_18px_60px_rgba(0,0,0,0.12)] transition-[transform,opacity] duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] hover:opacity-90 active:scale-[0.97]"
 										href="#contact"
 									>
 										Book a Call
 									</Link>
 									<Link
-										className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-background/45 px-5 font-semibold text-foreground/80 text-sm shadow-[0_1px_0_rgba(255,255,255,0.12)_inset] backdrop-blur transition-[transform,background-color,color] duration-[160ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-foreground/5 hover:text-foreground active:scale-[0.97]"
+										className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-background/45 px-5 font-semibold text-foreground/80 text-sm shadow-[0_1px_0_rgba(255,255,255,0.12)_inset] backdrop-blur transition-[transform,background-color,color] duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-foreground/5 hover:text-foreground active:scale-[0.97]"
 										href="#pricing"
 									>
 										View Pricing
