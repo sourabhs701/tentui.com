@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "world-map-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("world-map")],
+		files: [
+			{
+				path: "examples/world-map-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 w-full",
+		},
+	},
+	{
 		name: "contextful-save-button-demo",
 		type: "registry:example",
 		dependencies: ["motion"],

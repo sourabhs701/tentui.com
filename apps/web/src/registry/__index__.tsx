@@ -23,6 +23,24 @@ export const Index = {
 		categories: ["hero"],
 		meta: {"createdAt":"2026-07-17","iframeHeight":760,"previewClassName":"min-h-screen"},
 	},
+	"world-map": {
+		name: "world-map",
+		title: "Interactive World Map",
+		description: "Explore countries with zoom, pan, selection, and hover details.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/world-map/world-map.tsx","type":"registry:component","target":"@components/world-map.tsx"},{"path":"src/registry/components/world-map/world-map.geo.json","type":"registry:file","target":"@components/world-map.geo.json"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/world-map/world-map")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for world-map");
+			}
+			return { default: module.default };
+		}),
+		categories: [],
+		meta: {"createdAt":"2026-05-05","video":"https://cdn.srb.codes/videos/components/world-map","image":"https://cdn.srb.codes/images/components/world-map"},
+	},
 	"contextful-save-button": {
 		name: "contextful-save-button",
 		title: "Contextful Save Button",
@@ -58,6 +76,24 @@ export const Index = {
 		}),
 		categories: [],
 		meta: {"createdAt":"2026-07-19","video":"https://cdn.srb.codes/videos/components/animated-arrow","image":"https://cdn.srb.codes/images/components/animated-arrow"},
+	},
+	"world-map-demo": {
+		name: "world-map-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/world-map-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/world-map-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for world-map-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 w-full"},
 	},
 	"contextful-save-button-demo": {
 		name: "contextful-save-button-demo",

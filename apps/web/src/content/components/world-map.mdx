@@ -1,0 +1,124 @@
+---
+title: Interactive World Map
+description: Explore countries with zoom, pan, selection, and hover details.
+image: https://cdn.srb.codes/images/components/world-map-light.webp
+new: true
+createdAt: 2026-05-05
+updatedAt: 2026-05-05
+---
+
+<ComponentPreview name="world-map-demo" />
+
+## Features
+
+- Zooms and pans across the map.
+- Highlights selected countries and reports country clicks.
+- Shows country names and user counts in hover tooltips.
+- Disables interaction and tooltips in static mode.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/world-map
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install react-simple-maps clsx tailwind-merge
+```
+
+```bash
+npm install --save-dev @types/react-simple-maps
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the component and geography data into your project</Step>
+
+<ComponentSource name="world-map" title="components/world-map.tsx" />
+
+<ComponentSource
+  src="src/registry/components/world-map/world-map.geo.json"
+  title="components/world-map.geo.json"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { WorldMap } from "@/components/world-map";
+```
+
+```tsx
+const usersByCountry = {
+  "United States": 1240,
+  Brazil: 580,
+  India: 920,
+};
+
+const selectedCountries = new Set(Object.keys(usersByCountry));
+
+<div className="h-[450px] w-full">
+  <WorldMap
+    selectedCountries={selectedCountries}
+    userCounts={usersByCountry}
+  />
+</div>
+```
+
+## Accessibility
+
+Country interactions are pointer-only in the current implementation. Provide an
+equivalent keyboard-accessible control when country selection is essential, and
+do not rely on color or hover tooltips alone to communicate state.
+
+## API reference
+
+### WorldMap
+
+<AutoTypeTable
+  path="src/registry/components/world-map/world-map.tsx"
+  name="WorldMapProps"
+/>
+
+## Examples
+
+### Static map
+
+Use `static` to disable zoom, pan, country clicks, and hover tooltips.
+
+```tsx
+<div className="h-[450px] w-full">
+  <WorldMap static selectedCountries={new Set(["Brazil", "India"])} />
+</div>
+```
+
+## References
+
+- [React Simple Maps](https://www.react-simple-maps.io/docs/getting-started/)

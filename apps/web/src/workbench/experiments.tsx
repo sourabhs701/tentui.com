@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 
 import AgencyHero01 from "../registry/blocks/agency-hero-01/agency-hero-01";
+import { WorldMapDemo } from "../registry/examples/world-map-demo";
 
 export type WorkbenchExperiment = {
 	slug: string;
@@ -17,6 +18,13 @@ export const experiments: WorkbenchExperiment[] = [
 		description: "Animated agency hero with availability badge.",
 		fullBleed: true,
 		component: AgencyHero01,
+	},
+	{
+		slug: "world-map",
+		title: "World Map",
+		description:
+			"Interactive world map with selected countries and user counts.",
+		component: WorldMapDemo,
 	},
 ];
 

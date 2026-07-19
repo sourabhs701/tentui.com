@@ -2,6 +2,33 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "world-map",
+		type: "registry:component",
+		title: "Interactive World Map",
+		description:
+			"Explore countries with zoom, pan, selection, and hover details.",
+		dependencies: ["react-simple-maps"],
+		files: [
+			{
+				path: "components/world-map/world-map.tsx",
+				type: "registry:component",
+				target: "@components/world-map.tsx",
+			},
+			{
+				path: "components/world-map/world-map.geo.json",
+				type: "registry:file",
+				target: "@components/world-map.geo.json",
+			},
+		],
+		categories: [],
+		meta: {
+			createdAt: "2026-05-05",
+			video: "https://cdn.srb.codes/videos/components/world-map",
+			image: "https://cdn.srb.codes/images/components/world-map",
+		},
+		docs: "https://tentui.com/components/world-map",
+	},
+	{
 		name: "contextful-save-button",
 		type: "registry:component",
 		title: "Contextful Save Button",

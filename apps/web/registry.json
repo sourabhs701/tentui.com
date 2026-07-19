@@ -29,6 +29,34 @@
       "type": "registry:block"
     },
     {
+      "name": "world-map",
+      "title": "Interactive World Map",
+      "description": "Explore countries with zoom, pan, selection, and hover details.",
+      "dependencies": [
+        "react-simple-maps"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/world-map/world-map.tsx",
+          "type": "registry:component",
+          "target": "@components/world-map.tsx"
+        },
+        {
+          "path": "src/registry/components/world-map/world-map.geo.json",
+          "type": "registry:file",
+          "target": "@components/world-map.geo.json"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-05-05",
+        "video": "https://cdn.srb.codes/videos/components/world-map",
+        "image": "https://cdn.srb.codes/images/components/world-map"
+      },
+      "docs": "https://tentui.com/components/world-map",
+      "categories": [],
+      "type": "registry:component"
+    },
+    {
       "name": "contextful-save-button",
       "title": "Contextful Save Button",
       "description": "Show async save progress and outcomes without leaving the button.",
