@@ -1,0 +1,110 @@
+---
+title: Contextful Save Button
+description: Show async save progress and outcomes without leaving the button.
+image: https://cdn.srb.codes/images/components/animated-save-button-light.webp
+new: true
+createdAt: 2026-07-19
+updatedAt: 2026-07-19
+---
+
+<ComponentPreview name="contextful-save-button-demo" />
+
+## Features
+
+- Reports loading, success, and error states for asynchronous actions.
+- Animates label changes character by character.
+- Announces status changes and reduces motion when requested.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/contextful-save-button
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install lucide-react motion clsx tailwind-merge
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="contextful-save-button"
+  title="components/contextful-save-button.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ContextfulSaveButton } from "@/components/contextful-save-button";
+```
+
+```tsx
+<ContextfulSaveButton
+  onClick={async () => {
+    await saveChanges();
+  }}
+/>
+```
+
+## Accessibility
+
+The button disables itself while an action is running and announces loading,
+success, and error labels through a polite live region. Reduced-motion preferences
+remove transforms and stop the loading icon's rotation.
+
+## API reference
+
+### ContextfulSaveButton
+
+<AutoTypeTable
+  path="src/registry/components/contextful-save-button/contextful-save-button.tsx"
+  name="ContextfulSaveButtonProps"
+/>
+
+## Examples
+
+### Custom labels
+
+```tsx
+<ContextfulSaveButton
+  labels={{
+    idle: "Publish",
+    loading: "Publishing",
+    success: "Published",
+    error: "Try again",
+  }}
+  onClick={async () => {
+    await publishChanges();
+  }}
+/>
+```

@@ -23,6 +23,24 @@ export const Index = {
 		categories: ["hero"],
 		meta: {"createdAt":"2026-07-17","iframeHeight":760,"previewClassName":"min-h-screen"},
 	},
+	"contextful-save-button": {
+		name: "contextful-save-button",
+		title: "Contextful Save Button",
+		description: "Show async save progress and outcomes without leaving the button.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/contextful-save-button/contextful-save-button.tsx","type":"registry:component","target":"@components/contextful-save-button.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/contextful-save-button/contextful-save-button")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for contextful-save-button");
+			}
+			return { default: module.default };
+		}),
+		categories: [],
+		meta: {"createdAt":"2026-07-19","video":"https://cdn.srb.codes/videos/components/animated-save-button","image":"https://cdn.srb.codes/images/components/animated-save-button"},
+	},
 	"animated-arrow": {
 		name: "animated-arrow",
 		title: "Animated Arrow",
@@ -40,6 +58,24 @@ export const Index = {
 		}),
 		categories: [],
 		meta: {"createdAt":"2026-07-19","video":"https://cdn.srb.codes/videos/components/animated-arrow","image":"https://cdn.srb.codes/images/components/animated-arrow"},
+	},
+	"contextful-save-button-demo": {
+		name: "contextful-save-button-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/contextful-save-button-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/contextful-save-button-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for contextful-save-button-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
 	"animated-arrow-demo": {
 		name: "animated-arrow-demo",

@@ -29,6 +29,30 @@
       "type": "registry:block"
     },
     {
+      "name": "contextful-save-button",
+      "title": "Contextful Save Button",
+      "description": "Show async save progress and outcomes without leaving the button.",
+      "dependencies": [
+        "lucide-react",
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/contextful-save-button/contextful-save-button.tsx",
+          "type": "registry:component",
+          "target": "@components/contextful-save-button.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-19",
+        "video": "https://cdn.srb.codes/videos/components/animated-save-button",
+        "image": "https://cdn.srb.codes/images/components/animated-save-button"
+      },
+      "docs": "https://tentui.com/components/contextful-save-button",
+      "categories": [],
+      "type": "registry:component"
+    },
+    {
       "name": "animated-arrow",
       "title": "Animated Arrow",
       "description": "Slide an arrow across its container when its parent is hovered.",
