@@ -1,0 +1,43 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "copy-button",
+  "title": "Copy Button",
+  "description": "Copy text to the clipboard with visual feedback.",
+  "dependencies": [
+    "lucide-react",
+    "motion"
+  ],
+  "registryDependencies": [
+    "button"
+  ],
+  "files": [
+    {
+      "path": "src/registry/components/copy-button/copy-button.tsx",
+      "content": "\"use client\";\n\nimport { CheckIcon, CircleXIcon, CopyIcon } from \"lucide-react\";\nimport { motion } from \"motion/react\";\nimport type { ComponentProps } from \"react\";\nimport { Button } from \"@/components/ui/button\";\nimport type { CopyState } from \"@/hooks/use-copy-to-clipboard\";\nimport { useCopyToClipboard } from \"@/hooks/use-copy-to-clipboard\";\nimport { cn } from \"@/lib/utils\";\nimport {\n\tIconSwap,\n\tIconSwapItem,\n} from \"@/registry/components/icon-swap/icon-swap\";\n\nexport type CopyStateIconProps = {\n\tstate: CopyState;\n\t/** Custom icon for idle state. */\n\tidleIcon?: React.ReactNode;\n\t/** Custom icon for done state. */\n\tdoneIcon?: React.ReactNode;\n\t/** Custom icon for error state. */\n\terrorIcon?: React.ReactNode;\n};\n\nexport function CopyStateIcon({\n\tstate,\n\tidleIcon,\n\tdoneIcon,\n\terrorIcon,\n}: CopyStateIconProps) {\n\tlet icon = idleIcon ?? (\n\t\t<CopyIcon data-icon=\"inline-start\" data-slot=\"idle-icon\" />\n\t);\n\n\tif (state === \"done\") {\n\t\ticon = doneIcon ?? (\n\t\t\t<CheckIcon data-icon=\"inline-start\" data-slot=\"done-icon\" />\n\t\t);\n\t} else if (state === \"error\") {\n\t\ticon = errorIcon ?? (\n\t\t\t<CircleXIcon data-icon=\"inline-start\" data-slot=\"error-icon\" />\n\t\t);\n\t}\n\n\treturn (\n\t\t<IconSwap>\n\t\t\t<IconSwapItem key={state} as={motion.span}>\n\t\t\t\t{icon}\n\t\t\t</IconSwapItem>\n\t\t</IconSwap>\n\t);\n}\n\nexport type CopyButtonProps = ComponentProps<typeof Button> & {\n\t/** The text to copy, or a function that returns the text. */\n\ttext: string | (() => string);\n\t/** Called with the copied text on successful copy. */\n\tonCopySuccess?: (text: string) => void;\n\t/** Called with the error if the copy operation fails. */\n\tonCopyError?: (error: Error) => void;\n} & Omit<CopyStateIconProps, \"state\">;\n\nexport function CopyButton({\n\tclassName,\n\tsize = \"icon\",\n\tchildren,\n\ttext,\n\tidleIcon,\n\tdoneIcon,\n\terrorIcon,\n\tonClick,\n\tonCopySuccess,\n\tonCopyError,\n\t...props\n}: CopyButtonProps) {\n\tconst { state, copy } = useCopyToClipboard({\n\t\tonCopySuccess,\n\t\tonCopyError,\n\t});\n\n\treturn (\n\t\t<Button\n\t\t\tclassName={cn(\"will-change-transform\", className)}\n\t\t\tsize={size}\n\t\t\tonClick={(e) => {\n\t\t\t\tvoid copy(text);\n\t\t\t\tonClick?.(e);\n\t\t\t}}\n\t\t\taria-label=\"Copy\"\n\t\t\t{...props}\n\t\t>\n\t\t\t<CopyStateIcon\n\t\t\t\tstate={state}\n\t\t\t\tidleIcon={idleIcon}\n\t\t\t\tdoneIcon={doneIcon}\n\t\t\t\terrorIcon={errorIcon}\n\t\t\t/>\n\t\t\t{children}\n\t\t</Button>\n\t);\n}\n\nexport default CopyButton;\n",
+      "type": "registry:component",
+      "target": "@components/copy-button.tsx"
+    },
+    {
+      "path": "src/registry/components/icon-swap/icon-swap.tsx",
+      "content": "\"use client\";\n\nimport type { AnimatePresenceProps, HTMLMotionProps } from \"motion/react\";\nimport { AnimatePresence, motion } from \"motion/react\";\n\nexport function IconSwap(props: React.PropsWithChildren<AnimatePresenceProps>) {\n\treturn <AnimatePresence mode=\"popLayout\" initial={false} {...props} />;\n}\n\ntype MotionElement = typeof motion.div | typeof motion.span;\n\nexport function IconSwapItem({\n\tas: Component = motion.div,\n\t...props\n}: HTMLMotionProps<\"div\"> & {\n\tas?: MotionElement;\n}) {\n\treturn (\n\t\t<Component\n\t\t\tinitial={{ opacity: 0, scale: 0.25, filter: \"blur(4px)\" }}\n\t\t\tanimate={{ opacity: 1, scale: 1, filter: \"blur(0px)\" }}\n\t\t\texit={{ opacity: 0, scale: 0.25, filter: \"blur(4px)\" }}\n\t\t\ttransition={{\n\t\t\t\ttype: \"spring\",\n\t\t\t\tduration: 0.3,\n\t\t\t\tbounce: 0,\n\t\t\t}}\n\t\t\t{...props}\n\t\t/>\n\t);\n}\n",
+      "type": "registry:component",
+      "target": "@components/icon-swap/icon-swap.tsx"
+    },
+    {
+      "path": "src/hooks/use-copy-to-clipboard.ts",
+      "content": "\"use client\";\n\nimport { useCallback, useEffect, useRef, useState } from \"react\";\n\nexport type CopyState = \"idle\" | \"done\" | \"error\";\n\nexport type UseCopyToClipboardOptions = {\n\tonCopySuccess?: (text: string) => void;\n\tonCopyError?: (error: Error) => void;\n\tresetDelay?: number;\n};\n\nexport function useCopyToClipboard({\n\tonCopySuccess,\n\tonCopyError,\n\tresetDelay = 1500,\n}: UseCopyToClipboardOptions = {}) {\n\tconst [state, setState] = useState<CopyState>(\"idle\");\n\tconst resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);\n\n\tuseEffect(() => {\n\t\treturn () => {\n\t\t\tif (resetTimeoutRef.current) {\n\t\t\t\tclearTimeout(resetTimeoutRef.current);\n\t\t\t}\n\t\t};\n\t}, []);\n\n\tconst copy = useCallback(\n\t\tasync (text: string | (() => string)) => {\n\t\t\t// Clear any pending reset\n\t\t\tif (resetTimeoutRef.current) {\n\t\t\t\tclearTimeout(resetTimeoutRef.current);\n\t\t\t}\n\n\t\t\ttry {\n\t\t\t\tconst finalText = typeof text === \"function\" ? text() : text;\n\t\t\t\tawait navigator.clipboard.writeText(finalText);\n\n\t\t\t\tsetState(\"done\");\n\n\t\t\t\tonCopySuccess?.(finalText);\n\t\t\t} catch (error) {\n\t\t\t\tsetState(\"error\");\n\n\t\t\t\tonCopyError?.(\n\t\t\t\t\terror instanceof Error ? error : new Error(\"Copy failed\"),\n\t\t\t\t);\n\t\t\t} finally {\n\t\t\t\t// Schedule reset to idle\n\t\t\t\tresetTimeoutRef.current = setTimeout(() => {\n\t\t\t\t\tsetState(\"idle\");\n\t\t\t\t}, resetDelay);\n\t\t\t}\n\t\t},\n\t\t[onCopySuccess, onCopyError, resetDelay],\n\t);\n\n\treturn { state, copy } as const;\n}\n",
+      "type": "registry:hook",
+      "target": "@hooks/use-copy-to-clipboard.ts"
+    }
+  ],
+  "meta": {
+    "createdAt": "2026-07-20",
+    "image": "https://cdn.srb.codes/images/components/copy-button",
+    "video": "https://cdn.srb.codes/videos/components/copy-button"
+  },
+  "docs": "https://tentui.com/components/copy-button",
+  "categories": [
+    "buttons"
+  ],
+  "type": "registry:component"
+}

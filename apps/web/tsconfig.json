@@ -20,6 +20,7 @@
 			}
 		],
 		"paths": {
+			"@/components/ui/*": ["../../packages/ui/src/components/*"],
 			"@/*": ["./src/*"],
 			"@tentui.com/ui/*": ["../../packages/ui/src/*"]
 		},

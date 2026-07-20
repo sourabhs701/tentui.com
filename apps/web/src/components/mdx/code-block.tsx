@@ -1,7 +1,7 @@
 import { MiddleTruncation } from "@/components/middle-truncation";
 import { cn } from "@/lib/utils";
 import type { NpmCommands } from "@/types/unist";
-import { CopyButton } from "../copy-button";
+import { CopyButton } from "../../registry/components/copy-button/copy-button";
 import { getIconForLanguageExtension } from "../icons";
 import { CodeBlockCommand } from "./code-block-command";
 

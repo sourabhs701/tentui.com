@@ -1,0 +1,97 @@
+---
+title: Email Dock
+description: Highlight and link parts of an email address with dock actions.
+createdAt: 2026-07-20
+updatedAt: 2026-07-21
+---
+
+<ComponentPreview name="email-dock-demo" />
+
+## Features
+
+- Highlights the username, domain, or full address independently.
+- Activates highlights on pointer hover, keyboard focus, or button click.
+- Supports links and custom accessible labels for dock actions.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/email-dock
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install lucide-react clsx tailwind-merge
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="email-dock" title="components/email-dock.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { EmailDock } from "@/components/email-dock";
+```
+
+```tsx
+const email = "hello@example.com";
+
+<EmailDock
+  email={email}
+  highlights={[
+    { segment: "local" },
+    { segment: "domain", href: "https://example.com", external: true },
+    { segment: "full", href: `mailto:${email}` },
+  ]}
+/>
+```
+
+Omit `highlights` to render the default username, domain, and full-address
+actions without links.
+
+## Accessibility
+
+The address is exposed to assistive technology as one complete email address,
+while its decorative segments are hidden. Each dock action is a native button or
+link with an accessible label and a visible focus ring. Keyboard focus activates
+the corresponding highlight.
+
+Provide `label` when the built-in username, domain, or email label does not
+describe a custom action.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/email-dock/email-dock.tsx"
+  name="EmailDockProps"
+/>

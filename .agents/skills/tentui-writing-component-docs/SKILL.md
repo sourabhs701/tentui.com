@@ -167,18 +167,20 @@ Use specific subheadings such as `### Keyboard interaction` or `### Reduced moti
 
 ## Write API reference
 
-Use TentUI's generated type table when the component exports a stable props type:
+Keep the section props-only. Use TentUI's generated type table when the component
+exports a stable props type:
 
 ```mdx
-### ComponentName
-
 <AutoTypeTable
   path="src/registry/components/{component-name}/{component-name}.tsx"
   name="ComponentNameProps"
 />
 ```
 
-Match `path` and `name` to real source exports. Omit the section when there is no useful public API to document.
+Match `path` and `name` to real source exports. Do not add a component-name
+subheading, introductory prose, usage notes, examples, or implementation details to
+the API reference. Omit the section when there are no useful public props to
+document.
 
 ## Separate Credits from References
 

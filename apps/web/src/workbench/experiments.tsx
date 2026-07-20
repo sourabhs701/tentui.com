@@ -18,7 +18,7 @@ export const experiments: WorkbenchExperiment[] = [
 		slug: "3d-button",
 		title: "3D Button",
 		description:
-			"Raised actions with default, secondary, outline, and destructive surfaces.",
+			"Raised actions with default, secondary, and destructive surfaces.",
 		component: ThreeDButtonDemo,
 	},
 	{

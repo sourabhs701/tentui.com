@@ -38,7 +38,6 @@ import type React from "react";
 import { createContext, useContext, useMemo, useRef, useState } from "react";
 import type { PanelImperativeHandle } from "react-resizable-panels";
 import type { RegistryItem } from "shadcn/schema";
-import { CopyButton, CopyStateIcon } from "@/components/copy-button";
 import {
 	DesktopIcon,
 	FolderIcon,
@@ -57,6 +56,10 @@ import type {
 	FileTree,
 } from "@/lib/registry";
 import { cn } from "@/lib/utils";
+import {
+	CopyButton,
+	CopyStateIcon,
+} from "@/registry/components/copy-button/copy-button";
 import { getRegistryItemNamespace } from "@/utils/registry";
 
 type View = "preview" | "code";

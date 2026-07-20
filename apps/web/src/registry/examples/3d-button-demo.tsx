@@ -31,8 +31,8 @@ export function ThreeDButtonDemo() {
 					<ThreeDButton size="icon" aria-label="Add item">
 						<PlusIcon />
 					</ThreeDButton>
-					<ThreeDButton size="icon" variant="secondary">
-						<ArrowRightIcon data-icon="inline-end" />
+					<ThreeDButton size="icon" variant="secondary" aria-label="Continue">
+						<ArrowRightIcon />
 					</ThreeDButton>
 				</div>
 			</section>

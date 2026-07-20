@@ -34,6 +34,7 @@ export function processFileContent(type: string, content: string | undefined) {
 	let code = content ?? "";
 
 	if (type !== "registry:page") {
+		code = code.replace(/^\s*export default [A-Za-z_$][\w$]*;\s*$/gm, "");
 		code = code.replaceAll("export default", "export");
 	}
 

@@ -1,0 +1,106 @@
+---
+title: Copy Button
+description: Copy text to the clipboard with visual feedback.
+createdAt: 2026-07-20
+updatedAt: 2026-07-21
+---
+
+<ComponentPreview name="copy-button-demo" />
+
+## Features
+
+- Accepts text as a value or a function resolved when the button is clicked.
+- Animates idle, success, and error icons before returning to idle.
+- Supports custom state icons and copy outcome callbacks.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/copy-button
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Add the Button component</Step>
+
+```bash
+npx shadcn@latest add button
+```
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install lucide-react motion
+```
+
+<Step>Add the clipboard hook</Step>
+
+<ComponentSource
+  src="src/hooks/use-copy-to-clipboard.ts"
+  title="hooks/use-copy-to-clipboard.ts"
+  collapsible="false"
+/>
+
+<Step>Add the icon transition component</Step>
+
+<ComponentSource
+  src="src/registry/components/icon-swap/icon-swap.tsx"
+  title="components/icon-swap/icon-swap.tsx"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="copy-button" title="components/copy-button.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { CopyButton } from "@/components/copy-button";
+```
+
+```tsx
+<CopyButton size="default" variant="outline" text="npm install tentui">
+  Copy command
+</CopyButton>
+```
+
+Pass a function when the value should be resolved at click time.
+
+```tsx
+<CopyButton text={() => window.location.href} aria-label="Copy page URL" />
+```
+
+## Accessibility
+
+`CopyButton` preserves the underlying button's keyboard and focus behavior and
+uses `Copy` as its default accessible label. Set `aria-label` to describe a more
+specific action when needed.
+
+Success and error feedback is visual. Announce the result separately when
+confirmation needs to be available to assistive technology.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/copy-button/copy-button.tsx"
+  name="CopyButtonProps"
+/>

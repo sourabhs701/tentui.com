@@ -10,8 +10,11 @@ import { useMemo } from "react";
 import type { PackageManager } from "@/hooks/use-package-manager";
 import { usePackageManager } from "@/hooks/use-package-manager";
 import type { NpmCommands } from "@/types/unist";
-import { CopyButton } from "../copy-button";
-import { IconSwap, IconSwapItem } from "../icon-swap";
+import { CopyButton } from "../../registry/components/copy-button/copy-button";
+import {
+	IconSwap,
+	IconSwapItem,
+} from "../../registry/components/icon-swap/icon-swap";
 import { getIconForPackageManager } from "../icons";
 
 export function CodeBlockCommand({

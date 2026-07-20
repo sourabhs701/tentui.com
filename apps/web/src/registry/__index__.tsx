@@ -39,7 +39,43 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/3d-button-light","video":"https://cdn.srb.codes/videos/components/3d-button-light"},
+		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/3d-button","video":"https://cdn.srb.codes/videos/components/3d-button"},
+	},
+	"copy-button": {
+		name: "copy-button",
+		title: "Copy Button",
+		description: "Copy text to the clipboard with visual feedback.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/copy-button/copy-button.tsx","type":"registry:component","target":"@components/copy-button.tsx"},{"path":"src/registry/components/icon-swap/icon-swap.tsx","type":"registry:component","target":"@components/icon-swap/icon-swap.tsx"},{"path":"src/hooks/use-copy-to-clipboard.ts","type":"registry:hook","target":"@hooks/use-copy-to-clipboard.ts"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/copy-button/copy-button")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for copy-button");
+			}
+			return { default: module.default };
+		}),
+		categories: ["buttons"],
+		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/copy-button","video":"https://cdn.srb.codes/videos/components/copy-button"},
+	},
+	"email-dock": {
+		name: "email-dock",
+		title: "Email Dock",
+		description: "Highlight and link parts of an email address with dock actions.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/email-dock/email-dock.tsx","type":"registry:component","target":"@components/email-dock.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/email-dock/email-dock")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for email-dock");
+			}
+			return { default: module.default };
+		}),
+		categories: [],
+		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/email-dock","video":"https://cdn.srb.codes/videos/components/email-dock"},
 	},
 	"world-map": {
 		name: "world-map",
@@ -131,6 +167,42 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-[40rem] w-full p-0"},
 	},
+	"email-dock-demo": {
+		name: "email-dock-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/email-dock-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/email-dock-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for email-dock-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"copy-button-demo": {
+		name: "copy-button-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/copy-button-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/copy-button-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for copy-button-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"world-map-demo": {
 		name: "world-map-demo",
 		title: undefined,
@@ -201,7 +273,223 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: undefined,
-		meta: {"previewClassName":"min-h-[56rem] w-full p-0"},
+		meta: {"previewClassName":"min-h-96 w-full p-0"},
+	},
+	"scribbled-text-wavy-underline-demo": {
+		name: "scribbled-text-wavy-underline-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-wavy-underline-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-wavy-underline-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-wavy-underline-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-circle-demo": {
+		name: "scribbled-text-circle-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-circle-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-circle-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-circle-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-highlight-demo": {
+		name: "scribbled-text-highlight-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-highlight-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-highlight-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-highlight-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-underline-demo": {
+		name: "scribbled-text-underline-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-underline-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-underline-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-underline-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-straight-underline-demo": {
+		name: "scribbled-text-straight-underline-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-straight-underline-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-straight-underline-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-straight-underline-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-dotted-underline-demo": {
+		name: "scribbled-text-dotted-underline-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-dotted-underline-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-dotted-underline-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-dotted-underline-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-double-underline-demo": {
+		name: "scribbled-text-double-underline-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-double-underline-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-double-underline-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-double-underline-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-strikethrough-demo": {
+		name: "scribbled-text-strikethrough-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-strikethrough-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-strikethrough-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-strikethrough-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-cross-out-demo": {
+		name: "scribbled-text-cross-out-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-cross-out-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-cross-out-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-cross-out-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-arrow-underline-demo": {
+		name: "scribbled-text-arrow-underline-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-arrow-underline-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-arrow-underline-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-arrow-underline-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-bracket-demo": {
+		name: "scribbled-text-bracket-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-bracket-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-bracket-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-bracket-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scribbled-text-box-demo": {
+		name: "scribbled-text-box-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scribbled-text-box-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scribbled-text-box-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scribbled-text-box-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	}
 } as const;
 

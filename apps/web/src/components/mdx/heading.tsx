@@ -1,8 +1,8 @@
 "use client";
 
 import { LinkIcon } from "lucide-react";
-import { CopyButton } from "@/components/copy-button";
 import { cn } from "@/lib/utils";
+import { CopyButton } from "@/registry/components/copy-button/copy-button";
 
 type HeadingType = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 

@@ -16,7 +16,6 @@ import {
 import { CheckIcon, ChevronDownIcon, CopyIcon, XIcon } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { CopyStateIcon } from "@/components/copy-button";
 import {
 	ClaudeIcon,
 	CursorIcon,
@@ -25,6 +24,7 @@ import {
 	OpenAIIcon,
 } from "@/components/icons";
 import type { CopyState } from "@/hooks/use-copy-to-clipboard";
+import { CopyStateIcon } from "@/registry/components/copy-button/copy-button";
 
 const cache = new Map<string, string>();
 

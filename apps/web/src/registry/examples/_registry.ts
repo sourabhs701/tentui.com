@@ -18,6 +18,34 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "email-dock-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("email-dock")],
+		files: [
+			{
+				path: "examples/email-dock-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "copy-button-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("copy-button")],
+		files: [
+			{
+				path: "examples/copy-button-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "world-map-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("world-map")],
@@ -63,6 +91,7 @@ export const examples: Registry["items"] = [
 	{
 		name: "scribbled-text-demo",
 		type: "registry:example",
+		dependencies: ["dialkit"],
 		registryDependencies: [getRegistryItemUrl("scribbled-text")],
 		files: [
 			{
@@ -71,7 +100,175 @@ export const examples: Registry["items"] = [
 			},
 		],
 		meta: {
-			previewClassName: "min-h-[56rem] w-full p-0",
+			previewClassName: "min-h-96 w-full p-0",
+		},
+	},
+	{
+		name: "scribbled-text-wavy-underline-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-wavy-underline-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scribbled-text-circle-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-circle-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scribbled-text-highlight-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-highlight-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scribbled-text-underline-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-underline-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scribbled-text-straight-underline-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-straight-underline-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scribbled-text-dotted-underline-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-dotted-underline-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scribbled-text-double-underline-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-double-underline-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scribbled-text-strikethrough-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-strikethrough-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scribbled-text-cross-out-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-cross-out-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scribbled-text-arrow-underline-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-arrow-underline-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scribbled-text-bracket-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-bracket-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scribbled-text-box-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-box-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
 		},
 	},
 ];

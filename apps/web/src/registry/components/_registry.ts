@@ -18,10 +18,64 @@ export const components: Registry["items"] = [
 		categories: ["buttons"],
 		meta: {
 			createdAt: "2026-07-20",
-			image: "https://cdn.srb.codes/images/components/3d-button-light",
-			video: "https://cdn.srb.codes/videos/components/3d-button-light",
+			image: "https://cdn.srb.codes/images/components/3d-button",
+			video: "https://cdn.srb.codes/videos/components/3d-button",
 		},
 		docs: "https://tentui.com/components/3d-button",
+	},
+	{
+		name: "copy-button",
+		type: "registry:component",
+		title: "Copy Button",
+		description: "Copy text to the clipboard with visual feedback.",
+		dependencies: ["lucide-react", "motion"],
+		registryDependencies: ["button"],
+		files: [
+			{
+				path: "components/copy-button/copy-button.tsx",
+				type: "registry:component",
+				target: "@components/copy-button.tsx",
+			},
+			{
+				path: "components/icon-swap/icon-swap.tsx",
+				type: "registry:component",
+				target: "@components/icon-swap/icon-swap.tsx",
+			},
+			{
+				path: "src/hooks/use-copy-to-clipboard.ts",
+				type: "registry:hook",
+				target: "@hooks/use-copy-to-clipboard.ts",
+			},
+		],
+		categories: ["buttons"],
+		meta: {
+			createdAt: "2026-07-20",
+			image: "https://cdn.srb.codes/images/components/copy-button",
+			video: "https://cdn.srb.codes/videos/components/copy-button",
+		},
+		docs: "https://tentui.com/components/copy-button",
+	},
+	{
+		name: "email-dock",
+		type: "registry:component",
+		title: "Email Dock",
+		description:
+			"Highlight and link parts of an email address with dock actions.",
+		dependencies: ["lucide-react"],
+		files: [
+			{
+				path: "components/email-dock/email-dock.tsx",
+				type: "registry:component",
+				target: "@components/email-dock.tsx",
+			},
+		],
+		categories: [],
+		meta: {
+			createdAt: "2026-07-20",
+			image: "https://cdn.srb.codes/images/components/email-dock",
+			video: "https://cdn.srb.codes/videos/components/email-dock",
+		},
+		docs: "https://tentui.com/components/email-dock",
 	},
 	{
 		name: "world-map",

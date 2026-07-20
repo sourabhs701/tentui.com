@@ -3,7 +3,7 @@ title: 3D Button
 description: Add physical depth and responsive press feedback to primary actions.
 image: https://cdn.srb.codes/images/components/3d-button-light.webp
 createdAt: 2026-07-20
-updatedAt: 2026-07-20
+updatedAt: 2026-07-21
 ---
 
 <ComponentPreview name="3d-button-demo" canReload />
@@ -68,18 +68,11 @@ import { ThreeDButton } from "@/components/3d-button";
 disabled behavior. Add an accessible label to icon-only buttons and set
 `type="submit"` explicitly when submitting a form.
 
-Reduced-motion preferences remove movement while preserving a short opacity
-transition.
+Reduced-motion preferences disable the button transition.
 
 ## API reference
 
-### ThreeDButton
-
-| Prop       | Type                                      | Default    | Description                    |
-| ---------- | ----------------------------------------- | ---------- | ------------------------------ |
-| `children` | `ReactNode`                               | —          | Button content.                |
-| `variant`  | `"solid" \| "secondary" \| "destructive"` | `"solid"`  | Visual treatment.              |
-| `size`     | `"sm" \| "md" \| "lg" \| "icon"`          | `"md"`     | Button dimensions and spacing. |
-| `type`     | `"button" \| "submit" \| "reset"`         | `"button"` | Native button behavior.        |
-
-All other native `button` props are forwarded to the underlying element.
+<AutoTypeTable
+  path="src/registry/components/3d-button/3d-button.tsx"
+  name="ThreeDButtonProps"
+/>
