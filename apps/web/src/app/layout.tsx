@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
+import Script from "next/script";
 
 import "../index.css";
 import { cn } from "@tentui.com/ui/lib/utils";
@@ -88,12 +89,22 @@ export default function RootLayout({
 			<head>
 				<JsonLdScript data={websiteJsonLd()} />
 				<script
+					defer
+					src="https://co.srb.codes/script.js"
+					data-website-id="3386bacf-e7d1-4a4e-8b1a-5e8da0d89194"
+				/>
+				<script
 					type="text/javascript"
 					dangerouslySetInnerHTML={{ __html: darkModeScript }}
 				/>
 			</head>
 			<body className="antialiased">
 				<Providers>{children}</Providers>
+				<Script
+					src="https://cdn.tkit.ai/widget.js"
+					data-project-id="a0yPCWkO"
+					strategy="afterInteractive"
+				/>
 			</body>
 		</html>
 	);
