@@ -109,6 +109,12 @@ export default function RootLayout({
 			suppressHydrationWarning
 		>
 			<head>
+				<link
+					rel="alternate"
+					type="application/rss+xml"
+					href={`${SITE_INFO.url}/rss`}
+					title="TentUI updates"
+				/>
 				<JsonLdScript data={websiteJsonLd()} />
 				<script
 					defer

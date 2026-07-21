@@ -28,6 +28,10 @@ const nextConfig: NextConfig = {
 				source: "/components/:slug.mdx",
 				destination: "/doc.mdx/:slug",
 			},
+			{
+				source: "/registry/rss",
+				destination: "/rss",
+			},
 		];
 	},
 };

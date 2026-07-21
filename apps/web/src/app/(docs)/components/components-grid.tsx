@@ -9,7 +9,7 @@ import { ComponentCard } from "./component-card";
 export function ComponentsGrid() {
 	return (
 		<MotionConfig reducedMotion="user">
-			<div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+			<div className="mb-10 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
 				{components.map((component, index) => (
 					<ComponentCard
 						key={component.name}

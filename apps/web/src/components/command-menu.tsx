@@ -18,6 +18,7 @@ import {
 	LayoutPanelTopIcon,
 	MonitorIcon,
 	MoonStarIcon,
+	RssIcon,
 	SearchIcon,
 	SunMediumIcon,
 } from "lucide-react";
@@ -75,6 +76,16 @@ const MENU_LINKS: CommandLink[] = [
 		kind: "page",
 		icon: <LayoutPanelTopIcon />,
 		shortcut: "GB",
+	},
+];
+
+const OTHER_LINKS: CommandLink[] = [
+	{
+		title: "RSS Feed",
+		href: "/rss",
+		kind: "link",
+		icon: <RssIcon />,
+		openInNewTab: true,
 	},
 ];
 
@@ -202,6 +213,13 @@ export default function CommandMenu({
 								onLinkSelect={handleOpenLink}
 							/>
 						)}
+
+						<CommandLinkGroup
+							heading="Other"
+							links={OTHER_LINKS}
+							onLinkHighlight={(link) => setSelectedCommandKind(link.kind)}
+							onLinkSelect={handleOpenLink}
+						/>
 
 						<CommandGroup heading="Brand Assets">
 							<CommandMenuItem

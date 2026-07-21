@@ -1,3 +1,4 @@
+import { RssIcon } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { TentUiMark } from "@/components/tentui-mark";
@@ -12,6 +13,7 @@ type FooterLink = {
 	label: string;
 	href: string;
 	external?: boolean;
+	icon?: React.ReactElement;
 };
 
 const componentLinks: FooterLink[] = components
@@ -38,6 +40,11 @@ const socialLinks: FooterLink[] = [
 		label: "X (formerly Twitter)",
 		href: "https://x.com/srbcode",
 		external: true,
+	},
+	{
+		label: "RSS",
+		href: "/rss",
+		icon: <RssIcon className="size-3" aria-hidden="true" />,
 	},
 ];
 
@@ -70,6 +77,7 @@ function LinkList({ links }: { links: FooterLink[] }) {
 							: undefined)}
 						className="inline-flex items-center gap-1 transition-colors hover:text-primary-foreground"
 					>
+						{l.icon}
 						{l.label}
 						{l.external && <ArrowUpRight />}
 					</Link>
