@@ -2,12 +2,12 @@ import { registryConfig } from "@/config/registry";
 
 const NEW_BADGE_DURATION_MS = 5 * 24 * 60 * 60 * 1000; // 5 days
 
-export type ComponentMetadata = {
+export type RegistryItemMetadata = {
 	meta?: { createdAt?: string };
 };
 
-export function isNewComponent(component: ComponentMetadata): boolean {
-	const addedAt = component.meta?.createdAt;
+export function isNewRegistryItem(item: RegistryItemMetadata): boolean {
+	const addedAt = item.meta?.createdAt;
 	if (!addedAt) return false;
 
 	const addedTime = new Date(addedAt).getTime();
