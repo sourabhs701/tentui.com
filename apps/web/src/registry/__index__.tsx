@@ -41,6 +41,24 @@ export const Index = {
 		categories: ["legal"],
 		meta: {"createdAt":"2026-07-21","iframeHeight":1120,"previewClassName":"min-h-screen"},
 	},
+	"footer-02": {
+		name: "footer-02",
+		title: "Footer 02",
+		description: "A grain-textured footer with dashed grid lines, navigation columns, and an oversized wordmark.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/footer-02/footer-02.tsx","type":"registry:component","target":"@components/footer-02.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/footer-02/footer-02")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for footer-02");
+			}
+			return { default: module.default };
+		}),
+		categories: ["footer"],
+		meta: {"createdAt":"2026-07-21","iframeHeight":720,"previewClassName":"flex min-h-svh items-end"},
+	},
 	"footer-01": {
 		name: "footer-01",
 		title: "Footer 01",

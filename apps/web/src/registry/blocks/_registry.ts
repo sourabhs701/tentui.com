@@ -55,6 +55,27 @@ export const blocks: Registry["items"] = [
 		},
 	},
 	{
+		name: "footer-02",
+		title: "Footer 02",
+		description:
+			"A grain-textured footer with dashed grid lines, navigation columns, and an oversized wordmark.",
+		type: "registry:block",
+		dependencies: ["lucide-react"],
+		files: [
+			{
+				path: "blocks/footer-02/footer-02.tsx",
+				target: "@components/footer-02.tsx",
+				type: "registry:component",
+			},
+		],
+		categories: ["footer"],
+		meta: {
+			createdAt: "2026-07-21",
+			iframeHeight: 720,
+			previewClassName: "flex min-h-svh items-end",
+		},
+	},
+	{
 		name: "footer-01",
 		title: "Footer 01",
 		description:

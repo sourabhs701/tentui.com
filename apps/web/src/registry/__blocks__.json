@@ -14,6 +14,13 @@
     ]
   },
   {
+    "name": "footer-02",
+    "description": "A grain-textured footer with dashed grid lines, navigation columns, and an oversized wordmark.",
+    "categories": [
+      "footer"
+    ]
+  },
+  {
     "name": "footer-01",
     "description": "A structured product footer with newsletter, navigation, status, and theme controls.",
     "categories": [
