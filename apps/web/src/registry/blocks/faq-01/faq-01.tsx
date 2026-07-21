@@ -153,22 +153,20 @@ export default function Faq01({
 									key={faq.id}
 									value={faq.id}
 								>
-									<AccordionTrigger className="group/faq-trigger touch-manipulation items-center rounded-none py-6 transition-none hover:no-underline **:data-[slot=accordion-trigger-icon]:hidden sm:py-7">
+									<AccordionTrigger className="group/faq-trigger [&>svg]:hidden! touch-manipulation items-center rounded-none py-6 transition-none hover:no-underline sm:py-7">
 										<span className="flex flex-1 items-center pr-4">
 											<span className="text-left text-base text-foreground leading-6 sm:text-lg">
 												{faq.question}
 											</span>
 										</span>
-										<span className="ml-auto flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground transition-[transform,background-color] duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/faq-trigger:bg-muted/80 group-active/faq-trigger:scale-[0.97]">
+										<span className="ml-auto flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground transition-[transform,background-color] duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/faq-trigger:bg-muted/80 group-active/faq-trigger:scale-[0.97] [&_svg]:size-4">
 											<PlusIcon
 												aria-hidden="true"
 												className="group-aria-expanded/faq-trigger:hidden"
-												data-slot="accordion-trigger-icon"
 											/>
 											<MinusIcon
 												aria-hidden="true"
 												className="hidden group-aria-expanded/faq-trigger:block"
-												data-slot="accordion-trigger-icon"
 											/>
 										</span>
 									</AccordionTrigger>

@@ -83,15 +83,14 @@ export default function Faq02({
 								key={faq.id}
 								value={faq.id}
 							>
-								<AccordionTrigger className="group/faq-trigger grid touch-manipulation grid-cols-[minmax(0,1fr)_2.25rem] items-center gap-x-4 rounded-none border-0 py-6 transition-none hover:no-underline **:data-[slot=accordion-trigger-icon]:hidden sm:gap-x-5 sm:py-7">
+								<AccordionTrigger className="group/faq-trigger [&>svg]:hidden! grid touch-manipulation grid-cols-[minmax(0,1fr)_2.25rem] items-center gap-x-4 rounded-none border-0 py-6 transition-none hover:no-underline sm:gap-x-5 sm:py-7">
 									<span className="text-left font-normal text-base text-foreground leading-6 sm:text-lg">
 										{faq.question}
 									</span>
-									<span className="flex size-9 items-center justify-center rounded-full border border-border bg-background text-muted-foreground shadow-xs transition-[transform,background-color,border-color] duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/faq-trigger:border-foreground/15 group-hover/faq-trigger:bg-muted group-active/faq-trigger:scale-[0.96]">
+									<span className="flex size-9 items-center justify-center rounded-full border border-border bg-background text-muted-foreground shadow-xs transition-[transform,background-color,border-color] duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/faq-trigger:border-foreground/15 group-hover/faq-trigger:bg-muted group-active/faq-trigger:scale-[0.96] [&_svg]:size-4">
 										<PlusIcon
 											aria-hidden="true"
 											className="transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-aria-expanded/faq-trigger:rotate-45 motion-reduce:transition-none"
-											data-slot="accordion-trigger-icon"
 										/>
 									</span>
 								</AccordionTrigger>
