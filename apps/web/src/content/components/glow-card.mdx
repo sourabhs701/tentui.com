@@ -1,0 +1,86 @@
+---
+title: Cursor-Tracking Glow Card
+description: Trace the pointer with a spring-smoothed radial glow along a card border.
+createdAt: 2026-07-21
+updatedAt: 2026-07-21
+---
+
+<ComponentPreview name="glow-card-demo" />
+
+## Features
+
+- Tracks fine-pointer movement with a lightly damped spring.
+- Keeps content composition open instead of imposing a card layout.
+- Ignores touch pointers and removes the moving glow for reduced-motion users.
+- Composes external pointer handlers without hiding the built-in response.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/glow-card
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion clsx tailwind-merge
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="glow-card" title="components/glow-card.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { GlowCard } from "@/components/glow-card";
+```
+
+```tsx
+<GlowCard glowColor="hsl(217 91% 60%)" glowSize={140}>
+  <article className="rounded-[inherit] bg-card p-6">
+    Your content
+  </article>
+</GlowCard>
+```
+
+## Accessibility
+
+The glow is decorative and hidden from assistive technology. Touch input does
+not activate pointer tracking, and reduced-motion preferences disable the moving
+effect while preserving the card content and border.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/glow-card/glow-card.tsx"
+  name="GlowCardProps"
+/>

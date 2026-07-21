@@ -4,6 +4,36 @@
   "homepage": "https://tentui.com/blocks",
   "items": [
     {
+      "name": "testimonials-01",
+      "title": "Testimonials 01",
+      "description": "A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
+      "dependencies": [
+        "motion",
+        "react-tweet"
+      ],
+      "registryDependencies": [
+        "avatar",
+        "card",
+        "https://tentui.com/r/glow-card.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/testimonials-01/testimonials-01.tsx",
+          "type": "registry:component",
+          "target": "@components/testimonials-01.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-21",
+        "iframeHeight": 1320,
+        "previewClassName": "min-h-screen"
+      },
+      "categories": [
+        "testimonials"
+      ],
+      "type": "registry:block"
+    },
+    {
       "name": "cta-01",
       "title": "CTA 01",
       "description": "A responsive call-to-action with a wide landscape image.",
@@ -228,6 +258,31 @@
         "hero"
       ],
       "type": "registry:block"
+    },
+    {
+      "name": "glow-card",
+      "title": "Cursor-Tracking Glow Card",
+      "description": "Trace the pointer with a spring-smoothed radial glow along a card border.",
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/glow-card/glow-card.tsx",
+          "type": "registry:component",
+          "target": "@components/glow-card.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-21",
+        "image": "https://cdn.srb.codes/images/components/glow-card",
+        "video": "https://cdn.srb.codes/videos/components/glow-card"
+      },
+      "docs": "https://tentui.com/components/glow-card",
+      "categories": [
+        "cards"
+      ],
+      "type": "registry:component"
     },
     {
       "name": "brand-context-menu",

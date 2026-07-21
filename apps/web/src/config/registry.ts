@@ -7,6 +7,12 @@ export const registryConfig = {
 
 export const blockCategories = [
 	{
+		name: "testimonials",
+		title: "Testimonials",
+		description:
+			"Testimonial sections for credible, visually engaging customer proof.",
+	},
+	{
 		name: "cta",
 		title: "CTA",
 		description: "Call-to-action sections that turn interest into momentum.",

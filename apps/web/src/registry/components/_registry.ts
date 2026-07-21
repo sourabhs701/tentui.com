@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "glow-card",
+		type: "registry:component",
+		title: "Cursor-Tracking Glow Card",
+		description:
+			"Trace the pointer with a spring-smoothed radial glow along a card border.",
+		dependencies: ["motion"],
+		files: [
+			{
+				path: "components/glow-card/glow-card.tsx",
+				type: "registry:component",
+				target: "@components/glow-card.tsx",
+			},
+		],
+		categories: ["cards"],
+		meta: {
+			createdAt: "2026-07-21",
+			image: "https://cdn.srb.codes/images/components/glow-card",
+			video: "https://cdn.srb.codes/videos/components/glow-card",
+		},
+		docs: "https://tentui.com/components/glow-card",
+	},
+	{
 		name: "brand-context-menu",
 		type: "registry:component",
 		title: "Brand Context Menu",

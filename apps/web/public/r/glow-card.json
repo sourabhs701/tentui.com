@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "glow-card",
+  "title": "Cursor-Tracking Glow Card",
+  "description": "Trace the pointer with a spring-smoothed radial glow along a card border.",
+  "dependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "src/registry/components/glow-card/glow-card.tsx",
+      "content": "\"use client\";\n\nimport {\n\tmotion,\n\tuseMotionTemplate,\n\tuseMotionValue,\n\tuseReducedMotion,\n\tuseSpring,\n} from \"motion/react\";\nimport type { ComponentProps, PointerEvent } from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport interface GlowCardProps extends ComponentProps<\"div\"> {\n\tglowColor?: string;\n\tglowSize?: number;\n}\n\nexport function GlowCard({\n\tchildren,\n\tclassName,\n\tglowColor = \"hsl(217 91% 60%)\",\n\tglowSize = 140,\n\tonPointerLeave,\n\tonPointerMove,\n\t...props\n}: GlowCardProps) {\n\tconst mouseX = useMotionValue(-glowSize);\n\tconst mouseY = useMotionValue(-glowSize);\n\tconst smoothX = useSpring(mouseX, {\n\t\tstiffness: 220,\n\t\tdamping: 30,\n\t\tmass: 0.25,\n\t});\n\tconst smoothY = useSpring(mouseY, {\n\t\tstiffness: 220,\n\t\tdamping: 30,\n\t\tmass: 0.25,\n\t});\n\tconst reduceMotion = useReducedMotion();\n\tconst backgroundImage = useMotionTemplate`radial-gradient(${glowSize}px circle at ${smoothX}px ${smoothY}px, ${glowColor}, transparent 70%)`;\n\n\tfunction handlePointerMove(event: PointerEvent<HTMLDivElement>) {\n\t\tonPointerMove?.(event);\n\t\tif (\n\t\t\tevent.defaultPrevented ||\n\t\t\tevent.pointerType === \"touch\" ||\n\t\t\treduceMotion\n\t\t) {\n\t\t\treturn;\n\t\t}\n\n\t\tconst bounds = event.currentTarget.getBoundingClientRect();\n\t\tmouseX.set(event.clientX - bounds.left);\n\t\tmouseY.set(event.clientY - bounds.top);\n\t}\n\n\tfunction handlePointerLeave(event: PointerEvent<HTMLDivElement>) {\n\t\tonPointerLeave?.(event);\n\t\tmouseX.set(-glowSize);\n\t\tmouseY.set(-glowSize);\n\t}\n\n\treturn (\n\t\t<div\n\t\t\tclassName={cn(\n\t\t\t\t\"group/glow-card relative overflow-hidden rounded-xl bg-border/70 p-px\",\n\t\t\t\tclassName,\n\t\t\t)}\n\t\t\tdata-slot=\"glow-card\"\n\t\t\tonPointerLeave={handlePointerLeave}\n\t\t\tonPointerMove={handlePointerMove}\n\t\t\t{...props}\n\t\t>\n\t\t\t<motion.div\n\t\t\t\taria-hidden=\"true\"\n\t\t\t\tclassName=\"pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:opacity-0 motion-reduce:transition-none [@media(hover:hover)_and_(pointer:fine)]:group-hover/glow-card:opacity-100\"\n\t\t\t\tstyle={{ backgroundImage }}\n\t\t\t/>\n\t\t\t<div className=\"relative h-full overflow-hidden rounded-[inherit]\">\n\t\t\t\t{children}\n\t\t\t</div>\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:component",
+      "target": "@components/glow-card.tsx"
+    }
+  ],
+  "meta": {
+    "createdAt": "2026-07-21",
+    "image": "https://cdn.srb.codes/images/components/glow-card",
+    "video": "https://cdn.srb.codes/videos/components/glow-card"
+  },
+  "docs": "https://tentui.com/components/glow-card",
+  "categories": [
+    "cards"
+  ],
+  "type": "registry:component"
+}

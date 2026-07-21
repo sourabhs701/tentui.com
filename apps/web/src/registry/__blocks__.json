@@ -1,5 +1,12 @@
 [
   {
+    "name": "testimonials-01",
+    "description": "A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
+    "categories": [
+      "testimonials"
+    ]
+  },
+  {
     "name": "cta-01",
     "description": "A responsive call-to-action with a wide landscape image.",
     "categories": [

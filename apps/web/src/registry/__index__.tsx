@@ -5,6 +5,24 @@
 import * as React from "react";
 
 export const Index = {
+	"testimonials-01": {
+		name: "testimonials-01",
+		title: "Testimonials 01",
+		description: "A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/testimonials-01/testimonials-01.tsx","type":"registry:component","target":"@components/testimonials-01.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/testimonials-01/testimonials-01")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for testimonials-01");
+			}
+			return { default: module.default };
+		}),
+		categories: ["testimonials"],
+		meta: {"createdAt":"2026-07-21","iframeHeight":1320,"previewClassName":"min-h-screen"},
+	},
 	"cta-01": {
 		name: "cta-01",
 		title: "CTA 01",
@@ -148,6 +166,24 @@ export const Index = {
 		}),
 		categories: ["hero"],
 		meta: {"createdAt":"2026-07-17","iframeHeight":760,"previewClassName":"min-h-screen"},
+	},
+	"glow-card": {
+		name: "glow-card",
+		title: "Cursor-Tracking Glow Card",
+		description: "Trace the pointer with a spring-smoothed radial glow along a card border.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/glow-card/glow-card.tsx","type":"registry:component","target":"@components/glow-card.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/glow-card/glow-card")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for glow-card");
+			}
+			return { default: module.default };
+		}),
+		categories: ["cards"],
+		meta: {"createdAt":"2026-07-21","image":"https://cdn.srb.codes/images/components/glow-card","video":"https://cdn.srb.codes/videos/components/glow-card"},
 	},
 	"brand-context-menu": {
 		name: "brand-context-menu",
@@ -310,6 +346,24 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
+	},
+	"glow-card-demo": {
+		name: "glow-card-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/glow-card-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/glow-card-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for glow-card-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 place-items-center content-center"},
 	},
 	"brand-context-menu-demo": {
 		name: "brand-context-menu-demo",

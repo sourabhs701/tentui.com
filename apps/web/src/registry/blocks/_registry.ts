@@ -4,6 +4,28 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const blocks: Registry["items"] = [
 	{
+		name: "testimonials-01",
+		title: "Testimonials 01",
+		description:
+			"A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
+		type: "registry:block",
+		dependencies: ["motion", "react-tweet"],
+		registryDependencies: ["avatar", "card", getRegistryItemUrl("glow-card")],
+		files: [
+			{
+				path: "blocks/testimonials-01/testimonials-01.tsx",
+				target: "@components/testimonials-01.tsx",
+				type: "registry:component",
+			},
+		],
+		categories: ["testimonials"],
+		meta: {
+			createdAt: "2026-07-21",
+			iframeHeight: 1320,
+			previewClassName: "min-h-screen",
+		},
+	},
+	{
 		name: "cta-01",
 		title: "CTA 01",
 		description: "A responsive call-to-action with a wide landscape image.",

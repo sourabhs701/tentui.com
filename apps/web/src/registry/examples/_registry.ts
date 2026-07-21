@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "glow-card-demo",
+		type: "registry:example",
+		registryDependencies: ["card", getRegistryItemUrl("glow-card")],
+		files: [
+			{
+				path: "examples/glow-card-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 place-items-center content-center",
+		},
+	},
+	{
 		name: "brand-context-menu-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("brand-context-menu")],
