@@ -23,6 +23,7 @@ import {
 	MarkdownIcon,
 	OpenAIIcon,
 } from "@/components/icons";
+import { SOURCE_CODE_GITHUB_URL } from "@/config/site";
 import type { CopyState } from "@/hooks/use-copy-to-clipboard";
 import { CopyStateIcon } from "@/registry/components/copy-button/copy-button";
 
@@ -50,7 +51,14 @@ export function LLMCopyButton({ markdownUrl }: { markdownUrl: string }) {
 				await navigator.clipboard.write([
 					new ClipboardItem({
 						"text/plain": fetch(markdownUrl)
-							.then((res) => res.text())
+							.then((response) => {
+								if (!response.ok) {
+									throw new Error(
+										`Markdown request failed: ${response.status}`,
+									);
+								}
+								return response.text();
+							})
 							.then((content) => {
 								cache.set(markdownUrl, content);
 								return content;
@@ -126,7 +134,7 @@ export function ViewOptions({
 			},
 			{
 				title: "Open in GitHub",
-				href: `https://github.com/ncdai/chanhdai.com/blob/main/src/features/doc/content/${markdownUrl.replace(/^\//, "")}`,
+				href: `${SOURCE_CODE_GITHUB_URL}/blob/main/apps/web/src/content/${markdownUrl.replace(/^\//, "")}`,
 				icon: GitHubIcon,
 			},
 			{

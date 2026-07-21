@@ -22,11 +22,29 @@ const nextConfig: NextConfig = {
 			},
 		],
 	},
+	async headers() {
+		return [
+			{
+				// This URL content-negotiates on Accept, so keep its variants out of shared caches.
+				source: "/components/:slug([^.]+)",
+				headers: [
+					{
+						key: "Cache-Control",
+						value: "private, no-store",
+					},
+				],
+			},
+		];
+	},
 	async rewrites() {
 		return [
 			{
 				source: "/components/:slug.mdx",
 				destination: "/doc.mdx/:slug",
+			},
+			{
+				source: "/blocks/:name.mdx",
+				destination: "/block.mdx/:name",
 			},
 			{
 				source: "/registry/rss",

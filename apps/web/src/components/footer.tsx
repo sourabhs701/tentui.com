@@ -1,4 +1,4 @@
-import { RssIcon } from "lucide-react";
+import { FileTextIcon, RssIcon } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { TentUiMark } from "@/components/tentui-mark";
@@ -36,6 +36,11 @@ const legalLinks: FooterLink[] = [
 ];
 
 const socialLinks: FooterLink[] = [
+	{
+		label: "llms.txt",
+		href: "/llms.txt",
+		icon: <FileTextIcon className="size-3" aria-hidden="true" />,
+	},
 	{
 		label: "X (formerly Twitter)",
 		href: "https://x.com/srbcode",

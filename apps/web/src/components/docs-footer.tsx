@@ -1,4 +1,5 @@
-import { RssIcon } from "lucide-react";
+import { FileTextIcon, RssIcon } from "lucide-react";
+import type { Route } from "next";
 import Link from "next/link";
 
 export function DocsFooter() {
@@ -6,6 +7,13 @@ export function DocsFooter() {
 		<footer className="container mx-auto border-border border-t border-dashed">
 			<div className="flex min-h-14 items-center justify-center gap-4 px-4 font-mono text-[12px] text-muted-foreground tracking-tight">
 				<p>&copy; 2026 TentUI</p>
+				<Link
+					href={"/llms.txt" as Route}
+					className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
+				>
+					<FileTextIcon className="size-3" aria-hidden="true" />
+					llms.txt
+				</Link>
 				<Link
 					href="/rss"
 					className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"

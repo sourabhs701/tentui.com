@@ -15,6 +15,7 @@ import {
 	BoxIcon,
 	CopyIcon,
 	CornerDownLeftIcon,
+	FileTextIcon,
 	LayoutPanelTopIcon,
 	MonitorIcon,
 	MoonStarIcon,
@@ -80,6 +81,13 @@ const MENU_LINKS: CommandLink[] = [
 ];
 
 const OTHER_LINKS: CommandLink[] = [
+	{
+		title: "llms.txt",
+		href: "/llms.txt",
+		kind: "link",
+		icon: <FileTextIcon />,
+		openInNewTab: true,
+	},
 	{
 		title: "RSS Feed",
 		href: "/rss",

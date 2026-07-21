@@ -149,6 +149,24 @@ The custom build step writes:
 
 Do not edit these generated files directly.
 
+## LLM-readable documentation
+
+TentUI publishes statically generated Markdown for AI tools and text-based
+consumers:
+
+- [`/llms.txt`](https://tentui.com/llms.txt) is the compact discovery index for
+  every documented component and block.
+- [`/llms-full.txt`](https://tentui.com/llms-full.txt) combines the complete
+  component documentation and block source into one document.
+- `/components/{slug}.mdx` expands component previews, source references, and
+  API tables into readable Markdown.
+- `/blocks/{name}.mdx` includes installation metadata and source code while
+  listing binary assets without embedding them.
+
+Component pages also return their Markdown representation when requested with
+an `Accept: text/markdown` header. These routes are statically generated, so
+registry and documentation changes are reflected after the next website build.
+
 ## Adding a component or block
 
 1. Add the implementation under `apps/web/src/registry/components` or
