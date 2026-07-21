@@ -1,0 +1,81 @@
+---
+title: Animated Tabs
+description: Switch between segmented options with a fluid shared-layout indicator.
+createdAt: 2026-07-21
+updatedAt: 2026-07-21
+---
+
+<ComponentPreview name="animated-tabs-demo" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/animated-tabs
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion clsx tailwind-merge
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="animated-tabs" title="components/animated-tabs.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { AnimatedTabs } from "@/components/animated-tabs";
+```
+
+```tsx
+const tabs = [
+  { value: "overview", label: "Overview" },
+  { value: "analytics", label: "Analytics" },
+];
+
+<AnimatedTabs
+  tabs={tabs}
+  value={value}
+  onValueChange={setValue}
+  aria-label="Dashboard view"
+/>
+```
+
+The component supports controlled and uncontrolled state with accessible radio-group semantics. Arrow keys, Home, and End move focus and selection through the options.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/animated-tabs/animated-tabs.tsx"
+  name="AnimatedTabsProps"
+/>

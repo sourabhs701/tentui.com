@@ -36,9 +36,12 @@ function withLocalFilePaths(item: RegistryItem): RegistryItem {
 
 function getComponentImportPath(item: RegistryItem) {
 	const componentFile = item.files?.find((file) =>
-		["registry:block", "registry:component", "registry:example"].includes(
-			file.type,
-		),
+		[
+			"registry:block",
+			"registry:component",
+			"registry:example",
+			"registry:page",
+		].includes(file.type),
 	);
 
 	if (!componentFile) {
@@ -71,6 +74,8 @@ function languageFromPath(filePath: string) {
 			return "css";
 		case "json":
 			return "json";
+		case "svg":
+			return "html";
 		case "md":
 		case "mdx":
 			return "markdown";
@@ -176,7 +181,10 @@ async function buildDisplayItem(item: RegistryItem) {
 			const raw = await readSourceFile(file.path);
 			const processed = processFileContent(file.type, raw);
 			// formatCode uses ts-morph (Node-only) — fine here at build time.
-			const formatted = await formatCode(processed, "base-lyra");
+			const isCode = /\.[cm]?[jt]sx?$/.test(file.path);
+			const formatted = isCode
+				? await formatCode(processed, "base-lyra")
+				: processed;
 			const highlightedContent = await highlightCode(
 				formatted,
 				languageFromPath(file.path),

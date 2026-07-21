@@ -5,6 +5,114 @@
 import * as React from "react";
 
 export const Index = {
+	"cta-01": {
+		name: "cta-01",
+		title: "CTA 01",
+		description: "A responsive call-to-action with a wide landscape image.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/cta-01/cta-01.tsx","type":"registry:component","target":"@components/cta-01.tsx"},{"path":"public/cta-01-landscape.svg","type":"registry:file","target":"~/public/cta-01-landscape.svg"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/cta-01/cta-01")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for cta-01");
+			}
+			return { default: module.default };
+		}),
+		categories: ["cta"],
+		meta: {"createdAt":"2026-07-21","iframeHeight":590,"previewClassName":"content-center"},
+	},
+	"legal-page-01": {
+		name: "legal-page-01",
+		title: "Legal Page 01",
+		description: "A two-file App Router legal route group with sidebar navigation and numbered clauses.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/legal-page-01/layout.tsx","type":"registry:page","target":"app/(legal)/layout.tsx"},{"path":"src/registry/blocks/legal-page-01/privacy/page.tsx","type":"registry:page","target":"app/(legal)/privacy/page.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/legal-page-01/layout")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for legal-page-01");
+			}
+			return { default: module.default };
+		}),
+		categories: ["legal"],
+		meta: {"createdAt":"2026-07-21","iframeHeight":1120,"previewClassName":"min-h-screen"},
+	},
+	"footer-01": {
+		name: "footer-01",
+		title: "Footer 01",
+		description: "A structured product footer with newsletter, navigation, status, and theme controls.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/footer-01/footer-01.tsx","type":"registry:component","target":"@components/footer-01.tsx"},{"path":"public/tkit-logo.svg","type":"registry:file","target":"~/public/tkit-logo.svg"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/footer-01/footer-01")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for footer-01");
+			}
+			return { default: module.default };
+		}),
+		categories: ["footer"],
+		meta: {"createdAt":"2026-07-21","iframeHeight":860,"previewClassName":"flex min-h-svh items-end"},
+	},
+	"pricing-01": {
+		name: "pricing-01",
+		title: "Pricing 01",
+		description: "Pricing plans with a billing toggle and usage comparison.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/pricing-01/pricing-01.tsx","type":"registry:component","target":"@components/pricing-01.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/pricing-01/pricing-01")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for pricing-01");
+			}
+			return { default: module.default };
+		}),
+		categories: ["pricing"],
+		meta: {"createdAt":"2026-07-21","iframeHeight":1040,"previewClassName":"min-h-screen"},
+	},
+	"faq-02": {
+		name: "faq-02",
+		title: "FAQ 02",
+		description: "A numbered editorial FAQ section with focused disclosure rows.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/faq-02/faq-02.tsx","type":"registry:component","target":"@components/faq-02.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/faq-02/faq-02")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for faq-02");
+			}
+			return { default: module.default };
+		}),
+		categories: ["faq"],
+		meta: {"createdAt":"2026-07-21","iframeHeight":860,"previewClassName":"min-h-screen"},
+	},
+	"faq-01": {
+		name: "faq-01",
+		title: "FAQ 01",
+		description: "A split-layout FAQ section with subtle grid detailing.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/faq-01/faq-01.tsx","type":"registry:component","target":"@components/faq-01.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/faq-01/faq-01")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for faq-01");
+			}
+			return { default: module.default };
+		}),
+		categories: ["faq"],
+		meta: {"createdAt":"2026-07-21","iframeHeight":760,"previewClassName":"min-h-screen"},
+	},
 	"agency-hero-01": {
 		name: "agency-hero-01",
 		title: "Agency Hero 01",
@@ -22,6 +130,24 @@ export const Index = {
 		}),
 		categories: ["hero"],
 		meta: {"createdAt":"2026-07-17","iframeHeight":760,"previewClassName":"min-h-screen"},
+	},
+	"animated-tabs": {
+		name: "animated-tabs",
+		title: "Animated Tabs",
+		description: "Switch segmented options with a fluid shared-layout indicator.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/animated-tabs/animated-tabs.tsx","type":"registry:component","target":"@components/animated-tabs.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/animated-tabs/animated-tabs")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for animated-tabs");
+			}
+			return { default: module.default };
+		}),
+		categories: ["navigation"],
+		meta: {"createdAt":"2026-07-21","image":"https://cdn.srb.codes/images/components/animated-tabs","video":"https://cdn.srb.codes/videos/components/animated-tabs"},
 	},
 	"3d-button": {
 		name: "3d-button",
@@ -148,6 +274,24 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
+	},
+	"animated-tabs-demo": {
+		name: "animated-tabs-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/animated-tabs-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/animated-tabs-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for animated-tabs-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
 	"3d-button-demo": {
 		name: "3d-button-demo",

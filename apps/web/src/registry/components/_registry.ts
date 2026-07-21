@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "animated-tabs",
+		type: "registry:component",
+		title: "Animated Tabs",
+		description:
+			"Switch segmented options with a fluid shared-layout indicator.",
+		dependencies: ["motion"],
+		files: [
+			{
+				path: "components/animated-tabs/animated-tabs.tsx",
+				type: "registry:component",
+				target: "@components/animated-tabs.tsx",
+			},
+		],
+		categories: ["navigation"],
+		meta: {
+			createdAt: "2026-07-21",
+			image: "https://cdn.srb.codes/images/components/animated-tabs",
+			video: "https://cdn.srb.codes/videos/components/animated-tabs",
+		},
+		docs: "https://tentui.com/components/animated-tabs",
+	},
+	{
 		name: "3d-button",
 		type: "registry:component",
 		title: "3D Button",

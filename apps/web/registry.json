@@ -4,6 +4,183 @@
   "homepage": "https://tentui.com/blocks",
   "items": [
     {
+      "name": "cta-01",
+      "title": "CTA 01",
+      "description": "A responsive call-to-action with a wide landscape image.",
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/cta-01/cta-01.tsx",
+          "type": "registry:component",
+          "target": "@components/cta-01.tsx"
+        },
+        {
+          "path": "public/cta-01-landscape.svg",
+          "type": "registry:file",
+          "target": "~/public/cta-01-landscape.svg"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-21",
+        "iframeHeight": 590,
+        "previewClassName": "content-center"
+      },
+      "categories": [
+        "cta"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "name": "legal-page-01",
+      "title": "Legal Page 01",
+      "description": "A two-file App Router legal route group with sidebar navigation and numbered clauses.",
+      "registryDependencies": [
+        "separator"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/legal-page-01/layout.tsx",
+          "type": "registry:page",
+          "target": "app/(legal)/layout.tsx"
+        },
+        {
+          "path": "src/registry/blocks/legal-page-01/privacy/page.tsx",
+          "type": "registry:page",
+          "target": "app/(legal)/privacy/page.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-21",
+        "iframeHeight": 1120,
+        "previewClassName": "min-h-screen"
+      },
+      "categories": [
+        "legal"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "name": "footer-01",
+      "title": "Footer 01",
+      "description": "A structured product footer with newsletter, navigation, status, and theme controls.",
+      "dependencies": [
+        "lucide-react",
+        "next-themes"
+      ],
+      "registryDependencies": [
+        "button",
+        "input-group",
+        "separator"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/footer-01/footer-01.tsx",
+          "type": "registry:component",
+          "target": "@components/footer-01.tsx"
+        },
+        {
+          "path": "public/tkit-logo.svg",
+          "type": "registry:file",
+          "target": "~/public/tkit-logo.svg"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-21",
+        "iframeHeight": 860,
+        "previewClassName": "flex min-h-svh items-end"
+      },
+      "categories": [
+        "footer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-01",
+      "title": "Pricing 01",
+      "description": "Pricing plans with a billing toggle and usage comparison.",
+      "dependencies": [
+        "lucide-react",
+        "motion"
+      ],
+      "registryDependencies": [
+        "badge",
+        "button",
+        "https://tentui.com/r/animated-tabs.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/pricing-01/pricing-01.tsx",
+          "type": "registry:component",
+          "target": "@components/pricing-01.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-21",
+        "iframeHeight": 1040,
+        "previewClassName": "min-h-screen"
+      },
+      "categories": [
+        "pricing"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "name": "faq-02",
+      "title": "FAQ 02",
+      "description": "A numbered editorial FAQ section with focused disclosure rows.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "accordion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/faq-02/faq-02.tsx",
+          "type": "registry:component",
+          "target": "@components/faq-02.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-21",
+        "iframeHeight": 860,
+        "previewClassName": "min-h-screen"
+      },
+      "categories": [
+        "faq"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "name": "faq-01",
+      "title": "FAQ 01",
+      "description": "A split-layout FAQ section with subtle grid detailing.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "accordion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/faq-01/faq-01.tsx",
+          "type": "registry:component",
+          "target": "@components/faq-01.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-21",
+        "iframeHeight": 760,
+        "previewClassName": "min-h-screen"
+      },
+      "categories": [
+        "faq"
+      ],
+      "type": "registry:block"
+    },
+    {
       "name": "agency-hero-01",
       "title": "Agency Hero 01",
       "description": "Animated agency hero.",
@@ -27,6 +204,31 @@
         "hero"
       ],
       "type": "registry:block"
+    },
+    {
+      "name": "animated-tabs",
+      "title": "Animated Tabs",
+      "description": "Switch segmented options with a fluid shared-layout indicator.",
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/animated-tabs/animated-tabs.tsx",
+          "type": "registry:component",
+          "target": "@components/animated-tabs.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-21",
+        "image": "https://cdn.srb.codes/images/components/animated-tabs",
+        "video": "https://cdn.srb.codes/videos/components/animated-tabs"
+      },
+      "docs": "https://tentui.com/components/animated-tabs",
+      "categories": [
+        "navigation"
+      ],
+      "type": "registry:component"
     },
     {
       "name": "3d-button",

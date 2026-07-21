@@ -1,5 +1,47 @@
 [
   {
+    "name": "cta-01",
+    "description": "A responsive call-to-action with a wide landscape image.",
+    "categories": [
+      "cta"
+    ]
+  },
+  {
+    "name": "legal-page-01",
+    "description": "A two-file App Router legal route group with sidebar navigation and numbered clauses.",
+    "categories": [
+      "legal"
+    ]
+  },
+  {
+    "name": "footer-01",
+    "description": "A structured product footer with newsletter, navigation, status, and theme controls.",
+    "categories": [
+      "footer"
+    ]
+  },
+  {
+    "name": "pricing-01",
+    "description": "Pricing plans with a billing toggle and usage comparison.",
+    "categories": [
+      "pricing"
+    ]
+  },
+  {
+    "name": "faq-02",
+    "description": "A numbered editorial FAQ section with focused disclosure rows.",
+    "categories": [
+      "faq"
+    ]
+  },
+  {
+    "name": "faq-01",
+    "description": "A split-layout FAQ section with subtle grid detailing.",
+    "categories": [
+      "faq"
+    ]
+  },
+  {
     "name": "agency-hero-01",
     "description": "Animated agency hero.",
     "categories": [
