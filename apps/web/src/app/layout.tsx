@@ -9,6 +9,7 @@ import { META_THEME_COLORS, SITE_INFO } from "@/config/site";
 import { JsonLdScript, websiteJsonLd } from "@/lib/json-ld";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const OG_IMAGE = "/og-image.png";
 
 const darkModeScript = `
 	try {
@@ -71,18 +72,16 @@ export const metadata: Metadata = {
 		locale: "en_US",
 		images: [
 			{
-				url: `/og/simple?title=${encodeURIComponent(SITE_INFO.name)}&description=${encodeURIComponent(SITE_INFO.description)}`,
-				width: 1200,
-				height: 630,
+				url: OG_IMAGE,
+				width: 1924,
+				height: 1080,
 				alt: SITE_INFO.name,
 			},
 		],
 	},
 	twitter: {
 		card: "summary_large_image",
-		images: [
-			`/og/simple?title=${encodeURIComponent(SITE_INFO.name)}&description=${encodeURIComponent(SITE_INFO.description)}`,
-		],
+		images: [OG_IMAGE],
 	},
 };
 
