@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 const componentPathPrefix = "/components/";
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
 	if (request.nextUrl.pathname.endsWith(".mdx")) {
 		return NextResponse.next();
 	}
