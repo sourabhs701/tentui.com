@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "@tentui.com/ui/components/sonner";
 import { TooltipProvider } from "@tentui.com/ui/components/tooltip";
 
+import "@/lib/openpanel";
 import { queryClient } from "@/utils/trpc";
 
 import { ThemeProvider } from "./theme-provider";

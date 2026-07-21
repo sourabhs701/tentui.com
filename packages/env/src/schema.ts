@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const webEnvSchema = z.object({
 	GITHUB_API_TOKEN: z.string().min(1),
+	NEXT_PUBLIC_OPENPANEL_CLIENT_ID: z.uuid(),
 	NEXT_PUBLIC_SERVER_URL: z.url(),
 });
 
@@ -12,6 +13,7 @@ export const serverEnvSchema = z.object({
 });
 
 export const envFileSchema = serverEnvSchema.extend({
+	NEXT_PUBLIC_OPENPANEL_CLIENT_ID: z.uuid(),
 	NEXT_PUBLIC_SERVER_URL: z.url(),
 	ALCHEMY_PASSWORD: z.string().min(1),
 });
