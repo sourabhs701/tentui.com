@@ -1,0 +1,133 @@
+---
+title: Brand Context Menu
+description: Share copy-ready and downloadable brand assets from a contextual menu.
+createdAt: 2026-07-21
+updatedAt: 2026-07-21
+---
+
+<ComponentPreview name="brand-context-menu-demo" />
+
+## Features
+
+- Copies the primary mark or logotype as raw SVG markup.
+- Keeps the menu compact with three focused actions.
+- Downloads the complete SVG and PNG brand kit as a ZIP archive.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/brand-context-menu
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Add the Context Menu and Sonner components</Step>
+
+```bash
+npx shadcn@latest add context-menu sonner
+```
+
+<Step>Mount the Sonner toaster in your root layout</Step>
+
+```tsx
+import { Toaster } from "@/components/ui/sonner";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <Toaster />
+      </body>
+    </html>
+  );
+}
+```
+
+<Step>Copy the files from the brand folder into your public directory</Step>
+
+The included SVG assets are installed at `public/brand` by the CLI. Add any PNG
+variants you want to include in the downloadable archive.
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="brand-context-menu" title="components/brand-context-menu.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Create the brand assets ZIP
+
+Run this command from the project root after adding or changing files in
+`public/brand`:
+
+```bash
+(cd public && zip -FS -r brand/tentui-brand-assets.zip brand \
+  -x "brand/.DS_Store" "brand/tentui-brand-assets.zip")
+```
+
+The component downloads the archive from
+`/brand/tentui-brand-assets.zip` by default. Use `brandAssetsZipPath` if your
+archive lives elsewhere.
+
+## Usage
+
+```tsx
+import { BrandContextMenu } from "@/components/brand-context-menu";
+```
+
+```tsx
+<BrandContextMenu>
+  <button type="button">Right-click for brand assets</button>
+</BrandContextMenu>
+```
+
+Pass custom mark and logotype assets and point the component to your archive.
+
+```tsx
+const mark = {
+  name: "Mark",
+  path: "/brand/mark.svg",
+  filename: "acme-mark.svg",
+};
+
+const logotype = {
+  name: "Logotype",
+  path: "/brand/logotype.svg",
+  filename: "acme-logotype.svg",
+};
+
+<BrandContextMenu
+  markAsset={mark}
+  logotypeAsset={logotype}
+  brandAssetsZipPath="/brand/acme-brand-assets.zip"
+>
+  <button type="button">Open brand kit</button>
+</BrandContextMenu>;
+```
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/brand-context-menu/brand-context-menu.tsx"
+  name="BrandContextMenuProps"
+/>
+
+## Credits
+
+- [@ncdai](https://x.com/ncdai)

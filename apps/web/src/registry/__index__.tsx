@@ -131,6 +131,24 @@ export const Index = {
 		categories: ["hero"],
 		meta: {"createdAt":"2026-07-17","iframeHeight":760,"previewClassName":"min-h-screen"},
 	},
+	"brand-context-menu": {
+		name: "brand-context-menu",
+		title: "Brand Context Menu",
+		description: "Share copy-ready and downloadable brand assets from a contextual menu.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/brand-context-menu/brand-context-menu.tsx","type":"registry:component","target":"@components/brand-context-menu.tsx"},{"path":"public/brand/Logo.svg","type":"registry:file","target":"~/public/brand/Logo.svg"},{"path":"public/brand/LogoType.svg","type":"registry:file","target":"~/public/brand/LogoType.svg"},{"path":"public/brand/mark-brand.svg","type":"registry:file","target":"~/public/brand/mark-brand.svg"},{"path":"public/brand/mark-light.svg","type":"registry:file","target":"~/public/brand/mark-light.svg"},{"path":"public/brand/Mark-dark.svg","type":"registry:file","target":"~/public/brand/Mark-dark.svg"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/brand-context-menu/brand-context-menu")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for brand-context-menu");
+			}
+			return { default: module.default };
+		}),
+		categories: ["menus"],
+		meta: {"createdAt":"2026-07-21"},
+	},
 	"animated-tabs": {
 		name: "animated-tabs",
 		title: "Animated Tabs",
@@ -274,6 +292,24 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
+	},
+	"brand-context-menu-demo": {
+		name: "brand-context-menu-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/brand-context-menu-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/brand-context-menu-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for brand-context-menu-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 w-full p-0"},
 	},
 	"animated-tabs-demo": {
 		name: "animated-tabs-demo",
