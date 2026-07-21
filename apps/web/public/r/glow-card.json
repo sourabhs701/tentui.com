@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "glow-card",
-  "title": "Cursor-Tracking Glow Card",
+  "title": "Glow Card",
   "description": "Trace the pointer with a spring-smoothed radial glow along a card border.",
   "dependencies": [
     "motion"

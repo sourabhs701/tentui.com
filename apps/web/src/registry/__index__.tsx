@@ -169,7 +169,7 @@ export const Index = {
 	},
 	"glow-card": {
 		name: "glow-card",
-		title: "Cursor-Tracking Glow Card",
+		title: "Glow Card",
 		description: "Trace the pointer with a spring-smoothed radial glow along a card border.",
 		type: "registry:component",
 		files: [{"path":"src/registry/components/glow-card/glow-card.tsx","type":"registry:component","target":"@components/glow-card.tsx"}],

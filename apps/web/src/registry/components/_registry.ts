@@ -4,7 +4,7 @@ export const components: Registry["items"] = [
 	{
 		name: "glow-card",
 		type: "registry:component",
-		title: "Cursor-Tracking Glow Card",
+		title: "Glow Card",
 		description:
 			"Trace the pointer with a spring-smoothed radial glow along a card border.",
 		dependencies: ["motion"],
