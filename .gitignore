@@ -50,6 +50,7 @@ coverage
 .nyc_output
 
 # Misc
+.media
 *.tgz
 .cache
 tmp

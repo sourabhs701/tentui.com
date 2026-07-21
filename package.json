@@ -11,6 +11,7 @@
 		"build": "turbo run build",
 		"registry:build": "turbo run registry:build --filter=web",
 		"registry:validate": "turbo run registry:validate --filter=web",
+		"media:publish": "bash scripts/media-publish.sh",
 		"check-types": "turbo run check-types",
 		"dev:web": "turbo run dev -F web",
 		"dev:server": "turbo run dev -F server",

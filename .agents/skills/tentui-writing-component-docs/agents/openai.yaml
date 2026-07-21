@@ -1,4 +1,0 @@
-interface:
-  display_name: "TentUI Component Docs"
-  short_description: "Write consistent TentUI component documentation"
-  default_prompt: "Use $tentui-writing-component-docs to write or review documentation for a TentUI registry component."

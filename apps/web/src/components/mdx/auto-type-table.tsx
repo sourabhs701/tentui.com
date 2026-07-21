@@ -5,6 +5,10 @@ import type { Nodes } from "hast";
 import { type Jsx, toJsxRuntime } from "hast-util-to-jsx-runtime";
 import type { ComponentProps, ReactNode } from "react";
 import * as runtime from "react/jsx-runtime";
+import {
+	componentPropsOnly,
+	componentPropTag,
+} from "./auto-type-table-generator";
 import { mdxCodeBlockComponents } from "./code-block";
 import { markdownRenderer } from "./markdown";
 import { parseTags } from "./parse-tags";
@@ -12,6 +16,7 @@ import type { ParameterNode, TypeNode } from "./type-table";
 import { TypeTable } from "./type-table";
 
 export type AutoTypeTableProps = ComponentProps<"div"> & {
+	include?: string[];
 	path?: string;
 	name?: string;
 	type?: string;
@@ -20,22 +25,36 @@ export type AutoTypeTableProps = ComponentProps<"div"> & {
 
 export async function AutoTypeTable({
 	generator,
+	include,
 	name,
 	path,
 	type,
 	...props
 }: AutoTypeTableProps) {
 	const renderer = markdownRenderer();
-	const output = (await generator.generateTypeTable({
-		name,
-		path,
-		type,
-	})) as GeneratedDoc[];
+	const output = (await generator.generateTypeTable(
+		{
+			name,
+			path,
+			type,
+		},
+		componentPropsOnly,
+	)) as GeneratedDoc[];
 
 	return Promise.all(
 		output.map(async (item) => {
+			const componentProps = include
+				? include.flatMap((name) => {
+						const entry = item.entries.find((item) => item.name === name);
+						return entry ? [entry] : [];
+					})
+				: item.entries.filter(
+						(entry) =>
+							entry.name !== "children" &&
+							entry.tags.some((tag) => tag.name === componentPropTag),
+					);
 			const entries = await Promise.all(
-				item.entries.map(async (entry): Promise<[string, TypeNode]> => {
+				componentProps.map(async (entry): Promise<[string, TypeNode]> => {
 					const tags = parseTags(entry.tags);
 					const parameters: ParameterNode[] = await Promise.all(
 						(tags.params ?? []).map(async (parameter) => ({
