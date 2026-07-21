@@ -130,7 +130,7 @@ export default async function ComponentPage({
 	const { previous, next } = findNeighbour(getComponentDocs(), slug);
 
 	return (
-		<div className="flex min-w-0 px-2">
+		<div className="mb-5 flex min-w-0 px-2">
 			<ComponentContentCol>
 				<JsonLdScript data={softwareSourceCodeJsonLd(doc)} />
 				<JsonLdScript
