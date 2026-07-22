@@ -1,0 +1,93 @@
+---
+title: Peeping Button
+description: Add a shy, cursor-tracking surprise behind a familiar button face.
+createdAt: 2026-07-22
+updatedAt: 2026-07-22
+---
+
+<ComponentPreview name="peeping-button-demo" canReload />
+
+## Features
+
+- Peeks at an irregular rhythm so the effect feels alive instead of mechanical.
+- Tracks fine-pointer movement with spring-smoothed pupils while the cover is open.
+- Closes when the user approaches or focuses the button, preserving a calm action state.
+- Pauses in hidden tabs and becomes still when reduced motion is requested.
+- Composes native button props and external pointer or focus handlers.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/peeping-button
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion clsx tailwind-merge
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="peeping-button" title="components/peeping-button.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { PeepingButton } from "@/components/peeping-button";
+```
+
+```tsx
+<PeepingButton onClick={() => console.log("Clicked")}>Pricing</PeepingButton>
+```
+
+Tune how often and how long the button peeks, or disable the automatic behavior.
+
+```tsx
+<PeepingButton peekDelay={[1800, 3200]} peekDuration={1800}>
+  Keep watching
+</PeepingButton>
+```
+
+## Accessibility
+
+`PeepingButton` renders a native button with its visible cover providing the
+accessible label. The eyes and invisible sizing placeholder are hidden from
+assistive technology. Focus, disabled, and keyboard activation behavior remain
+native, while reduced-motion preferences turn off automatic peeking and pupil
+movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/peeping-button/peeping-button.tsx"
+  name="PeepingButtonProps"
+/>

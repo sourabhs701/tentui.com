@@ -5,6 +5,24 @@
 import * as React from "react";
 
 export const Index = {
+	"saas-hero-01": {
+		name: "saas-hero-01",
+		title: "SaaS Hero 01",
+		description: "An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/saas-hero-01/saas-hero-01.tsx","type":"registry:component","target":"@components/saas-hero-01/index.tsx"},{"path":"src/registry/blocks/saas-hero-01/header.tsx","type":"registry:component","target":"@components/saas-hero-01/header.tsx"},{"path":"public/tkit-logo.svg","type":"registry:file","target":"~/public/tkit-logo.svg"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/saas-hero-01/saas-hero-01")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for saas-hero-01");
+			}
+			return { default: module.default };
+		}),
+		categories: ["hero"],
+		meta: {"createdAt":"2026-07-22","iframeHeight":1120,"previewClassName":"min-h-screen"},
+	},
 	"testimonials-01": {
 		name: "testimonials-01",
 		title: "Testimonials 01",
@@ -166,6 +184,24 @@ export const Index = {
 		}),
 		categories: ["hero"],
 		meta: {"createdAt":"2026-07-17","iframeHeight":760,"previewClassName":"min-h-screen"},
+	},
+	"peeping-button": {
+		name: "peeping-button",
+		title: "Peeping Button",
+		description: "Add a shy, cursor-tracking surprise behind a familiar button face.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/peeping-button/peeping-button.tsx","type":"registry:component","target":"@components/peeping-button.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/peeping-button/peeping-button")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for peeping-button");
+			}
+			return { default: module.default };
+		}),
+		categories: ["buttons"],
+		meta: {"createdAt":"2026-07-22"},
 	},
 	"glow-card": {
 		name: "glow-card",
@@ -346,6 +382,24 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
+	},
+	"peeping-button-demo": {
+		name: "peeping-button-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/peeping-button-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/peeping-button-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for peeping-button-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 place-items-center content-center"},
 	},
 	"glow-card-demo": {
 		name: "glow-card-demo",

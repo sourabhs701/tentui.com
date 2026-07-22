@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "peeping-button",
+		type: "registry:component",
+		title: "Peeping Button",
+		description:
+			"Add a shy, cursor-tracking surprise behind a familiar button face.",
+		dependencies: ["motion"],
+		files: [
+			{
+				path: "components/peeping-button/peeping-button.tsx",
+				type: "registry:component",
+				target: "@components/peeping-button.tsx",
+			},
+		],
+		categories: ["buttons"],
+		meta: {
+			createdAt: "2026-07-22",
+		},
+		docs: "https://tentui.com/components/peeping-button",
+	},
+	{
 		name: "glow-card",
 		type: "registry:component",
 		title: "Glow Card",

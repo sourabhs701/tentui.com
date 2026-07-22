@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "peeping-button-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("peeping-button")],
+		files: [
+			{
+				path: "examples/peeping-button-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 place-items-center content-center",
+		},
+	},
+	{
 		name: "glow-card-demo",
 		type: "registry:example",
 		registryDependencies: ["card", getRegistryItemUrl("glow-card")],

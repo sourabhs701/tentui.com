@@ -4,6 +4,42 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const blocks: Registry["items"] = [
 	{
+		name: "saas-hero-01",
+		title: "SaaS Hero 01",
+		description:
+			"An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",
+		type: "registry:block",
+		dependencies: ["motion"],
+		registryDependencies: [
+			"button",
+			getRegistryItemUrl("brand-context-menu"),
+			getRegistryItemUrl("peeping-button"),
+		],
+		files: [
+			{
+				path: "blocks/saas-hero-01/saas-hero-01.tsx",
+				target: "@components/saas-hero-01/index.tsx",
+				type: "registry:component",
+			},
+			{
+				path: "blocks/saas-hero-01/header.tsx",
+				target: "@components/saas-hero-01/header.tsx",
+				type: "registry:component",
+			},
+			{
+				path: "public/tkit-logo.svg",
+				target: "~/public/tkit-logo.svg",
+				type: "registry:file",
+			},
+		],
+		categories: ["hero"],
+		meta: {
+			createdAt: "2026-07-22",
+			iframeHeight: 1120,
+			previewClassName: "min-h-screen",
+		},
+	},
+	{
 		name: "testimonials-01",
 		title: "Testimonials 01",
 		description:

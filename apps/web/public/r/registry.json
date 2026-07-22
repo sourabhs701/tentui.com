@@ -4,6 +4,45 @@
   "homepage": "https://tentui.com/blocks",
   "items": [
     {
+      "name": "saas-hero-01",
+      "title": "SaaS Hero 01",
+      "description": "An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "button",
+        "https://tentui.com/r/brand-context-menu.json",
+        "https://tentui.com/r/peeping-button.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/saas-hero-01/saas-hero-01.tsx",
+          "type": "registry:component",
+          "target": "@components/saas-hero-01/index.tsx"
+        },
+        {
+          "path": "src/registry/blocks/saas-hero-01/header.tsx",
+          "type": "registry:component",
+          "target": "@components/saas-hero-01/header.tsx"
+        },
+        {
+          "path": "public/tkit-logo.svg",
+          "type": "registry:file",
+          "target": "~/public/tkit-logo.svg"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-22",
+        "iframeHeight": 1120,
+        "previewClassName": "min-h-screen"
+      },
+      "categories": [
+        "hero"
+      ],
+      "type": "registry:block"
+    },
+    {
       "name": "testimonials-01",
       "title": "Testimonials 01",
       "description": "A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
@@ -258,6 +297,29 @@
         "hero"
       ],
       "type": "registry:block"
+    },
+    {
+      "name": "peeping-button",
+      "title": "Peeping Button",
+      "description": "Add a shy, cursor-tracking surprise behind a familiar button face.",
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/peeping-button/peeping-button.tsx",
+          "type": "registry:component",
+          "target": "@components/peeping-button.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-22"
+      },
+      "docs": "https://tentui.com/components/peeping-button",
+      "categories": [
+        "buttons"
+      ],
+      "type": "registry:component"
     },
     {
       "name": "glow-card",
