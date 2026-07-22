@@ -11,6 +11,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import type { Metadata, Route } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ComponentViewTracker } from "@/components/component-view-tracker";
 import { DocShareMenu } from "@/components/doc-share-menu";
 import { MDX } from "@/components/mdx";
 import { DocKeyboardShortcuts } from "@/components/mdx/doc-keyboard-shortcuts";
@@ -132,6 +133,7 @@ export default async function ComponentPage({
 	return (
 		<div className="mb-5 flex min-w-0 px-2">
 			<ComponentContentCol>
+				<ComponentViewTracker slug={doc.slug} title={doc.metadata.title} />
 				<JsonLdScript data={softwareSourceCodeJsonLd(doc)} />
 				<JsonLdScript
 					data={breadcrumbJsonLd([

@@ -57,31 +57,6 @@ export const components: Registry["items"] = [
 				type: "registry:component",
 				target: "@components/brand-context-menu.tsx",
 			},
-			{
-				path: "public/brand/Logo.svg",
-				type: "registry:file",
-				target: "~/public/brand/Logo.svg",
-			},
-			{
-				path: "public/brand/LogoType.svg",
-				type: "registry:file",
-				target: "~/public/brand/LogoType.svg",
-			},
-			{
-				path: "public/brand/mark-brand.svg",
-				type: "registry:file",
-				target: "~/public/brand/mark-brand.svg",
-			},
-			{
-				path: "public/brand/mark-light.svg",
-				type: "registry:file",
-				target: "~/public/brand/mark-light.svg",
-			},
-			{
-				path: "public/brand/Mark-dark.svg",
-				type: "registry:file",
-				target: "~/public/brand/Mark-dark.svg",
-			},
 		],
 		categories: ["menus"],
 		meta: {

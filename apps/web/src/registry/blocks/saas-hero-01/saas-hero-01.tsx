@@ -1,17 +1,10 @@
 "use client";
 
-import {
-	MotionConfig,
-	motion,
-	useReducedMotion,
-	useScroll,
-	useTransform,
-} from "motion/react";
+import { MotionConfig, motion } from "motion/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import type { SyntheticEvent } from "react";
+import { PeepingButton } from "@/components/peeping-button";
 import { Button } from "@/components/ui/button";
-import { PeepingButton } from "@/registry/components/peeping-button";
 
 import { SiteHeader } from "./header";
 
@@ -20,14 +13,8 @@ export { SiteHeader };
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 
 export const SAAS_HERO_ASSETS = {
-	background: {
-		local: "/pixel-mountain-lake-hero-v2.png",
-		hosted: "https://tentui.com/pixel-mountain-lake-hero-v2.png",
-	},
-	dashboard: {
-		local: "/sass-hero-dashboard.png",
-		hosted: "https://tentui.com/sass-hero-dashboard.png",
-	},
+	background: "https://tentui.com/pixel-mountain-lake-hero-v2.png",
+	dashboard: "https://tentui.com/saas-hero-dashboard.png",
 } as const;
 
 const SERIF =
@@ -38,27 +25,11 @@ export type HeroProps = {
 	dashboardImageSrc?: string;
 };
 
-function loadHostedFallback(
-	event: SyntheticEvent<HTMLImageElement>,
-	fallbackSrc?: string,
-) {
-	if (!fallbackSrc || event.currentTarget.src === fallbackSrc) return;
-	event.currentTarget.src = fallbackSrc;
-}
-
 export function Hero({
-	backgroundImageSrc = SAAS_HERO_ASSETS.background.local,
-	dashboardImageSrc = SAAS_HERO_ASSETS.dashboard.local,
+	backgroundImageSrc = SAAS_HERO_ASSETS.background,
+	dashboardImageSrc = SAAS_HERO_ASSETS.dashboard,
 }: HeroProps = {}) {
 	const router = useRouter();
-
-	const { scrollY } = useScroll();
-	const shouldReduceMotion = useReducedMotion();
-	const imageClipPath = useTransform(
-		scrollY,
-		[0, 600],
-		["inset(0 4% 0 4%)", "inset(0 0% 0 0%)"],
-	);
 
 	return (
 		<MotionConfig reducedMotion="user">
@@ -116,24 +87,13 @@ export function Hero({
 					</p>
 				</div>
 
-				<motion.div
-					className="relative mx-auto mt-16 w-full max-w-[1600px] overflow-hidden bg-background sm:mt-24"
-					style={shouldReduceMotion ? undefined : { clipPath: imageClipPath }}
-				>
+				<div className="relative mx-auto mt-16 w-full max-w-[1600px] overflow-hidden bg-background sm:mt-24">
 					{/* Decorative product backdrop. */}
 					<Image
 						alt=""
 						aria-hidden="true"
 						className="object-cover object-center [image-rendering:pixelated]"
 						fill
-						onError={(event) =>
-							loadHostedFallback(
-								event,
-								backgroundImageSrc === SAAS_HERO_ASSETS.background.local
-									? SAAS_HERO_ASSETS.background.hosted
-									: undefined,
-							)
-						}
 						priority
 						sizes="(min-width: 100rem) 100rem, 100vw"
 						src={backgroundImageSrc}
@@ -148,14 +108,6 @@ export function Hero({
 									alt="Acme Tickets dashboard overview showing ticket sources and usage"
 									className="h-auto w-full"
 									height={1684}
-									onError={(event) =>
-										loadHostedFallback(
-											event,
-											dashboardImageSrc === SAAS_HERO_ASSETS.dashboard.local
-												? SAAS_HERO_ASSETS.dashboard.hosted
-												: undefined,
-										)
-									}
 									priority
 									sizes="(min-width: 80rem) 72rem, (min-width: 40rem) calc(100vw - 5rem), calc(100vw - 2rem)"
 									src={dashboardImageSrc}
@@ -168,7 +120,7 @@ export function Hero({
 							</figcaption>
 						</figure>
 					</div>
-				</motion.div>
+				</div>
 			</section>
 		</MotionConfig>
 	);

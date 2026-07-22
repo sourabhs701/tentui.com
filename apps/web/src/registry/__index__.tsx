@@ -226,7 +226,7 @@ export const Index = {
 		title: "Brand Context Menu",
 		description: "Share copy-ready and downloadable brand assets from a contextual menu.",
 		type: "registry:component",
-		files: [{"path":"src/registry/components/brand-context-menu/brand-context-menu.tsx","type":"registry:component","target":"@components/brand-context-menu.tsx"},{"path":"public/brand/Logo.svg","type":"registry:file","target":"~/public/brand/Logo.svg"},{"path":"public/brand/LogoType.svg","type":"registry:file","target":"~/public/brand/LogoType.svg"},{"path":"public/brand/mark-brand.svg","type":"registry:file","target":"~/public/brand/mark-brand.svg"},{"path":"public/brand/mark-light.svg","type":"registry:file","target":"~/public/brand/mark-light.svg"},{"path":"public/brand/Mark-dark.svg","type":"registry:file","target":"~/public/brand/Mark-dark.svg"}],
+		files: [{"path":"src/registry/components/brand-context-menu/brand-context-menu.tsx","type":"registry:component","target":"@components/brand-context-menu.tsx"}],
 		component: React.lazy(async () => {
 			const module = (await import("@/registry/components/brand-context-menu/brand-context-menu")) as unknown as {
 				default?: React.ComponentType;

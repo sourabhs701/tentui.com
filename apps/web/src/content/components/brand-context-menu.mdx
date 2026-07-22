@@ -54,11 +54,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-<Step>Copy the files from the brand folder into your public directory</Step>
-
-The included SVG assets are installed at `public/brand` by the CLI. Add any PNG
-variants you want to include in the downloadable archive.
-
 <Step>Copy and paste the following code into your project</Step>
 
 <ComponentSource name="brand-context-menu" title="components/brand-context-menu.tsx" />
@@ -71,19 +66,11 @@ variants you want to include in the downloadable archive.
 
 </CodeTabs>
 
-## Create the brand assets ZIP
+## Brand asset hosting
 
-Run this command from the project root after adding or changing files in
-`public/brand`:
-
-```bash
-(cd public && zip -FS -r brand/tentui-brand-assets.zip brand \
-  -x "brand/.DS_Store" "brand/tentui-brand-assets.zip")
-```
-
-The component downloads the archive from
-`/brand/tentui-brand-assets.zip` by default. Use `brandAssetsZipPath` if your
-archive lives elsewhere.
+The default TentUI SVGs and downloadable archive are served from
+`https://cdn.srb.codes/brand/`. Use `markAsset`, `logotypeAsset`, and
+`brandAssetsZipPath` to point the component at your own hosted assets.
 
 ## Usage
 
@@ -102,20 +89,20 @@ Pass custom mark and logotype assets and point the component to your archive.
 ```tsx
 const mark = {
   name: "Mark",
-  path: "/brand/mark.svg",
+  path: "https://cdn.example.com/brand/mark.svg",
   filename: "acme-mark.svg",
 };
 
 const logotype = {
   name: "Logotype",
-  path: "/brand/logotype.svg",
+  path: "https://cdn.example.com/brand/logotype.svg",
   filename: "acme-logotype.svg",
 };
 
 <BrandContextMenu
   markAsset={mark}
   logotypeAsset={logotype}
-  brandAssetsZipPath="/brand/acme-brand-assets.zip"
+  brandAssetsZipPath="https://cdn.example.com/brand/acme-brand-assets.zip"
 >
   <button type="button">Open brand kit</button>
 </BrandContextMenu>;

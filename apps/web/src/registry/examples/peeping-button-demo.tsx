@@ -1,6 +1,6 @@
 "use client";
 
-import { PeepingButton } from "@/registry/components/peeping-button";
+import { PeepingButton } from "@/components/peeping-button";
 
 export function PeepingButtonDemo() {
 	return (

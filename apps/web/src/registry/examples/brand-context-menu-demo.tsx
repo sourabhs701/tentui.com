@@ -19,7 +19,7 @@ export default function BrandContextMenuDemo() {
 								alt=""
 								className="h-6 w-auto"
 								height={76}
-								src="/brand/mark-brand.svg"
+								src="https://cdn.srb.codes/brand/mark-brand.svg"
 								unoptimized
 								width={89}
 							/>

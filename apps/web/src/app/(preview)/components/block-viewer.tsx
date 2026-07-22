@@ -34,8 +34,16 @@ import {
 	ToggleGroupItem,
 } from "@tentui.com/ui/components/toggle-group";
 import { CheckIcon, ChevronRightIcon, CopyIcon, XIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 import type React from "react";
-import { createContext, useContext, useMemo, useRef, useState } from "react";
+import {
+	createContext,
+	useContext,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import type { PanelImperativeHandle } from "react-resizable-panels";
 import type { RegistryItem } from "shadcn/schema";
 import {
@@ -105,6 +113,7 @@ function BlockViewerProvider({
 }: Pick<BlockViewerContext, "item" | "tree" | "highlightedFiles"> & {
 	children: React.ReactNode;
 }) {
+	const pathname = usePathname();
 	const [view, setView] = useState<View>("preview");
 
 	const [activeFile, setActiveFile] = useState<
@@ -114,7 +123,46 @@ function BlockViewerProvider({
 	const [iframeKey, setIframeKey] = useState(0);
 
 	const resizablePanelRef = useRef<PanelImperativeHandle>(null);
+	const viewerRef = useRef<HTMLDivElement>(null);
+	const hasTrackedViewRef = useRef(false);
 	const previewHeight = item.meta?.iframeHeight;
+	const blockName = item.name;
+	const blockTitle = item.title ?? blockName;
+	const blockCategories = item.categories?.join(",") ?? "uncategorized";
+
+	useEffect(() => {
+		hasTrackedViewRef.current = false;
+		const viewer = viewerRef.current;
+		if (!viewer) return;
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (
+					!entry?.isIntersecting ||
+					entry.intersectionRatio < 0.25 ||
+					hasTrackedViewRef.current
+				) {
+					return;
+				}
+
+				hasTrackedViewRef.current = true;
+				trackEvent({
+					name: "block_view",
+					properties: {
+						block_name: blockName,
+						block_title: blockTitle,
+						block_path: `${pathname}#${blockName}`,
+						block_categories: blockCategories,
+					},
+				});
+				observer.disconnect();
+			},
+			{ threshold: 0.25 },
+		);
+
+		observer.observe(viewer);
+		return () => observer.disconnect();
+	}, [blockCategories, blockName, blockTitle, pathname]);
 
 	return (
 		<BlockViewerContext.Provider
@@ -131,6 +179,7 @@ function BlockViewerProvider({
 			}}
 		>
 			<div
+				ref={viewerRef}
 				id={item.name}
 				className="flex min-w-0 scroll-mt-14 flex-col-reverse items-stretch gap-2 p-2 md:flex-col lg:pr-0"
 				style={

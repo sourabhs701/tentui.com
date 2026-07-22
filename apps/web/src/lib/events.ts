@@ -14,6 +14,8 @@ const eventSchema = z.object({
 		"command_menu_search",
 		"command_menu_action",
 		"blog_search",
+		"component_view",
+		"block_view",
 		"toc_inline_toggle",
 		"toc_inline_item_click",
 		"toc_minimap_hover",
