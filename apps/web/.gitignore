@@ -57,5 +57,3 @@ dev-dist
 .dev.vars*
 
 .open-next
-
-wrangler.jsonc

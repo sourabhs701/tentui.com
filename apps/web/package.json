@@ -9,7 +9,7 @@
 		"registry:validate": "shadcn registry validate ./public/r/registry.json",
 		"start": "next start",
 		"dev": "next dev --port 3001",
-		"deploy": "opennextjs-cloudflare build && wrangler deploy"
+		"deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
 	},
 	"dependencies": {
 		"@opennextjs/cloudflare": "^1.20.1",
