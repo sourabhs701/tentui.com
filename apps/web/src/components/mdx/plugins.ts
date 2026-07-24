@@ -1,9 +1,7 @@
-import fs from "node:fs";
-import path from "node:path";
 import rehypePrettyCode from "rehype-pretty-code";
 import { visit } from "unist-util-visit";
-import { fixImport } from "@/lib/registry-transform";
 import { Index } from "@/registry/__index__";
+import sourceFiles from "@/registry/__sources__.json";
 import type { MdxAttribute, MdxNode, MdxTree } from "./mdx-types";
 
 type RegistryItem = {
@@ -11,46 +9,7 @@ type RegistryItem = {
 };
 
 const registryIndex = Index as unknown as Record<string, RegistryItem>;
-
-export function remarkCodeImport() {
-	return (tree: MdxTree, file: { dirname?: string }) => {
-		visit(tree as never, "code", (rawNode: unknown) => {
-			const node = rawNode as MdxNode & { meta?: string };
-			const fileMeta = node.meta
-				?.split(/(?<!\\) /g)
-				.find((meta) => meta.startsWith("file="));
-			if (!fileMeta) return;
-
-			const match = /^file=(.+?)(?:(?:#(?:L(\d+)(-)?)?)(?:L(\d+))?)?$/.exec(
-				fileMeta,
-			);
-			if (!match?.[1]) throw new Error(`Unable to parse ${fileMeta}`);
-
-			const rootDirectory = path.join(
-				/* turbopackIgnore: true */ process.cwd(),
-				"src",
-			);
-			const filePath = path.resolve(
-				file.dirname ?? /* turbopackIgnore: true */ process.cwd(),
-				match[1].replace(/^@/, rootDirectory).replace(/\\ /g, " "),
-			);
-			const relativePath = path.relative(rootDirectory, filePath);
-			if (
-				relativePath.startsWith(`..${path.sep}`) ||
-				path.isAbsolute(relativePath)
-			) {
-				throw new Error(`Code import must stay under ${rootDirectory}`);
-			}
-
-			const lines = fs
-				.readFileSync(/* turbopackIgnore: true */ filePath, "utf8")
-				.split(/\r?\n/);
-			const from = match[2] ? Number(match[2]) : 1;
-			const to = match[4] ? Number(match[4]) : lines.length;
-			node.value = lines.slice(from - 1, to).join("\n");
-		});
-	};
-}
+const componentSources = sourceFiles as Record<string, string>;
 
 export function rehypeComponent() {
 	return (tree: MdxTree) => {
@@ -69,7 +28,9 @@ export function rehypeComponent() {
 			if (!filePath)
 				throw new Error(`Registry source was not found for ${name}`);
 
-			const raw = fs.readFileSync(/* turbopackIgnore: true */ filePath, "utf8");
+			const raw = componentSources[filePath];
+			if (raw === undefined)
+				throw new Error(`Component source was not generated for ${filePath}`);
 			const title = getAttribute(node, "title");
 			const showLineNumbers = getAttribute(node, "showLineNumbers");
 			const meta = [
@@ -89,10 +50,10 @@ export function rehypeComponent() {
 						type: "element",
 						tagName: "code",
 						properties: {
-							className: [`language-${path.extname(filePath).slice(1)}`],
+							className: [`language-${getFileExtension(filePath)}`],
 						},
 						data: { meta },
-						children: [{ type: "text", value: fixImport(raw) }],
+						children: [{ type: "text", value: raw }],
 					},
 				],
 			});
@@ -179,16 +140,9 @@ function getAttribute(node: MdxNode, name: string) {
 }
 
 function getSourcePath(sourcePath: string) {
-	const applicationRoot = /* turbopackIgnore: true */ process.cwd();
-	const absolutePath = path.resolve(applicationRoot, sourcePath);
-	const relativePath = path.relative(applicationRoot, absolutePath);
-	if (
-		relativePath.startsWith(`..${path.sep}`) ||
-		path.isAbsolute(relativePath)
-	) {
-		throw new Error(
-			`Component source must stay inside the application root: ${sourcePath}`,
-		);
-	}
-	return absolutePath;
+	return sourcePath.replaceAll("\\", "/");
+}
+
+function getFileExtension(filePath: string) {
+	return /\.([^.\\/]+)$/.exec(filePath)?.[1] ?? "tsx";
 }

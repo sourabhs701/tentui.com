@@ -26,7 +26,6 @@ import {
 	rehypeHighlightCode,
 	rehypeHighlightCodeRawString,
 	rehypeNpmCommand,
-	remarkCodeImport,
 } from "./plugins";
 
 const components: MDXRemoteProps["components"] = {
@@ -131,7 +130,7 @@ const components: MDXRemoteProps["components"] = {
 
 const options: MDXRemoteProps["options"] = {
 	mdxOptions: {
-		remarkPlugins: [remarkGfm, remarkCodeImport, remarkHeading],
+		remarkPlugins: [remarkGfm, remarkHeading],
 		rehypePlugins: [
 			[rehypeExternalLinks, { target: "_blank", rel: "nofollow noopener" }],
 			rehypeSlug,

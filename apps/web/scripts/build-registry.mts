@@ -14,11 +14,12 @@ import {
 	normalizeProjectPath,
 	relativePath,
 } from "../src/lib/registry-paths";
-import { processFileContent } from "../src/lib/registry-transform";
+import { fixImport, processFileContent } from "../src/lib/registry-transform";
 import { registry } from "../src/registry/index";
 
 const appRoot = process.cwd();
 const registryPath = path.join(appRoot, "src/registry");
+const componentContentPath = path.join(appRoot, "src/content/components");
 
 function withLocalFilePaths(item: RegistryItem): RegistryItem {
 	return {
@@ -167,6 +168,60 @@ async function readSourceFile(relativeOrAbsolute: string) {
 		? relativeOrAbsolute
 		: path.join(appRoot, relativeOrAbsolute);
 	return fs.readFile(absolutePath, "utf8");
+}
+
+async function getExplicitComponentSourcePaths() {
+	const contentFiles = await fs.readdir(componentContentPath);
+	const sourcePaths = new Set<string>();
+
+	await Promise.all(
+		contentFiles
+			.filter((file) => file.endsWith(".mdx"))
+			.map(async (file) => {
+				const content = await fs.readFile(
+					path.join(componentContentPath, file),
+					"utf8",
+				);
+				for (const match of content.matchAll(
+					/<ComponentSource\b[^>]*\bsrc="([^"]+)"/g,
+				)) {
+					if (match[1]) sourcePaths.add(match[1]);
+				}
+			}),
+	);
+
+	return sourcePaths;
+}
+
+async function buildSourcePayload(items: RegistryItem[]) {
+	const sourcePaths = await getExplicitComponentSourcePaths();
+
+	for (const item of items) {
+		const primaryFile = withLocalFilePaths(item).files?.[0];
+		if (primaryFile) sourcePaths.add(primaryFile.path);
+	}
+
+	const entries = await Promise.all(
+		[...sourcePaths].toSorted().map(async (sourcePath) => {
+			const absolutePath = path.resolve(appRoot, sourcePath);
+			const relativePath = path.relative(appRoot, absolutePath);
+			if (
+				relativePath.startsWith(`..${path.sep}`) ||
+				path.isAbsolute(relativePath)
+			) {
+				throw new Error(
+					`Component source must stay inside ${appRoot}: ${sourcePath}`,
+				);
+			}
+
+			return [
+				sourcePath.replaceAll("\\", "/"),
+				fixImport(await readSourceFile(absolutePath)),
+			] as const;
+		}),
+	);
+
+	return Object.fromEntries(entries);
 }
 
 /**
@@ -325,6 +380,7 @@ export async function buildRegistry(sourceRegistry: Registry) {
 			.map(async (item) => [item.name, await buildDisplayItem(item)] as const),
 	);
 	const displayItems = Object.fromEntries(displayEntries);
+	const sourcePayload = await buildSourcePayload(parsed.data.items);
 
 	const outputs = [
 		{
@@ -338,6 +394,10 @@ export async function buildRegistry(sourceRegistry: Registry) {
 		{
 			path: path.join(registryPath, "__items__.json"),
 			content: `${JSON.stringify(displayItems, null, 2)}\n`,
+		},
+		{
+			path: path.join(registryPath, "__sources__.json"),
+			content: `${JSON.stringify(sourcePayload, null, 2)}\n`,
 		},
 		{
 			path: path.join(registryPath, "__blocks__.json"),

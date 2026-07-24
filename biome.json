@@ -32,7 +32,8 @@
 			"!apps/web/registry.json",
 			"!apps/web/src/registry/__blocks__.json",
 			"!apps/web/src/registry/__index__.tsx",
-			"!apps/web/src/registry/__items__.json"
+			"!apps/web/src/registry/__items__.json",
+			"!apps/web/src/registry/__sources__.json"
 		]
 	},
 	"formatter": {
