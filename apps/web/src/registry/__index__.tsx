@@ -5,6 +5,24 @@
 import * as React from "react";
 
 export const Index = {
+	"faq-03": {
+		name: "faq-03",
+		title: "FAQ 03",
+		description: "A conversational FAQ section with chat bubbles and a compact contact prompt.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/faq-03/faq-03.tsx","type":"registry:component","target":"@components/faq-03.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/faq-03/faq-03")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for faq-03");
+			}
+			return { default: module.default };
+		}),
+		categories: ["faq"],
+		meta: {"createdAt":"2026-07-22","iframeHeight":980,"previewClassName":"min-h-screen"},
+	},
 	"saas-hero-01": {
 		name: "saas-hero-01",
 		title: "SaaS Hero 01",

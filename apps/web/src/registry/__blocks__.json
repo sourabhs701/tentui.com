@@ -1,5 +1,12 @@
 [
   {
+    "name": "faq-03",
+    "description": "A conversational FAQ section with chat bubbles and a compact contact prompt.",
+    "categories": [
+      "faq"
+    ]
+  },
+  {
     "name": "saas-hero-01",
     "description": "An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",
     "categories": [

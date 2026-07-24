@@ -4,6 +4,35 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const blocks: Registry["items"] = [
 	{
+		name: "faq-03",
+		title: "FAQ 03",
+		description:
+			"A conversational FAQ section with chat bubbles and a compact contact prompt.",
+		type: "registry:block",
+		dependencies: ["lucide-react"],
+		registryDependencies: [
+			"accordion",
+			"avatar",
+			"bubble",
+			"button",
+			"message",
+			"separator",
+		],
+		files: [
+			{
+				path: "blocks/faq-03/faq-03.tsx",
+				target: "@components/faq-03.tsx",
+				type: "registry:component",
+			},
+		],
+		categories: ["faq"],
+		meta: {
+			createdAt: "2026-07-22",
+			iframeHeight: 980,
+			previewClassName: "min-h-screen",
+		},
+	},
+	{
 		name: "saas-hero-01",
 		title: "SaaS Hero 01",
 		description:

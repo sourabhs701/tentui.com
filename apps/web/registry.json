@@ -4,6 +4,38 @@
   "homepage": "https://tentui.com/blocks",
   "items": [
     {
+      "name": "faq-03",
+      "title": "FAQ 03",
+      "description": "A conversational FAQ section with chat bubbles and a compact contact prompt.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "accordion",
+        "avatar",
+        "bubble",
+        "button",
+        "message",
+        "separator"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/faq-03/faq-03.tsx",
+          "type": "registry:component",
+          "target": "@components/faq-03.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-22",
+        "iframeHeight": 980,
+        "previewClassName": "min-h-screen"
+      },
+      "categories": [
+        "faq"
+      ],
+      "type": "registry:block"
+    },
+    {
       "name": "saas-hero-01",
       "title": "SaaS Hero 01",
       "description": "An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",
