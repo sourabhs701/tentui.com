@@ -7,6 +7,13 @@
     ]
   },
   {
+    "name": "agency-pricing-01",
+    "description": "Tabbed project pricing paired with a highlighted ongoing agency retainer.",
+    "categories": [
+      "pricing"
+    ]
+  },
+  {
     "name": "saas-hero-01",
     "description": "An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",
     "categories": [

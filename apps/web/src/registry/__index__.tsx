@@ -23,6 +23,24 @@ export const Index = {
 		categories: ["faq"],
 		meta: {"createdAt":"2026-07-22","iframeHeight":980,"previewClassName":"min-h-screen"},
 	},
+	"agency-pricing-01": {
+		name: "agency-pricing-01",
+		title: "Agency Pricing 01",
+		description: "Tabbed project pricing paired with a highlighted ongoing agency retainer.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/agency-pricing-01/pricing.tsx","type":"registry:component","target":"@components/agency-pricing-01/pricing.tsx"},{"path":"src/registry/blocks/agency-pricing-01/icons.tsx","type":"registry:component","target":"@components/agency-pricing-01/icons.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/agency-pricing-01/pricing")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for agency-pricing-01");
+			}
+			return { default: module.default };
+		}),
+		categories: ["pricing"],
+		meta: {"createdAt":"2026-07-22","iframeHeight":980,"previewClassName":"min-h-screen"},
+	},
 	"saas-hero-01": {
 		name: "saas-hero-01",
 		title: "SaaS Hero 01",

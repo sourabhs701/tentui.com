@@ -36,6 +36,36 @@
       "type": "registry:block"
     },
     {
+      "name": "agency-pricing-01",
+      "title": "Agency Pricing 01",
+      "description": "Tabbed project pricing paired with a highlighted ongoing agency retainer.",
+      "dependencies": [
+        "lucide-react",
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/agency-pricing-01/pricing.tsx",
+          "type": "registry:component",
+          "target": "@components/agency-pricing-01/pricing.tsx"
+        },
+        {
+          "path": "src/registry/blocks/agency-pricing-01/icons.tsx",
+          "type": "registry:component",
+          "target": "@components/agency-pricing-01/icons.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-22",
+        "iframeHeight": 980,
+        "previewClassName": "min-h-screen"
+      },
+      "categories": [
+        "pricing"
+      ],
+      "type": "registry:block"
+    },
+    {
       "name": "saas-hero-01",
       "title": "SaaS Hero 01",
       "description": "An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",

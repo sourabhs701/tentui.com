@@ -33,6 +33,32 @@ export const blocks: Registry["items"] = [
 		},
 	},
 	{
+		name: "agency-pricing-01",
+		title: "Agency Pricing 01",
+		description:
+			"Tabbed project pricing paired with a highlighted ongoing agency retainer.",
+		type: "registry:block",
+		dependencies: ["lucide-react", "motion"],
+		files: [
+			{
+				path: "blocks/agency-pricing-01/pricing.tsx",
+				target: "@components/agency-pricing-01/pricing.tsx",
+				type: "registry:component",
+			},
+			{
+				path: "blocks/agency-pricing-01/icons.tsx",
+				target: "@components/agency-pricing-01/icons.tsx",
+				type: "registry:component",
+			},
+		],
+		categories: ["pricing"],
+		meta: {
+			createdAt: "2026-07-22",
+			iframeHeight: 980,
+			previewClassName: "min-h-screen",
+		},
+	},
+	{
 		name: "saas-hero-01",
 		title: "SaaS Hero 01",
 		description:
