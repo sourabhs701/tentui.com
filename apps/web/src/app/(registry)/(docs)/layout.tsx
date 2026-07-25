@@ -29,6 +29,7 @@ const sidebarGroups = [
 		title: "Getting Started",
 		items: [
 			{ title: "Introduction", href: "/docs" },
+			{ title: "Installation", href: "/docs/installation" },
 			{ title: "MCP", href: "/docs/mcp" },
 		],
 	},

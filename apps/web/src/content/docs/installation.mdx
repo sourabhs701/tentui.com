@@ -1,0 +1,79 @@
+---
+title: Installation
+description: Configure the Tent UI registry and add your first component with the shadcn CLI.
+order: 2
+createdAt: 2026-07-26
+updatedAt: 2026-07-26
+---
+
+Tent UI components are installed as source code through the shadcn CLI. There is no Tent UI runtime package to add or maintain.
+
+## Prerequisites
+
+Before installing a component, make sure your project has:
+
+- A React framework supported by [shadcn/ui](https://ui.shadcn.com/docs/installation)
+- Tailwind CSS configured
+- A `components.json` file at the project root
+
+If shadcn is not initialized yet, run:
+
+```bash
+npx shadcn@latest init
+```
+
+The CLI detects your framework, configures aliases and styles, and creates `components.json`.
+
+## Add the registry
+
+Add the `@tentui` registry to `components.json`:
+
+```json title="components.json"
+{
+  "registries": {
+    "@tentui": "https://tentui.com/r/{name}.json"
+  }
+}
+```
+
+If the file already contains a `registries` object, add the `@tentui` entry alongside the existing registries instead of replacing them.
+
+## Install a component
+
+Install an item by its registry name:
+
+```bash
+npx shadcn@latest add @tentui/animated-arrow
+```
+
+You can also install an item directly from its registry URL without configuring the `@tentui` namespace:
+
+```bash
+npx shadcn@latest add https://tentui.com/r/animated-arrow.json
+```
+
+The CLI copies the component into the path defined by your `components` alias and installs any required package or registry dependencies.
+
+## Install a block
+
+Blocks use the same command and may add multiple components, assets, and dependencies:
+
+```bash
+npx shadcn@latest add @tentui/saas-hero-01
+```
+
+Review the generated files after installation. Blocks are intentionally complete starting points, so adapt their content, links, assets, and behavior before shipping.
+
+## Manual installation
+
+Every component page includes a **Manual** installation tab with the required dependencies, source files, and import-path instructions. Use it when you do not want the CLI to modify your project.
+
+## Updating an item
+
+Tent UI components live in your repository after installation and are not updated automatically. To pull a newer version, run the add command again and review the CLI's overwrite prompt and resulting diff before accepting it.
+
+Your local changes belong to your project. Reconcile them manually when replacing an existing component.
+
+## Next steps
+
+Browse the [component library](/components), explore complete [blocks](/blocks), or connect the [MCP server](/docs/mcp) to discover and install Tent UI items from an AI-enabled editor.

@@ -150,8 +150,8 @@ export function SidebarContent({ groups }: { groups: MenuGroup[] }) {
 						<span>{group.title}</span>
 						{!!group.newCount && (
 							<Badge
-								variant="secondary"
-								className="h-auto rounded-full bg-linear-to-b from-blue-400 to-blue-500 px-1.5 py-0.5 font-bold text-[9px] text-white tracking-normal"
+								variant="outline"
+								className="h-4 rounded-sm border-border/60 bg-background/40 px-1.5 py-0 font-medium text-[9px]/4 text-muted-foreground tracking-normal shadow-none"
 							>
 								New {group.newCount}
 							</Badge>
