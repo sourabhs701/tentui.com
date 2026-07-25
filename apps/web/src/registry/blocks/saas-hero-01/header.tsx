@@ -39,7 +39,7 @@ export function SiteHeader() {
 							className="h-12 w-auto"
 							height={166}
 							priority
-							src="/tkit-logo.svg"
+							src="https://cdn.srb.codes/tkit-logo.svg"
 							width={455}
 						/>
 					</Link>

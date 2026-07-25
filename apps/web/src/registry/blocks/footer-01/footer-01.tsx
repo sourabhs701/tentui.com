@@ -229,7 +229,7 @@ function Wordmark({
 					aria-hidden="true"
 					className="h-9 w-auto"
 					height={166}
-					src="/tkit-logo.svg"
+					src="https://cdn.srb.codes/tkit-logo.svg"
 					unoptimized
 					width={455}
 				/>

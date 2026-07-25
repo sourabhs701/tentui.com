@@ -9,7 +9,7 @@ import { META_THEME_COLORS, SITE_INFO } from "@/config/site";
 import { JsonLdScript, websiteJsonLd } from "@/lib/json-ld";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const OG_IMAGE = "/og-image.png";
+const OG_IMAGE = "https://cdn.srb.codes/og-image.png";
 
 const darkModeScript = `
 	try {

@@ -40,7 +40,7 @@ export default function Cta01() {
 						className="h-[220px] w-full object-cover object-bottom sm:h-[280px] md:h-[320px] lg:h-[360px]"
 						height={941}
 						sizes="(min-width: 72rem) 72rem, 100vw"
-						src="/cta-01-landscape.svg"
+						src="https://cdn.srb.codes/cta-01-landscape.svg"
 						unoptimized
 						width={1672}
 					/>

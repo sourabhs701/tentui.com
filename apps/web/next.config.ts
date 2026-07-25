@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
 		remotePatterns: [
 			{
 				protocol: "https",
+				hostname: "cdn.srb.codes",
+			},
+			{
+				protocol: "https",
 				hostname: "cdn.dribbble.com",
 				pathname: "/userupload/**",
 			},

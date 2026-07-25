@@ -10,7 +10,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
-const WORLD_MAP_GEOGRAPHY_URL = "/data/world-map.geo.json";
+const WORLD_MAP_GEOGRAPHY_URL = "https://cdn.srb.codes/data/world-map.geo.json";
 
 export interface GeoFeature {
 	rsmKey: string;

@@ -175,11 +175,6 @@ export const components: Registry["items"] = [
 				type: "registry:component",
 				target: "@components/world-map.tsx",
 			},
-			{
-				path: "public/data/world-map.geo.json",
-				type: "registry:file",
-				target: "~/public/data/world-map.geo.json",
-			},
 		],
 		categories: [],
 		meta: {

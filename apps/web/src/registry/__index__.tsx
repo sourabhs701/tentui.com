@@ -46,7 +46,7 @@ export const Index = {
 		title: "SaaS Hero 01",
 		description: "An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",
 		type: "registry:block",
-		files: [{"path":"src/registry/blocks/saas-hero-01/saas-hero-01.tsx","type":"registry:component","target":"@components/saas-hero-01/index.tsx"},{"path":"src/registry/blocks/saas-hero-01/header.tsx","type":"registry:component","target":"@components/saas-hero-01/header.tsx"},{"path":"public/tkit-logo.svg","type":"registry:file","target":"~/public/tkit-logo.svg"}],
+		files: [{"path":"src/registry/blocks/saas-hero-01/saas-hero-01.tsx","type":"registry:component","target":"@components/saas-hero-01/index.tsx"},{"path":"src/registry/blocks/saas-hero-01/header.tsx","type":"registry:component","target":"@components/saas-hero-01/header.tsx"}],
 		component: React.lazy(async () => {
 			const module = (await import("@/registry/blocks/saas-hero-01/saas-hero-01")) as unknown as {
 				default?: React.ComponentType;
@@ -82,7 +82,7 @@ export const Index = {
 		title: "CTA 01",
 		description: "A responsive call-to-action with a wide landscape image.",
 		type: "registry:block",
-		files: [{"path":"src/registry/blocks/cta-01/cta-01.tsx","type":"registry:component","target":"@components/cta-01.tsx"},{"path":"public/cta-01-landscape.svg","type":"registry:file","target":"~/public/cta-01-landscape.svg"}],
+		files: [{"path":"src/registry/blocks/cta-01/cta-01.tsx","type":"registry:component","target":"@components/cta-01.tsx"}],
 		component: React.lazy(async () => {
 			const module = (await import("@/registry/blocks/cta-01/cta-01")) as unknown as {
 				default?: React.ComponentType;
@@ -136,7 +136,7 @@ export const Index = {
 		title: "Footer 01",
 		description: "A structured product footer with newsletter, navigation, status, and theme controls.",
 		type: "registry:block",
-		files: [{"path":"src/registry/blocks/footer-01/footer-01.tsx","type":"registry:component","target":"@components/footer-01.tsx"},{"path":"public/tkit-logo.svg","type":"registry:file","target":"~/public/tkit-logo.svg"}],
+		files: [{"path":"src/registry/blocks/footer-01/footer-01.tsx","type":"registry:component","target":"@components/footer-01.tsx"}],
 		component: React.lazy(async () => {
 			const module = (await import("@/registry/blocks/footer-01/footer-01")) as unknown as {
 				default?: React.ComponentType;
@@ -352,7 +352,7 @@ export const Index = {
 		title: "Interactive World Map",
 		description: "Explore countries with zoom, pan, selection, and hover details.",
 		type: "registry:component",
-		files: [{"path":"src/registry/components/world-map/world-map.tsx","type":"registry:component","target":"@components/world-map.tsx"},{"path":"public/data/world-map.geo.json","type":"registry:file","target":"~/public/data/world-map.geo.json"}],
+		files: [{"path":"src/registry/components/world-map/world-map.tsx","type":"registry:component","target":"@components/world-map.tsx"}],
 		component: React.lazy(async () => {
 			const module = (await import("@/registry/components/world-map/world-map")) as unknown as {
 				default?: React.ComponentType;

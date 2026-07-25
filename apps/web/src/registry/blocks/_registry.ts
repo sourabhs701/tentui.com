@@ -81,11 +81,6 @@ export const blocks: Registry["items"] = [
 				target: "@components/saas-hero-01/header.tsx",
 				type: "registry:component",
 			},
-			{
-				path: "public/tkit-logo.svg",
-				target: "~/public/tkit-logo.svg",
-				type: "registry:file",
-			},
 		],
 		categories: ["hero"],
 		meta: {
@@ -127,11 +122,6 @@ export const blocks: Registry["items"] = [
 				path: "blocks/cta-01/cta-01.tsx",
 				target: "@components/cta-01.tsx",
 				type: "registry:component",
-			},
-			{
-				path: "public/cta-01-landscape.svg",
-				target: "~/public/cta-01-landscape.svg",
-				type: "registry:file",
 			},
 		],
 		categories: ["cta"],
@@ -201,11 +191,6 @@ export const blocks: Registry["items"] = [
 				path: "blocks/footer-01/footer-01.tsx",
 				target: "@components/footer-01.tsx",
 				type: "registry:component",
-			},
-			{
-				path: "public/tkit-logo.svg",
-				target: "~/public/tkit-logo.svg",
-				type: "registry:file",
 			},
 		],
 		categories: ["footer"],
