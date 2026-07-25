@@ -29,7 +29,7 @@ export function Heading<T extends HeadingType = "h2">({
 				{props.children}
 			</a>
 			<CopyButton
-				className="size-7 opacity-0 group-hover/heading:opacity-100"
+				className="size-11 touch-manipulation opacity-100 [@media(hover:hover)_and_(pointer:fine)]:size-7 [@media(hover:hover)_and_(pointer:fine)]:opacity-0 [@media(hover:hover)_and_(pointer:fine)]:focus-visible:opacity-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover/heading:opacity-100"
 				variant="ghost"
 				size="icon-sm"
 				text={() => createHeadingUrl(props.id ?? "")}

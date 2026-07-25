@@ -1,0 +1,23 @@
+---
+title: Fixing Next.js ISR Cache on Cloudflare
+description: How TentUI's daily GitHub-star revalidation exposed a read-only OpenNext cache.
+author: Sourabh Soni
+authorImage: /srb.avif
+category: Engineering
+createdAt: 2026-07-24
+updatedAt: 2026-07-25
+---
+
+## The failure
+
+TentUI's GitHub star count is cached for one day. When that cache became stale, production requests started failing because the OpenNext setup could read build-time assets but could not write regenerated entries or coordinate revalidation.
+
+## The fix
+
+The site combined time-based revalidation with a read-only incremental cache and no production-ready queue. The fix was to use R2 as the writable incremental cache and an OpenNext Durable Object queue to coordinate regeneration.
+
+## Read the full investigation
+
+The complete article covers the production evidence, failure chain, corrected Cloudflare configuration, and stale-to-fresh verification process.
+
+[Read the full article on srb.codes](https://www.srb.codes/blog/fixing-tentui-isr-cache-on-cloudflare)

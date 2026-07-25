@@ -47,6 +47,10 @@ const nextConfig: NextConfig = {
 				destination: "/doc.mdx/:slug",
 			},
 			{
+				source: "/blog/:slug.mdx",
+				destination: "/blog.mdx/:slug",
+			},
+			{
 				source: "/blocks/:name.mdx",
 				destination: "/block.mdx/:name",
 			},

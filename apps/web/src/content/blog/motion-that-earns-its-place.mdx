@@ -1,0 +1,37 @@
+---
+title: Motion that earns its place
+description: A practical standard for deciding when interface animation improves understanding and when it only adds noise.
+author: Sourabh Soni
+authorImage: /srb.avif
+category: Design
+createdAt: 2026-07-18
+updatedAt: 2026-07-18
+---
+
+Good interface motion rarely announces itself. It explains a change, preserves context, or confirms that the product understood an action. The animation is not the point; the continuity it creates is.
+
+That gives us a useful standard: motion should have a job.
+
+## Start with the state change
+
+Before choosing a duration or easing curve, describe what changed. Did an object move somewhere? Did new information enter the page? Did an action succeed? The answer determines whether motion can make the transition easier to understand.
+
+An expanding panel benefits from preserving its origin. A button confirmation benefits from immediate feedback. A decorative icon beside a static heading usually does not need to move at all.
+
+## Prefer continuity over spectacle
+
+The most useful transitions preserve spatial relationships. A popover should emerge from its trigger. A dismissed item should make room for what replaces it. A shared element should feel like the same object before and after navigation.
+
+When motion contradicts those relationships, the interface becomes harder to follow even if the animation itself looks polished.
+
+## Keep interaction feedback immediate
+
+Feedback should begin as close to the input as possible. Press states belong under the pointer. Dragged objects should track the gesture. A long transition after a direct manipulation makes the interface feel detached from the user.
+
+Durations can be short without feeling abrupt when the easing is right. For most small UI transitions, a responsive ease-out or a carefully damped spring creates a stronger result than adding more time.
+
+## Respect the absence of motion
+
+Reduced-motion support is not an alternate visual style. It is part of the component's behavior. Remove large spatial travel, preserve essential state feedback, and avoid replacing one distracting effect with another.
+
+The same restraint improves the default experience. If removing an animation makes the interaction no less understandable, that animation probably was not earning its place.

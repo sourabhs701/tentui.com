@@ -21,6 +21,18 @@ export type Doc = {
 	content: string;
 };
 
+export type BlogMetadata = DocMetadata & {
+	author: string;
+	authorImage?: string;
+	category: string;
+	featured?: boolean;
+};
+
+export type BlogPost = Omit<Doc, "metadata"> & {
+	metadata: BlogMetadata;
+};
+
+const BLOG_DIRECTORY = path.join(process.cwd(), "src/content/blog");
 const COMPONENTS_DIRECTORY = path.join(process.cwd(), "src/content/components");
 const DOCS_DIRECTORY = path.join(process.cwd(), "src/content/docs");
 
@@ -54,12 +66,24 @@ export const getComponentDocs = cache(() => readDocs(COMPONENTS_DIRECTORY));
 
 export const getDocs = cache(() => readDocs(DOCS_DIRECTORY));
 
+export const getBlogPosts = cache(() =>
+	(readDocs(BLOG_DIRECTORY) as BlogPost[]).sort(
+		(a, b) =>
+			new Date(b.metadata.createdAt).getTime() -
+			new Date(a.metadata.createdAt).getTime(),
+	),
+);
+
 export function getComponentDocBySlug(slug: string) {
 	return getComponentDocs().find((doc) => doc.slug === slug);
 }
 
 export function getDocBySlug(slug: string) {
 	return getDocs().find((doc) => doc.slug === slug);
+}
+
+export function getBlogPostBySlug(slug: string) {
+	return getBlogPosts().find((post) => post.slug === slug);
 }
 
 export function findNeighbour(docs: Doc[], slug: string) {

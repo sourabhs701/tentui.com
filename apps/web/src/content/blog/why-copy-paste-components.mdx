@@ -1,0 +1,37 @@
+---
+title: Why copy-paste components scale
+description: Owning component source creates a better boundary for specialized UI than adding another permanent abstraction.
+author: Sourabh Soni
+authorImage: /srb.avif
+category: Engineering
+createdAt: 2026-07-10
+updatedAt: 2026-07-10
+---
+
+Installing a package is convenient when its abstraction stays stable across many products. Specialized interface components are different. Their value often comes from the exact details a product will eventually want to change.
+
+For that kind of UI, source ownership is a feature.
+
+## The abstraction is allowed to end
+
+A package asks every consumer to meet at the same API. That is a good trade for a date library or an accessible dialog primitive. It is less convincing for a highly specific interaction whose typography, timing, layout, and behavior all need to fit the surrounding product.
+
+A copy-paste component gives you a strong starting point without insisting that the starting abstraction remains permanent.
+
+## Local code is easier to adapt
+
+When the source lives beside the rest of your application, normal engineering tools apply. You can rename concepts to match your domain, remove branches you do not need, compose it with local primitives, and test behavior at the right boundary.
+
+There is no wrapper layer whose only purpose is to work around a dependency's public API.
+
+## Updates become deliberate
+
+Owning source means upstream updates are not automatic, but that is often the safer behavior for expressive UI. A visual or behavioral change should not arrive unnoticed through a lockfile update.
+
+The registry still provides provenance and a repeatable installation path. After installation, your version can evolve with your product rather than with every other consumer.
+
+## Choose the boundary deliberately
+
+Copy-paste is not the right model for every problem. Stable, difficult primitives with broad accessibility requirements are excellent package dependencies. Product-specific composition and expressive interaction often benefit from local ownership.
+
+The useful question is not whether packages or copied source are universally better. It is where you want the abstraction to end.

@@ -4,6 +4,10 @@ import type { Route } from "next";
 import { useRouter } from "next/navigation";
 import { useHotkeys } from "react-hotkeys-hook";
 
+function canNavigate(event: KeyboardEvent) {
+	return event.target === document.body;
+}
+
 export function DocKeyboardShortcuts({
 	previous,
 	next,
@@ -14,10 +18,14 @@ export function DocKeyboardShortcuts({
 	const router = useRouter();
 
 	useHotkeys("ArrowLeft", (event) => {
-		if (!event.defaultPrevented && previous) router.push(previous);
+		if (!event.defaultPrevented && canNavigate(event) && previous) {
+			router.push(previous);
+		}
 	});
 	useHotkeys("ArrowRight", (event) => {
-		if (!event.defaultPrevented && next) router.push(next);
+		if (!event.defaultPrevented && canNavigate(event) && next) {
+			router.push(next);
+		}
 	});
 
 	return null;

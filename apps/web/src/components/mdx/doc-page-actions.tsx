@@ -82,9 +82,10 @@ export function LLMCopyButton({ markdownUrl }: { markdownUrl: string }) {
 
 	return (
 		<Button
-			className="h-7 gap-1.5 border-none px-2 text-[0.8125rem] active:scale-none"
+			className="min-h-11 touch-manipulation gap-1.5 border-none px-3 text-[0.8125rem] transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [@media(hover:hover)_and_(pointer:fine)]:h-7 [@media(hover:hover)_and_(pointer:fine)]:min-h-0 [@media(hover:hover)_and_(pointer:fine)]:px-2"
 			variant="secondary"
 			size="sm"
+			aria-label="Copy page"
 			aria-busy={isCopying}
 			disabled={isCopying}
 			onClick={handleCopy}
@@ -169,7 +170,7 @@ export function ViewOptions({
 			<DropdownMenuTrigger
 				render={
 					<Button
-						className="size-7 border-none active:scale-none"
+						className="size-11 touch-manipulation border-none transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [@media(hover:hover)_and_(pointer:fine)]:size-7"
 						variant="secondary"
 						size="icon-sm"
 						aria-label="View Options"

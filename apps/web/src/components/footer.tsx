@@ -3,6 +3,7 @@ import type { Route } from "next";
 import Link from "next/link";
 import { TentUiMark } from "@/components/tentui-mark";
 import { blockCategories } from "@/config/registry";
+import { getBlogPosts } from "@/lib/documents";
 import { cn } from "@/lib/utils";
 import { components } from "@/registry/components/_registry";
 import FooterBigLogo from "./footer-big-logo";
@@ -27,6 +28,15 @@ const blockCategoryLinks: FooterLink[] = blockCategories.map((category) => ({
 	label: category.title,
 	href: `/blocks/${category.name}`,
 }));
+
+const blogLinks: FooterLink[] = [
+	...getBlogPosts()
+		.slice(0, 3)
+		.map((post) => ({
+			label: post.metadata.title,
+			href: `/blog/${post.slug}`,
+		})),
+];
 
 const legalLinks: FooterLink[] = [
 	{ label: "License", href: "/license" },
@@ -99,7 +109,7 @@ function Footer() {
 			<Section line={false} borderClassName="border-primary-foreground/15">
 				<Grain opacity={0.1} />
 				<div className="flex flex-col divide-y divide-dashed divide-primary-foreground/15 md:flex-row md:divide-x md:divide-y-0">
-					<div className="px-4 py-7 md:basis-1/4">
+					<div className="px-4 py-7 md:flex-1">
 						<div className="flex items-center gap-2">
 							<TentUiMark className="h-5 w-auto text-white" />
 							<span className="font-mono text-[12px] text-white tracking-tight">
@@ -113,13 +123,13 @@ function Footer() {
 						<LinkList links={socialLinks} />
 					</div>
 
-					<div className="relative px-4 py-7 md:basis-1/4">
+					<div className="relative px-4 py-7 md:flex-1">
 						<Marker position="top-left" />
 						<h3 className="font-mono text-[12px] tracking-tight">Components</h3>
 						<LinkList links={componentLinks} />
 					</div>
 
-					<div className="relative px-4 py-7 md:basis-1/4">
+					<div className="relative px-4 py-7 md:flex-1">
 						<Marker position="top-left" />
 						<h3 className="font-mono text-[12px] tracking-tight">
 							Shadcn Compatible Blocks
@@ -127,7 +137,13 @@ function Footer() {
 						<LinkList links={blockCategoryLinks} />
 					</div>
 
-					<div className="relative px-4 py-7 md:basis-1/4">
+					<div className="relative px-4 py-7 md:flex-1">
+						<Marker position="top-left" />
+						<h3 className="font-mono text-[12px] tracking-tight">Blog</h3>
+						<LinkList links={blogLinks} />
+					</div>
+
+					<div className="relative px-4 py-7 md:flex-1">
 						<Marker position="top-left" />
 						<h3 className="font-mono text-[12px] tracking-tight">Legal</h3>
 						<LinkList links={legalLinks} />
