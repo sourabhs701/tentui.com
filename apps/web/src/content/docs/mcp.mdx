@@ -1,0 +1,43 @@
+---
+title: MCP
+description: Connect Tent UI to your AI-enabled editor and install components through natural-language prompts.
+order: 2
+createdAt: 2026-07-25
+updatedAt: 2026-07-25
+---
+
+The Model Context Protocol (MCP) gives compatible AI tools direct access to component registries. Once connected, Claude Code, Cursor, and other MCP clients can discover Tent UI components and add them to your project for you.
+
+## Installation
+
+Initialize the shadcn MCP server in your project:
+
+```bash
+npx shadcn@latest mcp init
+```
+
+Follow the CLI prompts for your editor, then restart the editor if it asks you to reload its MCP configuration.
+
+## Add the Tent UI registry
+
+Add the `@tentui` registry to your project's `components.json` file:
+
+```json title="components.json"
+{
+  "registries": {
+    "@tentui": "https://tentui.com/r/{name}.json"
+  }
+}
+```
+
+If your file already contains a `registries` object, add the `@tentui` entry alongside the existing registries rather than replacing them.
+
+## Usage
+
+Your AI assistant can now search the registry, inspect components, and install the source that matches your request. Try prompts such as:
+
+- "Add the Tent UI animated arrow to this link."
+- "Use a glow card for the pricing option under the pointer."
+- "Add a branded context menu with copy and download actions."
+
+For the best result, mention Tent UI and describe where the component should be used. The assistant can handle installation, but you should still review the generated source and tailor the final behavior to your product.

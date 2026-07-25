@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ComponentsGrid } from "@/components/components-grid";
 import { getComponentDocs } from "@/lib/documents";
 import {
 	absoluteUrl,
@@ -6,8 +7,6 @@ import {
 	JSON_LD_ID,
 	JsonLdScript,
 } from "@/lib/json-ld";
-
-import { ComponentsGrid } from "./components-grid";
 
 const title = "Components";
 const description =

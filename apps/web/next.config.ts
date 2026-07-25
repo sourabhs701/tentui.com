@@ -39,6 +39,10 @@ const nextConfig: NextConfig = {
 	async rewrites() {
 		return [
 			{
+				source: "/docs/:slug.mdx",
+				destination: "/docs.mdx/:slug",
+			},
+			{
 				source: "/components/:slug.mdx",
 				destination: "/doc.mdx/:slug",
 			},

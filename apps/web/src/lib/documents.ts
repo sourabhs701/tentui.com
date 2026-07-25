@@ -10,6 +10,7 @@ export type DocMetadata = {
 	description: string;
 	image?: string;
 	new?: boolean;
+	order?: number;
 	createdAt: string;
 	updatedAt: string;
 };
@@ -20,15 +21,16 @@ export type Doc = {
 	content: string;
 };
 
-const CONTENT_DIRECTORY = path.join(process.cwd(), "src/content/components");
+const COMPONENTS_DIRECTORY = path.join(process.cwd(), "src/content/components");
+const DOCS_DIRECTORY = path.join(process.cwd(), "src/content/docs");
 
-export const getComponentDocs = cache(() => {
+function readDocs(directory: string) {
 	return fs
-		.readdirSync(CONTENT_DIRECTORY)
+		.readdirSync(directory)
 		.filter((file) => path.extname(file) === ".mdx")
 		.map<Doc>((file) => {
 			const parsed = matter(
-				fs.readFileSync(path.join(CONTENT_DIRECTORY, file), "utf8"),
+				fs.readFileSync(path.join(directory, file), "utf8"),
 			);
 
 			return {
@@ -37,15 +39,27 @@ export const getComponentDocs = cache(() => {
 				content: parsed.content,
 			};
 		})
-		.sort((a, b) =>
-			a.metadata.title.localeCompare(b.metadata.title, "en", {
-				sensitivity: "base",
-			}),
-		);
-});
+		.sort((a, b) => {
+			const order = (a.metadata.order ?? 0) - (b.metadata.order ?? 0);
+			return (
+				order ||
+				a.metadata.title.localeCompare(b.metadata.title, "en", {
+					sensitivity: "base",
+				})
+			);
+		});
+}
+
+export const getComponentDocs = cache(() => readDocs(COMPONENTS_DIRECTORY));
+
+export const getDocs = cache(() => readDocs(DOCS_DIRECTORY));
 
 export function getComponentDocBySlug(slug: string) {
 	return getComponentDocs().find((doc) => doc.slug === slug);
+}
+
+export function getDocBySlug(slug: string) {
+	return getDocs().find((doc) => doc.slug === slug);
 }
 
 export function findNeighbour(docs: Doc[], slug: string) {

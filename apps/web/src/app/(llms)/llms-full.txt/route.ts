@@ -1,6 +1,6 @@
 import { SITE_INFO } from "@/config/site";
 import { getAllBlocks } from "@/lib/blocks";
-import { getComponentDocs } from "@/lib/documents";
+import { getComponentDocs, getDocs } from "@/lib/documents";
 import {
 	getBlockLLMText,
 	getComponentLLMText,
@@ -20,7 +20,22 @@ function frontmatter(values: Record<string, string | undefined>) {
 
 export async function GET() {
 	const components = getComponentDocs();
+	const docs = getDocs();
 	const blocks = await getAllBlocks();
+	const docsContent = await Promise.all(
+		docs.map(async (item) => {
+			const source =
+				item.slug === "introduction"
+					? `${SITE_INFO.url}/docs`
+					: `${SITE_INFO.url}/docs/${item.slug}`;
+			return `${frontmatter({
+				title: item.metadata.title,
+				description: item.metadata.description,
+				last_updated: getISODate(item.metadata.updatedAt),
+				source,
+			})}\n\n${await getComponentLLMText(item)}`;
+		}),
+	);
 	const componentContent = await Promise.all(
 		components.map(async (item) => {
 			return `${frontmatter({
@@ -45,6 +60,10 @@ export async function GET() {
 > ${SITE_INFO.description}
 
 This document contains the complete TentUI component documentation and block source intended for technical reference and LLM consumption.
+
+## Getting started
+
+${docsContent.join("\n\n")}
 
 ## Components
 

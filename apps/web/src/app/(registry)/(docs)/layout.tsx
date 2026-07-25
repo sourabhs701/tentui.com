@@ -22,6 +22,17 @@ const sidebarComponentItems = sortByTitle(components).map((component) => ({
 
 const sidebarGroups = [
 	{
+		title: "Follow the updates",
+		items: [{ title: "X @srbcode", href: "https://x.com/srbcode" }],
+	},
+	{
+		title: "Getting Started",
+		items: [
+			{ title: "Introduction", href: "/docs" },
+			{ title: "MCP", href: "/docs/mcp" },
+		],
+	},
+	{
 		title: "Components",
 		newCount: sidebarComponentItems.filter((component) => component.isNew)
 			.length,

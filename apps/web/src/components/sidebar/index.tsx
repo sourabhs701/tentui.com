@@ -109,19 +109,19 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 	);
 }
 
-type MenuItem<T extends string = string> = {
+type MenuItem = {
 	title: string;
-	href: T;
+	href: string;
 	isNew?: boolean;
 };
 
-type MenuGroup<T extends string = string> = {
+type MenuGroup = {
 	title: string;
-	items: MenuItem<T>[];
+	items: MenuItem[];
 	newCount?: number;
 };
 
-export function SidebarContent({ groups }: { groups: MenuGroup<Route>[] }) {
+export function SidebarContent({ groups }: { groups: MenuGroup[] }) {
 	const pathname = usePathname();
 
 	const itemActiveRef = useRef<HTMLAnchorElement | null>(null);
@@ -192,19 +192,23 @@ const SidebarMenuItem = memo(function SidebarMenuItem({
 	isNew = false,
 	isActive = false,
 	isLast = false,
-}: MenuItem<Route> & {
+}: MenuItem & {
 	ref?: React.Ref<HTMLAnchorElement>;
 	isNew?: boolean;
 	isActive?: boolean;
 	isLast?: boolean;
 }) {
+	const isExternal = href.startsWith("http");
+
 	return (
 		<>
 			<MotionLink
 				ref={ref}
 				aria-current={isActive ? "page" : undefined}
 				className="group relative flex h-px items-center gap-3 after:absolute after:top-1/2 after:left-0 after:size-full after:-translate-y-1/2 after:p-3.5"
-				href={href}
+				href={href as Route}
+				target={isExternal ? "_blank" : undefined}
+				rel={isExternal ? "noreferrer" : undefined}
 				initial={false}
 				animate={isActive ? "active" : "normal"}
 				whileHover="hover"
