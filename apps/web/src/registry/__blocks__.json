@@ -1,5 +1,12 @@
 [
   {
+    "name": "footer-03",
+    "description": "A rounded dark footer with an overlapping brand mark, centered calls to action, and compact navigation.",
+    "categories": [
+      "footer"
+    ]
+  },
+  {
     "name": "faq-03",
     "description": "A conversational FAQ section with chat bubbles and a compact contact prompt.",
     "categories": [
@@ -7,15 +14,15 @@
     ]
   },
   {
-    "name": "agency-pricing-01",
-    "description": "Tabbed project pricing paired with a highlighted ongoing agency retainer.",
+    "name": "pricing-02",
+    "description": "Tabbed project pricing paired with a highlighted ongoing retainer.",
     "categories": [
       "pricing"
     ]
   },
   {
-    "name": "saas-hero-01",
-    "description": "An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",
+    "name": "hero-02",
+    "description": "An editorial hero with a playful pricing CTA and support dashboard preview.",
     "categories": [
       "hero"
     ]
@@ -77,8 +84,8 @@
     ]
   },
   {
-    "name": "agency-hero-01",
-    "description": "Animated agency hero.",
+    "name": "hero-01",
+    "description": "An animated hero with availability, service CTAs, and a technology carousel.",
     "categories": [
       "hero"
     ]

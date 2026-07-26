@@ -1,6 +1,6 @@
 import { registryConfig } from "@/config/registry";
 
-const NEW_BADGE_DURATION_MS = 5 * 24 * 60 * 60 * 1000; // 5 days
+const NEW_BADGE_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 export type RegistryItemMetadata = {
 	meta?: { createdAt?: string };

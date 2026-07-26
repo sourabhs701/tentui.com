@@ -49,7 +49,7 @@ export default async function WorkbenchExperimentPage({
 				{experiment.fullBleed ? (
 					<Component />
 				) : (
-					<div className="w-full max-w-5xl overflow-hidden rounded-xl border bg-background shadow-sm">
+					<div className="w-full overflow-hidden rounded-xl border bg-background shadow-sm">
 						<Component />
 					</div>
 				)}

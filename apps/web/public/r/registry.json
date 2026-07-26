@@ -4,6 +4,27 @@
   "homepage": "https://tentui.com/blocks",
   "items": [
     {
+      "name": "footer-03",
+      "title": "Footer 03",
+      "description": "A rounded dark footer with an overlapping brand mark, centered calls to action, and compact navigation.",
+      "files": [
+        {
+          "path": "src/registry/blocks/footer-03/footer-03.tsx",
+          "type": "registry:component",
+          "target": "@components/footer-03.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-26",
+        "iframeHeight": 860,
+        "previewClassName": "flex min-h-svh items-end"
+      },
+      "categories": [
+        "footer"
+      ],
+      "type": "registry:block"
+    },
+    {
       "name": "faq-03",
       "title": "FAQ 03",
       "description": "A conversational FAQ section with chat bubbles and a compact contact prompt.",
@@ -36,23 +57,23 @@
       "type": "registry:block"
     },
     {
-      "name": "agency-pricing-01",
-      "title": "Agency Pricing 01",
-      "description": "Tabbed project pricing paired with a highlighted ongoing agency retainer.",
+      "name": "pricing-02",
+      "title": "Pricing 02",
+      "description": "Tabbed project pricing paired with a highlighted ongoing retainer.",
       "dependencies": [
         "lucide-react",
         "motion"
       ],
       "files": [
         {
-          "path": "src/registry/blocks/agency-pricing-01/pricing.tsx",
+          "path": "src/registry/blocks/pricing-02/pricing-02.tsx",
           "type": "registry:component",
-          "target": "@components/agency-pricing-01/pricing.tsx"
+          "target": "@components/pricing-02/pricing-02.tsx"
         },
         {
-          "path": "src/registry/blocks/agency-pricing-01/icons.tsx",
+          "path": "src/registry/blocks/pricing-02/icons.tsx",
           "type": "registry:component",
-          "target": "@components/agency-pricing-01/icons.tsx"
+          "target": "@components/pricing-02/icons.tsx"
         }
       ],
       "meta": {
@@ -66,9 +87,9 @@
       "type": "registry:block"
     },
     {
-      "name": "saas-hero-01",
-      "title": "SaaS Hero 01",
-      "description": "An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",
+      "name": "hero-02",
+      "title": "Hero 02",
+      "description": "An editorial hero with a playful pricing CTA and support dashboard preview.",
       "dependencies": [
         "motion"
       ],
@@ -79,14 +100,14 @@
       ],
       "files": [
         {
-          "path": "src/registry/blocks/saas-hero-01/saas-hero-01.tsx",
+          "path": "src/registry/blocks/hero-02/hero-02.tsx",
           "type": "registry:component",
-          "target": "@components/saas-hero-01/index.tsx"
+          "target": "@components/hero-02/index.tsx"
         },
         {
-          "path": "src/registry/blocks/saas-hero-01/header.tsx",
+          "path": "src/registry/blocks/hero-02/header.tsx",
           "type": "registry:component",
-          "target": "@components/saas-hero-01/header.tsx"
+          "target": "@components/hero-02/header.tsx"
         }
       ],
       "meta": {
@@ -321,18 +342,18 @@
       "type": "registry:block"
     },
     {
-      "name": "agency-hero-01",
-      "title": "Agency Hero 01",
-      "description": "Animated agency hero.",
+      "name": "hero-01",
+      "title": "Hero 01",
+      "description": "An animated hero with availability, service CTAs, and a technology carousel.",
       "dependencies": [
         "motion",
         "react-fast-marquee"
       ],
       "files": [
         {
-          "path": "src/registry/blocks/agency-hero-01/agency-hero-01.tsx",
+          "path": "src/registry/blocks/hero-01/hero-01.tsx",
           "type": "registry:component",
-          "target": "@components/agency-hero-01.tsx"
+          "target": "@components/hero-01.tsx"
         }
       ],
       "meta": {

@@ -150,7 +150,7 @@ function TechCarousel() {
 	);
 }
 
-export default function AgencyHero01() {
+export default function Hero01() {
 	return (
 		<MotionConfig reducedMotion="user">
 			<div className="max-w-screen overflow-x-hidden px-2">

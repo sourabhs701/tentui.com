@@ -5,6 +5,24 @@
 import * as React from "react";
 
 export const Index = {
+	"footer-03": {
+		name: "footer-03",
+		title: "Footer 03",
+		description: "A rounded dark footer with an overlapping brand mark, centered calls to action, and compact navigation.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/footer-03/footer-03.tsx","type":"registry:component","target":"@components/footer-03.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/footer-03/footer-03")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for footer-03");
+			}
+			return { default: module.default };
+		}),
+		categories: ["footer"],
+		meta: {"createdAt":"2026-07-26","iframeHeight":860,"previewClassName":"flex min-h-svh items-end"},
+	},
 	"faq-03": {
 		name: "faq-03",
 		title: "FAQ 03",
@@ -23,36 +41,36 @@ export const Index = {
 		categories: ["faq"],
 		meta: {"createdAt":"2026-07-22","iframeHeight":980,"previewClassName":"min-h-screen"},
 	},
-	"agency-pricing-01": {
-		name: "agency-pricing-01",
-		title: "Agency Pricing 01",
-		description: "Tabbed project pricing paired with a highlighted ongoing agency retainer.",
+	"pricing-02": {
+		name: "pricing-02",
+		title: "Pricing 02",
+		description: "Tabbed project pricing paired with a highlighted ongoing retainer.",
 		type: "registry:block",
-		files: [{"path":"src/registry/blocks/agency-pricing-01/pricing.tsx","type":"registry:component","target":"@components/agency-pricing-01/pricing.tsx"},{"path":"src/registry/blocks/agency-pricing-01/icons.tsx","type":"registry:component","target":"@components/agency-pricing-01/icons.tsx"}],
+		files: [{"path":"src/registry/blocks/pricing-02/pricing-02.tsx","type":"registry:component","target":"@components/pricing-02/pricing-02.tsx"},{"path":"src/registry/blocks/pricing-02/icons.tsx","type":"registry:component","target":"@components/pricing-02/icons.tsx"}],
 		component: React.lazy(async () => {
-			const module = (await import("@/registry/blocks/agency-pricing-01/pricing")) as unknown as {
+			const module = (await import("@/registry/blocks/pricing-02/pricing-02")) as unknown as {
 				default?: React.ComponentType;
 			};
 			if (!module.default) {
-				throw new Error("No default export found for agency-pricing-01");
+				throw new Error("No default export found for pricing-02");
 			}
 			return { default: module.default };
 		}),
 		categories: ["pricing"],
 		meta: {"createdAt":"2026-07-22","iframeHeight":980,"previewClassName":"min-h-screen"},
 	},
-	"saas-hero-01": {
-		name: "saas-hero-01",
-		title: "SaaS Hero 01",
-		description: "An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",
+	"hero-02": {
+		name: "hero-02",
+		title: "Hero 02",
+		description: "An editorial hero with a playful pricing CTA and support dashboard preview.",
 		type: "registry:block",
-		files: [{"path":"src/registry/blocks/saas-hero-01/saas-hero-01.tsx","type":"registry:component","target":"@components/saas-hero-01/index.tsx"},{"path":"src/registry/blocks/saas-hero-01/header.tsx","type":"registry:component","target":"@components/saas-hero-01/header.tsx"}],
+		files: [{"path":"src/registry/blocks/hero-02/hero-02.tsx","type":"registry:component","target":"@components/hero-02/index.tsx"},{"path":"src/registry/blocks/hero-02/header.tsx","type":"registry:component","target":"@components/hero-02/header.tsx"}],
 		component: React.lazy(async () => {
-			const module = (await import("@/registry/blocks/saas-hero-01/saas-hero-01")) as unknown as {
+			const module = (await import("@/registry/blocks/hero-02/hero-02")) as unknown as {
 				default?: React.ComponentType;
 			};
 			if (!module.default) {
-				throw new Error("No default export found for saas-hero-01");
+				throw new Error("No default export found for hero-02");
 			}
 			return { default: module.default };
 		}),
@@ -203,18 +221,18 @@ export const Index = {
 		categories: ["faq"],
 		meta: {"createdAt":"2026-07-21","iframeHeight":760,"previewClassName":"min-h-screen"},
 	},
-	"agency-hero-01": {
-		name: "agency-hero-01",
-		title: "Agency Hero 01",
-		description: "Animated agency hero.",
+	"hero-01": {
+		name: "hero-01",
+		title: "Hero 01",
+		description: "An animated hero with availability, service CTAs, and a technology carousel.",
 		type: "registry:block",
-		files: [{"path":"src/registry/blocks/agency-hero-01/agency-hero-01.tsx","type":"registry:component","target":"@components/agency-hero-01.tsx"}],
+		files: [{"path":"src/registry/blocks/hero-01/hero-01.tsx","type":"registry:component","target":"@components/hero-01.tsx"}],
 		component: React.lazy(async () => {
-			const module = (await import("@/registry/blocks/agency-hero-01/agency-hero-01")) as unknown as {
+			const module = (await import("@/registry/blocks/hero-01/hero-01")) as unknown as {
 				default?: React.ComponentType;
 			};
 			if (!module.default) {
-				throw new Error("No default export found for agency-hero-01");
+				throw new Error("No default export found for hero-01");
 			}
 			return { default: module.default };
 		}),

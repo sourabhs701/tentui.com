@@ -350,7 +350,7 @@ function CardButton({
 }
 
 // ── Component ────────────────────────────────────────────────────────
-export function Pricing() {
+export function Pricing02() {
 	const [activeTab, setActiveTab] = useState("landing");
 	const activeCategory =
 		tabCategories.find((category) => category.value === activeTab) ??
@@ -418,4 +418,4 @@ export function Pricing() {
 	);
 }
 
-export default Pricing;
+export default Pricing02;

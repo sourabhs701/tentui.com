@@ -12,7 +12,7 @@ export { SiteHeader };
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 
-export const SAAS_HERO_ASSETS = {
+export const HERO_02_ASSETS = {
 	background: "https://cdn.srb.codes/pixel-mountain-lake-hero-v2.png",
 	dashboard: "https://cdn.srb.codes/saas-hero-dashboard.png",
 } as const;
@@ -20,15 +20,15 @@ export const SAAS_HERO_ASSETS = {
 const SERIF =
 	"'Iowan Old Style', 'Palatino Linotype', Georgia, Cambria, 'Times New Roman', serif";
 
-export type HeroProps = {
+export type Hero02Props = {
 	backgroundImageSrc?: string;
 	dashboardImageSrc?: string;
 };
 
-export function Hero({
-	backgroundImageSrc = SAAS_HERO_ASSETS.background,
-	dashboardImageSrc = SAAS_HERO_ASSETS.dashboard,
-}: HeroProps = {}) {
+export function Hero02({
+	backgroundImageSrc = HERO_02_ASSETS.background,
+	dashboardImageSrc = HERO_02_ASSETS.dashboard,
+}: Hero02Props = {}) {
 	const router = useRouter();
 
 	return (
@@ -126,4 +126,4 @@ export function Hero({
 	);
 }
 
-export default Hero;
+export default Hero02;

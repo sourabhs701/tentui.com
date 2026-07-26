@@ -4,6 +4,26 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const blocks: Registry["items"] = [
 	{
+		name: "footer-03",
+		title: "Footer 03",
+		description:
+			"A rounded dark footer with an overlapping brand mark, centered calls to action, and compact navigation.",
+		type: "registry:block",
+		files: [
+			{
+				path: "blocks/footer-03/footer-03.tsx",
+				target: "@components/footer-03.tsx",
+				type: "registry:component",
+			},
+		],
+		categories: ["footer"],
+		meta: {
+			createdAt: "2026-07-26",
+			iframeHeight: 860,
+			previewClassName: "flex min-h-svh items-end",
+		},
+	},
+	{
 		name: "faq-03",
 		title: "FAQ 03",
 		description:
@@ -33,21 +53,21 @@ export const blocks: Registry["items"] = [
 		},
 	},
 	{
-		name: "agency-pricing-01",
-		title: "Agency Pricing 01",
+		name: "pricing-02",
+		title: "Pricing 02",
 		description:
-			"Tabbed project pricing paired with a highlighted ongoing agency retainer.",
+			"Tabbed project pricing paired with a highlighted ongoing retainer.",
 		type: "registry:block",
 		dependencies: ["lucide-react", "motion"],
 		files: [
 			{
-				path: "blocks/agency-pricing-01/pricing.tsx",
-				target: "@components/agency-pricing-01/pricing.tsx",
+				path: "blocks/pricing-02/pricing-02.tsx",
+				target: "@components/pricing-02/pricing-02.tsx",
 				type: "registry:component",
 			},
 			{
-				path: "blocks/agency-pricing-01/icons.tsx",
-				target: "@components/agency-pricing-01/icons.tsx",
+				path: "blocks/pricing-02/icons.tsx",
+				target: "@components/pricing-02/icons.tsx",
 				type: "registry:component",
 			},
 		],
@@ -59,10 +79,10 @@ export const blocks: Registry["items"] = [
 		},
 	},
 	{
-		name: "saas-hero-01",
-		title: "SaaS Hero 01",
+		name: "hero-02",
+		title: "Hero 02",
 		description:
-			"An editorial SaaS hero with a playful pricing CTA and support dashboard preview.",
+			"An editorial hero with a playful pricing CTA and support dashboard preview.",
 		type: "registry:block",
 		dependencies: ["motion"],
 		registryDependencies: [
@@ -72,13 +92,13 @@ export const blocks: Registry["items"] = [
 		],
 		files: [
 			{
-				path: "blocks/saas-hero-01/saas-hero-01.tsx",
-				target: "@components/saas-hero-01/index.tsx",
+				path: "blocks/hero-02/hero-02.tsx",
+				target: "@components/hero-02/index.tsx",
 				type: "registry:component",
 			},
 			{
-				path: "blocks/saas-hero-01/header.tsx",
-				target: "@components/saas-hero-01/header.tsx",
+				path: "blocks/hero-02/header.tsx",
+				target: "@components/hero-02/header.tsx",
 				type: "registry:component",
 			},
 		],
@@ -269,15 +289,16 @@ export const blocks: Registry["items"] = [
 		},
 	},
 	{
-		name: "agency-hero-01",
-		title: "Agency Hero 01",
-		description: "Animated agency hero.",
+		name: "hero-01",
+		title: "Hero 01",
+		description:
+			"An animated hero with availability, service CTAs, and a technology carousel.",
 		type: "registry:block",
 		dependencies: ["motion", "react-fast-marquee"],
 		files: [
 			{
-				path: "blocks/agency-hero-01/agency-hero-01.tsx",
-				target: "@components/agency-hero-01.tsx",
+				path: "blocks/hero-01/hero-01.tsx",
+				target: "@components/hero-01.tsx",
 				type: "registry:component",
 			},
 		],

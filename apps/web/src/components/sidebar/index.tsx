@@ -10,12 +10,20 @@ import {
 } from "@tentui.com/ui/components/tooltip";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { motion } from "motion/react";
+import {
+	type MotionValue,
+	motion,
+	useMotionValue,
+	useReducedMotion,
+	useSpring,
+	useTransform,
+} from "motion/react";
 import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { memo, useCallback, useEffect, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useClickSound } from "@/hooks/soundcn/use-click-sound";
 import { useMetalClickSound } from "@/hooks/soundcn/use-metal-click-sound";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +31,13 @@ import type { SidebarIconHandle } from "./sidebar-icon";
 import { SidebarIcon } from "./sidebar-icon";
 
 const DEFAULT_SIDEBAR_OPEN = true;
+const NORMAL_LINE_WIDTH = 24;
+const MAX_LINE_WIDTH = 40;
+const PROXIMITY_RADIUS = 30;
+const GAP_LINE_COUNT = 2;
+const TICK_INTERVAL = 70;
+const TICK_VOLUME = 0.09;
+
 const sidebarOpenAtom = atomWithStorage(
 	"tentui:sidebar-open:v1",
 	DEFAULT_SIDEBAR_OPEN,
@@ -123,8 +138,19 @@ type MenuGroup = {
 
 export function SidebarContent({ groups }: { groups: MenuGroup[] }) {
 	const pathname = usePathname();
-
 	const itemActiveRef = useRef<HTMLAnchorElement | null>(null);
+	const pointerY = useMotionValue(Number.POSITIVE_INFINITY);
+	const shouldReduceMotion = useReducedMotion();
+	const lastTickAtRef = useRef(Number.NEGATIVE_INFINITY);
+	const [playClick] = useClickSound();
+
+	const playTick = useCallback(() => {
+		const now = performance.now();
+		if (now - lastTickAtRef.current < TICK_INTERVAL) return;
+
+		lastTickAtRef.current = now;
+		playClick({ volume: TICK_VOLUME });
+	}, [playClick]);
 
 	// Scroll active item into view on mount
 	useEffect(() => {
@@ -135,11 +161,16 @@ export function SidebarContent({ groups }: { groups: MenuGroup[] }) {
 		<nav
 			aria-label="Library navigation"
 			className="flex flex-col py-5.25 pr-0.5 pl-3"
-			style={
-				{
-					"--normal-line-width": `${lineVariants.normal.width}px`,
-				} as React.CSSProperties
-			}
+			onPointerCancel={() => pointerY.set(Number.POSITIVE_INFINITY)}
+			onPointerLeave={() => pointerY.set(Number.POSITIVE_INFINITY)}
+			onPointerMove={(event) => {
+				if (event.pointerType === "touch" || shouldReduceMotion === true) {
+					pointerY.set(Number.POSITIVE_INFINITY);
+					return;
+				}
+
+				pointerY.set(event.clientY);
+			}}
 		>
 			{groups.map((group, index) => (
 				<section
@@ -168,6 +199,8 @@ export function SidebarContent({ groups }: { groups: MenuGroup[] }) {
 								isNew={item.isNew}
 								isActive={item.href === pathname}
 								isLast={index === group.items.length - 1}
+								onCrossCenter={playTick}
+								pointerY={pointerY}
 							/>
 						))}
 					</div>
@@ -177,13 +210,61 @@ export function SidebarContent({ groups }: { groups: MenuGroup[] }) {
 	);
 }
 
-const MotionLink = motion.create(Link);
+function useProximityLine(
+	pointerY: MotionValue<number>,
+	isExpanded = false,
+	onCrossCenter?: () => void,
+) {
+	const ref = useRef<HTMLSpanElement>(null);
+	const previousPointerYRef = useRef(Number.POSITIVE_INFINITY);
+	const restingScale =
+		(isExpanded ? MAX_LINE_WIDTH : NORMAL_LINE_WIDTH) / MAX_LINE_WIDTH;
+	const targetScaleX = useTransform(pointerY, (currentPointerY) => {
+		const previousPointerY = previousPointerYRef.current;
+		previousPointerYRef.current = currentPointerY;
 
-const lineVariants = {
-	normal: { width: 24 },
-	active: { width: 40 },
-	hover: { width: 40 },
-};
+		if (!Number.isFinite(currentPointerY)) return restingScale;
+
+		const bounds = ref.current?.getBoundingClientRect();
+		if (!bounds) return restingScale;
+
+		const lineCenterY = bounds.top + bounds.height / 2;
+		const crossedCenter =
+			Number.isFinite(previousPointerY) &&
+			((previousPointerY < lineCenterY && currentPointerY >= lineCenterY) ||
+				(previousPointerY > lineCenterY && currentPointerY <= lineCenterY));
+		if (crossedCenter) onCrossCenter?.();
+
+		const distance = Math.abs(currentPointerY - lineCenterY);
+		const proximity = 1 - Math.min(distance / PROXIMITY_RADIUS, 1);
+
+		return restingScale + (1 - restingScale) * proximity;
+	});
+	const scaleX = useSpring(targetScaleX, {
+		stiffness: 320,
+		damping: 34,
+		mass: 0.7,
+	});
+	const labelX = useTransform(
+		scaleX,
+		(scale) => scale * MAX_LINE_WIDTH - NORMAL_LINE_WIDTH,
+	);
+
+	return { labelX, ref, scaleX };
+}
+
+function SidebarSpacerLine({ pointerY }: { pointerY: MotionValue<number> }) {
+	const { ref, scaleX } = useProximityLine(pointerY);
+
+	return (
+		<motion.span
+			ref={ref}
+			aria-hidden="true"
+			className="-mr-4 block h-px w-10 origin-left bg-foreground/20"
+			style={{ scaleX }}
+		/>
+	);
+}
 
 const SidebarMenuItem = memo(function SidebarMenuItem({
 	ref,
@@ -192,33 +273,43 @@ const SidebarMenuItem = memo(function SidebarMenuItem({
 	isNew = false,
 	isActive = false,
 	isLast = false,
+	onCrossCenter,
+	pointerY,
 }: MenuItem & {
 	ref?: React.Ref<HTMLAnchorElement>;
 	isNew?: boolean;
 	isActive?: boolean;
 	isLast?: boolean;
+	onCrossCenter: () => void;
+	pointerY: MotionValue<number>;
 }) {
 	const isExternal = href.startsWith("http");
+	const {
+		labelX,
+		ref: lineRef,
+		scaleX,
+	} = useProximityLine(pointerY, isActive, onCrossCenter);
 
 	return (
 		<>
-			<MotionLink
+			<Link
 				ref={ref}
 				aria-current={isActive ? "page" : undefined}
 				className="group relative flex h-px items-center gap-3 after:absolute after:top-1/2 after:left-0 after:size-full after:-translate-y-1/2 after:p-3.5"
 				href={href as Route}
 				target={isExternal ? "_blank" : undefined}
 				rel={isExternal ? "noreferrer" : undefined}
-				initial={false}
-				animate={isActive ? "active" : "normal"}
-				whileHover="hover"
 			>
 				<motion.span
-					className="block h-px shrink-0 bg-foreground/20 transition-[background-color] ease-out group-hover:bg-foreground group-aria-[current=page]:bg-foreground"
-					variants={lineVariants}
-					transition={{ type: "spring", stiffness: 200, damping: 20 }}
+					ref={lineRef}
+					aria-hidden="true"
+					className="-mr-4 block h-px w-10 shrink-0 origin-left bg-foreground/20 transition-[background-color] ease-out group-hover:bg-foreground group-aria-[current=page]:bg-foreground"
+					style={{ scaleX }}
 				/>
-				<span className="inline-flex items-center gap-2 whitespace-nowrap text-muted-foreground text-sm transition-[color] ease-out group-hover:text-foreground group-aria-[current=page]:text-foreground">
+				<motion.span
+					className="inline-flex items-center gap-2 whitespace-nowrap text-muted-foreground text-sm transition-[color] ease-out group-hover:text-foreground group-aria-[current=page]:text-foreground"
+					style={{ x: labelX }}
+				>
 					<span>{title}</span>
 					{isNew && (
 						<>
@@ -229,15 +320,13 @@ const SidebarMenuItem = memo(function SidebarMenuItem({
 							<span className="sr-only">New</span>
 						</>
 					)}
-				</span>
-			</MotionLink>
+				</motion.span>
+			</Link>
 
-			{!isLast && (
-				<>
-					<span className="block h-px w-(--normal-line-width) bg-foreground/20" />
-					<span className="block h-px w-(--normal-line-width) bg-foreground/20" />
-				</>
-			)}
+			{!isLast &&
+				Array.from({ length: GAP_LINE_COUNT }, (_, index) => (
+					<SidebarSpacerLine key={index} pointerY={pointerY} />
+				))}
 		</>
 	);
 });

@@ -1,0 +1,180 @@
+import { Fragment, type ReactNode } from "react";
+
+export interface Footer03Link {
+	label: string;
+	href: string;
+	external?: boolean;
+}
+const SOCIAL_LINKS: Footer03Link[] = [
+	{
+		label: "GitHub",
+		href: "#",
+		external: true,
+	},
+	{
+		label: "X / Twitter",
+		href: "#",
+		external: true,
+	},
+];
+
+const EXPLORE_LINKS: Footer03Link[] = [
+	{ label: "Components", href: "#" },
+	{ label: "Blocks", href: "#" },
+];
+
+const LEGAL_LINKS: Footer03Link[] = [
+	{ label: "Terms", href: "#" },
+	{ label: "Privacy", href: "#" },
+];
+
+function ArrowIcon() {
+	return (
+		<svg
+			aria-hidden="true"
+			className="size-3 text-blue-500 transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none"
+			fill="none"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+			viewBox="0 0 24 24"
+		>
+			<path d="M7 17 17 7M8 7h9v9" />
+		</svg>
+	);
+}
+
+function Mark() {
+	return (
+		<svg
+			aria-hidden="true"
+			className="size-full text-blue-500"
+			viewBox="0 0 24 23"
+		>
+			<path
+				d="M12.0139 14.2848C10.0072 14.2848 8.38019 12.6853 8.38019 10.7133C8.38019 8.74133 10.0072 7.14184 12.0139 7.14184C14.0207 7.14184 15.6458 8.74133 15.6458 10.7133C15.6458 12.6853 14.0188 14.2848 12.0139 14.2848ZM23.7677 15.174C23.5257 16.107 22.9021 16.9415 21.9732 17.4326C21.2509 17.8161 20.4542 17.9329 19.7002 17.8197C18.5703 17.6499 17.4161 17.8197 16.409 18.3547L16.221 18.4552C15.2157 18.9883 14.4339 19.8428 13.9592 20.8654C13.6428 21.5464 13.1048 22.138 12.3825 22.5215C11.9525 22.7497 11.4964 22.883 11.0366 22.9305C9.72795 23.1879 8.32621 22.726 7.45129 21.6213C6.94681 20.984 6.69734 20.2299 6.68804 19.4813C6.67314 18.3584 6.30827 17.2665 5.60833 16.3791L5.47617 16.2129C4.77437 15.3256 3.78775 14.7102 2.68572 14.4181C1.94855 14.2227 1.26908 13.7991 0.764598 13.1618C-0.462158 11.6098 -0.182909 9.37492 1.38823 8.16069C2.95751 6.94829 5.1988 7.19479 6.45534 8.72125C6.98774 9.36944 7.2521 10.14 7.26513 10.9105C7.28375 12.07 7.68769 13.1892 8.41182 14.104C9.01869 14.8709 9.82287 15.4588 10.7369 15.8076C10.8933 15.8112 11.0478 15.824 11.2004 15.8459C12.3657 16.0194 13.5571 15.8131 14.594 15.2616C15.5694 14.7449 16.3606 13.9488 16.8632 12.9811C16.9004 12.8478 16.9433 12.7163 16.9954 12.5885C17.4161 11.5441 17.5036 10.3974 17.1983 9.31467L17.1406 9.11016C16.8353 8.0274 16.1633 7.08706 15.2549 6.406C15.2493 6.40052 15.2418 6.39687 15.2362 6.39139C14.3334 5.73224 13.25 5.3561 12.1237 5.3561H11.9097C10.7667 5.3561 9.66652 5.74319 8.75436 6.42243C8.14564 6.87525 7.38985 7.14366 6.56705 7.14366C4.56776 7.14366 2.94449 5.55512 2.93518 3.59045C2.92402 1.6276 4.49699 0.0390573 6.49443 0.000713257C7.34143 -0.0157199 8.1233 0.252688 8.74877 0.714643C9.69071 1.41214 10.8393 1.78645 12.0177 1.78645C13.196 1.78645 14.3445 1.41214 15.2865 0.714643C15.912 0.252688 16.6938 -0.0157199 17.5408 0.000713257H17.5427C17.848 0.00619098 18.1496 0.0500127 18.4381 0.126701C18.4474 0.128527 18.4548 0.132179 18.4641 0.134004C18.5088 0.146786 18.5535 0.159567 18.5982 0.174174C18.6317 0.18513 18.6652 0.196085 18.6968 0.208867C18.7173 0.21617 18.7359 0.221648 18.7546 0.228952C18.8048 0.247211 18.8532 0.267296 18.9016 0.287381C18.9035 0.287381 18.9072 0.289207 18.9091 0.291032C20.026 0.762116 20.8432 1.76637 21.0461 2.98059C21.048 2.99155 21.0498 3.0025 21.0517 3.01529C21.0554 3.04085 21.0591 3.06641 21.0629 3.0938C21.0684 3.1358 21.074 3.17779 21.0778 3.21979C21.0778 3.22527 21.0778 3.22892 21.0778 3.23439C21.1317 3.77852 21.0554 4.31351 20.8711 4.8065C20.8692 4.81198 20.8656 4.81928 20.8637 4.82476C20.8563 4.84302 20.8488 4.8631 20.8413 4.88136C20.4095 5.96047 20.3499 7.14731 20.6626 8.26477C20.9772 9.38222 21.6493 10.37 22.5838 11.0767C23.2037 11.5459 23.6765 12.216 23.885 13.0231C24.0786 13.7681 24.0208 14.5148 23.764 15.1795L23.7677 15.174Z"
+				fill="currentColor"
+			/>
+		</svg>
+	);
+}
+
+function FooterLink({ link }: { link: Footer03Link }) {
+	return (
+		<a
+			className="group flex w-fit items-center gap-1.5 font-medium text-sm text-white/60 transition-colors duration-150 ease-out hover:text-white sm:text-base"
+			href={link.href}
+			rel={link.external ? "noreferrer" : undefined}
+			target={link.external ? "_blank" : undefined}
+		>
+			{link.label}
+			{link.external ? <ArrowIcon /> : null}
+		</a>
+	);
+}
+
+function ActionLink({
+	link,
+	primary = false,
+}: {
+	link: Footer03Link;
+	primary?: boolean;
+}) {
+	return (
+		<a
+			className={
+				primary
+					? "flex h-12 items-center rounded-full bg-blue-500 px-6 font-semibold text-sm text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25)] transition-colors duration-150 ease-out hover:bg-blue-600"
+					: "flex h-12 items-center rounded-full bg-white/[0.08] px-6 font-semibold text-sm text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.14),inset_0_-1px_2px_0_rgba(0,0,0,0.3)] backdrop-blur-2xl transition-colors duration-150 ease-out hover:bg-white/[0.12]"
+			}
+			href={link.href}
+			rel={link.external ? "noreferrer" : undefined}
+			target={link.external ? "_blank" : undefined}
+		>
+			{link.label}
+		</a>
+	);
+}
+
+export default function Footer03() {
+	return (
+		<footer className="relative w-full p-2.5 pt-20">
+			<div className="relative w-full overflow-visible rounded-[45px] bg-neutral-950 px-8 pt-28 pb-10 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] sm:px-12">
+				<div className="absolute top-0 left-1/2 size-28 -translate-x-1/2 -translate-y-1/2 sm:size-36">
+					<Mark />
+				</div>
+
+				<div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 md:grid-cols-[1fr_auto_1fr] md:items-start">
+					<nav
+						aria-label="Social links"
+						className="order-2 flex flex-col gap-2 md:order-1 md:pt-4"
+					>
+						<h2 className="mb-1 font-bold text-lg text-white tracking-tight">
+							Socials
+						</h2>
+						{SOCIAL_LINKS.map((link) => (
+							<FooterLink key={`${link.label}-${link.href}`} link={link} />
+						))}
+					</nav>
+
+					<div className="order-1 flex flex-col items-center gap-4 text-center md:order-2">
+						<h2 className="font-bold text-5xl tracking-tight sm:text-6xl">
+							Tent UI
+						</h2>
+						<p className="max-w-xl text-balance font-medium text-white/60 sm:text-lg">
+							A collection of beautifully crafted components and blocks for your
+							next project.
+						</p>
+						<div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+							<ActionLink
+								link={{ label: "Browse components", href: "#" }}
+								primary
+							/>
+							<ActionLink
+								link={{
+									label: "Star on GitHub",
+									href: "#",
+									external: true,
+								}}
+							/>
+						</div>
+					</div>
+
+					<nav
+						aria-label="Explore"
+						className="order-3 flex flex-col gap-2 md:items-end md:pt-4"
+					>
+						<h2 className="mb-1 font-bold text-lg text-white tracking-tight">
+							Explore
+						</h2>
+						{EXPLORE_LINKS.map((link) => (
+							<FooterLink key={`${link.label}-${link.href}`} link={link} />
+						))}
+					</nav>
+				</div>
+
+				<div className="mx-auto mt-12 flex w-full max-w-6xl flex-wrap items-center justify-end gap-2.5">
+					{LEGAL_LINKS.map((link) => (
+						<Fragment key={`${link.label}-${link.href}`}>
+							<a
+								className="font-medium text-white/50 text-xs transition-colors duration-150 ease-out hover:text-white"
+								href={link.href}
+								rel={link.external ? "noreferrer" : undefined}
+								target={link.external ? "_blank" : undefined}
+							>
+								{link.label}
+							</a>
+							<span aria-hidden="true" className="text-white/25 text-xs">
+								·
+							</span>
+						</Fragment>
+					))}
+					<span className="font-medium text-white/50 text-xs">
+						© ${new Date().getFullYear()} Tent UI
+					</span>
+				</div>
+			</div>
+		</footer>
+	);
+}
