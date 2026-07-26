@@ -9,26 +9,26 @@ import { cn } from "@/lib/utils";
 const FEEDBACK_DURATION = 2000;
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 
-type ContextfulSaveButtonStatus = "idle" | "loading" | "success" | "error";
+type StatefulButtonStatus = "idle" | "loading" | "success" | "error";
 
-type ContextfulSaveButtonLabels = Partial<
-	Record<ContextfulSaveButtonStatus, string>
+type StatefulButtonLabels = Partial<
+	Record<Exclude<StatefulButtonStatus, "idle">, string>
 >;
 
-interface ContextfulSaveButtonProps
+interface StatefulButtonProps
 	extends Omit<React.ComponentProps<"button">, "children" | "onClick"> {
-	labels?: ContextfulSaveButtonLabels;
+	children: string;
+	labels?: StatefulButtonLabels;
 	onClick?: (
 		event: React.MouseEvent<HTMLButtonElement>,
 	) => void | Promise<void>;
 }
 
 const defaultLabels = {
-	idle: "Save",
-	loading: "Saving",
-	success: "Saved",
+	loading: "Working",
+	success: "Done",
 	error: "Try again",
-} satisfies Record<ContextfulSaveButtonStatus, string>;
+} satisfies Record<Exclude<StatefulButtonStatus, "idle">, string>;
 
 function AnimatedChars({ text }: { text: string }) {
 	return (
@@ -55,17 +55,18 @@ function AnimatedChars({ text }: { text: string }) {
 	);
 }
 
-function ContextfulSaveButton({
+function StatefulButton({
+	children,
 	className,
 	disabled,
 	labels,
 	onClick,
 	...props
-}: ContextfulSaveButtonProps) {
-	const [status, setStatus] = useState<ContextfulSaveButtonStatus>("idle");
+}: StatefulButtonProps) {
+	const [status, setStatus] = useState<StatefulButtonStatus>("idle");
 	const isRunning = useRef(false);
 	const resetTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
-	const resolvedLabels = { ...defaultLabels, ...labels };
+	const resolvedLabels = { idle: children, ...defaultLabels, ...labels };
 	const label = resolvedLabels[status];
 	const isPending = status !== "idle";
 
@@ -99,7 +100,7 @@ function ContextfulSaveButton({
 		<MotionConfig reducedMotion="user">
 			<div className="relative inline-flex font-sans">
 				<button
-					data-slot="contextful-save-button"
+					data-slot="stateful-button"
 					data-status={status}
 					type="button"
 					aria-busy={status === "loading"}
@@ -164,10 +165,10 @@ function ContextfulSaveButton({
 }
 
 export {
-	ContextfulSaveButton,
-	type ContextfulSaveButtonLabels,
-	type ContextfulSaveButtonProps,
-	type ContextfulSaveButtonStatus,
+	StatefulButton,
+	type StatefulButtonLabels,
+	type StatefulButtonProps,
+	type StatefulButtonStatus,
 };
 
-export default ContextfulSaveButton;
+export default StatefulButton;

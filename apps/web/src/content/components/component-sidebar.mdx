@@ -1,0 +1,154 @@
+---
+title: Component Sidebar
+description: Navigate dense component libraries with proximity-reactive guide lines.
+createdAt: 2026-07-26
+updatedAt: 2026-07-26
+---
+
+<ComponentPreview name="component-sidebar-demo" />
+
+## Features
+
+- Expands guide lines as the pointer approaches, keeping dense navigation easy to scan.
+- Supports controlled and uncontrolled open state with an optional single-key shortcut.
+- Accepts a custom link renderer for Next.js, React Router, or other routing libraries.
+- Scrolls the active item into view and marks it with `aria-current="page"`.
+- Ignores touch pointers and removes movement for reduced-motion users.
+- Exposes interaction callbacks so applications can add sound or haptic feedback without coupling it to the component.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/component-sidebar
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion clsx tailwind-merge
+npx shadcn@latest add badge button kbd tooltip
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="component-sidebar"
+  title="components/component-sidebar.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+Add `TooltipProvider` near the root of your application if it is not already present.
+
+```tsx
+import { TooltipProvider } from "@/components/ui/tooltip";
+
+<TooltipProvider>{children}</TooltipProvider>
+```
+
+## Usage
+
+```tsx
+import {
+  ComponentSidebar,
+  ComponentSidebarContent,
+} from "@/components/component-sidebar";
+```
+
+```tsx
+const groups = [
+  {
+    title: "Getting started",
+    items: [
+      { title: "Overview", href: "/overview" },
+      { title: "Installation", href: "/installation" },
+    ],
+  },
+  {
+    title: "Components",
+    newCount: 1,
+    items: [
+      { title: "Button", href: "/button" },
+      { title: "Dialog", href: "/dialog", isNew: true },
+    ],
+  },
+];
+
+<ComponentSidebar>
+  <ComponentSidebarContent
+    activeHref="/overview"
+    groups={groups}
+  />
+</ComponentSidebar>
+```
+
+### Framework links
+
+Use `renderLink` to preserve client-side navigation. The component supplies the active ref, accessibility attributes, external-link attributes, and children.
+
+```tsx
+import type { Route } from "next";
+import Link from "next/link";
+
+function renderLink({ href, ...props }) {
+  return <Link href={href as Route} {...props} />;
+}
+
+<ComponentSidebarContent
+  activeHref={pathname}
+  groups={groups}
+  renderLink={renderLink}
+/>
+```
+
+### Layout
+
+Override the component's CSS variables with utilities when it needs to fit a specific shell.
+
+```tsx
+<ComponentSidebar className="[--component-sidebar-height:calc(100svh-4rem)] [--component-sidebar-top:4rem] [--component-sidebar-width:16rem]">
+  {/* Navigation */}
+</ComponentSidebar>
+```
+
+## Accessibility
+
+The toggle has an accessible name, exposes its expanded state, and points to the controlled panel. Closed content is inert, active links use `aria-current`, and the default `S` shortcut is ignored while typing in editable controls. Set `shortcutKey={false}` when a single-key shortcut is not appropriate.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/component-sidebar/component-sidebar.tsx"
+  name="ComponentSidebarProps"
+/>
+
+<AutoTypeTable
+  path="src/registry/components/component-sidebar/component-sidebar.tsx"
+  name="ComponentSidebarContentProps"
+/>

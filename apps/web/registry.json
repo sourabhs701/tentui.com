@@ -367,6 +367,62 @@
       "type": "registry:block"
     },
     {
+      "name": "tailwindcss-buttons",
+      "title": "Tailwind CSS Buttons",
+      "description": "Browse and copy a responsive gallery of polished Tailwind CSS button styles.",
+      "dependencies": [
+        "react-element-to-jsx-string",
+        "react-is"
+      ],
+      "registryDependencies": [
+        "https://tentui.com/r/copy-button.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/tailwindcss-buttons/tailwindcss-buttons.tsx",
+          "type": "registry:component",
+          "target": "@components/tailwindcss-buttons.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-26"
+      },
+      "docs": "https://tentui.com/components/tailwindcss-buttons",
+      "categories": [
+        "buttons"
+      ],
+      "type": "registry:component"
+    },
+    {
+      "name": "component-sidebar",
+      "title": "Component Sidebar",
+      "description": "Navigate dense component libraries with proximity-reactive guide lines.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "badge",
+        "button",
+        "kbd",
+        "tooltip"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/component-sidebar/component-sidebar.tsx",
+          "type": "registry:component",
+          "target": "@components/component-sidebar.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-26"
+      },
+      "docs": "https://tentui.com/components/component-sidebar",
+      "categories": [
+        "navigation"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "peeping-button",
       "title": "Peeping Button",
       "description": "Add a shy, cursor-tracking surprise behind a familiar button face.",
@@ -468,31 +524,6 @@
       "type": "registry:component"
     },
     {
-      "name": "3d-button",
-      "title": "3D Button",
-      "description": "Add physical depth and responsive press feedback to primary actions.",
-      "dependencies": [
-        "class-variance-authority"
-      ],
-      "files": [
-        {
-          "path": "src/registry/components/3d-button/3d-button.tsx",
-          "type": "registry:component",
-          "target": "@components/3d-button.tsx"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-07-20",
-        "image": "https://cdn.srb.codes/images/components/3d-button",
-        "video": "https://cdn.srb.codes/videos/components/3d-button"
-      },
-      "docs": "https://tentui.com/components/3d-button",
-      "categories": [
-        "buttons"
-      ],
-      "type": "registry:component"
-    },
-    {
       "name": "copy-button",
       "title": "Copy Button",
       "description": "Copy text to the clipboard with visual feedback.",
@@ -578,18 +609,18 @@
       "type": "registry:component"
     },
     {
-      "name": "contextful-save-button",
-      "title": "Contextful Save Button",
-      "description": "Show async save progress and outcomes without leaving the button.",
+      "name": "stateful-button",
+      "title": "Stateful Button",
+      "description": "Communicate async loading, success, and error states without leaving the button.",
       "dependencies": [
         "lucide-react",
         "motion"
       ],
       "files": [
         {
-          "path": "src/registry/components/contextful-save-button/contextful-save-button.tsx",
+          "path": "src/registry/components/stateful-button/stateful-button.tsx",
           "type": "registry:component",
-          "target": "@components/contextful-save-button.tsx"
+          "target": "@components/stateful-button.tsx"
         }
       ],
       "meta": {
@@ -597,8 +628,10 @@
         "video": "https://cdn.srb.codes/videos/components/animated-save-button",
         "image": "https://cdn.srb.codes/images/components/animated-save-button"
       },
-      "docs": "https://tentui.com/components/contextful-save-button",
-      "categories": [],
+      "docs": "https://tentui.com/components/stateful-button",
+      "categories": [
+        "buttons"
+      ],
       "type": "registry:component"
     },
     {

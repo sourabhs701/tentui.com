@@ -171,7 +171,7 @@ export default function Footer03() {
 						</Fragment>
 					))}
 					<span className="font-medium text-white/50 text-xs">
-						© ${new Date().getFullYear()} Tent UI
+						© {new Date().getFullYear()} Tent UI
 					</span>
 				</div>
 			</div>

@@ -11,14 +11,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { startTransition } from "react";
+import {
+	ARCHIVE_SIDEBAR_ROW,
+	ArchiveSidebar,
+	ArchiveSidebarActiveRail,
+} from "@/components/archive-sidebar";
 import type { BlogPost } from "@/lib/documents";
 
 const ALL_POSTS = "All Posts";
 const SERIF =
 	"'Iowan Old Style', 'Palatino Linotype', Georgia, Cambria, 'Times New Roman', serif";
-const CATEGORY_ROW =
-	"relative flex h-11 w-full cursor-pointer touch-manipulation items-center px-6 text-left font-mono text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/50 active:bg-muted [@media(hover:hover)_and_(pointer:fine)]:h-8";
-
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
 	year: "numeric",
 	month: "short",
@@ -86,38 +88,26 @@ export function BlogArchive({ posts }: { posts: BlogPost[] }) {
 			) : null}
 
 			<div className="grid grid-cols-1 md:grid-cols-[232px_1fr]">
-				<nav
-					aria-label="Blog categories"
-					className="self-start py-8 md:sticky md:top-(--header-height) md:py-14"
-				>
-					<div className="bg-primary px-6 py-2">
-						<span className="font-medium text-primary-foreground text-xs uppercase tracking-wide">
-							Categories
-						</span>
-					</div>
-					<ul className="flex flex-col">
-						{categories.map((item) => (
-							<li key={item}>
-								<button
-									type="button"
-									onClick={() => setCategory(item)}
-									aria-pressed={isActiveCategory(item)}
-									className={cn(
-										CATEGORY_ROW,
-										isActiveCategory(item)
-											? "bg-primary/10 text-foreground"
-											: "text-muted-foreground hover:bg-muted hover:text-foreground",
-									)}
-								>
-									{isActiveCategory(item) ? (
-										<span className="absolute top-0 left-0 h-full w-0.5 bg-primary" />
-									) : null}
-									{item}
-								</button>
-							</li>
-						))}
-					</ul>
-				</nav>
+				<ArchiveSidebar title="Categories" aria-label="Blog categories">
+					{categories.map((item) => (
+						<li key={item}>
+							<button
+								type="button"
+								onClick={() => setCategory(item)}
+								aria-pressed={isActiveCategory(item)}
+								className={cn(
+									ARCHIVE_SIDEBAR_ROW,
+									isActiveCategory(item)
+										? "bg-primary/10 text-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground",
+								)}
+							>
+								{isActiveCategory(item) ? <ArchiveSidebarActiveRail /> : null}
+								{item}
+							</button>
+						</li>
+					))}
+				</ArchiveSidebar>
 
 				<section aria-label="Articles" className="min-w-0 py-8 md:py-14">
 					{visiblePosts.length > 0 ? (

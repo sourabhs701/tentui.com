@@ -1,16 +1,16 @@
 ---
-title: Contextful Save Button
-description: Show async save progress and outcomes without leaving the button.
+title: Stateful Button
+description: Communicate async loading, success, and error states without leaving the button.
 image: https://cdn.srb.codes/images/components/animated-save-button-light.webp
 createdAt: 2026-07-19
-updatedAt: 2026-07-21
+updatedAt: 2026-07-26
 ---
 
-<ComponentPreview name="contextful-save-button-demo" />
+<ComponentPreview name="stateful-button-demo" canConfigure />
 
 ## Features
 
-- Reports loading, success, and error states for asynchronous actions.
+- Reports loading, success, and error states for any asynchronous action.
 - Animates label changes character by character.
 - Announces status changes and reduces motion when requested.
 
@@ -23,7 +23,7 @@ updatedAt: 2026-07-21
 <TabsContent value="cli">
 
 ```bash
-npx shadcn@latest add @tentui/contextful-save-button
+npx shadcn@latest add @tentui/stateful-button
 ```
 
 </TabsContent>
@@ -49,8 +49,8 @@ npm install lucide-react motion clsx tailwind-merge
 <Step>Copy and paste the following code into your project</Step>
 
 <ComponentSource
-  name="contextful-save-button"
-  title="components/contextful-save-button.tsx"
+  name="stateful-button"
+  title="components/stateful-button.tsx"
 />
 
 <Step>Update the import paths to match your project setup</Step>
@@ -64,15 +64,18 @@ npm install lucide-react motion clsx tailwind-merge
 ## Usage
 
 ```tsx
-import { ContextfulSaveButton } from "@/components/contextful-save-button";
+import { StatefulButton } from "@/components/stateful-button";
 ```
 
 ```tsx
-<ContextfulSaveButton
+<StatefulButton
+  labels={{ loading: "Saving", success: "Saved" }}
   onClick={async () => {
     await saveChanges();
   }}
-/>
+>
+  Save changes
+</StatefulButton>
 ```
 
 ## Accessibility
@@ -84,8 +87,8 @@ remove transforms and stop the loading icon's rotation.
 ## API reference
 
 <AutoTypeTable
-  path="src/registry/components/contextful-save-button/contextful-save-button.tsx"
-  name="ContextfulSaveButtonProps"
+  path="src/registry/components/stateful-button/stateful-button.tsx"
+  name="StatefulButtonProps"
 />
 
 ## Examples
@@ -93,9 +96,8 @@ remove transforms and stop the loading icon's rotation.
 ### Custom labels
 
 ```tsx
-<ContextfulSaveButton
+<StatefulButton
   labels={{
-    idle: "Publish",
     loading: "Publishing",
     success: "Published",
     error: "Try again",
@@ -103,5 +105,7 @@ remove transforms and stop the loading icon's rotation.
   onClick={async () => {
     await publishChanges();
   }}
-/>
+>
+  Publish
+</StatefulButton>
 ```

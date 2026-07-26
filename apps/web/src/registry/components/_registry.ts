@@ -2,6 +2,48 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "tailwindcss-buttons",
+		type: "registry:component",
+		title: "Tailwind CSS Buttons",
+		description:
+			"Browse and copy a responsive gallery of polished Tailwind CSS button styles.",
+		dependencies: ["react-element-to-jsx-string", "react-is"],
+		registryDependencies: ["https://tentui.com/r/copy-button.json"],
+		files: [
+			{
+				path: "components/tailwindcss-buttons/tailwindcss-buttons.tsx",
+				type: "registry:component",
+				target: "@components/tailwindcss-buttons.tsx",
+			},
+		],
+		categories: ["buttons"],
+		meta: {
+			createdAt: "2026-07-26",
+		},
+		docs: "https://tentui.com/components/tailwindcss-buttons",
+	},
+	{
+		name: "component-sidebar",
+		type: "registry:component",
+		title: "Component Sidebar",
+		description:
+			"Navigate dense component libraries with proximity-reactive guide lines.",
+		dependencies: ["motion"],
+		registryDependencies: ["badge", "button", "kbd", "tooltip"],
+		files: [
+			{
+				path: "components/component-sidebar/component-sidebar.tsx",
+				type: "registry:component",
+				target: "@components/component-sidebar.tsx",
+			},
+		],
+		categories: ["navigation"],
+		meta: {
+			createdAt: "2026-07-26",
+		},
+		docs: "https://tentui.com/components/component-sidebar",
+	},
+	{
 		name: "peeping-button",
 		type: "registry:component",
 		title: "Peeping Button",
@@ -87,28 +129,6 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/animated-tabs",
 	},
 	{
-		name: "3d-button",
-		type: "registry:component",
-		title: "3D Button",
-		description:
-			"Add physical depth and responsive press feedback to primary actions.",
-		dependencies: ["class-variance-authority"],
-		files: [
-			{
-				path: "components/3d-button/3d-button.tsx",
-				type: "registry:component",
-				target: "@components/3d-button.tsx",
-			},
-		],
-		categories: ["buttons"],
-		meta: {
-			createdAt: "2026-07-20",
-			image: "https://cdn.srb.codes/images/components/3d-button",
-			video: "https://cdn.srb.codes/videos/components/3d-button",
-		},
-		docs: "https://tentui.com/components/3d-button",
-	},
-	{
 		name: "copy-button",
 		type: "registry:component",
 		title: "Copy Button",
@@ -185,26 +205,26 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/world-map",
 	},
 	{
-		name: "contextful-save-button",
+		name: "stateful-button",
 		type: "registry:component",
-		title: "Contextful Save Button",
+		title: "Stateful Button",
 		description:
-			"Show async save progress and outcomes without leaving the button.",
+			"Communicate async loading, success, and error states without leaving the button.",
 		dependencies: ["lucide-react", "motion"],
 		files: [
 			{
-				path: "components/contextful-save-button/contextful-save-button.tsx",
+				path: "components/stateful-button/stateful-button.tsx",
 				type: "registry:component",
-				target: "@components/contextful-save-button.tsx",
+				target: "@components/stateful-button.tsx",
 			},
 		],
-		categories: [],
+		categories: ["buttons"],
 		meta: {
 			createdAt: "2026-07-19",
 			video: "https://cdn.srb.codes/videos/components/animated-save-button",
 			image: "https://cdn.srb.codes/images/components/animated-save-button",
 		},
-		docs: "https://tentui.com/components/contextful-save-button",
+		docs: "https://tentui.com/components/stateful-button",
 	},
 	{
 		name: "animated-arrow",

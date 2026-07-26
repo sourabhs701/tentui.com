@@ -4,6 +4,11 @@ import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import {
+	ARCHIVE_SIDEBAR_ROW,
+	ArchiveSidebar,
+	ArchiveSidebarActiveRail,
+} from "@/components/archive-sidebar";
 import { cn } from "@/lib/utils";
 
 const LEGAL = [
@@ -17,44 +22,27 @@ export function CompanySidebar() {
 	const pathname = usePathname();
 
 	return (
-		<nav
-			aria-label="Company"
-			className="self-start py-8 md:sticky md:top-12 md:py-14"
-		>
-			<p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.32em]">
-				Legal
-			</p>
-
-			<ul className="mt-6 space-y-0.5">
-				{LEGAL.map((item) => {
-					const active = pathname === item.href;
-					return (
-						<li key={item.href}>
-							<Link
-								href={item.href}
-								aria-current={active ? "page" : undefined}
-								className={cn(
-									"group relative flex items-center gap-2 py-1.5 pr-2 pl-4 font-mono text-[13px] tracking-tight transition-colors",
-									active
-										? "bg-primary/10 text-primary"
-										: "text-muted-foreground hover:text-foreground",
-								)}
-							>
-								<span
-									aria-hidden="true"
-									className={cn(
-										"absolute top-0 bottom-0 left-0 w-px transition-colors",
-										active
-											? "bg-primary"
-											: "bg-transparent group-hover:bg-border",
-									)}
-								/>
-								{item.label}
-							</Link>
-						</li>
-					);
-				})}
-			</ul>
-		</nav>
+		<ArchiveSidebar title="Legal" aria-label="Company">
+			{LEGAL.map((item) => {
+				const active = pathname === item.href;
+				return (
+					<li key={item.href}>
+						<Link
+							href={item.href}
+							aria-current={active ? "page" : undefined}
+							className={cn(
+								ARCHIVE_SIDEBAR_ROW,
+								active
+									? "bg-primary/10 text-foreground"
+									: "text-muted-foreground hover:bg-muted hover:text-foreground",
+							)}
+						>
+							{active ? <ArchiveSidebarActiveRail /> : null}
+							{item.label}
+						</Link>
+					</li>
+				);
+			})}
+		</ArchiveSidebar>
 	);
 }

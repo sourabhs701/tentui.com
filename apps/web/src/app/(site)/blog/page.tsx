@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Section from "@/components/section";
 import { getBlogPosts } from "@/lib/documents";
 import { BlogArchive } from "./_components/blog-archive";
 
@@ -27,9 +28,9 @@ export default function BlogPage() {
 	const posts = getBlogPosts();
 
 	return (
-		<div className="bg-background px-2">
-			<header className="mx-auto w-full max-w-6xl">
-				<div className="py-16 md:py-20">
+		<div className="overflow-x-clip bg-background">
+			<Section line={false}>
+				<header className="px-4 py-16 md:py-20">
 					<h1
 						className="max-w-2xl font-normal text-4xl text-foreground leading-[1.08] tracking-[-0.02em] md:text-5xl"
 						style={{ fontFamily: SERIF }}
@@ -39,18 +40,18 @@ export default function BlogPage() {
 					<p className="mt-5 max-w-xl text-[15px] text-muted-foreground leading-relaxed">
 						{DESCRIPTION}
 					</p>
-				</div>
-			</header>
+				</header>
 
-			<div className="mx-auto w-full max-w-6xl pb-24">
-				{posts.length > 0 ? (
-					<BlogArchive posts={posts} />
-				) : (
-					<p className="py-24 text-center text-[14px] text-muted-foreground">
-						No posts yet. Check back soon.
-					</p>
-				)}
-			</div>
+				<div className="pb-24">
+					{posts.length > 0 ? (
+						<BlogArchive posts={posts} />
+					) : (
+						<p className="py-24 text-center text-[14px] text-muted-foreground">
+							No posts yet. Check back soon.
+						</p>
+					)}
+				</div>
+			</Section>
 		</div>
 	);
 }

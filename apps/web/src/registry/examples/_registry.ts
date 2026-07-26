@@ -4,6 +4,34 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "tailwindcss-buttons-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("tailwindcss-buttons")],
+		files: [
+			{
+				path: "examples/tailwindcss-buttons-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "w-full p-0",
+		},
+	},
+	{
+		name: "component-sidebar-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("component-sidebar")],
+		files: [
+			{
+				path: "examples/component-sidebar-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[38rem] w-full p-0",
+		},
+	},
+	{
 		name: "peeping-button-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("peeping-button")],
@@ -60,20 +88,6 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
-		name: "3d-button-demo",
-		type: "registry:example",
-		registryDependencies: [getRegistryItemUrl("3d-button")],
-		files: [
-			{
-				path: "examples/3d-button-demo.tsx",
-				type: "registry:example",
-			},
-		],
-		meta: {
-			previewClassName: "min-h-[40rem] w-full p-0",
-		},
-	},
-	{
 		name: "email-dock-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("email-dock")],
@@ -116,13 +130,13 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
-		name: "contextful-save-button-demo",
+		name: "stateful-button-demo",
 		type: "registry:example",
-		dependencies: ["motion"],
-		registryDependencies: [getRegistryItemUrl("contextful-save-button")],
+		dependencies: ["dialkit"],
+		registryDependencies: [getRegistryItemUrl("stateful-button")],
 		files: [
 			{
-				path: "examples/contextful-save-button-demo.tsx",
+				path: "examples/stateful-button-demo.tsx",
 				type: "registry:example",
 			},
 		],

@@ -239,6 +239,42 @@ export const Index = {
 		categories: ["hero"],
 		meta: {"createdAt":"2026-07-17","iframeHeight":760,"previewClassName":"min-h-screen"},
 	},
+	"tailwindcss-buttons": {
+		name: "tailwindcss-buttons",
+		title: "Tailwind CSS Buttons",
+		description: "Browse and copy a responsive gallery of polished Tailwind CSS button styles.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/tailwindcss-buttons/tailwindcss-buttons.tsx","type":"registry:component","target":"@components/tailwindcss-buttons.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/tailwindcss-buttons/tailwindcss-buttons")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for tailwindcss-buttons");
+			}
+			return { default: module.default };
+		}),
+		categories: ["buttons"],
+		meta: {"createdAt":"2026-07-26"},
+	},
+	"component-sidebar": {
+		name: "component-sidebar",
+		title: "Component Sidebar",
+		description: "Navigate dense component libraries with proximity-reactive guide lines.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/component-sidebar/component-sidebar.tsx","type":"registry:component","target":"@components/component-sidebar.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/component-sidebar/component-sidebar")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for component-sidebar");
+			}
+			return { default: module.default };
+		}),
+		categories: ["navigation"],
+		meta: {"createdAt":"2026-07-26"},
+	},
 	"peeping-button": {
 		name: "peeping-button",
 		title: "Peeping Button",
@@ -311,24 +347,6 @@ export const Index = {
 		categories: ["navigation"],
 		meta: {"createdAt":"2026-07-21","image":"https://cdn.srb.codes/images/components/animated-tabs","video":"https://cdn.srb.codes/videos/components/animated-tabs"},
 	},
-	"3d-button": {
-		name: "3d-button",
-		title: "3D Button",
-		description: "Add physical depth and responsive press feedback to primary actions.",
-		type: "registry:component",
-		files: [{"path":"src/registry/components/3d-button/3d-button.tsx","type":"registry:component","target":"@components/3d-button.tsx"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/components/3d-button/3d-button")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for 3d-button");
-			}
-			return { default: module.default };
-		}),
-		categories: ["buttons"],
-		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/3d-button","video":"https://cdn.srb.codes/videos/components/3d-button"},
-	},
 	"copy-button": {
 		name: "copy-button",
 		title: "Copy Button",
@@ -383,22 +401,22 @@ export const Index = {
 		categories: [],
 		meta: {"createdAt":"2026-05-05","video":"https://cdn.srb.codes/videos/components/world-map","image":"https://cdn.srb.codes/images/components/world-map"},
 	},
-	"contextful-save-button": {
-		name: "contextful-save-button",
-		title: "Contextful Save Button",
-		description: "Show async save progress and outcomes without leaving the button.",
+	"stateful-button": {
+		name: "stateful-button",
+		title: "Stateful Button",
+		description: "Communicate async loading, success, and error states without leaving the button.",
 		type: "registry:component",
-		files: [{"path":"src/registry/components/contextful-save-button/contextful-save-button.tsx","type":"registry:component","target":"@components/contextful-save-button.tsx"}],
+		files: [{"path":"src/registry/components/stateful-button/stateful-button.tsx","type":"registry:component","target":"@components/stateful-button.tsx"}],
 		component: React.lazy(async () => {
-			const module = (await import("@/registry/components/contextful-save-button/contextful-save-button")) as unknown as {
+			const module = (await import("@/registry/components/stateful-button/stateful-button")) as unknown as {
 				default?: React.ComponentType;
 			};
 			if (!module.default) {
-				throw new Error("No default export found for contextful-save-button");
+				throw new Error("No default export found for stateful-button");
 			}
 			return { default: module.default };
 		}),
-		categories: [],
+		categories: ["buttons"],
 		meta: {"createdAt":"2026-07-19","video":"https://cdn.srb.codes/videos/components/animated-save-button","image":"https://cdn.srb.codes/images/components/animated-save-button"},
 	},
 	"animated-arrow": {
@@ -436,6 +454,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
+	},
+	"tailwindcss-buttons-demo": {
+		name: "tailwindcss-buttons-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/tailwindcss-buttons-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/tailwindcss-buttons-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for tailwindcss-buttons-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"w-full p-0"},
+	},
+	"component-sidebar-demo": {
+		name: "component-sidebar-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/component-sidebar-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/component-sidebar-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for component-sidebar-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[38rem] w-full p-0"},
 	},
 	"peeping-button-demo": {
 		name: "peeping-button-demo",
@@ -509,24 +563,6 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
-	"3d-button-demo": {
-		name: "3d-button-demo",
-		title: undefined,
-		description: "",
-		type: "registry:example",
-		files: [{"path":"src/registry/examples/3d-button-demo.tsx","type":"registry:example"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/3d-button-demo")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for 3d-button-demo");
-			}
-			return { default: module.default };
-		}),
-		categories: undefined,
-		meta: {"previewClassName":"min-h-[40rem] w-full p-0"},
-	},
 	"email-dock-demo": {
 		name: "email-dock-demo",
 		title: undefined,
@@ -581,18 +617,18 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 w-full"},
 	},
-	"contextful-save-button-demo": {
-		name: "contextful-save-button-demo",
+	"stateful-button-demo": {
+		name: "stateful-button-demo",
 		title: undefined,
 		description: "",
 		type: "registry:example",
-		files: [{"path":"src/registry/examples/contextful-save-button-demo.tsx","type":"registry:example"}],
+		files: [{"path":"src/registry/examples/stateful-button-demo.tsx","type":"registry:example"}],
 		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/contextful-save-button-demo")) as unknown as {
+			const module = (await import("@/registry/examples/stateful-button-demo")) as unknown as {
 				default?: React.ComponentType;
 			};
 			if (!module.default) {
-				throw new Error("No default export found for contextful-save-button-demo");
+				throw new Error("No default export found for stateful-button-demo");
 			}
 			return { default: module.default };
 		}),

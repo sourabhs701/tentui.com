@@ -1,4 +1,4 @@
-import { FileTextIcon, RssIcon } from "lucide-react";
+import { FileTextIcon, HistoryIcon, RssIcon } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { TentUiMark } from "@/components/tentui-mark";
@@ -45,7 +45,12 @@ const legalLinks: FooterLink[] = [
 	{ label: "Copyright", href: "/copyright" },
 ];
 
-const socialLinks: FooterLink[] = [
+const brandLinks: FooterLink[] = [
+	{
+		label: "Changelog",
+		href: "/changelog",
+		icon: <HistoryIcon className="size-3" aria-hidden="true" />,
+	},
 	{
 		label: "llms.txt",
 		href: "/llms.txt",
@@ -120,7 +125,7 @@ function Footer() {
 								&copy; 2026
 							</span>
 						</div>
-						<LinkList links={socialLinks} />
+						<LinkList links={brandLinks} />
 					</div>
 
 					<div className="relative px-4 py-7 md:flex-1">
