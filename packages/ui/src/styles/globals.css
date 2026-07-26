@@ -307,6 +307,11 @@
 	}
 }
 
+::selection {
+	background-color: color-mix(in oklab, var(--primary) 10%, transparent);
+	color: var(--primary);
+}
+
 html:has([data-blocks-layout]),
 body:has([data-blocks-layout]),
 [data-blocks-layout],

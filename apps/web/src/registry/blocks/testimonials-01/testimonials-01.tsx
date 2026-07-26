@@ -42,20 +42,6 @@ export interface Testimonials01Props {
 
 const DEFAULT_TESTIMONIALS = [
 	{
-		id: "2036823885039988767",
-		className: "md:col-span-2 md:row-span-2",
-		fallback: {
-			text: "learned sth from you here, thanks!! following your journey ... lets keep in touch and share more thoughts!!",
-			author: {
-				name: "Ehsan",
-				handle: "acadictive",
-				avatarUrl:
-					"https://pbs.twimg.com/profile_images/1996662487731560448/r6wo78NW_normal.jpg",
-				verified: true,
-			},
-		},
-	},
-	{
 		id: "2048474453227540522",
 		className: "md:col-span-2",
 		fallback: {
@@ -124,19 +110,6 @@ const DEFAULT_TESTIMONIALS = [
 		},
 	},
 	{
-		id: "2021270463331102732",
-		className: "md:col-span-2",
-		fallback: {
-			text: "Love this",
-			author: {
-				name: "Xtro UI/UX Designer",
-				handle: "XtroUI",
-				avatarUrl:
-					"https://pbs.twimg.com/profile_images/2015194979761545216/rMAQ1dt1_normal.jpg",
-			},
-		},
-	},
-	{
 		id: "2078686529443316059",
 		className: "md:col-span-2",
 		fallback: {
@@ -150,12 +123,23 @@ const DEFAULT_TESTIMONIALS = [
 			},
 		},
 	},
+	{
+		id: "2081023285505007821",
+		className: "md:col-span-2",
+		fallback: {
+			text: "This is a badass library.",
+			author: {
+				name: "Coin Moebius",
+				handle: "coinmoebius",
+				avatarUrl:
+					"https://pbs.twimg.com/profile_images/2063997511509975040/LE-0tfyw_200x200.jpg",
+			},
+		},
+	},
 ] as const satisfies readonly TestimonialSource[];
 
-const LEADING_MENTIONS = /^(@\w+\s+)+/;
-
 function cleanText(text: string) {
-	return text.replace(LEADING_MENTIONS, "").trim();
+	return text.replace(/^(@\w+\s+)+/, "").trim();
 }
 
 function normalizeTweet(tweet: Tweet): TestimonialData {
