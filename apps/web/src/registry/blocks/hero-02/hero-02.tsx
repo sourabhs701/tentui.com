@@ -66,7 +66,7 @@ export function Hero02({
 					>
 						<Button
 							aria-label="Start free trial"
-							className="min-w-40"
+							className="h-[51px] min-w-40"
 							onClick={() => router.push("#")}
 							size="lg"
 						>
