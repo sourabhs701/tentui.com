@@ -1,0 +1,293 @@
+---
+title: "Shadcn Landing Page: Build One with Copy-Paste Blocks"
+description: Build a shadcn landing page from editable hero, testimonial, pricing, FAQ, CTA, and footer blocks without adding a Tent UI runtime package.
+author: Sourabh Soni
+authorImage: https://cdn.srb.codes/srb.avif
+category: Engineering
+createdAt: "2026-07-28"
+updatedAt: "2026-07-28"
+---
+
+A shadcn landing page rarely fails because it is missing a button or card. The
+hard part is turning those primitives into a coherent sequence: a hero that
+states the promise, proof that makes it credible, pricing that answers the
+commercial question, and a clear final action.
+
+Tent UI provides those larger sections as shadcn-compatible blocks built for
+Base UI and Tailwind CSS 4. The CLI copies each block into your project,
+installs its declared dependencies, and leaves the source open for the changes
+every real landing page needs.
+
+This guide assembles six blocks into one page and, more importantly, identifies
+what to change before that page goes live.
+
+## Choose a complete page sequence
+
+A useful landing page gives each section one job. For this example, the page
+uses the following sequence:
+
+| Job | Tent UI block | Why it is here |
+| --- | --- | --- |
+| State the promise | [Hero 02](/blocks/hero#hero-02) | Headline, primary actions, navigation, and a product screenshot |
+| Establish proof | [Testimonials 01](/blocks/testimonials#testimonials-01) | A visual collection of customer quotes |
+| Explain the offer | [Pricing 01](/blocks/pricing#pricing-01) | Monthly and annual plans with a usage comparison |
+| Remove objections | [FAQ 01](/blocks/faq#faq-01) | Focused answers in an accordion |
+| Repeat the action | [CTA 01](/blocks/cta#cta-01) | One final conversion prompt |
+| Close the page | [Footer 03](/blocks/footer#footer-03) | Product, social, and legal navigation |
+
+This is a composition, not a locked template. Swap any section for another
+option in the [block library](/blocks), or omit a section when the page does not
+need it. A short waitlist page may only need a hero, proof, and footer. A
+self-serve product usually needs pricing and answers to purchase objections.
+
+## Configure the Tent UI registry
+
+This composition targets a Next.js App Router project with Tailwind CSS 4 and a
+Base UI shadcn setup. It expects a `components.json` file at the project root.
+If shadcn is not initialized, run the setup and select Base UI when prompted:
+
+```bash
+npx shadcn@latest init
+```
+
+Then add the Tent UI namespace to `components.json`:
+
+```json title="components.json"
+{
+  "registries": {
+    "@tentui": "https://tentui.com/r/{name}.json"
+  }
+}
+```
+
+Keep any registry entries already present in the file. The namespace follows
+the official shadcn [registry namespace](https://ui.shadcn.com/docs/registry/namespace)
+model; it is a shorter address for individual registry items, not a Tent UI
+runtime dependency.
+
+If your existing shadcn project uses Radix or Tailwind CSS 3, treat the block
+previews as design references and adapt the primitive APIs and Tailwind syntax.
+The exact source in this guide is not a drop-in target for those configurations.
+
+## Install the landing page blocks
+
+Install each section by its current registry name:
+
+```bash
+npx shadcn@latest add @tentui/hero-02
+npx shadcn@latest add @tentui/testimonials-01
+npx shadcn@latest add @tentui/pricing-01
+npx shadcn@latest add @tentui/faq-01
+npx shadcn@latest add @tentui/cta-01
+npx shadcn@latest add @tentui/footer-03
+```
+
+The CLI also resolves the shadcn components and npm packages declared by each
+block. Review what each section brings into the project instead of treating a
+block as opaque markup:
+
+| Block | Files | Key additions |
+| --- | ---: | --- |
+| Hero 02 | 2 | Motion, Button, Peeping Button, Brand Context Menu, Context Menu, and Sonner |
+| Testimonials 01 | 1 | `react-tweet`, Motion, Avatar, Card, and Glow Card |
+| Pricing 01 | 1 | Motion, Lucide icons, Badge, Button, and Animated Tabs |
+| FAQ 01 | 1 | Lucide icons and Accordion |
+| CTA 01 | 1 | Button |
+| Footer 03 | 1 | No declared package or registry dependencies |
+
+Review the generated diff after every install. Registry blocks are deliberately
+substantial: they can include multiple files, local components, assets, and
+framework imports. The shadcn
+[`registry:block`](https://ui.shadcn.com/docs/registry/registry-item-json)
+type is designed for this larger unit of UI.
+
+## Compose the page
+
+The installed files expose default components, so the first page composition
+can stay small:
+
+```tsx title="app/page.tsx"
+import Cta01 from "@/components/cta-01";
+import Faq01 from "@/components/faq-01";
+import Footer03 from "@/components/footer-03";
+import Hero02 from "@/components/hero-02";
+import Pricing01 from "@/components/pricing-01";
+import Testimonials01 from "@/components/testimonials-01";
+
+export default function LandingPage() {
+  return (
+    <>
+      <Hero02 />
+      <Testimonials01
+        title="Trusted by teams that care about every customer"
+        description="What changed after they moved support into one workspace."
+      />
+      <Pricing01 />
+      <Faq01 />
+      <Cta01 />
+      <Footer03 />
+    </>
+  );
+}
+```
+
+This renders a complete section stack, but it is not ready to publish. The demo
+content intentionally makes the editable surfaces obvious. The next pass turns
+the collection of blocks into one product page.
+
+## Replace the demo product before styling
+
+Start with meaning, not colors. Six polished sections can still produce a weak
+landing page when each section appears to describe a different company.
+
+In Hero 02, replace the logo, headline, supporting sentence, CTA labels, links,
+background art, product screenshot, screenshot dimensions, and `alt` text. The
+component accepts `backgroundImageSrc` and `dashboardImageSrc`, but the copy and
+navigation live in the installed source so they can match your product exactly.
+Its logo also opens a Brand Context Menu with Tent UI mark, logotype, and ZIP
+downloads. Replace those asset URLs or remove that menu. If you retain its copy
+and download feedback, mount the installed `Toaster` once in your application
+layout.
+
+Testimonials 01 accepts a custom title, description, and testimonial source
+list. Its default sources resolve posts from X and retain fallback content when
+a request fails. Replace those IDs and fallbacks with quotes you have permission
+to publish. If build-time external requests do not fit your deployment, replace
+the resolver with testimonials from your CMS or local data.
+
+Pricing 01 keeps its plans, limits, feature lists, billing values, and checkout
+URLs in the component file. Update all of them together. A price card that says
+"Growth" while its CTA points to a placeholder URL is not a small launch issue;
+it breaks the page's primary transaction.
+
+FAQ 01 accepts an array of `{ id, question, answer }` items. Write questions from
+sales calls, support conversations, and onboarding friction rather than filling
+the section with generic product claims. CTA 01 and Footer 03 contain editable
+copy, routes, brand marks, and social links in their source files. Remove every
+`#` placeholder before launch.
+
+## Make six blocks feel like one system
+
+Once the content describes one product, reconcile the visual decisions. The
+blocks already use semantic shadcn tokens such as `background`, `foreground`,
+`muted`, `border`, and `primary`, so your theme can establish a shared base.
+
+Then audit the decisions that tokens do not control:
+
+- Use one heading family and one body family unless a deliberate editorial
+  contrast earns the extra typeface.
+- Normalize section padding so the page has a visible rhythm instead of six
+  unrelated vertical gaps.
+- Keep border radius, shadows, and border contrast consistent across cards.
+- Reuse one primary CTA label when buttons lead to the same action.
+- Preserve one content width for section headings and another for dense grids.
+- Remove animations that repeat the same entrance effect without adding
+  hierarchy or feedback.
+
+That local editing model is the same boundary described in
+[Why copy-paste components scale](/blog/why-copy-paste-components): the registry
+provides a starting point, then the source evolves with your product.
+
+Tailwind's responsive variants are mobile-first, but that does not make the
+final content automatically responsive. Test the real headline, longest plan
+name, translated labels, testimonial lengths, and footer links at narrow widths.
+The official [responsive design guide](https://tailwindcss.com/docs/responsive-design)
+is the right reference for adjusting breakpoints after testing the actual copy.
+
+## Know which parts are Next.js-specific
+
+This particular shadcn landing page is easiest to use in a Next.js App Router
+project because several selected blocks use Next.js APIs.
+
+| Block | Framework-specific behavior | Adaptation outside Next.js |
+| --- | --- | --- |
+| Hero 02 | `next/image`, `next/link`, and `next/navigation` | Use the framework's image, link, and navigation APIs |
+| Testimonials 01 | Async server component that resolves X data | Load data in the framework's server layer or pass local testimonial data |
+| Pricing 01 | Client state and Motion | Keep it as a client component and verify the bundler setup |
+| FAQ 01 | Client accordion state | Keep it as a client component with the installed accordion primitive |
+| CTA 01 | `next/image` | Replace with the framework's optimized image component or a sized `img` |
+| Footer 03 | React and standard anchors | Usually works without framework substitutions |
+
+Do not solve portability by replacing sized images with unsized markup. Hero 02
+and CTA 01 currently set `unoptimized` on their remote Next.js images, so the
+optimizer is disabled even though explicit dimensions still reserve layout
+space. If you remove `unoptimized`, verify the remote-image configuration for
+every external host.
+
+## Keep motion and accessibility in the launch review
+
+The page mixes static sections, accordions, tabs, and animated entrances. Motion
+components use reduced-motion support, but your edits can change that behavior.
+When adding or replacing animation, keep labels and state changes understandable
+without movement. Motion's official
+[React accessibility guide](https://motion.dev/docs/react-accessibility)
+documents `MotionConfig` and `useReducedMotion` for respecting the user's device
+preference. [Motion that earns its place](/blog/motion-that-earns-its-place)
+explains the broader decision rule: remove movement when requested without
+removing useful feedback.
+
+Run a keyboard pass through navigation, pricing controls, FAQ triggers, and every
+CTA. Check visible focus, logical heading order, meaningful image alternatives,
+and link text that still makes sense out of context. Test at 200% zoom and with
+reduced motion enabled. A block provides a considered starting point; only the
+finished page can be evaluated in its real content and routing context.
+
+## Run a pre-launch content audit
+
+Use a final search for demo names, placeholder URLs, and remote assets before
+shipping:
+
+| Area | Verify |
+| --- | --- |
+| Brand | Logo, product name, type, colors, favicon, and social image |
+| Conversion | CTA labels, destinations, analytics, checkout URLs, and form behavior |
+| Claims | Prices, limits, testimonials, customer permission, and comparison language |
+| Media | Screenshot freshness, intrinsic dimensions, `alt` text, and remote hosts |
+| Navigation | Header anchors, footer routes, external-link behavior, terms, and privacy |
+| Interaction | Keyboard use, focus states, reduced motion, loading, and failure paths |
+| Responsive layout | Real copy at mobile widths, zoom, and supported locales |
+
+The current [Tent UI license](/license) permits modification and use in unlimited
+end products for you or your clients. It prohibits redistributing the source as
+a stock item, reselling it on a marketplace, or using it to create templates for
+marketplace sale. Review the complete terms and the licenses of installed
+third-party dependencies for your intended use.
+
+## Frequently asked questions
+
+### Is a shadcn landing page a package or a template?
+
+It can be either, but this guide uses source-owned blocks. shadcn provides the
+registry and foundational component model, while Tent UI supplies larger page
+sections. The result becomes a landing page when you compose and adapt those
+sections in your application; there is no permanent Tent UI runtime package.
+
+### Can I install all the blocks and publish immediately?
+
+No. The blocks include demonstration copy, images, links, prices, and testimonial
+sources. Treat them as production-oriented starting points, then replace the
+product content, connect real routes and actions, and test the assembled page.
+
+### Can I use these shadcn landing page blocks outside Next.js?
+
+Yes, with adaptation. The pricing, FAQ, and footer blocks mainly rely on React,
+Tailwind, and installed primitives. Hero 02 and CTA 01 use Next.js image or
+navigation APIs, and Testimonials 01 resolves data on the server. Replace those
+boundaries with equivalents from your framework.
+
+### How is a block different from a component?
+
+A component usually solves one focused interface problem. A block composes
+multiple components into a larger section and may install several files and
+dependencies. Use components for local behavior and blocks when you need a
+substantial page starting point.
+
+## Build the page, then make it yours
+
+The fastest useful shadcn landing page is not the one with the most sections. It
+is the one whose sections tell one story, use one visual system, and lead to one
+clear next step.
+
+[Browse the Tent UI landing page blocks](/blocks), choose the sections that fit
+your product, and use the registry commands above or the Manual tab on each
+block page to bring the source into your project.
