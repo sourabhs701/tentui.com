@@ -1,0 +1,309 @@
+---
+title: Shadcn Loading Button with Success and Error States
+description: Build an accessible shadcn loading button with success and error states, duplicate-action protection, live updates, and reduced motion.
+author: Sourabh Soni
+authorImage: https://cdn.srb.codes/srb.avif
+category: Engineering
+image: /blog/shadcn-loading-button-cover.png
+createdAt: "2026-07-26"
+updatedAt: "2026-07-26"
+---
+
+A shadcn loading button often starts with two props: add a spinner and set
+`disabled`. That covers one frame of the interaction. It does not answer what
+happens when the action succeeds, when it fails, or when someone clicks twice
+before React has rendered the disabled state.
+
+The more useful model is a small state machine: `idle`, `loading`, `success`,
+and `error`. Each state owns one label, one icon, and one set of interaction
+rules. The result is easier to reason about than a collection of overlapping
+booleans.
+
+This guide builds that complete async lifecycle as a shadcn-compatible,
+copy-paste React component.
+
+<ComponentPreview name="stateful-button-demo" canConfigure />
+
+The left button resolves and the right button rejects. Both use the same
+component and deliberately keep the outcome visible before returning to idle.
+
+## Quick start
+
+Install the [Stateful Button component](/components/stateful-button) from the
+Tent UI registry:
+
+```bash
+npx shadcn@latest add @tentui/stateful-button
+```
+
+Then give it a Promise-returning action:
+
+```tsx
+import { StatefulButton } from "@/components/stateful-button";
+
+export function SaveButton() {
+  return (
+    <StatefulButton
+      labels={{
+        loading: "Saving",
+        success: "Saved",
+        error: "Try again",
+      }}
+      onClick={async () => {
+        await saveChanges();
+      }}
+    >
+      Save changes
+    </StatefulButton>
+  );
+}
+```
+
+The button enters `loading` immediately, waits for `saveChanges()`, shows the
+matching result, and resets after two seconds.
+
+## A spinner is not a state model
+
+The official shadcn/ui [Button documentation](https://ui.shadcn.com/docs/components/base/button)
+shows how to compose a `Spinner` inside a button. That is the right primitive
+when all you need is a visual loading indicator. Its documented Button API does
+not expose a loading prop, so the application still owns the async behavior.
+
+That behavior becomes ambiguous when it is represented by independent values:
+
+```tsx
+const [isLoading, setIsLoading] = useState(false);
+const [isSuccess, setIsSuccess] = useState(false);
+const [hasError, setHasError] = useState(false);
+```
+
+Can loading and success both be true? Does an old error survive the next click?
+Which flag controls the label? Those combinations are possible even though the
+interface should never display them.
+
+A single status removes the invalid combinations:
+
+```tsx
+type Status = "idle" | "loading" | "success" | "error";
+```
+
+The allowed transitions are deliberately small:
+
+```text
+idle -> loading -> success -> idle
+                -> error   -> idle
+```
+
+| State | Visible label | Disabled | `aria-busy` | Exit condition |
+| --- | --- | --- | --- | --- |
+| `idle` | The button's children | No | `false` | The action starts |
+| `loading` | `Working` or a custom label | Yes | `true` | The Promise settles |
+| `success` | `Done` or a custom label | Yes | `false` | Feedback timer ends |
+| `error` | `Try again` or a custom label | Yes | `false` | Feedback timer ends |
+
+Only `loading` means work is still pending. Success and error are short-lived
+feedback states, not extensions of the request.
+
+## Prevent the duplicate-click race
+
+Disabling a button is necessary for most non-idempotent actions, but rendering
+`disabled` is not a synchronous lock. Two click events can arrive before React
+commits the loading state.
+
+The component closes that gap with a ref:
+
+```tsx
+const isRunning = useRef(false);
+
+async function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+  if (isRunning.current) return;
+
+  isRunning.current = true;
+  setStatus("loading");
+
+  try {
+    await onClick?.(event);
+    setStatus("success");
+  } catch {
+    setStatus("error");
+  }
+}
+```
+
+The ref changes during the first event, before another event can pass the
+guard. State still drives what the reader sees; the ref protects the narrow
+window before that state reaches the DOM.
+
+This matters for actions such as purchases, invitations, uploads, and saves.
+Even when the server accepts an idempotency key, preventing the duplicate at
+the interface produces clearer feedback.
+
+## Handle success and failure in one place
+
+The Promise is the component's transition signal. A resolved Promise moves to
+success and a rejected Promise moves to error. After either result, a timer
+returns the button to idle.
+
+Keep application errors observable. If your error reporter lives outside the
+component, report the failure and rethrow it so the button can still show its
+error state:
+
+```tsx
+<StatefulButton
+  onClick={async () => {
+    try {
+      await publishChanges();
+    } catch (error) {
+      reportError(error);
+      throw error;
+    }
+  }}
+>
+  Publish
+</StatefulButton>
+```
+
+Two seconds is long enough for brief acknowledgement without making the
+control feel stuck. It is not a universal duration. Reset immediately when the
+action navigates away, and keep persistent errors near the affected field or
+content when the user needs them to recover.
+
+## Announce status without moving focus
+
+Visual feedback is only one channel. [WCAG 2.2 Success Criterion 4.1.3](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)
+specifically covers waiting, success, and error messages that should be
+available to assistive technology without receiving focus.
+
+The Stateful Button uses four complementary signals:
+
+- The visible label changes from the action to its current status.
+- `aria-busy` is true only while the Promise is unresolved.
+- A polite `role="status"` region exposes each non-idle label.
+- The spinner, check, and error icons are decorative because the text already
+  communicates their meaning.
+
+```tsx
+<button aria-busy={status === "loading"} disabled={status !== "idle"}>
+  {label}
+</button>
+
+<span className="sr-only" role="status" aria-live="polite">
+  {status === "idle" ? "" : label}
+</span>
+```
+
+The live region is polite because this feedback usually does not justify
+interrupting the current announcement. An urgent, destructive failure may need
+a different error pattern outside the button.
+
+Treat these semantics as a foundation, not an accessibility certificate. Test
+the final labels, surrounding form, focus behavior, and announcement timing in
+the browser and screen-reader combinations your product supports.
+
+## Keep the meaning when motion stops
+
+Animation can make the state change feel continuous, but it must not carry the
+meaning by itself. The component wraps its character transitions in
+`MotionConfig reducedMotion="user"` and stops the spinner with Tailwind's
+`motion-reduce:animate-none` utility.
+
+With reduced motion enabled, the text and icon still change. Only the transforms,
+blur, and rotation disappear. This follows the same rule described in
+[Motion that earns its place](/blog/motion-that-earns-its-place): remove movement,
+not feedback.
+
+## Read the complete source
+
+The implementation below includes the state model, labels, click guard,
+feedback timer, live region, icons, and reduced-motion behavior.
+
+<ComponentSource
+  name="stateful-button"
+  title="components/stateful-button.tsx"
+/>
+
+Because Tent UI distributes source through a shadcn registry, this file lands
+inside your project. You can replace its native-button styles with your local
+`Button` variants, change the feedback duration, or remove the character
+animation without waiting for a package API. That is the practical advantage of
+[owning a copy-paste component](/blog/why-copy-paste-components).
+
+## When not to use this loading button
+
+This pattern is for short, user-initiated async actions. Choose another pattern
+when the job has different semantics:
+
+- Use a progress indicator with a percentage for long, measurable work.
+- Keep a cancel control enabled when the operation can safely be interrupted.
+- Use a link for navigation instead of making a button imitate one.
+- Put validation errors beside the invalid field when the button cannot explain
+  how to recover.
+- Use a confirmation dialog before a destructive action when the decision, not
+  the network request, needs extra attention.
+
+The component also defaults to `type="button"`. It is not a drop-in replacement
+for a React Server Action submit button or `useFormStatus`. Form submission owns
+pending state differently, and it should be tested with the form's validation,
+focus, and progressive-enhancement behavior.
+
+## Test behavior, not the spinner
+
+Before shipping an async button, verify the state transitions rather than only
+checking whether an icon rendered:
+
+| Scenario | Expected behavior |
+| --- | --- |
+| Rapid activation | The action handler runs once |
+| Keyboard activation | Enter and Space start one action when the button is idle |
+| Pending action | The loading label appears and the control is unavailable |
+| Resolved Promise | Success is visible and announced before reset |
+| Rejected Promise | Error is visible and announced before retry becomes available |
+| Reduced motion | Status remains clear without transforms or spinner rotation |
+| Narrow layout and zoom | Custom labels remain readable without clipping |
+| Component unmount | No delayed feedback is shown after the surface disappears |
+
+Use deterministic Promises in component tests. Resolve or reject them manually
+instead of waiting on real network requests, and use fake timers for the
+feedback reset. Run a separate manual check with your supported screen readers;
+a DOM assertion cannot tell you whether an announcement is understandable in
+context.
+
+## Frequently asked questions
+
+### Does shadcn/ui have a loading button prop?
+
+The current documented `Button` API lists variants and sizes, not a loading
+prop. The official examples compose the separate `Spinner` component inside a
+button. Use that simple composition for visual loading, or add an explicit
+state model when the action also needs duplicate prevention and result
+feedback.
+
+### Should a loading button be disabled?
+
+Usually, yes, when repeating the action would be harmful or confusing. A
+synchronous guard is still useful because a second event can occur before the
+disabled render commits. Do not disable the only way to cancel a long-running
+operation.
+
+### Should a loading button use `aria-live`?
+
+Use a status message when the waiting or result text needs to be announced
+without moving focus. `role="status"` provides polite live-region semantics.
+Keep the message concise and avoid announcing the decorative spinner separately.
+
+### How long should the success state remain visible?
+
+For a brief in-place action, one to two seconds is a reasonable starting point.
+The Stateful Button uses two seconds. Let the next screen communicate success
+when the action navigates, and keep recovery instructions persistent when the
+error requires user input.
+
+## Copy, then adapt
+
+A good loading button does more than rotate an icon. It prevents impossible
+states, closes the rapid-click gap, communicates the result through more than
+motion, and gives failure a clear path back to idle.
+
+[Copy the Stateful Button source and try both outcomes](/components/stateful-button),
+or browse the [Tailwind CSS button gallery](/components/tailwindcss-buttons) if
+you need a visual starting point before adding async behavior.

@@ -132,7 +132,7 @@ const options: MDXRemoteProps["options"] = {
 	mdxOptions: {
 		remarkPlugins: [remarkGfm, remarkHeading],
 		rehypePlugins: [
-			[rehypeExternalLinks, { target: "_blank", rel: "nofollow noopener" }],
+			[rehypeExternalLinks, { target: "_blank", rel: "noopener" }],
 			rehypeSlug,
 			rehypeComponent,
 			rehypeCodeRawString,

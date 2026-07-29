@@ -14,7 +14,7 @@ export function markdownRenderer() {
 	const processor = remark()
 		.use(remarkGfm)
 		.use(remarkRehype)
-		.use(rehypeExternalLinks, { target: "_blank", rel: "nofollow noopener" })
+		.use(rehypeExternalLinks, { target: "_blank", rel: "noopener" })
 		.use(rehypeCodeRawString)
 		.use(rehypeHighlightCode)
 		.use(rehypeHighlightCodeRawString);

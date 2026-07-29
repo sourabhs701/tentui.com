@@ -1,0 +1,104 @@
+---
+title: Git Branching for UI Component Libraries
+description: Practical Git branching patterns for component library repos. How to organize feature branches, handle breaking changes, and keep your main branch stable.
+author: Sourabh Soni
+authorImage: https://cdn.srb.codes/srb.avif
+category: Engineering
+createdAt: 2026-07-26
+updatedAt: 2026-07-26
+---
+
+Component libraries have a branching problem that most Git guides ignore. A typical app repo ships one product. A component library ships dozens of independent pieces, each with its own consumers, each capable of breaking someone's project on a bad merge.
+
+Here is how to set up a branching workflow that fits that reality.
+
+## One component, one branch
+
+The standard advice is "one feature, one branch." For component libraries, translate that to one component or one component change per branch. A branch that touches `animated-tabs`, `glow-card`, and `copy-button` in the same PR creates a review nightmare. If the tabs change is ready but the card change needs rework, the whole branch stalls.
+
+Name branches by component and change type:
+
+```bash
+git checkout -b feature/glow-card-hover-variants
+git checkout -b fix/copy-button-aria-label
+git checkout -b chore/animated-tabs-storybook-update
+```
+
+The prefix (`feature/`, `fix/`, `chore/`) tells reviewers the scope before they open the diff. The component name in the middle makes `git branch --list` scannable when you have fifteen branches open across a library.
+
+## Protect main with a staging branch
+
+Shipping broken components erodes trust fast. One option: add a `next` branch between feature branches and `main`.
+
+```
+feature/glow-card-hover-variants → next → main
+fix/copy-button-aria-label       → next → main
+```
+
+Feature branches merge into `next`. You run your full test suite, visual regression tests, and build checks there. When `next` is stable, it merges to `main` and you cut a release. This is a simplified GitFlow pattern adapted for libraries: `next` acts as the develop branch, and `main` stays release-grade.
+
+The tradeoff is maintenance overhead. For smaller libraries (under ~20 components), GitHub Flow with branch protection rules on `main` works fine. Require a passing CI check and at least one review before any merge reaches `main`.
+
+## Handle breaking changes in dedicated branches
+
+Breaking changes in a component library ripple outward to every project consuming that component. Treat them differently from regular features.
+
+Create a long-lived branch for the next major version:
+
+```bash
+git checkout -b v2/next
+```
+
+All breaking changes land in `v2/next`. Non-breaking fixes and features continue merging to `main` for patch and minor releases. When `v2/next` is ready, it becomes the new `main`.
+
+This keeps your current consumers on stable releases while you build toward the next major version without rushing.
+
+## Keep branches short
+
+Long-lived feature branches are where merge conflicts breed. For component work, a branch should cover a single addition or modification and merge within a few days. If a new component is large (say, a full command palette with search, keyboard navigation, and theming), break it into sequential PRs:
+
+1. Base component structure and rendering
+2. Keyboard navigation and focus management
+3. Theming and style variants
+
+Each PR merges independently. Each is reviewable in one sitting.
+
+## Branch naming in monorepos
+
+If your component library lives inside a monorepo alongside an app or docs site, add a package scope to the branch name:
+
+```bash
+git checkout -b feature/ui--stateful-button-loading-state
+git checkout -b fix/docs--missing-props-table
+```
+
+The double dash separates package from description. When multiple teams commit to the same repo, this convention prevents collisions and makes filtering straightforward:
+
+```bash
+git branch --list 'feature/ui--*'
+```
+
+## Rebase or merge?
+
+For component libraries, prefer rebasing feature branches onto `main` before merging. Merge commits pile up fast in a repo where five components might each get a fix in the same week. A rebased history reads as a flat sequence of changes per component, which makes `git log` and `git bisect` far more useful when tracking down which commit introduced a rendering bug.
+
+The one constraint: never rebase a branch that other people are also working on. Rebasing rewrites commit history, which forces everyone else on that branch to reconcile their local copy. If two developers are pairing on a component, merge instead.
+
+For a visual walkthrough of how rebasing, merging, and branch management work in practice, Gitoryx has a [detailed branching strategy guide](https://gitoryx.com/tutorials/git-branching-strategy) that covers the three main models (GitFlow, GitHub Flow, trunk-based development) with concrete command examples for each step.
+
+## Automate the cleanup
+
+Merged branches that linger clutter your branch list and obscure what is actually in progress. Delete branches immediately after merging:
+
+```bash
+git push origin --delete feature/glow-card-hover-variants
+git branch -d feature/glow-card-hover-variants
+```
+
+Most Git hosting platforms can auto-delete branches after a PR merges. Turn that on. Your branch list should reflect active work, not a history of completed tasks.
+
+## Putting it into practice
+
+Pick the simplest strategy that prevents breakage for your consumers. For most component libraries, that means: one component per branch, consistent naming with type prefixes, branch protection on `main`, short-lived branches that merge in days, and automated cleanup. Add a `next` or versioned branch only when your library and team are large enough to need the extra gate.
+
+The branching model is infrastructure. Get it right once, and every component you ship afterward moves through a predictable path from idea to release.
