@@ -4,6 +4,21 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "realistic-emboss-demo",
+		type: "registry:example",
+		dependencies: ["dialkit"],
+		registryDependencies: [getRegistryItemUrl("realistic-emboss")],
+		files: [
+			{
+				path: "examples/realistic-emboss-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[34rem] place-items-center content-center",
+		},
+	},
+	{
 		name: "tailwindcss-buttons-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("tailwindcss-buttons")],

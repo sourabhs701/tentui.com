@@ -1,5 +1,12 @@
 [
   {
+    "name": "footer-04",
+    "description": "A tactile plaster footer with a custom logo pressed into its surface.",
+    "categories": [
+      "footer"
+    ]
+  },
+  {
     "name": "pricing-03",
     "description": "A focused two-plan pricing section with an ambient fluid treatment for the popular plan.",
     "categories": [

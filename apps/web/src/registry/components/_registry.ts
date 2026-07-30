@@ -2,6 +2,35 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "realistic-emboss",
+		type: "registry:component",
+		title: "Realistic Emboss",
+		description:
+			"Press text or custom SVG logos into a procedural plaster surface.",
+		files: [
+			{
+				path: "components/realistic-emboss/index.ts",
+				type: "registry:component",
+				target: "@components/realistic-emboss/index.ts",
+			},
+			{
+				path: "components/realistic-emboss/realistic-emboss.tsx",
+				type: "registry:component",
+				target: "@components/realistic-emboss/realistic-emboss.tsx",
+			},
+			{
+				path: "components/realistic-emboss/realistic-emboss-engine.ts",
+				type: "registry:component",
+				target: "@components/realistic-emboss/realistic-emboss-engine.ts",
+			},
+		],
+		categories: ["effects"],
+		meta: {
+			createdAt: "2026-07-30",
+		},
+		docs: "https://tentui.com/components/realistic-emboss",
+	},
+	{
 		name: "tailwindcss-buttons",
 		type: "registry:component",
 		title: "Tailwind CSS Buttons",
