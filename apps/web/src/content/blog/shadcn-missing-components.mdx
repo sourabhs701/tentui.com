@@ -1,0 +1,249 @@
+---
+title: "Shadcn Missing Components: Find and Install Them Safely"
+description: "Find components that shadcn does not include, inspect community registry code before installing it, and diagnose broken namespace or JSON responses."
+author: Sourabh Soni
+authorImage: https://cdn.srb.codes/srb.avif
+category: Engineering
+createdAt: "2026-07-29"
+updatedAt: "2026-07-29"
+---
+
+When a component is missing from shadcn, the answer is not always to build it
+from scratch. It may live in a community registry, use a different name, or be
+small enough to compose from the primitives already in your project.
+
+The important distinction is that shadcn is both a component collection and a
+way to distribute source code. The CLI can install items from the official
+registry, a public community registry, a GitHub repository, or a registry URL.
+That reach is useful, but it also means an install command is only as reliable
+as the registry endpoint and source behind it.
+
+This guide shows how to find a missing shadcn component, inspect it before it
+touches your project, and diagnose the common case where an old command now
+returns a web page instead of registry JSON.
+
+## First, define what is actually missing
+
+Search by the job the interface needs to do, not only by the component name you
+saw in a mockup or an old article.
+
+| What you need | Check first |
+| --- | --- |
+| A common control such as a button, dialog, or input | The official shadcn component catalog |
+| A composed feature such as a login form or dashboard | Official and community blocks |
+| A specialized interaction or animation | A focused community registry |
+| A variation of an installed primitive | Compose the existing source and its built-in variants |
+| A component from an old install command | Confirm that its registry item still returns valid JSON |
+
+This prevents two common mistakes: adding a second implementation of something
+you already own, or installing a large dependency for behavior that needs only
+a few lines around an existing primitive.
+
+If the missing control is an OTP field, use the maintained official component
+instead of reviving an old registry item. The guide to
+[fixing an OTP input cursor that stays in one place on mobile](/blog/fix-otp-input-cursor-mobile)
+shows how shadcn's current Input OTP handles indexed slots, controlled React
+state, paste, one-time-code autofill, and the separate iPhone caret artifact.
+
+For example, shadcn's Button does not need a separate component for every
+loading state. A spinner, disabled state, and accessible status message can be
+composed around it. When the interaction needs a complete async lifecycle,
+however, a purpose-built source component such as Tent UI's
+[Stateful Button](/components/stateful-button) can save the state-model work.
+
+## Search registries before writing new code
+
+The current shadcn CLI can search a configured registry:
+
+```bash
+npx shadcn@latest search @shadcn -q "button"
+```
+
+Use the official [Registry Directory](https://ui.shadcn.com/docs/registry/registry-index)
+to discover public namespaces. You can also search a registry that is already
+listed in your `components.json`:
+
+```bash
+npx shadcn@latest search @acme -q "animated tabs"
+```
+
+A namespace is an address, not a package. In a configuration like this, the CLI
+replaces `{name}` with the requested item:
+
+```json
+{
+  "registries": {
+    "@acme": "https://registry.example.com/r/{name}.json"
+  }
+}
+```
+
+The official directory can resolve listed public namespaces. A private or
+unlisted registry must be configured explicitly. Registry authors should
+publish the exact namespace and URL template; do not guess either value from a
+brand name.
+
+## View the registry item before installing it
+
+Finding a promising result is not permission to write it into your codebase.
+Use `view` first:
+
+```bash
+npx shadcn@latest view @tentui/animated-tabs
+```
+
+The command prints the registry payload without installing it. Review:
+
+- The item type and description.
+- Every file path and target path.
+- npm and registry dependencies.
+- Client-only directives and framework-specific imports.
+- Imports that assume a different alias or component directory.
+- Styling tokens, accessibility semantics, and keyboard behavior.
+
+Only then run the add command:
+
+```bash
+npx shadcn@latest add @tentui/animated-tabs
+```
+
+The CLI copies source into your project. It does not turn community code into a
+maintained black-box dependency, and it does not remove the need for review.
+Read the installed diff as if it came from a pull request.
+
+## Why “Unexpected token &lt;” appears
+
+One GSC-visible query for this site contains the command:
+
+```bash
+npx shadcn@latest add @react-bits/blurtext-ts-tw
+```
+
+If that or another registry command fails with an error similar to
+`Unexpected token '<'`, the first character is the clue. JSON normally starts
+with `{` or `[`. HTML commonly starts with `<!doctype html>`.
+
+The CLI resolved a URL but received a web page, redirect target, hosting
+fallback, or error document instead of a registry item. Re-running the install
+with `--force` will not make that response valid.
+
+Inspect the item without changing files:
+
+```bash
+npx shadcn@latest view @react-bits/blurtext-ts-tw
+```
+
+If you know the registry's documented item URL, check its response headers and
+first bytes:
+
+```bash
+curl -I https://registry.example.com/r/item-name.json
+curl -sS https://registry.example.com/r/item-name.json | head
+```
+
+A working endpoint should return JSON that conforms to the
+[shadcn registry-item schema](https://ui.shadcn.com/docs/registry/registry-item-json).
+An HTTP 200 status alone is not enough; static hosts often return an HTML
+application shell with a successful status for unknown paths.
+
+## Recover from a stale or broken install command
+
+Work through the failure in this order:
+
+1. **Confirm the item name.** Search the registry or its current documentation.
+   The component may have been renamed, split by framework, or removed.
+2. **Confirm the namespace.** Check the official registry directory or the
+   author's setup instructions. Do not invent a URL template.
+3. **Use `view` before `add`.** This separates registry resolution problems from
+   file-write and dependency-install problems.
+4. **Check the actual response.** HTML, a redirect loop, or invalid schema must
+   be fixed by the registry owner or avoided by choosing another source.
+5. **Prefer a maintained equivalent.** Match the interaction and accessibility
+   requirements, not just a similar visual effect.
+6. **Copy manually only from reviewed source.** A manual copy avoids a broken
+   endpoint, but it does not make stale code compatible with your project.
+
+Do not paste a component from a cached search result without checking its
+license, dependencies, and current upstream source. A missing registry item is
+a signal to re-evaluate the implementation, not a reason to bypass provenance.
+
+## Add the Tent UI registry for specialized components
+
+Tent UI complements the common shadcn primitives with focused interaction
+components and landing-page blocks. Configure its namespace once:
+
+```json
+{
+  "registries": {
+    "@tentui": "https://tentui.com/r/{name}.json"
+  }
+}
+```
+
+Then inspect and install only the item you need:
+
+```bash
+npx shadcn@latest view @tentui/stateful-button
+npx shadcn@latest add @tentui/stateful-button
+```
+
+The [Tent UI installation guide](/docs/installation) also documents direct item
+URLs and manual installation. Browse the
+[component catalog](/components) when the name of the interaction is still
+unclear, or use the [shadcn animation guide](/blog/how-to-add-animations-to-shadcn-components)
+for shared-layout and async-feedback examples.
+
+## Review the installed source in context
+
+A registry payload can be valid and still be wrong for your application. After
+installation:
+
+1. Run the project's type checker and formatter.
+2. Check whether imports match the aliases in `components.json`.
+3. Test keyboard operation, focus visibility, and reduced motion.
+4. Verify responsive behavior and long content at narrow widths.
+5. Remove unused variants and dependencies only after confirming they are not
+   registry dependencies.
+6. Record the upstream source and license in the pull request.
+
+Framework compatibility deserves particular attention. A React component that
+imports `next/image` or `next/link` needs adaptation in Vite or another router.
+A component that uses hooks or browser APIs needs a client boundary in a
+React Server Components project. The CLI can place files correctly, but it
+cannot decide these product-specific boundaries for you.
+
+## Frequently asked questions
+
+### Does shadcn include every component?
+
+No. The official collection provides common primitives and composed examples.
+Its registry system lets other authors distribute specialized components,
+blocks, hooks, and supporting files as source.
+
+### Can I install any `@registry/component` command?
+
+Only if the namespace resolves to a trusted registry and the item returns valid
+registry JSON. Inspect the payload with `view`, review its source and
+dependencies, and then install it.
+
+### What if a registry URL returns HTML with status 200?
+
+Treat the item as unavailable at that URL. The host is probably returning a
+site fallback instead of JSON. Find the author's current item name or registry
+instructions, report the broken endpoint, or choose a maintained alternative.
+
+### Should I build the missing component myself?
+
+Build or compose it locally when the behavior is small, product-specific, or
+not available from a source you trust. Use a registry item when it supplies a
+meaningful, reviewable implementation that you would otherwise have to design
+and test yourself.
+
+## A safer default for missing shadcn components
+
+Start with the interface job, search current registries, and inspect the payload
+before it can write files. When a command returns HTML instead of JSON, stop and
+verify the endpoint rather than forcing the install.
+
+That workflow takes a few minutes, but it prevents stale commands, unexplained
+dependencies, and incompatible source from becoming part of your application.

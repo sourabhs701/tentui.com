@@ -1,0 +1,318 @@
+---
+title: How to Add Animations to shadcn Components
+description: Build accessible shadcn animations with source-owned code, shared-layout transitions, async feedback, and reduced-motion support.
+author: Sourabh Soni
+authorImage: https://cdn.srb.codes/srb.avif
+category: Engineering
+createdAt: "2026-07-29"
+updatedAt: "2026-07-29"
+---
+
+Adding animation to a shadcn component is easy. Deciding what should move,
+keeping the component accessible, and making the result feel connected to the
+state change is the harder part.
+
+The most reliable approach is to start with the job of the animation. A moving
+indicator can preserve context when a selection changes. A button can show that
+an async action is still running and then confirm its result. Decorative motion
+that does neither is usually safe to leave out.
+
+This guide covers two practical patterns you can copy into a shadcn project:
+shared-layout animation for tabs and state-driven feedback for an async button.
+Both keep the source in your application, so you can adapt the timing, styles,
+and behavior without adding a Tent UI runtime package.
+
+If you arrived looking for an open-source shadcn animation workflow, source
+visibility is only part of the answer. You should also know which code is copied
+into your application, which packages remain runtime dependencies, and what each
+license permits.
+
+## Choose the state change before the animation
+
+Do not begin with a spring preset or a list of effects. First name the change
+the user needs to understand.
+
+| State change | Useful animation | Avoid |
+| --- | --- | --- |
+| One tab becomes active | Move one shared indicator to the new selection | Fading every tab out and back in |
+| An action starts | Replace the idle label with immediate progress feedback | A long entrance animation before work begins |
+| An action succeeds or fails | Keep the outcome visible briefly | Returning to idle before the result can be read |
+| Content appears in place | Use a short opacity or scale transition when continuity helps | Large movement unrelated to the trigger |
+
+This constraint keeps animation tied to meaning. It also makes the component
+easier to test because every transition corresponds to a real state.
+
+If you are still deciding whether an interaction needs motion, read
+[Motion that earns its place](/blog/motion-that-earns-its-place) before choosing
+an implementation.
+
+## Configure the Tent UI registry
+
+Tent UI components are distributed through the shadcn CLI. Add the namespace
+once in `components.json`:
+
+```json
+{
+  "registries": {
+    "@tentui": "https://tentui.com/r/{name}.json"
+  }
+}
+```
+
+The CLI then copies the selected component and its declared dependencies into
+your project. Review the generated source after each install, just as you would
+review code added by a teammate.
+
+## A practical shadcn animation list
+
+Choose an animated component by the state change it needs to explain, not by the
+effect alone. This short list compares current Tent UI components that can be
+copied into a shadcn project:
+
+| Component | Best fit | Animation approach |
+| --- | --- | --- |
+| [Animated Tabs](/components/animated-tabs) | Preserve continuity when a selection changes | Motion shared-layout spring |
+| [Stateful Button](/components/stateful-button) | Show loading, success, and error feedback | Motion label and icon transitions |
+| [Animated Arrow](/components/animated-arrow) | Reinforce direction on a link or button | CSS transform transition |
+| [Glow Card](/components/glow-card) | Respond to fine-pointer movement around a card | Motion spring and radial gradient |
+| [Scribbled Text](/components/scribbled-text) | Draw attention to a short phrase as it enters view | Motion SVG path drawing |
+| [Peeping Button](/components/peeping-button) | Add a playful, nonessential discovery moment | Timed state and Motion springs |
+
+Use the first three when motion needs to clarify interaction state. The last
+three are more decorative, so confirm that they support the page's purpose and
+remain still when reduced motion is requested.
+
+## Check the licenses in an open-source animation stack
+
+An open-source shadcn animation stack can contain several separately licensed
+layers: the accessible primitive, the animation library, and the component code
+copied from a registry. A public repository or copy-paste install does not
+automatically give every layer the same license.
+
+Before adopting a component:
+
+1. Open the registry JSON and review the files and dependencies it installs.
+2. Check the license for each dependency in its package or repository.
+3. Check the component publisher's license for modification, commercial use,
+   and redistribution terms.
+4. Record those licenses with the dependency review in your pull request.
+
+Tent UI keeps its site and component implementations visible in its
+[public source repository](https://github.com/sourabhs701/tentui.com), and the
+registry copies component source into your project. The
+[Tent UI license](/license) permits modification and use in end products but
+places restrictions on redistributing the source as a competing item. Review
+those terms instead of assuming that publicly visible, source-owned, and
+open-source all mean the same thing.
+
+## Pattern 1: animate selection with shared layout
+
+A tab indicator should feel like the same object moving between selections.
+Rendering an unrelated highlight for every tab can make the transition look
+like one object disappeared and another appeared.
+
+The [Animated Tabs component](/components/animated-tabs) uses Motion's shared
+layout animation to preserve that relationship. Install it with:
+
+```bash
+npx shadcn@latest add @tentui/animated-tabs
+```
+
+Use the component with controlled state when the active tab also determines
+which content your page renders:
+
+```tsx
+"use client";
+
+import { useState } from "react";
+
+import { AnimatedTabs } from "@/components/animated-tabs";
+
+const tabs = [
+  { value: "overview", label: "Overview" },
+  { value: "activity", label: "Activity" },
+  { value: "settings", label: "Settings" },
+] as const;
+
+export function AccountNavigation() {
+  const [value, setValue] = useState("overview");
+
+  return (
+    <AnimatedTabs
+      aria-label="Account section"
+      tabs={tabs}
+      value={value}
+      onValueChange={setValue}
+    />
+  );
+}
+```
+
+The implementation gives the active indicator one stable layout identity. When
+the selected value changes, Motion interpolates the indicator's position
+instead of mounting an unrelated animation at the destination.
+
+The component also keeps interaction behavior independent from the animation:
+
+- Each option exposes radio-group semantics and its selected state.
+- Arrow keys move to the previous or next option.
+- Home and End move to the first or last option.
+- A visible focus ring remains available to keyboard users.
+- `MotionConfig reducedMotion="user"` respects the user's reduced-motion
+  preference.
+
+That separation matters. If motion fails to load or is reduced, selection and
+keyboard navigation should still work.
+
+## Pattern 2: animate an async action as a state machine
+
+A loading spinner is only one frame of an async interaction. A complete button
+needs at least four states:
+
+```text
+idle → loading → success → idle
+                 ↘ error → idle
+```
+
+Modeling those states explicitly prevents contradictory combinations such as a
+loading spinner beside an error label. It also creates clear rules for duplicate
+clicks, status announcements, and reset timing.
+
+Install the [Stateful Button component](/components/stateful-button):
+
+```bash
+npx shadcn@latest add @tentui/stateful-button
+```
+
+Then pass it the Promise-returning action:
+
+```tsx
+import { StatefulButton } from "@/components/stateful-button";
+
+export function PublishButton() {
+  return (
+    <StatefulButton
+      labels={{
+        loading: "Publishing",
+        success: "Published",
+        error: "Try again",
+      }}
+      onClick={async () => {
+        await publishChanges();
+      }}
+    >
+      Publish
+    </StatefulButton>
+  );
+}
+```
+
+The button changes its label and status icon as the Promise settles. More
+importantly, its behavior carries the meaning even when motion is unavailable:
+it disables repeated actions while work is pending, exposes `aria-busy`, and
+announces non-idle labels through a polite live region.
+
+The result is both animation and interaction logic. The full
+[shadcn loading button guide](/blog/shadcn-loading-button) explains the state
+model, duplicate-action guard, error handling, and reduced-motion behavior in
+detail.
+
+## Keep animation outside the primitive boundary
+
+shadcn components give you accessible primitives and source ownership. Preserve
+that boundary when adding animation:
+
+1. Keep the primitive responsible for semantics, focus, and keyboard behavior.
+2. Animate a visual child such as an indicator, label, icon, or content wrapper.
+3. Drive the animation from the primitive's actual state.
+4. Do not delay the state change until a decorative transition completes.
+
+For example, the animated tab remains a real button with an accessible selected
+state. The moving background is an `aria-hidden` visual layer. The async button
+remains responsible for disabled and busy behavior while animated children
+communicate the same state visually.
+
+This composition is safer than replacing a proven primitive with a custom
+clickable `div` just to make an animation easier.
+
+## Use springs and easing for different jobs
+
+Springs work well when an object moves between related positions because they
+can preserve a sense of continuity. Short ease-out transitions work well for
+opacity and scale because they respond quickly and settle predictably.
+
+Use a spring for:
+
+- A shared tab or segmented-control indicator.
+- A selected item moving within a small, bounded region.
+- A layout change where the same object should remain recognizable.
+
+Use a short ease-out for:
+
+- Showing or hiding a status icon.
+- Fading supporting content.
+- Small press feedback.
+
+Avoid giving every animated property its own unrelated duration. A component
+feels coherent when position, opacity, and scale agree about when the state
+change begins and ends.
+
+## Treat reduced motion as component behavior
+
+Reduced motion is not a separate theme. The component should preserve the state
+change while removing movement that can cause discomfort.
+
+For Motion components, wrap the animated subtree with:
+
+```tsx
+import { MotionConfig } from "motion/react";
+
+<MotionConfig reducedMotion="user">
+  {children}
+</MotionConfig>
+```
+
+For CSS transitions, Tailwind's `motion-reduce` variant can remove transforms
+and transitions:
+
+```tsx
+className="transition-transform motion-reduce:transform-none motion-reduce:transition-none"
+```
+
+Do not remove feedback entirely. A button still needs a readable loading or
+success label. A selected tab still needs color, contrast, and an accessible
+selected state. Reduce the movement while keeping the meaning.
+
+## Check accessibility and performance before shipping
+
+Use this short review on every animated shadcn component:
+
+- Can a keyboard user trigger the same state changes?
+- Does focus remain visible before, during, and after the transition?
+- Is status conveyed in text or semantics instead of motion alone?
+- Does the component still work when reduced motion is enabled?
+- Does animation begin immediately after the interaction?
+- Are you animating transforms and opacity instead of layout-heavy properties
+  when a visual wrapper can do the job?
+- Can repeated input interrupt or safely complete the transition?
+- Does the component avoid adding a client boundary larger than the interactive
+  region requires?
+
+Animation should make state easier to follow, not turn the state change into a
+performance or accessibility cost.
+
+## Start with one meaningful transition
+
+You do not need to animate an entire shadcn interface at once. Start with one
+interaction where continuity or feedback is currently missing:
+
+- Use [Animated Tabs](/components/animated-tabs) when a selected option should
+  remain visually connected as it moves.
+- Use [Stateful Button](/components/stateful-button) when an async action needs
+  loading, success, and error feedback.
+- Browse the [Tent UI component library](/components) for other source-owned
+  interaction patterns.
+
+Install the component, verify its semantics without motion, then tune the
+animation in the source you now own. That order produces motion that supports
+the interface instead of competing with it.

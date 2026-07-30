@@ -109,7 +109,7 @@ export function BlogArchive({ posts }: { posts: BlogPost[] }) {
 					))}
 				</ArchiveSidebar>
 
-				<section aria-label="Articles" className="min-w-0 py-8 md:py-14">
+				<section aria-label="Articles" className="min-w-0 py-12">
 					{visiblePosts.length > 0 ? (
 						<ul className="flex flex-col">
 							{visiblePosts.map((post) => (

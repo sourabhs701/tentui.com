@@ -1,11 +1,25 @@
 ---
-title: Animated Arrow
-description: Slide an arrow across its container when its parent is hovered.
+title: Animated Arrow for React and shadcn/ui
+description: A copy-paste React animated arrow for buttons and links with a CSS slide transition, keyboard focus feedback, and reduced-motion support.
 createdAt: 2026-07-19
-updatedAt: 2026-07-21
+updatedAt: 2026-07-29
 ---
 
 <ComponentPreview name="animated-arrow-demo" />
+
+Animated Arrow is a lightweight, copy-paste React component for adding directional
+feedback to a button or link. It clips two Lucide arrow icons inside a compact
+viewport, then slides the track when the parent is hovered or receives visible
+keyboard focus. The effect uses Tailwind CSS rather than a JavaScript animation
+runtime, so it is easy to restyle for shadcn/ui projects.
+
+## Features
+
+- Adds a sliding arrow transition to React buttons and links.
+- Uses a named Tailwind group so the trigger stays scoped to this component.
+- Accepts a `className` for size, color, rotation, and background changes.
+- Mirrors hover feedback for keyboard focus.
+- Disables the movement when the user prefers reduced motion.
 
 ## Installation
 
@@ -68,6 +82,24 @@ import { AnimatedArrow } from "@/components/animated-arrow";
   <AnimatedArrow />
 </button>
 ```
+
+Use the component inside an interactive parent such as a link or button. The
+arrow is decorative and hidden from assistive technologies, so the parent still
+needs visible text or an accessible label that describes the action.
+
+## How the animation works
+
+The component places two identical arrows on a track that is twice as wide as
+the visible container. The track begins translated by half its width. Hovering
+or focusing the named parent group returns the track to its starting position,
+which makes one arrow replace the other without changing layout.
+
+Because the transition is CSS-only, you can tune its duration and easing in the
+component source. Keep the parent class `group/animated-arrow`; a plain `group`
+will not activate the scoped variants used by the arrow.
+
+For more patterns that respect motion preferences, read
+[How to Add Animations to shadcn/ui Components](/blog/how-to-add-animations-to-shadcn-components).
 
 ## API reference
 

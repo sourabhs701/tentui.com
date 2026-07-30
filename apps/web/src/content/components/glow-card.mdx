@@ -1,16 +1,20 @@
 ---
-title: Glow Card
-description: Trace the pointer with a spring-smoothed radial glow along a card border.
+title: Glow Card for React and shadcn/ui
+description: A pointer-reactive Glow Card for React and shadcn/ui with a spring-smoothed border highlight, reduced-motion support, and editable source code.
 createdAt: 2026-07-21
-updatedAt: 2026-07-21
+updatedAt: 2026-07-29
 ---
 
 <ComponentPreview name="glow-card-demo" />
 
+Glow Card is a copy-and-paste React wrapper that adds a pointer-reactive radial
+highlight to the border of any card. Use it with the shadcn/ui Card component or
+your own markup, then customize the glow color and radius to match your design.
+
 ## Features
 
 - Tracks fine-pointer movement with a lightly damped spring.
-- Keeps content composition open instead of imposing a card layout.
+- Wraps shadcn/ui cards or custom React content without imposing a layout.
 - Ignores touch pointers and removes the moving glow for reduced-motion users.
 - Composes external pointer handlers without hiding the built-in response.
 
@@ -77,6 +81,13 @@ import { GlowCard } from "@/components/glow-card";
 The glow is decorative and hidden from assistive technology. Touch input does
 not activate pointer tracking, and reduced-motion preferences disable the moving
 effect while preserving the card content and border.
+
+## Related components
+
+Use [Animated Arrow](/components/animated-arrow) for a smaller directional hover
+effect, or read [How to Add Animations to shadcn/ui Components](/blog/how-to-add-animations-to-shadcn-components)
+for practical guidance on purposeful motion, reduced-motion fallbacks, and
+animation performance.
 
 ## API reference
 

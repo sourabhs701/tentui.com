@@ -3,8 +3,6 @@ import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import { loadEnvFiles } from "@tentui.com/env/load";
 import type { NextConfig } from "next";
 
-// Load packages/env/.env (+ .env.prod in production) before Next reads process.env.
-// Keep this out of @tentui.com/env/web so client components never pull in node:fs.
 loadEnvFiles();
 
 const nextConfig: NextConfig = {
@@ -26,10 +24,73 @@ const nextConfig: NextConfig = {
 			},
 		],
 	},
+	async redirects() {
+		return [
+			{
+				source: "/about",
+				destination: "/",
+				permanent: true,
+			},
+			{
+				source: "/brand",
+				destination: "/",
+				permanent: true,
+			},
+			{
+				source: "/pricing",
+				destination: "/blocks/pricing",
+				permanent: true,
+			},
+			{
+				source: "/docs/components",
+				destination: "/components",
+				permanent: true,
+			},
+			{
+				source: "/docs/setup",
+				destination: "/docs/installation",
+				permanent: true,
+			},
+			{
+				source: "/docs/usage",
+				destination: "/docs/installation",
+				permanent: true,
+			},
+			{
+				source: "/docs/components/animated-tabs",
+				destination: "/components/animated-tabs",
+				permanent: true,
+			},
+			{
+				source: "/docs/components/animated-arrow",
+				destination: "/components/animated-arrow",
+				permanent: true,
+			},
+			{
+				source: "/docs/components/glow-card",
+				destination: "/components/glow-card",
+				permanent: true,
+			},
+			{
+				source: "/docs/components/password-input",
+				destination: "/blog/accessible-password-input-shadcn",
+				permanent: true,
+			},
+			{
+				source: "/demo/glow-card",
+				destination: "/components/glow-card",
+				permanent: true,
+			},
+			{
+				source: "/demo/email-dock",
+				destination: "/components/email-dock",
+				permanent: true,
+			},
+		];
+	},
 	async headers() {
 		return [
 			{
-				// This URL content-negotiates on Accept, so keep its variants out of shared caches.
 				source: "/components/:slug([^.]+)",
 				headers: [
 					{

@@ -1,11 +1,23 @@
 ---
-title: Animated Tabs
-description: Switch between segmented options with a fluid shared-layout indicator.
+title: Animated Tabs for React and shadcn/ui
+description: An accessible animated tabs component for React and shadcn/ui with a fluid Motion shared-layout indicator and keyboard navigation.
 createdAt: 2026-07-21
-updatedAt: 2026-07-21
+updatedAt: 2026-07-29
 ---
 
 <ComponentPreview name="animated-tabs-demo" />
+
+Animated Tabs is a copy-and-paste React component for switching between
+segmented views with a spring-animated active indicator. It works with
+shadcn/ui projects, supports controlled and uncontrolled state, and uses Motion
+shared-layout animation so the indicator moves smoothly between options.
+
+## Features
+
+- Animates a single shared indicator instead of remounting one per option.
+- Supports controlled and uncontrolled selection.
+- Includes arrow-key, Home, and End navigation with roving focus.
+- Respects the user's reduced-motion preference.
 
 ## Installation
 
@@ -72,6 +84,21 @@ const tabs = [
 ```
 
 The component supports controlled and uncontrolled state with accessible radio-group semantics. Arrow keys, Home, and End move focus and selection through the options.
+
+Render the matching content panel from the selected value. Animated Tabs manages
+the segmented control and its selection state; it does not impose a content
+panel structure on your application.
+
+## Accessibility
+
+The control uses radio-group semantics because selecting an option updates the
+current view immediately. The active option is the only item in the tab order,
+while arrow keys move focus and selection together. A visible focus ring remains
+available for keyboard users.
+
+Motion's reduced-motion configuration disables the shared-layout movement when
+the user requests less animation. For more implementation patterns, read
+[How to Add Animations to shadcn/ui Components](/blog/how-to-add-animations-to-shadcn-components).
 
 ## API reference
 

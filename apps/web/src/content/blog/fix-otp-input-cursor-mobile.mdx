@@ -1,0 +1,334 @@
+---
+title: Fix an OTP Input Cursor That Stays in One Place on Mobile
+description: Fix a stuck mobile OTP cursor with one native input, mirrored slots, a fake caret, one-time-code autofill, and paste-safe React state.
+author: Sourabh Soni
+authorImage: https://cdn.srb.codes/srb.avif
+category: Engineering
+createdAt: "2026-07-29"
+updatedAt: "2026-07-29"
+---
+
+An OTP input can accept every digit correctly while its cursor appears to stay
+in the first box on mobile. That usually means the real input state and the
+visible slots have drifted apart. The browser is editing one control, but the
+interface is drawing several boxes and a caret independently.
+
+The reliable fix is to keep one native input as the source of truth. Mirror its
+value, focus, and selection into visual slots, and render a fake caret only in
+the active empty slot. This preserves the browser behavior that mobile
+keyboards, paste, selection, and one-time-code autofill expect.
+
+The current shadcn/ui Input OTP already follows this model. This guide shows how
+to use it without reintroducing the stuck-cursor bug in local styling or
+controlled React state.
+
+There are also two different mobile symptoms that look similar. A fake caret
+that never advances is usually an integration bug. A thin native line that
+remains visible at the left edge on iPhone is an upstream iOS rendering
+artifact. Diagnose which one you have before changing the component.
+
+## The short fix
+
+Install the official shadcn/ui component:
+
+```bash
+pnpm dlx shadcn@latest add input-otp
+```
+
+Use your project's package runner in place of `pnpm` when necessary. The
+component adds the [`input-otp`](https://input-otp.rodz.dev) dependency and
+copies an editable wrapper into your project.
+
+Then render six indexed slots around one `InputOTP`:
+
+```tsx
+"use client";
+
+import * as React from "react";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+
+export function VerificationCodeField() {
+  const [value, setValue] = React.useState("");
+
+  return (
+    <InputOTP
+      aria-label="Six-digit verification code"
+      autoComplete="one-time-code"
+      inputMode="numeric"
+      maxLength={6}
+      onChange={setValue}
+      pattern={REGEXP_ONLY_DIGITS}
+      value={value}
+    >
+      <InputOTPGroup>
+        <InputOTPSlot index={0} />
+        <InputOTPSlot index={1} />
+        <InputOTPSlot index={2} />
+      </InputOTPGroup>
+      <InputOTPSeparator />
+      <InputOTPGroup>
+        <InputOTPSlot index={3} />
+        <InputOTPSlot index={4} />
+        <InputOTPSlot index={5} />
+      </InputOTPGroup>
+    </InputOTP>
+  );
+}
+```
+
+The slot indexes must be unique and continuous. Repeating `index={0}` makes
+every box read the first slot's state, which can look like a cursor that never
+moves. In controlled mode, `onChange` must also update the exact `value` passed
+back to `InputOTP`; otherwise the browser's edit is immediately replaced with
+stale React state.
+
+## First identify which cursor is stuck
+
+| Symptom | Likely cause | Start here |
+| --- | --- | --- |
+| The active border or blinking caret remains in one slot while typing | Duplicate slot indexes, stale controlled state, or a remount | Check indexes, `value`, `onChange`, and React `key` |
+| A thin gray or black line remains on the left on iPhone, often after the final digit | The hidden native input's selection is still being painted by iOS | Check the installed `input-otp` version and upstream iOS status |
+| The last digit remains selected after all slots are full | Expected replacement behavior | Type another digit and confirm it replaces the selected character |
+
+The final case is intentional. When the input is full, `input-otp` selects the
+last character so another keystroke can replace it. Do not add a focus effect
+just to move the native selection beyond `maxLength`.
+
+## Why separate OTP inputs break on mobile
+
+Six visible boxes do not require six native inputs. A row of separate inputs
+creates six focus targets and asks application code to reproduce browser
+editing behavior:
+
+- Move focus after an accepted character.
+- Move backward from an empty field on Backspace.
+- Replace a selected digit instead of always appending.
+- Distribute a pasted code across the remaining fields.
+- Accept an SMS code offered by the operating system.
+- Preserve the selection while React rerenders.
+
+Desktop testing with a hardware keyboard often covers only the first two
+cases. Mobile browsers add virtual keyboards, text suggestions, autofill, touch
+selection, and platform-specific paste behavior.
+
+The underlying `input-otp` component instead renders one real input over the
+whole group. Its visible boxes are a projection of that input, not independent
+form fields. The project's source mirrors `selectionStart` and `selectionEnd`
+and derives the active slot from that selection. That is why the browser can
+keep owning text entry while the design still looks segmented.
+
+## Render the caret from slot state
+
+The shadcn wrapper reads three values for each slot from `OTPInputContext`:
+`char`, `isActive`, and `hasFakeCaret`. Its essential behavior looks like this:
+
+```tsx
+function InputOTPSlot({ index }: { index: number }) {
+  const context = React.useContext(OTPInputContext);
+  const { char, hasFakeCaret, isActive } = context.slots[index] ?? {};
+
+  return (
+    <div data-active={isActive}>
+      {char}
+      {hasFakeCaret ? (
+        <span aria-hidden="true" className="otp-caret" />
+      ) : null}
+    </div>
+  );
+}
+```
+
+Do not render the fake caret from a local slot index, a permanent `focus` class,
+or a second `activeIndex` state. Those values can lag behind the native
+selection. The library already defines `hasFakeCaret` only when a slot is both
+active and empty.
+
+The real caret is intentionally transparent. Drawing another permanent caret
+on top of it produces the exact visual failure this pattern is meant to avoid.
+Style `data-[active=true]` for the active border or ring, and use
+`hasFakeCaret` only for the blinking line.
+
+The current shadcn implementation can be inspected in its
+[Input OTP documentation](https://ui.shadcn.com/docs/components/base/input-otp)
+and the upstream
+[`input-otp` source](https://github.com/guilhermerodz/input-otp/blob/master/packages/input-otp/src/input.tsx).
+The upstream default branch can include work that has not reached the stable
+npm release, so compare it with your installed version before copying a fix.
+
+## Keep controlled state synchronous and simple
+
+A controlled OTP field should have one owner:
+
+```tsx
+const [value, setValue] = React.useState("");
+
+<InputOTP value={value} onChange={setValue} maxLength={6}>
+  {/* indexed slots */}
+</InputOTP>
+```
+
+Avoid formatting the value in an effect and writing it back a render later.
+That intermediate stale value can reset both the characters and the mirrored
+selection. Restrict input with `pattern`, or transform pasted text with the
+component's `pasteTransformer` prop, so the accepted value is produced during
+the input event.
+
+`input-otp` passes the next string directly to `onChange`. This is correct:
+
+```tsx
+<InputOTP value={value} onChange={setValue} maxLength={6} />
+```
+
+This DOM-input-shaped handler is not:
+
+```tsx
+<InputOTP
+  value={value}
+  onChange={(event) => setValue(event.target.value)}
+  maxLength={6}
+/>
+```
+
+There is no `event.target.value` in that callback. Treating the string like an
+event prevents the controlled value from advancing.
+
+For example, a code copied as `123 456` can be normalized before insertion:
+
+```tsx
+<InputOTP
+  maxLength={6}
+  pasteTransformer={(text) => text.replaceAll(/\D/g, "")}
+  pattern={REGEXP_ONLY_DIGITS}
+>
+  {/* indexed slots */}
+</InputOTP>
+```
+
+Do not call `focus()` or `setSelectionRange()` after every `onChange`. The
+underlying component already updates and mirrors the native selection,
+including its iOS-specific paste handling. An application-level selection
+effect can race that work and force the apparent cursor back to an old slot.
+
+## Handle the separate iPhone line artifact carefully
+
+The upstream project tracks an iOS issue where a native selection or caret
+artifact can remain visible even though the shadcn fake caret is correct. This
+is not fixed by changing slot indexes or adding another `focus()` call.
+
+As of July 29, 2026, npm's stable `input-otp` release is `1.4.2`. The upstream
+[changelog](https://github.com/guilhermerodz/input-otp/blob/master/CHANGELOG.md)
+documents the iOS caret work in `1.5.0-beta.1`. Treat that as prerelease
+software: review its changes and test your supported iOS versions before
+adopting it, or wait for the corresponding stable release.
+
+Avoid hiding the real input with `opacity: 0` as a quick CSS patch. The upstream
+implementation keeps an opacity-one native input because iOS long-press paste
+depends on real selection geometry. The prerelease fix hides the artifact with
+more targeted text positioning while preserving touch interaction.
+
+If you already use a later stable version, inspect its release notes and local
+source rather than pinning back to the version named here.
+
+## Enable the right mobile keyboard and code autofill
+
+`inputMode="numeric"` asks for a number-oriented virtual keyboard without
+turning the code into a number. Keep the underlying input's default text type;
+do not add `type="number"`, because numeric inputs do not support the text
+selection APIs this slot model mirrors. Keep the value as a string:
+verification codes can start with zero, and arithmetic is never performed on
+them.
+
+`autoComplete="one-time-code"` identifies the field as a one-time verification
+code. The upstream component uses this value by default, but declaring it in
+the application makes the intent visible during review.
+
+These attributes are hints, not guarantees. The keyboard and autofill UI
+remain platform decisions, so the field must still support normal typing and
+paste. Do not block paste or require a user to type a code that the operating
+system already offered.
+
+## If the cursor still looks stuck
+
+Check the integration in this order:
+
+1. **Inspect the slot indexes.** A six-character field needs indexes zero
+   through five exactly once.
+2. **Log the controlled value.** Confirm `onChange` receives the new string and
+   the next render passes that same string back.
+3. **Remove custom focus state.** Let `isActive` and `hasFakeCaret` come from
+   `OTPInputContext`.
+4. **Remove selection effects.** Search for `focus`, `select`, and
+   `setSelectionRange` around the field.
+5. **Check overlays.** The one native input must continue covering the slot
+   group and receiving pointer events.
+6. **Test without form resets.** A validation effect or changing React `key`
+   can remount the input after every digit.
+7. **Update copied source deliberately.** Compare your local Input OTP with the
+   current shadcn registry item before replacing customized code.
+
+Use the CLI's diff preview when an older copied component may be the cause:
+
+```bash
+pnpm dlx shadcn@latest add input-otp --dry-run
+pnpm dlx shadcn@latest add input-otp --diff input-otp.tsx
+```
+
+Review the diff instead of overwriting local source automatically. The wrapper
+may contain project-specific styles or validation behavior worth preserving.
+
+## Test the interaction, not only the six boxes
+
+An OTP field is complete when the editing flow works, not when its empty state
+matches a mockup. Test:
+
+| Scenario | Expected result |
+| --- | --- |
+| Type one digit at a time | Each character appears once and the active empty slot advances |
+| Backspace | The previous character can be selected and replaced without losing focus |
+| Paste a full code | The accepted characters fill the slots in order up to `maxLength` |
+| Use mobile code autofill | The whole code enters the same field and reaches the complete state |
+| Tap the field | The native input receives focus without creating six separate focus stops |
+| Submit an invalid code | Focus remains usable and the error is associated with the field |
+| Re-request a code | The value clears once without remounting on every subsequent edit |
+
+Run those checks on a real iOS Safari device and Android Chrome in addition to
+desktop keyboard testing. Device emulation does not reproduce every virtual
+keyboard, autofill, touch-selection, or paste behavior.
+
+After the code reaches its maximum length, keep network progress and errors
+separate from the input's caret state. The
+[shadcn loading button guide](/blog/shadcn-loading-button) shows how to model a
+Verify action as idle, loading, success, and error without tying request state
+to the field's selection.
+
+## Should you keep a multi-input OTP implementation?
+
+Keep multiple native inputs only when you have a tested requirement that the
+single-input pattern cannot meet. If you do, the group must implement paste
+distribution, replacement selection, forward and backward focus, mobile
+autofill, accessible labeling, and error association as one coherent control.
+
+For most React and shadcn applications, adopting the maintained single-input
+primitive is less code and fewer mobile edge cases. It also keeps the segmented
+visual treatment editable in your repository.
+
+Input OTP is an official shadcn/ui component, not a Tent UI registry item. If an
+old third-party command for a similar component no longer works, follow the
+[missing shadcn components guide](/blog/shadcn-missing-components) to inspect
+the current registry source instead of forcing a stale install.
+
+## The durable model
+
+Treat the OTP as one text field with six visual positions. Let the browser own
+editing, let React own one string value, and let the slot context own the active
+border and fake caret.
+
+That alignment fixes more than a cursor that appears frozen. It also gives
+mobile paste, selection, Backspace, and one-time-code autofill a single native
+control to work with.

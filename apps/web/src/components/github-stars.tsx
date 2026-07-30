@@ -1,9 +1,12 @@
+"use client";
+
 import { Button } from "@tentui.com/ui/components/button";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
 } from "@tentui.com/ui/components/tooltip";
+import { useEffect, useState } from "react";
 import { UTM_PARAMS } from "@/config/site";
 import { addQueryParams } from "@/utils/url";
 
@@ -13,6 +16,29 @@ type GitHubStarsProps = {
 };
 
 export function GitHubStars({ repo, stargazersCount }: GitHubStarsProps) {
+	const [displayCount, setDisplayCount] = useState(stargazersCount);
+
+	useEffect(() => {
+		const controller = new AbortController();
+
+		fetch("/api/github-stars", { signal: controller.signal })
+			.then((response) => {
+				if (!response.ok) throw new Error("GitHub star request failed");
+				return response.json() as Promise<{ stargazersCount?: unknown }>;
+			})
+			.then(({ stargazersCount }) => {
+				if (
+					typeof stargazersCount === "number" &&
+					Number.isFinite(stargazersCount)
+				) {
+					setDisplayCount(stargazersCount);
+				}
+			})
+			.catch(() => {});
+
+		return () => controller.abort();
+	}, []);
+
 	return (
 		<Tooltip>
 			<TooltipTrigger
@@ -43,7 +69,7 @@ export function GitHubStars({ repo, stargazersCount }: GitHubStarsProps) {
 										notation: "compact",
 										compactDisplay: "short",
 									})
-										.format(stargazersCount)
+										.format(displayCount)
 										.toLowerCase()}
 								</span>
 
@@ -54,7 +80,7 @@ export function GitHubStars({ repo, stargazersCount }: GitHubStarsProps) {
 				}
 			/>
 			<TooltipContent className="tabular-nums">
-				{new Intl.NumberFormat("en-US").format(stargazersCount)} stars
+				{new Intl.NumberFormat("en-US").format(displayCount)} stars
 			</TooltipContent>
 		</Tooltip>
 	);

@@ -42,7 +42,7 @@ export function getDocsPageMetadata(doc: Doc): Metadata {
 		`/og/simple?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
 
 	return {
-		title,
+		title: doc.slug === "introduction" ? { absolute: title } : title,
 		description,
 		alternates: { canonical: url },
 		openGraph: {
