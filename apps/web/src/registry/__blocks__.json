@@ -1,5 +1,12 @@
 [
   {
+    "name": "pricing-03",
+    "description": "A focused two-plan pricing section with an ambient fluid treatment for the popular plan.",
+    "categories": [
+      "pricing"
+    ]
+  },
+  {
     "name": "footer-03",
     "description": "A rounded dark footer with an overlapping brand mark, centered calls to action, and compact navigation.",
     "categories": [

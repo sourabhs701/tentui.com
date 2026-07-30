@@ -5,6 +5,24 @@
 import * as React from "react";
 
 export const Index = {
+	"pricing-03": {
+		name: "pricing-03",
+		title: "Pricing 03",
+		description: "A focused two-plan pricing section with an ambient fluid treatment for the popular plan.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/pricing-03/pricing-03.tsx","type":"registry:component","target":"@components/pricing-03/pricing-03.tsx"},{"path":"src/registry/blocks/pricing-03/fluid-wave.tsx","type":"registry:component","target":"@components/pricing-03/fluid-wave.tsx"},{"path":"src/lib/webgl.ts","type":"registry:lib","target":"@lib/webgl.ts"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/pricing-03/pricing-03")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for pricing-03");
+			}
+			return { default: module.default };
+		}),
+		categories: ["pricing"],
+		meta: {"createdAt":"2026-07-30","iframeHeight":940,"previewClassName":"min-h-screen"},
+	},
 	"footer-03": {
 		name: "footer-03",
 		title: "Footer 03",

@@ -4,6 +4,40 @@
   "homepage": "https://tentui.com/blocks",
   "items": [
     {
+      "name": "pricing-03",
+      "title": "Pricing 03",
+      "description": "A focused two-plan pricing section with an ambient fluid treatment for the popular plan.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/pricing-03/pricing-03.tsx",
+          "type": "registry:component",
+          "target": "@components/pricing-03/pricing-03.tsx"
+        },
+        {
+          "path": "src/registry/blocks/pricing-03/fluid-wave.tsx",
+          "type": "registry:component",
+          "target": "@components/pricing-03/fluid-wave.tsx"
+        },
+        {
+          "path": "src/lib/webgl.ts",
+          "type": "registry:lib",
+          "target": "@lib/webgl.ts"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-30",
+        "iframeHeight": 940,
+        "previewClassName": "min-h-screen"
+      },
+      "categories": [
+        "pricing"
+      ],
+      "type": "registry:block"
+    },
+    {
       "name": "footer-03",
       "title": "Footer 03",
       "description": "A rounded dark footer with an overlapping brand mark, centered calls to action, and compact navigation.",

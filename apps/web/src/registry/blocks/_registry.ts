@@ -4,6 +4,37 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const blocks: Registry["items"] = [
 	{
+		name: "pricing-03",
+		title: "Pricing 03",
+		description:
+			"A focused two-plan pricing section with an ambient fluid treatment for the popular plan.",
+		type: "registry:block",
+		dependencies: ["lucide-react"],
+		files: [
+			{
+				path: "blocks/pricing-03/pricing-03.tsx",
+				target: "@components/pricing-03/pricing-03.tsx",
+				type: "registry:component",
+			},
+			{
+				path: "blocks/pricing-03/fluid-wave.tsx",
+				target: "@components/pricing-03/fluid-wave.tsx",
+				type: "registry:component",
+			},
+			{
+				path: "src/lib/webgl.ts",
+				target: "@lib/webgl.ts",
+				type: "registry:lib",
+			},
+		],
+		categories: ["pricing"],
+		meta: {
+			createdAt: "2026-07-30",
+			iframeHeight: 940,
+			previewClassName: "min-h-screen",
+		},
+	},
+	{
 		name: "footer-03",
 		title: "Footer 03",
 		description:
