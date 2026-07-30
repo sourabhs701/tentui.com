@@ -96,5 +96,12 @@
     "categories": [
       "hero"
     ]
+  },
+  {
+    "name": "404-01",
+    "description": "An interactive 404 page with Figma-inspired vector controls and editable Bézier points.",
+    "categories": [
+      "404"
+    ]
   }
 ]

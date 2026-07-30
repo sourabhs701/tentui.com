@@ -401,6 +401,55 @@
       "type": "registry:block"
     },
     {
+      "name": "404-01",
+      "title": "404 01",
+      "description": "An interactive 404 page with Figma-inspired vector controls and editable Bézier points.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/registry/blocks/404-01/404-01.tsx",
+          "type": "registry:component",
+          "target": "@components/404-01/404-01.tsx"
+        },
+        {
+          "path": "src/registry/blocks/404-01/vector-editor.tsx",
+          "type": "registry:component",
+          "target": "@components/404-01/vector-editor.tsx"
+        },
+        {
+          "path": "src/registry/blocks/404-01/parse.ts",
+          "type": "registry:component",
+          "target": "@components/404-01/parse.ts"
+        },
+        {
+          "path": "src/registry/blocks/404-01/types.ts",
+          "type": "registry:component",
+          "target": "@components/404-01/types.ts"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-06-25",
+        "iframeHeight": 900,
+        "previewClassName": "min-h-screen",
+        "company": "Figma",
+        "tags": [
+          "SVG",
+          "Bezier",
+          "Editor"
+        ],
+        "source": "https://figma.com"
+      },
+      "categories": [
+        "404"
+      ],
+      "type": "registry:block"
+    },
+    {
       "name": "tailwindcss-buttons",
       "title": "Tailwind CSS Buttons",
       "description": "Browse and copy a responsive gallery of polished Tailwind CSS button styles.",

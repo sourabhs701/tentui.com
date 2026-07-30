@@ -257,6 +257,24 @@ export const Index = {
 		categories: ["hero"],
 		meta: {"createdAt":"2026-07-17","iframeHeight":760,"previewClassName":"min-h-screen"},
 	},
+	"404-01": {
+		name: "404-01",
+		title: "404 01",
+		description: "An interactive 404 page with Figma-inspired vector controls and editable Bézier points.",
+		type: "registry:block",
+		files: [{"path":"src/registry/blocks/404-01/404-01.tsx","type":"registry:component","target":"@components/404-01/404-01.tsx"},{"path":"src/registry/blocks/404-01/vector-editor.tsx","type":"registry:component","target":"@components/404-01/vector-editor.tsx"},{"path":"src/registry/blocks/404-01/parse.ts","type":"registry:component","target":"@components/404-01/parse.ts"},{"path":"src/registry/blocks/404-01/types.ts","type":"registry:component","target":"@components/404-01/types.ts"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/blocks/404-01/404-01")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for 404-01");
+			}
+			return { default: module.default };
+		}),
+		categories: ["404"],
+		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
+	},
 	"tailwindcss-buttons": {
 		name: "tailwindcss-buttons",
 		title: "Tailwind CSS Buttons",

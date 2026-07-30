@@ -340,4 +340,44 @@ export const blocks: Registry["items"] = [
 			previewClassName: "min-h-screen",
 		},
 	},
+	{
+		name: "404-01",
+		title: "404 01",
+		description:
+			"An interactive 404 page with Figma-inspired vector controls and editable Bézier points.",
+		type: "registry:block",
+		dependencies: ["lucide-react"],
+		registryDependencies: ["button"],
+		files: [
+			{
+				path: "blocks/404-01/404-01.tsx",
+				target: "@components/404-01/404-01.tsx",
+				type: "registry:component",
+			},
+			{
+				path: "blocks/404-01/vector-editor.tsx",
+				target: "@components/404-01/vector-editor.tsx",
+				type: "registry:component",
+			},
+			{
+				path: "blocks/404-01/parse.ts",
+				target: "@components/404-01/parse.ts",
+				type: "registry:component",
+			},
+			{
+				path: "blocks/404-01/types.ts",
+				target: "@components/404-01/types.ts",
+				type: "registry:component",
+			},
+		],
+		categories: ["404"],
+		meta: {
+			createdAt: "2026-06-25",
+			iframeHeight: 900,
+			previewClassName: "min-h-screen",
+			company: "Figma",
+			tags: ["SVG", "Bezier", "Editor"],
+			source: "https://figma.com",
+		},
+	},
 ];

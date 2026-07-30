@@ -24,6 +24,12 @@ export const blockCategories = [
 			"Legal pages for presenting policies, terms, licenses, and notices clearly.",
 	},
 	{
+		name: "404",
+		title: "404 Pages",
+		description:
+			"404 pages that turn a dead end into a useful, memorable way back.",
+	},
+	{
 		name: "footer",
 		title: "Footer",
 		description:
