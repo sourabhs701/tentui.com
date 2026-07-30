@@ -31,6 +31,65 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/realistic-emboss",
 	},
 	{
+		name: "ascii-wordmark",
+		type: "registry:component",
+		title: "ASCII Wordmark",
+		description:
+			"Render a cursor-reactive word as a GPU-simulated field of drifting ASCII particles.",
+		dependencies: ["three", "@types/three"],
+		files: [
+			{
+				path: "components/ascii-wordmark/ascii-wordmark.tsx",
+				type: "registry:component",
+				target: "@components/ascii-wordmark/ascii-wordmark.tsx",
+			},
+			{
+				path: "components/ascii-wordmark/renderer.ts",
+				type: "registry:component",
+				target: "@components/ascii-wordmark/renderer.ts",
+			},
+			{
+				path: "components/ascii-wordmark/shaders.ts",
+				type: "registry:component",
+				target: "@components/ascii-wordmark/shaders.ts",
+			},
+			{
+				path: "components/ascii-wordmark/atlas.ts",
+				type: "registry:component",
+				target: "@components/ascii-wordmark/atlas.ts",
+			},
+			{
+				path: "components/ascii-wordmark/word-points.ts",
+				type: "registry:component",
+				target: "@components/ascii-wordmark/word-points.ts",
+			},
+		],
+		categories: ["typography"],
+		meta: {
+			createdAt: "2026-07-30",
+		},
+		docs: "https://tentui.com/components/ascii-wordmark",
+	},
+	{
+		name: "tile-field",
+		type: "registry:component",
+		title: "Tile Field",
+		description:
+			"Render a theme-aware wordmark with moving tiles, a color wave, and pointer glow.",
+		files: [
+			{
+				path: "components/tile-field/tile-field.tsx",
+				type: "registry:component",
+				target: "@components/tile-field.tsx",
+			},
+		],
+		categories: ["typography"],
+		meta: {
+			createdAt: "2026-07-30",
+		},
+		docs: "https://tentui.com/components/tile-field",
+	},
+	{
 		name: "tailwindcss-buttons",
 		type: "registry:component",
 		title: "Tailwind CSS Buttons",

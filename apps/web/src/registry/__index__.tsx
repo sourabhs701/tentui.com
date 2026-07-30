@@ -311,6 +311,42 @@ export const Index = {
 		categories: ["effects"],
 		meta: {"createdAt":"2026-07-30"},
 	},
+	"ascii-wordmark": {
+		name: "ascii-wordmark",
+		title: "ASCII Wordmark",
+		description: "Render a cursor-reactive word as a GPU-simulated field of drifting ASCII particles.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/ascii-wordmark/ascii-wordmark.tsx","type":"registry:component","target":"@components/ascii-wordmark/ascii-wordmark.tsx"},{"path":"src/registry/components/ascii-wordmark/renderer.ts","type":"registry:component","target":"@components/ascii-wordmark/renderer.ts"},{"path":"src/registry/components/ascii-wordmark/shaders.ts","type":"registry:component","target":"@components/ascii-wordmark/shaders.ts"},{"path":"src/registry/components/ascii-wordmark/atlas.ts","type":"registry:component","target":"@components/ascii-wordmark/atlas.ts"},{"path":"src/registry/components/ascii-wordmark/word-points.ts","type":"registry:component","target":"@components/ascii-wordmark/word-points.ts"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/ascii-wordmark/ascii-wordmark")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ascii-wordmark");
+			}
+			return { default: module.default };
+		}),
+		categories: ["typography"],
+		meta: {"createdAt":"2026-07-30"},
+	},
+	"tile-field": {
+		name: "tile-field",
+		title: "Tile Field",
+		description: "Render a theme-aware wordmark with moving tiles, a color wave, and pointer glow.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/tile-field/tile-field.tsx","type":"registry:component","target":"@components/tile-field.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/tile-field/tile-field")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for tile-field");
+			}
+			return { default: module.default };
+		}),
+		categories: ["typography"],
+		meta: {"createdAt":"2026-07-30"},
+	},
 	"tailwindcss-buttons": {
 		name: "tailwindcss-buttons",
 		title: "Tailwind CSS Buttons",
@@ -544,6 +580,42 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-[34rem] place-items-center content-center"},
+	},
+	"ascii-wordmark-demo": {
+		name: "ascii-wordmark-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ascii-wordmark-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ascii-wordmark-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ascii-wordmark-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[32rem] w-full p-0"},
+	},
+	"tile-field-demo": {
+		name: "tile-field-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/tile-field-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/tile-field-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for tile-field-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-80 w-full p-0"},
 	},
 	"tailwindcss-buttons-demo": {
 		name: "tailwindcss-buttons-demo",

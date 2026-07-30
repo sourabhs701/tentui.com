@@ -504,6 +504,70 @@
       "type": "registry:component"
     },
     {
+      "name": "ascii-wordmark",
+      "title": "ASCII Wordmark",
+      "description": "Render a cursor-reactive word as a GPU-simulated field of drifting ASCII particles.",
+      "dependencies": [
+        "three",
+        "@types/three"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/ascii-wordmark/ascii-wordmark.tsx",
+          "type": "registry:component",
+          "target": "@components/ascii-wordmark/ascii-wordmark.tsx"
+        },
+        {
+          "path": "src/registry/components/ascii-wordmark/renderer.ts",
+          "type": "registry:component",
+          "target": "@components/ascii-wordmark/renderer.ts"
+        },
+        {
+          "path": "src/registry/components/ascii-wordmark/shaders.ts",
+          "type": "registry:component",
+          "target": "@components/ascii-wordmark/shaders.ts"
+        },
+        {
+          "path": "src/registry/components/ascii-wordmark/atlas.ts",
+          "type": "registry:component",
+          "target": "@components/ascii-wordmark/atlas.ts"
+        },
+        {
+          "path": "src/registry/components/ascii-wordmark/word-points.ts",
+          "type": "registry:component",
+          "target": "@components/ascii-wordmark/word-points.ts"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-30"
+      },
+      "docs": "https://tentui.com/components/ascii-wordmark",
+      "categories": [
+        "typography"
+      ],
+      "type": "registry:component"
+    },
+    {
+      "name": "tile-field",
+      "title": "Tile Field",
+      "description": "Render a theme-aware wordmark with moving tiles, a color wave, and pointer glow.",
+      "files": [
+        {
+          "path": "src/registry/components/tile-field/tile-field.tsx",
+          "type": "registry:component",
+          "target": "@components/tile-field.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-30"
+      },
+      "docs": "https://tentui.com/components/tile-field",
+      "categories": [
+        "typography"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "tailwindcss-buttons",
       "title": "Tailwind CSS Buttons",
       "description": "Browse and copy a responsive gallery of polished Tailwind CSS button styles.",

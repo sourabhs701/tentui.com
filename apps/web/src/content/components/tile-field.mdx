@@ -1,0 +1,101 @@
+---
+title: Tile Field Wordmark
+description: Render a light and dark mode wordmark with moving cursor-reactive tiles, a customizable color wave, and a soft glow.
+createdAt: 2026-07-30
+updatedAt: 2026-07-30
+---
+
+<ComponentPreview name="tile-field-demo" canConfigure />
+
+Tile Field turns a text wordmark into a responsive canvas of square tiles. A
+slow customizable color wave moves through the letters while fine-pointer
+movement brushes a soft light across nearby tiles and occasionally reveals
+small sparks. Use the preview controls to change the text and color.
+
+## Features
+
+- Fits any wordmark to the available width and rebuilds the grid when its container resizes.
+- Adapts its resting tiles to light and dark themes.
+- Accepts any CSS color for the wave, pointer glow, and sparks.
+- Includes DialKit preview controls for editing the text and color live.
+- Batches tile drawing with `Path2D` and caps canvas density at `2x` device pixel ratio.
+- Pushes and drifts individual tiles around the cursor with a slowly fading light trail.
+- Pauses while off-screen or while the document is hidden.
+- Ignores touch input and renders a static fallback for reduced-motion preferences.
+- Uses no animation dependency.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/tile-field
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the utilities used by the component</Step>
+
+```bash
+npm install clsx tailwind-merge
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="tile-field" title="components/tile-field.tsx" />
+
+<Step>Update the import path to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { TileField } from "@/components/tile-field";
+```
+
+```tsx
+<TileField
+  word="humandelta <3"
+  color="#6366f1"
+  className="min-h-64 rounded-xl bg-background"
+/>
+```
+
+The component includes a `min-height` so it works without setup. Pass a height,
+minimum height, or aspect ratio through `className` to fit your layout. Its
+resting tiles inherit `text-muted-foreground`, so they update with your theme.
+
+## Accessibility
+
+The generated canvas is hidden from assistive technology. Its host exposes the
+word as an image label by default; pass `aria-label` when the visible word needs
+more descriptive alternative text. Touch input does not activate the cursor
+light, and reduced-motion users receive a static tile wordmark.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/tile-field/tile-field.tsx"
+  name="TileFieldProps"
+/>

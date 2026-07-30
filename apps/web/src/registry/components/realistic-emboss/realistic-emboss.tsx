@@ -134,23 +134,13 @@ export function RealisticEmboss({
 		fontFamily,
 	]);
 
-	if (ariaLabel) {
-		return (
-			<div
-				aria-label={ariaLabel}
-				className={cn("relative isolate overflow-hidden", className)}
-				data-slot="realistic-emboss"
-				ref={hostRef}
-				role="img"
-				style={{ backgroundColor: color, ...style }}
-				{...props}
-			/>
-		);
-	}
+	const accessibilityProps = ariaLabel
+		? { "aria-label": ariaLabel, role: "img" as const }
+		: { "aria-hidden": true as const };
 
 	return (
 		<div
-			aria-hidden="true"
+			{...accessibilityProps}
 			className={cn("relative isolate overflow-hidden", className)}
 			data-slot="realistic-emboss"
 			ref={hostRef}

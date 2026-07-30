@@ -19,6 +19,36 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "ascii-wordmark-demo",
+		type: "registry:example",
+		dependencies: ["dialkit"],
+		registryDependencies: [getRegistryItemUrl("ascii-wordmark")],
+		files: [
+			{
+				path: "examples/ascii-wordmark-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[32rem] w-full p-0",
+		},
+	},
+	{
+		name: "tile-field-demo",
+		type: "registry:example",
+		dependencies: ["dialkit"],
+		registryDependencies: [getRegistryItemUrl("tile-field")],
+		files: [
+			{
+				path: "examples/tile-field-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-80 w-full p-0",
+		},
+	},
+	{
 		name: "tailwindcss-buttons-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("tailwindcss-buttons")],

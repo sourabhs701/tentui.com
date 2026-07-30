@@ -1,0 +1,103 @@
+---
+title: ASCII Wordmark
+description: A cursor-reactive ASCII wordmark for React and shadcn/ui with GPU flow-field particles, a colorful glyph trail, and reduced-motion support.
+createdAt: 2026-07-30
+updatedAt: 2026-07-30
+---
+
+<ComponentPreview name="ascii-wordmark-demo" canConfigure />
+
+ASCII Wordmark samples any word into a GPU particle texture, moves those particles
+through a simplex-noise flow field, and converts the rendered result into a live
+grid of ASCII glyphs. Fine pointers repel nearby particles and paint a short color
+trail through the grid.
+
+## Features
+
+- Simulates up to 40,000 particles with Three.js `GPUComputationRenderer`.
+- Rebuilds the particle target from any word and accepts a custom ink color.
+- Repels particles and colors nearby glyphs in direct response to the pointer.
+- Pauses outside the viewport or while the page is hidden.
+- Reduces particle density on coarse pointers and renders a static wordmark when reduced motion is requested.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/ascii-wordmark
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install three clsx tailwind-merge
+```
+
+```bash
+npm install --save-dev @types/three
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy the component files into your project</Step>
+
+<ComponentSource name="ascii-wordmark" title="components/ascii-wordmark" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { AsciiWordmark } from "@/components/ascii-wordmark/ascii-wordmark";
+```
+
+```tsx
+<div className="bg-neutral-950">
+  <AsciiWordmark word="VAULT" inkColor="#8b80ff" />
+</div>
+```
+
+The component supplies a responsive `16 / 5` aspect ratio and a minimum height.
+Pass a `className` when the surrounding layout should control its dimensions.
+
+## Accessibility
+
+The canvas is hidden from assistive technology and the host is exposed as an
+image labeled with the rendered word. Override `aria-label` when the word needs
+more context. Reduced-motion users receive the assembled word without the
+continuous flow-field simulation or cursor effects.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/ascii-wordmark/ascii-wordmark.tsx"
+  name="AsciiWordmarkProps"
+/>
+
+## References
+
+- [Three.js GPUComputationRenderer](https://threejs.org/examples/?q=gpgpu#webgl_gpgpu_birds)
+- [Three.js post-processing](https://threejs.org/manual/en/post-processing.html)
