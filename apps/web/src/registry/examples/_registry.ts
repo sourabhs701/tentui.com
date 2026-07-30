@@ -49,6 +49,21 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "search-command-demo",
+		type: "registry:example",
+		dependencies: ["next-themes"],
+		registryDependencies: [getRegistryItemUrl("search-command")],
+		files: [
+			{
+				path: "examples/search-command-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 w-full p-0",
+		},
+	},
+	{
 		name: "tailwindcss-buttons-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("tailwindcss-buttons")],

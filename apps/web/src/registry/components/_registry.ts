@@ -90,6 +90,27 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/tile-field",
 	},
 	{
+		name: "search-command",
+		type: "registry:component",
+		title: "Search Command",
+		description:
+			"Search pages and run actions from a polished, keyboard-first command menu.",
+		dependencies: ["lucide-react", "react-hotkeys-hook"],
+		registryDependencies: ["button", "command", "kbd"],
+		files: [
+			{
+				path: "components/search-command/search-command.tsx",
+				type: "registry:component",
+				target: "@components/search-command.tsx",
+			},
+		],
+		categories: ["menus"],
+		meta: {
+			createdAt: "2026-07-30",
+		},
+		docs: "https://tentui.com/components/search-command",
+	},
+	{
 		name: "tailwindcss-buttons",
 		type: "registry:component",
 		title: "Tailwind CSS Buttons",

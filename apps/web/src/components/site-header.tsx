@@ -4,7 +4,9 @@ import Link from "next/link";
 
 import { MAIN_NAV } from "@/config/site";
 
-const CommandMenu = dynamic(() => import("@/components/command-menu"));
+const SiteHeaderSearchCommand = dynamic(
+	() => import("@/components/command-menu"),
+);
 const BrandContextMenu = dynamic(
 	() => import("@/components/brand-context-menu"),
 );
@@ -65,7 +67,7 @@ export function SiteHeader({ showGutters = true }: SiteHeaderProps) {
 								orientation="vertical"
 								className="mr-2 hidden data-vertical:h-5 data-vertical:self-center sm:block"
 							/>
-							<CommandMenu
+							<SiteHeaderSearchCommand
 								components={headerCommandComponents}
 								blocks={headerCommandBlocks}
 								enabledHotkeys

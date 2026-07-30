@@ -1,0 +1,176 @@
+---
+title: Search Command
+description: Search pages and run actions from a polished, keyboard-first command menu.
+createdAt: 2026-07-30
+updatedAt: 2026-07-30
+---
+
+<ComponentPreview name="search-command-demo" />
+
+## Features
+
+- Matches the compact search command used in the TentUI navigation bar.
+- Opens with `Mod+K` or `/` and displays the correct Command or Control key for the user's platform.
+- Groups pages, actions, and settings with icons, searchable descriptions, metadata, disabled states, and hotkey hints.
+- Supports controlled and uncontrolled dialog state.
+- Keeps routing framework-agnostic through item and global selection callbacks.
+- Ignores slash shortcuts while the user is typing in an input, select, textarea, or editable region.
+- Updates the footer action as keyboard or pointer selection moves between groups.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/search-command
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Add the required shadcn components</Step>
+
+```bash
+npm install lucide-react react-hotkeys-hook
+npx shadcn@latest add button command kbd
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="search-command" title="components/search-command.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { SearchCommand } from "@/components/search-command";
+```
+
+```tsx
+const groups = [
+  {
+    heading: "Menu",
+    actionLabel: "Go to page",
+    items: [
+      {
+        title: "Home",
+        description: "Workspace overview",
+        keywords: ["dashboard"],
+        shortcut: "GH",
+      },
+      {
+        title: "Settings",
+        description: "Preferences and integrations",
+        shortcut: "GS",
+      },
+    ],
+  },
+];
+
+<SearchCommand
+  groups={groups}
+  onItemSelect={(item) => console.log(item.title)}
+/>
+```
+
+### Routing
+
+Keep navigation in the application layer so the component works with Next.js, React Router, TanStack Router, or regular browser navigation.
+
+```tsx
+const router = useRouter();
+
+const groups = [
+  {
+    heading: "Pages",
+    items: [
+      { title: "Home", value: "/" },
+      { title: "Customers", value: "/customers" },
+    ],
+  },
+];
+
+<SearchCommand
+  groups={groups}
+  onItemSelect={(item) => router.push(item.value ?? "/")}
+/>
+```
+
+### Actions
+
+Add `onSelect` to an item when it owns an action. Both the item callback and `onItemSelect` run after the menu closes.
+
+```tsx
+{
+  title: "Create document",
+  keywords: ["new", "page"],
+  onSelect: createDocument,
+}
+```
+
+### Settings
+
+Settings use the same item API as pages and actions. For example, add an appearance group with `next-themes`.
+
+```tsx
+const { setTheme } = useTheme();
+
+const themeGroup = {
+  heading: "Theme",
+  actionLabel: "Change theme",
+  items: [
+    {
+      title: "Light",
+      icon: <SunMediumIcon />,
+      onSelect: () => setTheme("light"),
+    },
+    {
+      title: "Dark",
+      icon: <MoonStarIcon />,
+      onSelect: () => setTheme("dark"),
+    },
+    {
+      title: "System",
+      icon: <MonitorIcon />,
+      onSelect: () => setTheme("system"),
+    },
+  ],
+};
+
+<SearchCommand groups={[...groups, themeGroup]} />
+```
+
+Pass `enabledHotkeys={false}` if another command palette already owns `Mod+K` and `/` on the page. The shortcut keys remain visible in the trigger.
+
+## Accessibility
+
+The trigger exposes its dialog state and `Meta+K`, `Control+K`, and `/` shortcuts. The dialog has a configurable title and description for assistive technology, all items live inside command groups, and slash is ignored while the user is editing text.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/search-command/search-command.tsx"
+  name="SearchCommandProps"
+/>

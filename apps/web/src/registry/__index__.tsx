@@ -347,6 +347,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-30"},
 	},
+	"search-command": {
+		name: "search-command",
+		title: "Search Command",
+		description: "Search pages and run actions from a polished, keyboard-first command menu.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/search-command/search-command.tsx","type":"registry:component","target":"@components/search-command.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/search-command/search-command")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for search-command");
+			}
+			return { default: module.default };
+		}),
+		categories: ["menus"],
+		meta: {"createdAt":"2026-07-30"},
+	},
 	"tailwindcss-buttons": {
 		name: "tailwindcss-buttons",
 		title: "Tailwind CSS Buttons",
@@ -616,6 +634,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-80 w-full p-0"},
+	},
+	"search-command-demo": {
+		name: "search-command-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/search-command-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/search-command-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for search-command-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 w-full p-0"},
 	},
 	"tailwindcss-buttons-demo": {
 		name: "tailwindcss-buttons-demo",

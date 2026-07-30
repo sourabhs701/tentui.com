@@ -568,6 +568,35 @@
       "type": "registry:component"
     },
     {
+      "name": "search-command",
+      "title": "Search Command",
+      "description": "Search pages and run actions from a polished, keyboard-first command menu.",
+      "dependencies": [
+        "lucide-react",
+        "react-hotkeys-hook"
+      ],
+      "registryDependencies": [
+        "button",
+        "command",
+        "kbd"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/search-command/search-command.tsx",
+          "type": "registry:component",
+          "target": "@components/search-command.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-07-30"
+      },
+      "docs": "https://tentui.com/components/search-command",
+      "categories": [
+        "menus"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "tailwindcss-buttons",
       "title": "Tailwind CSS Buttons",
       "description": "Browse and copy a responsive gallery of polished Tailwind CSS button styles.",
