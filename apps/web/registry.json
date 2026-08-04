@@ -157,15 +157,13 @@
     {
       "name": "testimonials-01",
       "title": "Testimonials 01",
-      "description": "A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
+      "description": "A live X testimonial mosaic with resilient fallbacks.",
       "dependencies": [
-        "motion",
         "react-tweet"
       ],
       "registryDependencies": [
         "avatar",
-        "card",
-        "https://tentui.com/r/glow-card.json"
+        "card"
       ],
       "files": [
         {
@@ -578,31 +576,6 @@
       "type": "registry:component"
     },
     {
-      "name": "glow-card",
-      "title": "Glow Card",
-      "description": "Trace the pointer with a spring-smoothed radial glow along a card border.",
-      "dependencies": [
-        "motion"
-      ],
-      "files": [
-        {
-          "path": "src/registry/components/glow-card/glow-card.tsx",
-          "type": "registry:component",
-          "target": "@components/glow-card.tsx"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-07-21",
-        "image": "https://cdn.srb.codes/images/components/glow-card",
-        "video": "https://cdn.srb.codes/videos/components/glow-card"
-      },
-      "docs": "https://tentui.com/components/glow-card",
-      "categories": [
-        "cards"
-      ],
-      "type": "registry:component"
-    },
-    {
       "name": "brand-context-menu",
       "title": "Brand Context Menu",
       "description": "Share copy-ready and downloadable brand assets from a contextual menu.",
@@ -714,29 +687,6 @@
         "video": "https://cdn.srb.codes/videos/components/email-dock"
       },
       "docs": "https://tentui.com/components/email-dock",
-      "categories": [],
-      "type": "registry:component"
-    },
-    {
-      "name": "world-map",
-      "title": "Interactive World Map",
-      "description": "Explore countries with zoom, pan, selection, and hover details.",
-      "dependencies": [
-        "react-simple-maps"
-      ],
-      "files": [
-        {
-          "path": "src/registry/components/world-map/world-map.tsx",
-          "type": "registry:component",
-          "target": "@components/world-map.tsx"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-05-05",
-        "video": "https://cdn.srb.codes/videos/components/world-map",
-        "image": "https://cdn.srb.codes/images/components/world-map"
-      },
-      "docs": "https://tentui.com/components/world-map",
       "categories": [],
       "type": "registry:component"
     },

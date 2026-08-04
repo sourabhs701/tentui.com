@@ -36,7 +36,7 @@
   },
   {
     "name": "testimonials-01",
-    "description": "A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
+    "description": "A live X testimonial mosaic with resilient fallbacks.",
     "categories": [
       "testimonials"
     ]

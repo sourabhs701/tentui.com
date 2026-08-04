@@ -109,16 +109,9 @@ const releases: Release[] = [
 		displayDate: "Jul 21, 2026",
 		title: "Interaction essentials",
 		summary:
-			"A set of expressive components for navigation, brand sharing, social proof, and subtle pointer feedback.",
+			"A set of expressive components for navigation, brand sharing, social proof, and polished interaction.",
 		commit: "49654ee",
 		changes: [
-			{
-				type: "component",
-				title: "Glow Card",
-				description:
-					"A spring-smoothed radial glow that follows the pointer without overpowering card content.",
-				href: "/components/glow-card",
-			},
 			{
 				type: "component",
 				title: "Animated Tabs",
@@ -186,16 +179,9 @@ const releases: Release[] = [
 		displayDate: "Jul 19, 2026",
 		title: "The collection begins",
 		summary:
-			"TentUI opened with three components that set the standard: useful first, expressive where it earns its place.",
+			"TentUI opened with components that set the standard: useful first, expressive where it earns its place.",
 		commit: "787fc97",
 		changes: [
-			{
-				type: "component",
-				title: "Interactive World Map",
-				description:
-					"Country exploration with zoom, pan, selection, and contextual hover details.",
-				href: "/components/world-map",
-			},
 			{
 				type: "component",
 				title: "Animated Arrow",

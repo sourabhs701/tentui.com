@@ -143,11 +143,10 @@ export const blocks: Registry["items"] = [
 	{
 		name: "testimonials-01",
 		title: "Testimonials 01",
-		description:
-			"A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
+		description: "A live X testimonial mosaic with resilient fallbacks.",
 		type: "registry:block",
-		dependencies: ["motion", "react-tweet"],
-		registryDependencies: ["avatar", "card", getRegistryItemUrl("glow-card")],
+		dependencies: ["react-tweet"],
+		registryDependencies: ["avatar", "card"],
 		files: [
 			{
 				path: "blocks/testimonials-01/testimonials-01.tsx",

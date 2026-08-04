@@ -104,28 +104,6 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/peeping-button",
 	},
 	{
-		name: "glow-card",
-		type: "registry:component",
-		title: "Glow Card",
-		description:
-			"Trace the pointer with a spring-smoothed radial glow along a card border.",
-		dependencies: ["motion"],
-		files: [
-			{
-				path: "components/glow-card/glow-card.tsx",
-				type: "registry:component",
-				target: "@components/glow-card.tsx",
-			},
-		],
-		categories: ["cards"],
-		meta: {
-			createdAt: "2026-07-21",
-			image: "https://cdn.srb.codes/images/components/glow-card",
-			video: "https://cdn.srb.codes/videos/components/glow-card",
-		},
-		docs: "https://tentui.com/components/glow-card",
-	},
-	{
 		name: "brand-context-menu",
 		type: "registry:component",
 		title: "Brand Context Menu",
@@ -221,28 +199,6 @@ export const components: Registry["items"] = [
 			video: "https://cdn.srb.codes/videos/components/email-dock",
 		},
 		docs: "https://tentui.com/components/email-dock",
-	},
-	{
-		name: "world-map",
-		type: "registry:component",
-		title: "Interactive World Map",
-		description:
-			"Explore countries with zoom, pan, selection, and hover details.",
-		dependencies: ["react-simple-maps"],
-		files: [
-			{
-				path: "components/world-map/world-map.tsx",
-				type: "registry:component",
-				target: "@components/world-map.tsx",
-			},
-		],
-		categories: [],
-		meta: {
-			createdAt: "2026-05-05",
-			video: "https://cdn.srb.codes/videos/components/world-map",
-			image: "https://cdn.srb.codes/images/components/world-map",
-		},
-		docs: "https://tentui.com/components/world-map",
 	},
 	{
 		name: "stateful-button",

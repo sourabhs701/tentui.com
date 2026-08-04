@@ -98,7 +98,7 @@ export const Index = {
 	"testimonials-01": {
 		name: "testimonials-01",
 		title: "Testimonials 01",
-		description: "A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
+		description: "A live X testimonial mosaic with resilient fallbacks.",
 		type: "registry:block",
 		files: [{"path":"src/registry/blocks/testimonials-01/testimonials-01.tsx","type":"registry:component","target":"@components/testimonials-01.tsx"}],
 		component: React.lazy(async () => {
@@ -365,24 +365,6 @@ export const Index = {
 		categories: ["buttons"],
 		meta: {"createdAt":"2026-07-22"},
 	},
-	"glow-card": {
-		name: "glow-card",
-		title: "Glow Card",
-		description: "Trace the pointer with a spring-smoothed radial glow along a card border.",
-		type: "registry:component",
-		files: [{"path":"src/registry/components/glow-card/glow-card.tsx","type":"registry:component","target":"@components/glow-card.tsx"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/components/glow-card/glow-card")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for glow-card");
-			}
-			return { default: module.default };
-		}),
-		categories: ["cards"],
-		meta: {"createdAt":"2026-07-21","image":"https://cdn.srb.codes/images/components/glow-card","video":"https://cdn.srb.codes/videos/components/glow-card"},
-	},
 	"brand-context-menu": {
 		name: "brand-context-menu",
 		title: "Brand Context Menu",
@@ -454,24 +436,6 @@ export const Index = {
 		}),
 		categories: [],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/email-dock","video":"https://cdn.srb.codes/videos/components/email-dock"},
-	},
-	"world-map": {
-		name: "world-map",
-		title: "Interactive World Map",
-		description: "Explore countries with zoom, pan, selection, and hover details.",
-		type: "registry:component",
-		files: [{"path":"src/registry/components/world-map/world-map.tsx","type":"registry:component","target":"@components/world-map.tsx"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/components/world-map/world-map")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for world-map");
-			}
-			return { default: module.default };
-		}),
-		categories: [],
-		meta: {"createdAt":"2026-05-05","video":"https://cdn.srb.codes/videos/components/world-map","image":"https://cdn.srb.codes/images/components/world-map"},
 	},
 	"stateful-button": {
 		name: "stateful-button",
@@ -617,24 +581,6 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-96 place-items-center content-center"},
 	},
-	"glow-card-demo": {
-		name: "glow-card-demo",
-		title: undefined,
-		description: "",
-		type: "registry:example",
-		files: [{"path":"src/registry/examples/glow-card-demo.tsx","type":"registry:example"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/glow-card-demo")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for glow-card-demo");
-			}
-			return { default: module.default };
-		}),
-		categories: undefined,
-		meta: {"previewClassName":"min-h-96 place-items-center content-center"},
-	},
 	"brand-context-menu-demo": {
 		name: "brand-context-menu-demo",
 		title: undefined,
@@ -706,24 +652,6 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
-	},
-	"world-map-demo": {
-		name: "world-map-demo",
-		title: undefined,
-		description: "",
-		type: "registry:example",
-		files: [{"path":"src/registry/examples/world-map-demo.tsx","type":"registry:example"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/world-map-demo")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for world-map-demo");
-			}
-			return { default: module.default };
-		}),
-		categories: undefined,
-		meta: {"previewClassName":"min-h-72 w-full"},
 	},
 	"stateful-button-demo": {
 		name: "stateful-button-demo",

@@ -67,18 +67,8 @@ const nextConfig: NextConfig = {
 				permanent: true,
 			},
 			{
-				source: "/docs/components/glow-card",
-				destination: "/components/glow-card",
-				permanent: true,
-			},
-			{
 				source: "/docs/components/password-input",
 				destination: "/blog/accessible-password-input-shadcn",
-				permanent: true,
-			},
-			{
-				source: "/demo/glow-card",
-				destination: "/components/glow-card",
 				permanent: true,
 			},
 			{
