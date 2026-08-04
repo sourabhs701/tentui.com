@@ -2,75 +2,6 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
-		name: "realistic-emboss",
-		type: "registry:component",
-		title: "Realistic Emboss",
-		description:
-			"Press text or custom SVG logos into a procedural plaster surface.",
-		files: [
-			{
-				path: "components/realistic-emboss/index.ts",
-				type: "registry:component",
-				target: "@components/realistic-emboss/index.ts",
-			},
-			{
-				path: "components/realistic-emboss/realistic-emboss.tsx",
-				type: "registry:component",
-				target: "@components/realistic-emboss/realistic-emboss.tsx",
-			},
-			{
-				path: "components/realistic-emboss/realistic-emboss-engine.ts",
-				type: "registry:component",
-				target: "@components/realistic-emboss/realistic-emboss-engine.ts",
-			},
-		],
-		categories: ["effects"],
-		meta: {
-			createdAt: "2026-07-30",
-		},
-		docs: "https://tentui.com/components/realistic-emboss",
-	},
-	{
-		name: "ascii-wordmark",
-		type: "registry:component",
-		title: "ASCII Wordmark",
-		description:
-			"Render a cursor-reactive word as a GPU-simulated field of drifting ASCII particles.",
-		dependencies: ["three", "@types/three"],
-		files: [
-			{
-				path: "components/ascii-wordmark/ascii-wordmark.tsx",
-				type: "registry:component",
-				target: "@components/ascii-wordmark/ascii-wordmark.tsx",
-			},
-			{
-				path: "components/ascii-wordmark/renderer.ts",
-				type: "registry:component",
-				target: "@components/ascii-wordmark/renderer.ts",
-			},
-			{
-				path: "components/ascii-wordmark/shaders.ts",
-				type: "registry:component",
-				target: "@components/ascii-wordmark/shaders.ts",
-			},
-			{
-				path: "components/ascii-wordmark/atlas.ts",
-				type: "registry:component",
-				target: "@components/ascii-wordmark/atlas.ts",
-			},
-			{
-				path: "components/ascii-wordmark/word-points.ts",
-				type: "registry:component",
-				target: "@components/ascii-wordmark/word-points.ts",
-			},
-		],
-		categories: ["typography"],
-		meta: {
-			createdAt: "2026-07-30",
-		},
-		docs: "https://tentui.com/components/ascii-wordmark",
-	},
-	{
 		name: "tile-field",
 		type: "registry:component",
 		title: "Tile Field",
@@ -173,28 +104,6 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/peeping-button",
 	},
 	{
-		name: "glow-card",
-		type: "registry:component",
-		title: "Glow Card",
-		description:
-			"Trace the pointer with a spring-smoothed radial glow along a card border.",
-		dependencies: ["motion"],
-		files: [
-			{
-				path: "components/glow-card/glow-card.tsx",
-				type: "registry:component",
-				target: "@components/glow-card.tsx",
-			},
-		],
-		categories: ["cards"],
-		meta: {
-			createdAt: "2026-07-21",
-			image: "https://cdn.srb.codes/images/components/glow-card",
-			video: "https://cdn.srb.codes/videos/components/glow-card",
-		},
-		docs: "https://tentui.com/components/glow-card",
-	},
-	{
 		name: "brand-context-menu",
 		type: "registry:component",
 		title: "Brand Context Menu",
@@ -290,28 +199,6 @@ export const components: Registry["items"] = [
 			video: "https://cdn.srb.codes/videos/components/email-dock",
 		},
 		docs: "https://tentui.com/components/email-dock",
-	},
-	{
-		name: "world-map",
-		type: "registry:component",
-		title: "Interactive World Map",
-		description:
-			"Explore countries with zoom, pan, selection, and hover details.",
-		dependencies: ["react-simple-maps"],
-		files: [
-			{
-				path: "components/world-map/world-map.tsx",
-				type: "registry:component",
-				target: "@components/world-map.tsx",
-			},
-		],
-		categories: [],
-		meta: {
-			createdAt: "2026-05-05",
-			video: "https://cdn.srb.codes/videos/components/world-map",
-			image: "https://cdn.srb.codes/images/components/world-map",
-		},
-		docs: "https://tentui.com/components/world-map",
 	},
 	{
 		name: "stateful-button",

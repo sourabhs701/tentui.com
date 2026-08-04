@@ -4,30 +4,6 @@
   "homepage": "https://tentui.com/blocks",
   "items": [
     {
-      "name": "footer-04",
-      "title": "Footer 04",
-      "description": "A tactile plaster footer with a custom logo pressed into its surface.",
-      "registryDependencies": [
-        "https://tentui.com/r/realistic-emboss.json"
-      ],
-      "files": [
-        {
-          "path": "src/registry/blocks/footer-04/footer-04.tsx",
-          "type": "registry:component",
-          "target": "@components/footer-04.tsx"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-07-30",
-        "iframeHeight": 840,
-        "previewClassName": "flex min-h-svh items-end"
-      },
-      "categories": [
-        "footer"
-      ],
-      "type": "registry:block"
-    },
-    {
       "name": "pricing-03",
       "title": "Pricing 03",
       "description": "A focused two-plan pricing section with an ambient fluid treatment for the popular plan.",
@@ -181,15 +157,13 @@
     {
       "name": "testimonials-01",
       "title": "Testimonials 01",
-      "description": "A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
+      "description": "A live X testimonial mosaic with resilient fallbacks.",
       "dependencies": [
-        "motion",
         "react-tweet"
       ],
       "registryDependencies": [
         "avatar",
-        "card",
-        "https://tentui.com/r/glow-card.json"
+        "card"
       ],
       "files": [
         {
@@ -474,80 +448,6 @@
       "type": "registry:block"
     },
     {
-      "name": "realistic-emboss",
-      "title": "Realistic Emboss",
-      "description": "Press text or custom SVG logos into a procedural plaster surface.",
-      "files": [
-        {
-          "path": "src/registry/components/realistic-emboss/index.ts",
-          "type": "registry:component",
-          "target": "@components/realistic-emboss/index.ts"
-        },
-        {
-          "path": "src/registry/components/realistic-emboss/realistic-emboss.tsx",
-          "type": "registry:component",
-          "target": "@components/realistic-emboss/realistic-emboss.tsx"
-        },
-        {
-          "path": "src/registry/components/realistic-emboss/realistic-emboss-engine.ts",
-          "type": "registry:component",
-          "target": "@components/realistic-emboss/realistic-emboss-engine.ts"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-07-30"
-      },
-      "docs": "https://tentui.com/components/realistic-emboss",
-      "categories": [
-        "effects"
-      ],
-      "type": "registry:component"
-    },
-    {
-      "name": "ascii-wordmark",
-      "title": "ASCII Wordmark",
-      "description": "Render a cursor-reactive word as a GPU-simulated field of drifting ASCII particles.",
-      "dependencies": [
-        "three",
-        "@types/three"
-      ],
-      "files": [
-        {
-          "path": "src/registry/components/ascii-wordmark/ascii-wordmark.tsx",
-          "type": "registry:component",
-          "target": "@components/ascii-wordmark/ascii-wordmark.tsx"
-        },
-        {
-          "path": "src/registry/components/ascii-wordmark/renderer.ts",
-          "type": "registry:component",
-          "target": "@components/ascii-wordmark/renderer.ts"
-        },
-        {
-          "path": "src/registry/components/ascii-wordmark/shaders.ts",
-          "type": "registry:component",
-          "target": "@components/ascii-wordmark/shaders.ts"
-        },
-        {
-          "path": "src/registry/components/ascii-wordmark/atlas.ts",
-          "type": "registry:component",
-          "target": "@components/ascii-wordmark/atlas.ts"
-        },
-        {
-          "path": "src/registry/components/ascii-wordmark/word-points.ts",
-          "type": "registry:component",
-          "target": "@components/ascii-wordmark/word-points.ts"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-07-30"
-      },
-      "docs": "https://tentui.com/components/ascii-wordmark",
-      "categories": [
-        "typography"
-      ],
-      "type": "registry:component"
-    },
-    {
       "name": "tile-field",
       "title": "Tile Field",
       "description": "Render a theme-aware wordmark with moving tiles, a color wave, and pointer glow.",
@@ -676,31 +576,6 @@
       "type": "registry:component"
     },
     {
-      "name": "glow-card",
-      "title": "Glow Card",
-      "description": "Trace the pointer with a spring-smoothed radial glow along a card border.",
-      "dependencies": [
-        "motion"
-      ],
-      "files": [
-        {
-          "path": "src/registry/components/glow-card/glow-card.tsx",
-          "type": "registry:component",
-          "target": "@components/glow-card.tsx"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-07-21",
-        "image": "https://cdn.srb.codes/images/components/glow-card",
-        "video": "https://cdn.srb.codes/videos/components/glow-card"
-      },
-      "docs": "https://tentui.com/components/glow-card",
-      "categories": [
-        "cards"
-      ],
-      "type": "registry:component"
-    },
-    {
       "name": "brand-context-menu",
       "title": "Brand Context Menu",
       "description": "Share copy-ready and downloadable brand assets from a contextual menu.",
@@ -812,29 +687,6 @@
         "video": "https://cdn.srb.codes/videos/components/email-dock"
       },
       "docs": "https://tentui.com/components/email-dock",
-      "categories": [],
-      "type": "registry:component"
-    },
-    {
-      "name": "world-map",
-      "title": "Interactive World Map",
-      "description": "Explore countries with zoom, pan, selection, and hover details.",
-      "dependencies": [
-        "react-simple-maps"
-      ],
-      "files": [
-        {
-          "path": "src/registry/components/world-map/world-map.tsx",
-          "type": "registry:component",
-          "target": "@components/world-map.tsx"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-05-05",
-        "video": "https://cdn.srb.codes/videos/components/world-map",
-        "image": "https://cdn.srb.codes/images/components/world-map"
-      },
-      "docs": "https://tentui.com/components/world-map",
       "categories": [],
       "type": "registry:component"
     },

@@ -14,12 +14,12 @@ Here is how to set up a branching workflow that fits that reality.
 
 ## One component, one branch
 
-The standard advice is "one feature, one branch." For component libraries, translate that to one component or one component change per branch. A branch that touches `animated-tabs`, `glow-card`, and `copy-button` in the same PR creates a review nightmare. If the tabs change is ready but the card change needs rework, the whole branch stalls.
+The standard advice is "one feature, one branch." For component libraries, translate that to one component or one component change per branch. A branch that touches `animated-tabs`, `peeping-button`, and `copy-button` in the same PR creates a review nightmare. If the tabs change is ready but the card change needs rework, the whole branch stalls.
 
 Name branches by component and change type:
 
 ```bash
-git checkout -b feature/glow-card-hover-variants
+git checkout -b feature/peeping-button-hover-variants
 git checkout -b fix/copy-button-aria-label
 git checkout -b chore/animated-tabs-storybook-update
 ```
@@ -31,8 +31,8 @@ The prefix (`feature/`, `fix/`, `chore/`) tells reviewers the scope before they 
 Shipping broken components erodes trust fast. One option: add a `next` branch between feature branches and `main`.
 
 ```
-feature/glow-card-hover-variants → next → main
-fix/copy-button-aria-label       → next → main
+feature/peeping-button-hover-variants → next → main
+fix/copy-button-aria-label           → next → main
 ```
 
 Feature branches merge into `next`. You run your full test suite, visual regression tests, and build checks there. When `next` is stable, it merges to `main` and you cut a release. This is a simplified GitFlow pattern adapted for libraries: `next` acts as the develop branch, and `main` stays release-grade.
@@ -91,8 +91,8 @@ For a visual walkthrough of how rebasing, merging, and branch management work in
 Merged branches that linger clutter your branch list and obscure what is actually in progress. Delete branches immediately after merging:
 
 ```bash
-git push origin --delete feature/glow-card-hover-variants
-git branch -d feature/glow-card-hover-variants
+git push origin --delete feature/peeping-button-hover-variants
+git branch -d feature/peeping-button-hover-variants
 ```
 
 Most Git hosting platforms can auto-delete branches after a PR merges. Turn that on. Your branch list should reflect active work, not a history of completed tasks.

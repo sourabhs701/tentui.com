@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 
 import { cn } from "@/lib/utils";
-import { GlowCard } from "@/registry/components/glow-card";
 
 export interface TestimonialAuthor {
 	name: string;
@@ -261,29 +260,27 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialData }) {
 			rel="noreferrer"
 			target="_blank"
 		>
-			<GlowCard className="h-full">
-				<Card className="@container/testimonial h-full gap-5 rounded-[inherit] bg-card py-0 shadow-none ring-0">
-					<CardHeader className="flex flex-row items-start justify-between gap-3 px-5 pt-5 sm:px-6 sm:pt-6">
-						<div className="flex min-w-0 items-center gap-3">
-							<AuthorAvatar author={author} />
-							<div className="flex min-w-0 flex-col leading-tight">
-								<CardTitle className="flex items-center gap-1 font-medium font-sans text-sm leading-tight">
-									<span className="truncate">{author.name}</span>
-									{author.verified ? <VerifiedMark /> : null}
-								</CardTitle>
-								<CardDescription className="truncate font-mono text-[11px] leading-tight">
-									@{author.handle}
-								</CardDescription>
-							</div>
+			<Card className="@container/testimonial h-full gap-5 bg-card py-0">
+				<CardHeader className="flex flex-row items-start justify-between gap-3 px-5 pt-5 sm:px-6 sm:pt-6">
+					<div className="flex min-w-0 items-center gap-3">
+						<AuthorAvatar author={author} />
+						<div className="flex min-w-0 flex-col leading-tight">
+							<CardTitle className="flex items-center gap-1 font-medium font-sans text-sm leading-tight">
+								<span className="truncate">{author.name}</span>
+								{author.verified ? <VerifiedMark /> : null}
+							</CardTitle>
+							<CardDescription className="truncate font-mono text-[11px] leading-tight">
+								@{author.handle}
+							</CardDescription>
 						</div>
-						<XLogo className="size-4 shrink-0 text-muted-foreground/70 transition-colors duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/card:text-foreground" />
-					</CardHeader>
+					</div>
+					<XLogo className="size-4 shrink-0 text-muted-foreground/70 transition-colors duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/card:text-foreground" />
+				</CardHeader>
 
-					<CardContent className="flex flex-1 flex-col px-5 pb-5 sm:px-6 sm:pb-6">
-						<Quote text={testimonial.text} />
-					</CardContent>
-				</Card>
-			</GlowCard>
+				<CardContent className="flex flex-1 flex-col px-5 pb-5 sm:px-6 sm:pb-6">
+					<Quote text={testimonial.text} />
+				</CardContent>
+			</Card>
 		</a>
 	);
 }

@@ -5,24 +5,6 @@
 import * as React from "react";
 
 export const Index = {
-	"footer-04": {
-		name: "footer-04",
-		title: "Footer 04",
-		description: "A tactile plaster footer with a custom logo pressed into its surface.",
-		type: "registry:block",
-		files: [{"path":"src/registry/blocks/footer-04/footer-04.tsx","type":"registry:component","target":"@components/footer-04.tsx"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/blocks/footer-04/footer-04")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for footer-04");
-			}
-			return { default: module.default };
-		}),
-		categories: ["footer"],
-		meta: {"createdAt":"2026-07-30","iframeHeight":840,"previewClassName":"flex min-h-svh items-end"},
-	},
 	"pricing-03": {
 		name: "pricing-03",
 		title: "Pricing 03",
@@ -116,7 +98,7 @@ export const Index = {
 	"testimonials-01": {
 		name: "testimonials-01",
 		title: "Testimonials 01",
-		description: "A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
+		description: "A live X testimonial mosaic with resilient fallbacks.",
 		type: "registry:block",
 		files: [{"path":"src/registry/blocks/testimonials-01/testimonials-01.tsx","type":"registry:component","target":"@components/testimonials-01.tsx"}],
 		component: React.lazy(async () => {
@@ -293,42 +275,6 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
-	"realistic-emboss": {
-		name: "realistic-emboss",
-		title: "Realistic Emboss",
-		description: "Press text or custom SVG logos into a procedural plaster surface.",
-		type: "registry:component",
-		files: [{"path":"src/registry/components/realistic-emboss/index.ts","type":"registry:component","target":"@components/realistic-emboss/index.ts"},{"path":"src/registry/components/realistic-emboss/realistic-emboss.tsx","type":"registry:component","target":"@components/realistic-emboss/realistic-emboss.tsx"},{"path":"src/registry/components/realistic-emboss/realistic-emboss-engine.ts","type":"registry:component","target":"@components/realistic-emboss/realistic-emboss-engine.ts"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/components/realistic-emboss/index")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for realistic-emboss");
-			}
-			return { default: module.default };
-		}),
-		categories: ["effects"],
-		meta: {"createdAt":"2026-07-30"},
-	},
-	"ascii-wordmark": {
-		name: "ascii-wordmark",
-		title: "ASCII Wordmark",
-		description: "Render a cursor-reactive word as a GPU-simulated field of drifting ASCII particles.",
-		type: "registry:component",
-		files: [{"path":"src/registry/components/ascii-wordmark/ascii-wordmark.tsx","type":"registry:component","target":"@components/ascii-wordmark/ascii-wordmark.tsx"},{"path":"src/registry/components/ascii-wordmark/renderer.ts","type":"registry:component","target":"@components/ascii-wordmark/renderer.ts"},{"path":"src/registry/components/ascii-wordmark/shaders.ts","type":"registry:component","target":"@components/ascii-wordmark/shaders.ts"},{"path":"src/registry/components/ascii-wordmark/atlas.ts","type":"registry:component","target":"@components/ascii-wordmark/atlas.ts"},{"path":"src/registry/components/ascii-wordmark/word-points.ts","type":"registry:component","target":"@components/ascii-wordmark/word-points.ts"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/components/ascii-wordmark/ascii-wordmark")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for ascii-wordmark");
-			}
-			return { default: module.default };
-		}),
-		categories: ["typography"],
-		meta: {"createdAt":"2026-07-30"},
-	},
 	"tile-field": {
 		name: "tile-field",
 		title: "Tile Field",
@@ -419,24 +365,6 @@ export const Index = {
 		categories: ["buttons"],
 		meta: {"createdAt":"2026-07-22"},
 	},
-	"glow-card": {
-		name: "glow-card",
-		title: "Glow Card",
-		description: "Trace the pointer with a spring-smoothed radial glow along a card border.",
-		type: "registry:component",
-		files: [{"path":"src/registry/components/glow-card/glow-card.tsx","type":"registry:component","target":"@components/glow-card.tsx"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/components/glow-card/glow-card")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for glow-card");
-			}
-			return { default: module.default };
-		}),
-		categories: ["cards"],
-		meta: {"createdAt":"2026-07-21","image":"https://cdn.srb.codes/images/components/glow-card","video":"https://cdn.srb.codes/videos/components/glow-card"},
-	},
 	"brand-context-menu": {
 		name: "brand-context-menu",
 		title: "Brand Context Menu",
@@ -509,24 +437,6 @@ export const Index = {
 		categories: [],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/email-dock","video":"https://cdn.srb.codes/videos/components/email-dock"},
 	},
-	"world-map": {
-		name: "world-map",
-		title: "Interactive World Map",
-		description: "Explore countries with zoom, pan, selection, and hover details.",
-		type: "registry:component",
-		files: [{"path":"src/registry/components/world-map/world-map.tsx","type":"registry:component","target":"@components/world-map.tsx"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/components/world-map/world-map")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for world-map");
-			}
-			return { default: module.default };
-		}),
-		categories: [],
-		meta: {"createdAt":"2026-05-05","video":"https://cdn.srb.codes/videos/components/world-map","image":"https://cdn.srb.codes/images/components/world-map"},
-	},
 	"stateful-button": {
 		name: "stateful-button",
 		title: "Stateful Button",
@@ -580,42 +490,6 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
-	},
-	"realistic-emboss-demo": {
-		name: "realistic-emboss-demo",
-		title: undefined,
-		description: "",
-		type: "registry:example",
-		files: [{"path":"src/registry/examples/realistic-emboss-demo.tsx","type":"registry:example"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/realistic-emboss-demo")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for realistic-emboss-demo");
-			}
-			return { default: module.default };
-		}),
-		categories: undefined,
-		meta: {"previewClassName":"min-h-[34rem] place-items-center content-center"},
-	},
-	"ascii-wordmark-demo": {
-		name: "ascii-wordmark-demo",
-		title: undefined,
-		description: "",
-		type: "registry:example",
-		files: [{"path":"src/registry/examples/ascii-wordmark-demo.tsx","type":"registry:example"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/ascii-wordmark-demo")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for ascii-wordmark-demo");
-			}
-			return { default: module.default };
-		}),
-		categories: undefined,
-		meta: {"previewClassName":"min-h-[32rem] w-full p-0"},
 	},
 	"tile-field-demo": {
 		name: "tile-field-demo",
@@ -707,24 +581,6 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-96 place-items-center content-center"},
 	},
-	"glow-card-demo": {
-		name: "glow-card-demo",
-		title: undefined,
-		description: "",
-		type: "registry:example",
-		files: [{"path":"src/registry/examples/glow-card-demo.tsx","type":"registry:example"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/glow-card-demo")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for glow-card-demo");
-			}
-			return { default: module.default };
-		}),
-		categories: undefined,
-		meta: {"previewClassName":"min-h-96 place-items-center content-center"},
-	},
 	"brand-context-menu-demo": {
 		name: "brand-context-menu-demo",
 		title: undefined,
@@ -796,24 +652,6 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
-	},
-	"world-map-demo": {
-		name: "world-map-demo",
-		title: undefined,
-		description: "",
-		type: "registry:example",
-		files: [{"path":"src/registry/examples/world-map-demo.tsx","type":"registry:example"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/world-map-demo")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for world-map-demo");
-			}
-			return { default: module.default };
-		}),
-		categories: undefined,
-		meta: {"previewClassName":"min-h-72 w-full"},
 	},
 	"stateful-button-demo": {
 		name: "stateful-button-demo",

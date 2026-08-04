@@ -4,27 +4,6 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const blocks: Registry["items"] = [
 	{
-		name: "footer-04",
-		title: "Footer 04",
-		description:
-			"A tactile plaster footer with a custom logo pressed into its surface.",
-		type: "registry:block",
-		registryDependencies: [getRegistryItemUrl("realistic-emboss")],
-		files: [
-			{
-				path: "blocks/footer-04/footer-04.tsx",
-				target: "@components/footer-04.tsx",
-				type: "registry:component",
-			},
-		],
-		categories: ["footer"],
-		meta: {
-			createdAt: "2026-07-30",
-			iframeHeight: 840,
-			previewClassName: "flex min-h-svh items-end",
-		},
-	},
-	{
 		name: "pricing-03",
 		title: "Pricing 03",
 		description:
@@ -164,11 +143,10 @@ export const blocks: Registry["items"] = [
 	{
 		name: "testimonials-01",
 		title: "Testimonials 01",
-		description:
-			"A live X testimonial mosaic with resilient fallbacks and cursor-tracking glow.",
+		description: "A live X testimonial mosaic with resilient fallbacks.",
 		type: "registry:block",
-		dependencies: ["motion", "react-tweet"],
-		registryDependencies: ["avatar", "card", getRegistryItemUrl("glow-card")],
+		dependencies: ["react-tweet"],
+		registryDependencies: ["avatar", "card"],
 		files: [
 			{
 				path: "blocks/testimonials-01/testimonials-01.tsx",
