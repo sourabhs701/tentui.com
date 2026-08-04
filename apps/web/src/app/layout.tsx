@@ -19,7 +19,8 @@ const darkModeScript = `
 	} catch (_) {}
 
 	try {
-		if (/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+		const platform = [navigator.userAgentData?.platform, navigator.platform, navigator.userAgent].join(" ")
+		if (/(Mac|iPhone|iPod|iPad)/i.test(platform)) {
 			document.documentElement.classList.add("os-macos")
 		}
 	} catch (_) {}
