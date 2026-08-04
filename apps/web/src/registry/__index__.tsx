@@ -5,24 +5,6 @@
 import * as React from "react";
 
 export const Index = {
-	"footer-04": {
-		name: "footer-04",
-		title: "Footer 04",
-		description: "A tactile plaster footer with a custom logo pressed into its surface.",
-		type: "registry:block",
-		files: [{"path":"src/registry/blocks/footer-04/footer-04.tsx","type":"registry:component","target":"@components/footer-04.tsx"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/blocks/footer-04/footer-04")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for footer-04");
-			}
-			return { default: module.default };
-		}),
-		categories: ["footer"],
-		meta: {"createdAt":"2026-07-30","iframeHeight":840,"previewClassName":"flex min-h-svh items-end"},
-	},
 	"pricing-03": {
 		name: "pricing-03",
 		title: "Pricing 03",
@@ -293,42 +275,6 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
-	"realistic-emboss": {
-		name: "realistic-emboss",
-		title: "Realistic Emboss",
-		description: "Press text or custom SVG logos into a procedural plaster surface.",
-		type: "registry:component",
-		files: [{"path":"src/registry/components/realistic-emboss/index.ts","type":"registry:component","target":"@components/realistic-emboss/index.ts"},{"path":"src/registry/components/realistic-emboss/realistic-emboss.tsx","type":"registry:component","target":"@components/realistic-emboss/realistic-emboss.tsx"},{"path":"src/registry/components/realistic-emboss/realistic-emboss-engine.ts","type":"registry:component","target":"@components/realistic-emboss/realistic-emboss-engine.ts"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/components/realistic-emboss/index")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for realistic-emboss");
-			}
-			return { default: module.default };
-		}),
-		categories: ["effects"],
-		meta: {"createdAt":"2026-07-30"},
-	},
-	"ascii-wordmark": {
-		name: "ascii-wordmark",
-		title: "ASCII Wordmark",
-		description: "Render a cursor-reactive word as a GPU-simulated field of drifting ASCII particles.",
-		type: "registry:component",
-		files: [{"path":"src/registry/components/ascii-wordmark/ascii-wordmark.tsx","type":"registry:component","target":"@components/ascii-wordmark/ascii-wordmark.tsx"},{"path":"src/registry/components/ascii-wordmark/renderer.ts","type":"registry:component","target":"@components/ascii-wordmark/renderer.ts"},{"path":"src/registry/components/ascii-wordmark/shaders.ts","type":"registry:component","target":"@components/ascii-wordmark/shaders.ts"},{"path":"src/registry/components/ascii-wordmark/atlas.ts","type":"registry:component","target":"@components/ascii-wordmark/atlas.ts"},{"path":"src/registry/components/ascii-wordmark/word-points.ts","type":"registry:component","target":"@components/ascii-wordmark/word-points.ts"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/components/ascii-wordmark/ascii-wordmark")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for ascii-wordmark");
-			}
-			return { default: module.default };
-		}),
-		categories: ["typography"],
-		meta: {"createdAt":"2026-07-30"},
-	},
 	"tile-field": {
 		name: "tile-field",
 		title: "Tile Field",
@@ -580,42 +526,6 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
-	},
-	"realistic-emboss-demo": {
-		name: "realistic-emboss-demo",
-		title: undefined,
-		description: "",
-		type: "registry:example",
-		files: [{"path":"src/registry/examples/realistic-emboss-demo.tsx","type":"registry:example"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/realistic-emboss-demo")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for realistic-emboss-demo");
-			}
-			return { default: module.default };
-		}),
-		categories: undefined,
-		meta: {"previewClassName":"min-h-[34rem] place-items-center content-center"},
-	},
-	"ascii-wordmark-demo": {
-		name: "ascii-wordmark-demo",
-		title: undefined,
-		description: "",
-		type: "registry:example",
-		files: [{"path":"src/registry/examples/ascii-wordmark-demo.tsx","type":"registry:example"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/ascii-wordmark-demo")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for ascii-wordmark-demo");
-			}
-			return { default: module.default };
-		}),
-		categories: undefined,
-		meta: {"previewClassName":"min-h-[32rem] w-full p-0"},
 	},
 	"tile-field-demo": {
 		name: "tile-field-demo",

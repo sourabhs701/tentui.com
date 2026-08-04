@@ -58,7 +58,6 @@
 		"shiki": "^4.3.1",
 		"sonner": "catalog:",
 		"tailwind-merge": "^3.6.0",
-		"three": "^0.185.1",
 		"unist-util-visit": "^5.1.0",
 		"zod": "catalog:"
 	},
@@ -72,7 +71,6 @@
 		"@types/react": "catalog:",
 		"@types/react-dom": "catalog:",
 		"@types/react-simple-maps": "^3.0.6",
-		"@types/three": "^0.185.1",
 		"alchemy": "catalog:",
 		"shadcn": "^4.13.0",
 		"tailwindcss": "catalog:",

@@ -4,30 +4,6 @@
   "homepage": "https://tentui.com/blocks",
   "items": [
     {
-      "name": "footer-04",
-      "title": "Footer 04",
-      "description": "A tactile plaster footer with a custom logo pressed into its surface.",
-      "registryDependencies": [
-        "https://tentui.com/r/realistic-emboss.json"
-      ],
-      "files": [
-        {
-          "path": "src/registry/blocks/footer-04/footer-04.tsx",
-          "type": "registry:component",
-          "target": "@components/footer-04.tsx"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-07-30",
-        "iframeHeight": 840,
-        "previewClassName": "flex min-h-svh items-end"
-      },
-      "categories": [
-        "footer"
-      ],
-      "type": "registry:block"
-    },
-    {
       "name": "pricing-03",
       "title": "Pricing 03",
       "description": "A focused two-plan pricing section with an ambient fluid treatment for the popular plan.",
@@ -472,80 +448,6 @@
         "404"
       ],
       "type": "registry:block"
-    },
-    {
-      "name": "realistic-emboss",
-      "title": "Realistic Emboss",
-      "description": "Press text or custom SVG logos into a procedural plaster surface.",
-      "files": [
-        {
-          "path": "src/registry/components/realistic-emboss/index.ts",
-          "type": "registry:component",
-          "target": "@components/realistic-emboss/index.ts"
-        },
-        {
-          "path": "src/registry/components/realistic-emboss/realistic-emboss.tsx",
-          "type": "registry:component",
-          "target": "@components/realistic-emboss/realistic-emboss.tsx"
-        },
-        {
-          "path": "src/registry/components/realistic-emboss/realistic-emboss-engine.ts",
-          "type": "registry:component",
-          "target": "@components/realistic-emboss/realistic-emboss-engine.ts"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-07-30"
-      },
-      "docs": "https://tentui.com/components/realistic-emboss",
-      "categories": [
-        "effects"
-      ],
-      "type": "registry:component"
-    },
-    {
-      "name": "ascii-wordmark",
-      "title": "ASCII Wordmark",
-      "description": "Render a cursor-reactive word as a GPU-simulated field of drifting ASCII particles.",
-      "dependencies": [
-        "three",
-        "@types/three"
-      ],
-      "files": [
-        {
-          "path": "src/registry/components/ascii-wordmark/ascii-wordmark.tsx",
-          "type": "registry:component",
-          "target": "@components/ascii-wordmark/ascii-wordmark.tsx"
-        },
-        {
-          "path": "src/registry/components/ascii-wordmark/renderer.ts",
-          "type": "registry:component",
-          "target": "@components/ascii-wordmark/renderer.ts"
-        },
-        {
-          "path": "src/registry/components/ascii-wordmark/shaders.ts",
-          "type": "registry:component",
-          "target": "@components/ascii-wordmark/shaders.ts"
-        },
-        {
-          "path": "src/registry/components/ascii-wordmark/atlas.ts",
-          "type": "registry:component",
-          "target": "@components/ascii-wordmark/atlas.ts"
-        },
-        {
-          "path": "src/registry/components/ascii-wordmark/word-points.ts",
-          "type": "registry:component",
-          "target": "@components/ascii-wordmark/word-points.ts"
-        }
-      ],
-      "meta": {
-        "createdAt": "2026-07-30"
-      },
-      "docs": "https://tentui.com/components/ascii-wordmark",
-      "categories": [
-        "typography"
-      ],
-      "type": "registry:component"
     },
     {
       "name": "tile-field",
