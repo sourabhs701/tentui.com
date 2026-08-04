@@ -1,11 +1,9 @@
-import { fetchGitHubStargazerCount } from "@/lib/github";
-
-const REVALIDATE_SECONDS = 86400;
+import { fetchStarCount } from "@/lib/github";
 
 export const dynamic = "force-static";
 export const revalidate = 86400;
 
 export async function GET() {
-	const stargazersCount = await fetchGitHubStargazerCount(REVALIDATE_SECONDS);
+	const stargazersCount = await fetchStarCount();
 	return Response.json({ stargazersCount });
 }

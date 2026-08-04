@@ -47,9 +47,6 @@
 	"vars": {
 		"NEXT_PUBLIC_SERVER_URL": "https://api2.tentui.com"
 	},
-	"secrets": {
-		"required": ["GITHUB_API_TOKEN"]
-	},
 	"observability": {
 		"enabled": true,
 		"head_sampling_rate": 1,
