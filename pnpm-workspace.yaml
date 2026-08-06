@@ -8,7 +8,7 @@ allowBuilds:
 catalog:
   dotenv: ^17.4.2
   zod: ^4.4.3
-  typescript: ^6
+  typescript: ^7
   "@cloudflare/workers-types": ^4.20260702.1
   hono: ^4.12.27
   "@trpc/server": ^11.18.0
