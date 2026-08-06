@@ -4,6 +4,21 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "interactive-sprite-demo",
+		type: "registry:example",
+		dependencies: ["dialkit"],
+		registryDependencies: [getRegistryItemUrl("interactive-sprite")],
+		files: [
+			{
+				path: "examples/interactive-sprite-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 w-full p-0",
+		},
+	},
+	{
 		name: "tile-field-demo",
 		type: "registry:example",
 		dependencies: ["dialkit"],

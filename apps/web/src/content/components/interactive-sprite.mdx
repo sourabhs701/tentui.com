@@ -1,0 +1,117 @@
+---
+title: Interactive Sprite
+description: Turn a directional sprite sheet into a character that follows the pointer and returns to rest when movement stops.
+createdAt: 2026-08-06
+updatedAt: 2026-08-06
+---
+
+<ComponentPreview name="interactive-sprite-demo" canConfigure />
+
+## Features
+
+- Selects one of eight directional frames from the pointer's angle around the character.
+- Returns to the center frame 300ms after pointer movement stops by default.
+- Lets users try their own sprite sheet from the DialKit panel without uploading it to a server.
+- Uses one animation frame per pointer update and no animation dependency.
+- Ignores touch pointers and stays centered when reduced motion is requested.
+- Supports custom grid dimensions and frame maps.
+- Includes DialKit controls for tuning the dead zone and idle delay live.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/interactive-sprite
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the utilities used by the component</Step>
+
+```bash
+npm install clsx tailwind-merge
+```
+
+<Step>Add a cn helper</Step>
+
+<ComponentSource
+  src="src/registry/lib/utils.ts"
+  title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="interactive-sprite"
+  title="components/interactive-sprite.tsx"
+/>
+
+<Step>Update the import path and sprite URL to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Create a sprite sheet with ChatGPT
+
+Paste this prompt into ChatGPT image generation and replace the bracketed
+character description with your own:
+
+```text
+Create a square 3×3 sprite sheet of the same [character description], shown as a consistent head-and-shoulders portrait in every cell.
+
+Arrange the gaze directions exactly like this:
+- Top row: up-left, up, up-right
+- Middle row: left, straight ahead, right
+- Bottom row: down-left, down, down-right
+
+Use nine equally sized cells with no gaps, borders, labels, or padding. Keep the character's scale, position, expression, lighting, clothing, and art style identical in every cell; only the eyes and head direction should change. Center the portrait in each cell, avoid cropping, use a transparent background, and export one 1536×1536 PNG or WebP image.
+```
+
+Image generators can drift between cells. Check that the grid is evenly spaced
+and each portrait stays aligned before using the result.
+
+## Usage
+
+Place the generated image in your public directory, then pass its URL to the
+component.
+
+```tsx
+import { InteractiveSprite } from "@/components/interactive-sprite";
+```
+
+```tsx
+<InteractiveSprite
+  alt="Character looking toward the pointer"
+  className="size-40 rounded-full"
+  src="/character-sprite.webp"
+/>
+```
+
+The default frame map expects a 3×3 sheet in the order described above. Adjust
+`frames`, `columns`, and `rows` when your sheet uses a different layout.
+
+## Accessibility
+
+Provide a useful `alt` when the character carries meaning. Pass an empty string
+when it is decorative. Touch pointers are ignored, and reduced-motion users see
+the centered resting frame.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/interactive-sprite/interactive-sprite.tsx"
+  name="InteractiveSpriteProps"
+/>

@@ -2,6 +2,25 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "interactive-sprite",
+		type: "registry:component",
+		title: "Interactive Sprite",
+		description:
+			"Turn a directional sprite sheet into a character that follows the pointer and returns to rest.",
+		files: [
+			{
+				path: "components/interactive-sprite/interactive-sprite.tsx",
+				type: "registry:component",
+				target: "@components/interactive-sprite.tsx",
+			},
+		],
+		categories: [],
+		meta: {
+			createdAt: "2026-08-06",
+		},
+		docs: "https://tentui.com/components/interactive-sprite",
+	},
+	{
 		name: "tile-field",
 		type: "registry:component",
 		title: "Tile Field",

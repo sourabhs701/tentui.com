@@ -448,6 +448,24 @@
       "type": "registry:block"
     },
     {
+      "name": "interactive-sprite",
+      "title": "Interactive Sprite",
+      "description": "Turn a directional sprite sheet into a character that follows the pointer and returns to rest.",
+      "files": [
+        {
+          "path": "src/registry/components/interactive-sprite/interactive-sprite.tsx",
+          "type": "registry:component",
+          "target": "@components/interactive-sprite.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-08-06"
+      },
+      "docs": "https://tentui.com/components/interactive-sprite",
+      "categories": [],
+      "type": "registry:component"
+    },
+    {
       "name": "tile-field",
       "title": "Tile Field",
       "description": "Render a theme-aware wordmark with moving tiles, a color wave, and pointer glow.",

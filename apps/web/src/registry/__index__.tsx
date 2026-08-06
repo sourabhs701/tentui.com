@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"interactive-sprite": {
+		name: "interactive-sprite",
+		title: "Interactive Sprite",
+		description: "Turn a directional sprite sheet into a character that follows the pointer and returns to rest.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/interactive-sprite/interactive-sprite.tsx","type":"registry:component","target":"@components/interactive-sprite.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/interactive-sprite/interactive-sprite")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for interactive-sprite");
+			}
+			return { default: module.default };
+		}),
+		categories: [],
+		meta: {"createdAt":"2026-08-06"},
+	},
 	"tile-field": {
 		name: "tile-field",
 		title: "Tile Field",
@@ -490,6 +508,24 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
+	},
+	"interactive-sprite-demo": {
+		name: "interactive-sprite-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/interactive-sprite-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/interactive-sprite-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for interactive-sprite-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 w-full p-0"},
 	},
 	"tile-field-demo": {
 		name: "tile-field-demo",
