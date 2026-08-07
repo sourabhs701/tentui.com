@@ -17,10 +17,7 @@ export function ComponentCard({
 }) {
 	const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
 	const [isHovered, setIsHovered] = useState(false);
-	const imageBase =
-		typeof component.meta?.image === "string"
-			? encodeURI(component.meta.image)
-			: undefined;
+	const imageBase = `https://cdn.tentui.com/images/${encodeURIComponent(component.name)}-`;
 	const videoBase =
 		typeof component.meta?.video === "string"
 			? encodeURI(component.meta.video)
@@ -119,7 +116,7 @@ export function ComponentCard({
 										videoRefs.current[index] = video;
 									}}
 									src={`${videoBase}-${theme}.mp4`}
-									poster={imageBase ? `${imageBase}-${theme}.webp` : undefined}
+									poster={`${imageBase}${theme}.png`}
 									muted
 									loop
 									playsInline
@@ -128,25 +125,17 @@ export function ComponentCard({
 								/>
 							))}
 
-						{imageBase &&
-							themes.map((theme) => (
-								<Image
-									key={theme}
-									src={`${imageBase}-${theme}.webp`}
-									alt={`${component.title ?? component.name} ${theme} preview`}
-									fill
-									sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-									className={`absolute inset-0 size-full object-cover transition-all duration-300 group-hover:scale-105 ${videoBase ? "group-hover:opacity-0" : ""} ${theme === "light" ? "block dark:hidden" : "hidden dark:block"}`}
-									unoptimized
-								/>
-							))}
-						{!videoBase && !imageBase && (
-							<div className="flex items-center justify-center p-4">
-								<p className="text-muted-foreground text-sm">
-									{component.title ?? component.name}
-								</p>
-							</div>
-						)}
+						{themes.map((theme) => (
+							<Image
+								key={theme}
+								src={`${imageBase}${theme}.png`}
+								alt={`${component.title ?? component.name} ${theme} preview`}
+								fill
+								sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+								className={`absolute inset-0 size-full object-cover transition-all duration-300 group-hover:scale-105 ${videoBase ? "group-hover:opacity-0" : ""} ${theme === "light" ? "block dark:hidden" : "hidden dark:block"}`}
+								unoptimized
+							/>
+						))}
 					</motion.div>
 				</div>
 			</Link>

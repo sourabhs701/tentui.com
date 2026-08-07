@@ -9,6 +9,7 @@
 	"scripts": {
 		"dev": "turbo run dev",
 		"build": "turbo run build",
+		"components:export": "node scripts/export-component-images.mjs",
 		"registry:build": "turbo run registry:build --filter=web",
 		"registry:validate": "turbo run registry:validate --filter=web",
 		"media:publish": "bash scripts/media-publish.sh",
@@ -33,6 +34,7 @@
 		"@types/node": "^22.13.14",
 		"husky": "^9.1.7",
 		"lint-staged": "^17.0.7",
+		"playwright": "^1.62.1",
 		"turbo": "^2.10.2",
 		"typescript": "catalog:"
 	},

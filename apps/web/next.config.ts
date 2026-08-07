@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
 			},
 			{
 				protocol: "https",
+				hostname: "cdn.tentui.com",
+				pathname: "/images/**",
+			},
+			{
+				protocol: "https",
 				hostname: "cdn.dribbble.com",
 				pathname: "/userupload/**",
 			},
