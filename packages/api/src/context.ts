@@ -11,6 +11,7 @@ export async function createContext({ context }: CreateContextOptions) {
 	});
 	return {
 		auth: null,
+		ipAddress: context.req.header("CF-Connecting-IP") ?? "local",
 		session,
 	};
 }
