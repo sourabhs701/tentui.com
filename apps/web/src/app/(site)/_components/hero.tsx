@@ -10,32 +10,58 @@ import { cn } from "@/lib/utils";
 const SHOWCASE_ITEMS = [
 	{
 		id: 1,
-		image:
-			"https://cdn.dribbble.com/userupload/46030284/file/8dfdc9a8b09fdbd99b010c1dcb279841.jpg?resize=1024x1693&vertical=center",
+		image: "https://cdn.tentui.com/images/hero/v1/search-command.webp",
 		height: "h-[400px]",
 		bgColor: "bg-rose-200 dark:bg-rose-900/30",
 	},
 	{
 		id: 2,
-		image:
-			"https://cdn.dribbble.com/userupload/46029941/file/f3b0e906d38980bf48e008f5542a58b5.jpg?resize=1024x1693&vertical=center",
+		image: "https://cdn.tentui.com/images/hero/v1/stateful-button.webp",
 		height: "h-[450px]",
 		bgColor: "bg-lime-200 dark:bg-lime-900/30",
 	},
 	{
 		id: 3,
-		image:
-			"https://cdn.dribbble.com/userupload/45777759/file/acf14657b38cd25e64bb16b4f201bef8.jpg?resize=1024x1529&vertical=center",
+		image: "https://cdn.tentui.com/images/hero/v1/animated-tabs.webp",
 		height: "h-[420px]",
 		bgColor: "bg-blue-200 dark:bg-blue-900/30",
 	},
 	{
 		id: 4,
-		image:
-			"https://cdn.dribbble.com/userupload/46068721/file/3910087a60fe6f781ddae7c14daf1804.jpg?resize=1024x1589&vertical=center",
+		image: "https://cdn.tentui.com/images/hero/v1/email-dock.webp",
 		height: "h-[380px]",
 		bgColor: "bg-neutral-200 dark:bg-neutral-800",
 	},
+	{
+		id: 5,
+		image: "https://cdn.tentui.com/images/hero/v1/theme-toggle.webp",
+		height: "h-[430px]",
+		bgColor: "bg-orange-200 dark:bg-orange-900/30",
+	},
+	{
+		id: 6,
+		image: "https://cdn.tentui.com/images/hero/v1/copy-button.webp",
+		height: "h-[390px]",
+		bgColor: "bg-emerald-200 dark:bg-emerald-900/30",
+	},
+	{
+		id: 7,
+		image: "https://cdn.tentui.com/images/hero/v1/scribbled-text.webp",
+		height: "h-[450px]",
+		bgColor: "bg-violet-200 dark:bg-violet-900/30",
+	},
+	{
+		id: 8,
+		image: "https://cdn.tentui.com/images/hero/v1/peeping-button.webp",
+		height: "h-[410px]",
+		bgColor: "bg-red-200 dark:bg-red-900/30",
+	},
+];
+
+const CAROUSEL_ITEMS = [
+	...SHOWCASE_ITEMS,
+	...SHOWCASE_ITEMS,
+	...SHOWCASE_ITEMS,
 ];
 
 type SoftButtonProps = ComponentPropsWithoutRef<typeof Link> & {
@@ -79,15 +105,6 @@ export function Hero() {
 	const baseX = useMotionValue(0);
 	const scrollVelocity = useRef(baseVelocity);
 	const scrollerRef = useRef<HTMLDivElement>(null);
-
-	const items = [
-		...SHOWCASE_ITEMS,
-		...SHOWCASE_ITEMS,
-		...SHOWCASE_ITEMS,
-		...SHOWCASE_ITEMS,
-		...SHOWCASE_ITEMS,
-		...SHOWCASE_ITEMS,
-	];
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -167,7 +184,7 @@ export function Hero() {
 						dragElastic={0.05}
 						dragMomentum={false}
 					>
-						{items.map((item, index) => (
+						{CAROUSEL_ITEMS.map((item, index) => (
 							<motion.div
 								key={`${item.id}-${index}`}
 								className={`w-[280px] shrink-0 sm:w-[320px] ${item.height} pointer-events-auto relative select-none overflow-hidden rounded-2xl`}

@@ -22,11 +22,6 @@ const nextConfig: NextConfig = {
 				hostname: "cdn.tentui.com",
 				pathname: "/images/**",
 			},
-			{
-				protocol: "https",
-				hostname: "cdn.dribbble.com",
-				pathname: "/userupload/**",
-			},
 		],
 	},
 	async redirects() {
