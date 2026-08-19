@@ -133,6 +133,20 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "theme-toggle-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("theme-toggle")],
+		files: [
+			{
+				path: "examples/theme-toggle-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "copy-button-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("copy-button")],

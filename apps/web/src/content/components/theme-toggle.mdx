@@ -1,0 +1,145 @@
+---
+title: Theme Toggle
+description: Switch between light and dark themes with animated, sound, and haptic feedback.
+createdAt: 2026-08-19
+updatedAt: 2026-08-19
+---
+
+<ComponentPreview name="theme-toggle-demo" />
+
+## Features
+
+- Switches between resolved light and dark themes through `next-themes`.
+- Animates the theme icon without causing a hydration mismatch.
+- Plays the TentUI metal click sound with subtle selection haptics.
+- Supports custom icons, button variants, and theme-change callbacks.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/theme-toggle
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Add the Button component</Step>
+
+```bash
+npx shadcn@latest add button
+```
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install lucide-react motion next-themes web-haptics
+```
+
+<Step>Add the theme toggle hook</Step>
+
+<ComponentSource
+  src="src/hooks/use-theme-toggle.ts"
+  title="hooks/use-theme-toggle.ts"
+  collapsible="false"
+/>
+
+<Step>Add the metal click sound</Step>
+
+<ComponentSource
+  src="src/hooks/soundcn/use-metal-click-sound.ts"
+  title="hooks/soundcn/use-metal-click-sound.ts"
+  collapsible="false"
+/>
+
+<ComponentSource
+  src="src/hooks/soundcn/use-sound.ts"
+  title="hooks/soundcn/use-sound.ts"
+  collapsible="false"
+/>
+
+<ComponentSource
+  src="src/lib/soundcn/metal-click.ts"
+  title="lib/soundcn/metal-click.ts"
+  collapsible="false"
+/>
+
+<ComponentSource
+  src="src/lib/soundcn/sound-engine.ts"
+  title="lib/soundcn/sound-engine.ts"
+  collapsible="false"
+/>
+
+<ComponentSource
+  src="src/lib/soundcn/sound-types.ts"
+  title="lib/soundcn/sound-types.ts"
+  collapsible="false"
+/>
+
+<Step>Add the icon transition component</Step>
+
+<ComponentSource
+  src="src/registry/components/icon-swap/icon-swap.tsx"
+  title="components/icon-swap/icon-swap.tsx"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="theme-toggle" title="components/theme-toggle.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+Wrap your application with `ThemeProvider` from `next-themes`.
+
+```tsx
+import { ThemeProvider } from "next-themes";
+
+<ThemeProvider attribute="class">{children}</ThemeProvider>;
+```
+
+Then render the toggle.
+
+```tsx
+import { ThemeToggle } from "@/components/theme-toggle";
+```
+
+```tsx
+<ThemeToggle variant="outline" />
+```
+
+Use `onThemeChange` when the application needs to synchronize related browser
+UI, such as a `theme-color` meta tag.
+
+```tsx
+<ThemeToggle onThemeChange={(theme) => updateThemeColor(theme)} />
+```
+
+## Accessibility
+
+`ThemeToggle` preserves the underlying button's keyboard and focus behavior. Its
+accessible label describes the theme that will be activated. Sound and haptics
+are additive; the icon and document theme provide the visual state.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/theme-toggle/theme-toggle.tsx"
+  name="ThemeToggleProps"
+/>

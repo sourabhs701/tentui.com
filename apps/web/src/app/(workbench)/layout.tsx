@@ -2,7 +2,7 @@ import type { Metadata, Route } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { ThemeToggle } from "@/components/theme-toggle";
+import { SiteThemeToggle } from "@/components/site-theme-toggle";
 
 export const metadata: Metadata = {
 	title: "Workbench",
@@ -31,7 +31,7 @@ export default function WorkbenchLayout({
 						</Link>
 					</div>
 					<div className="flex items-center gap-1">
-						<ThemeToggle />
+						<SiteThemeToggle />
 					</div>
 				</div>
 			</header>

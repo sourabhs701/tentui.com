@@ -419,6 +419,24 @@ export const Index = {
 		categories: ["navigation"],
 		meta: {"createdAt":"2026-07-21","image":"https://cdn.srb.codes/images/components/animated-tabs","video":"https://cdn.srb.codes/videos/components/animated-tabs"},
 	},
+	"theme-toggle": {
+		name: "theme-toggle",
+		title: "Theme Toggle",
+		description: "Switch between light and dark themes with animated, sound, and haptic feedback.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/theme-toggle/theme-toggle.tsx","type":"registry:component","target":"@components/theme-toggle.tsx"},{"path":"src/registry/components/icon-swap/icon-swap.tsx","type":"registry:component","target":"@components/icon-swap/icon-swap.tsx"},{"path":"src/hooks/use-theme-toggle.ts","type":"registry:hook","target":"@hooks/use-theme-toggle.ts"},{"path":"src/hooks/soundcn/use-metal-click-sound.ts","type":"registry:hook","target":"@hooks/soundcn/use-metal-click-sound.ts"},{"path":"src/hooks/soundcn/use-sound.ts","type":"registry:hook","target":"@hooks/soundcn/use-sound.ts"},{"path":"src/lib/soundcn/metal-click.ts","type":"registry:lib","target":"@lib/soundcn/metal-click.ts"},{"path":"src/lib/soundcn/sound-engine.ts","type":"registry:lib","target":"@lib/soundcn/sound-engine.ts"},{"path":"src/lib/soundcn/sound-types.ts","type":"registry:lib","target":"@lib/soundcn/sound-types.ts"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/theme-toggle/theme-toggle")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for theme-toggle");
+			}
+			return { default: module.default };
+		}),
+		categories: ["buttons"],
+		meta: {"createdAt":"2026-08-19"},
+	},
 	"copy-button": {
 		name: "copy-button",
 		title: "Copy Button",
@@ -665,6 +683,24 @@ export const Index = {
 			};
 			if (!module.default) {
 				throw new Error("No default export found for email-dock-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"theme-toggle-demo": {
+		name: "theme-toggle-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/theme-toggle-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/theme-toggle-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for theme-toggle-demo");
 			}
 			return { default: module.default };
 		}),

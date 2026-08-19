@@ -19,8 +19,8 @@ import {
 	headerCommandComponents,
 } from "./site-header-data";
 import { SiteNavigation } from "./site-navigation";
+import { SiteThemeToggle } from "./site-theme-toggle";
 import { TentUiMark } from "./tentui-mark";
-import { ThemeToggle } from "./theme-toggle";
 
 type SiteHeaderProps = {
 	showGutters?: boolean;
@@ -81,7 +81,7 @@ export function SiteHeader({ showGutters = true }: SiteHeaderProps) {
 								orientation="vertical"
 								className="mx-2 data-vertical:h-5 data-vertical:self-center"
 							/>
-							<ThemeToggle />
+							<SiteThemeToggle />
 						</div>
 					</div>
 					<Marker position="bottom-left" />

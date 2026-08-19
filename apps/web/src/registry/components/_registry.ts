@@ -166,6 +166,62 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/animated-tabs",
 	},
 	{
+		name: "theme-toggle",
+		type: "registry:component",
+		title: "Theme Toggle",
+		description:
+			"Switch between light and dark themes with animated, sound, and haptic feedback.",
+		dependencies: ["lucide-react", "motion", "next-themes", "web-haptics"],
+		registryDependencies: ["button"],
+		files: [
+			{
+				path: "components/theme-toggle/theme-toggle.tsx",
+				type: "registry:component",
+				target: "@components/theme-toggle.tsx",
+			},
+			{
+				path: "components/icon-swap/icon-swap.tsx",
+				type: "registry:component",
+				target: "@components/icon-swap/icon-swap.tsx",
+			},
+			{
+				path: "src/hooks/use-theme-toggle.ts",
+				type: "registry:hook",
+				target: "@hooks/use-theme-toggle.ts",
+			},
+			{
+				path: "src/hooks/soundcn/use-metal-click-sound.ts",
+				type: "registry:hook",
+				target: "@hooks/soundcn/use-metal-click-sound.ts",
+			},
+			{
+				path: "src/hooks/soundcn/use-sound.ts",
+				type: "registry:hook",
+				target: "@hooks/soundcn/use-sound.ts",
+			},
+			{
+				path: "src/lib/soundcn/metal-click.ts",
+				type: "registry:lib",
+				target: "@lib/soundcn/metal-click.ts",
+			},
+			{
+				path: "src/lib/soundcn/sound-engine.ts",
+				type: "registry:lib",
+				target: "@lib/soundcn/sound-engine.ts",
+			},
+			{
+				path: "src/lib/soundcn/sound-types.ts",
+				type: "registry:lib",
+				target: "@lib/soundcn/sound-types.ts",
+			},
+		],
+		categories: ["buttons"],
+		meta: {
+			createdAt: "2026-08-19",
+		},
+		docs: "https://tentui.com/components/theme-toggle",
+	},
+	{
 		name: "copy-button",
 		type: "registry:component",
 		title: "Copy Button",

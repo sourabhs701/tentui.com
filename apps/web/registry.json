@@ -647,6 +647,70 @@
       "type": "registry:component"
     },
     {
+      "name": "theme-toggle",
+      "title": "Theme Toggle",
+      "description": "Switch between light and dark themes with animated, sound, and haptic feedback.",
+      "dependencies": [
+        "lucide-react",
+        "motion",
+        "next-themes",
+        "web-haptics"
+      ],
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/theme-toggle/theme-toggle.tsx",
+          "type": "registry:component",
+          "target": "@components/theme-toggle.tsx"
+        },
+        {
+          "path": "src/registry/components/icon-swap/icon-swap.tsx",
+          "type": "registry:component",
+          "target": "@components/icon-swap/icon-swap.tsx"
+        },
+        {
+          "path": "src/hooks/use-theme-toggle.ts",
+          "type": "registry:hook",
+          "target": "@hooks/use-theme-toggle.ts"
+        },
+        {
+          "path": "src/hooks/soundcn/use-metal-click-sound.ts",
+          "type": "registry:hook",
+          "target": "@hooks/soundcn/use-metal-click-sound.ts"
+        },
+        {
+          "path": "src/hooks/soundcn/use-sound.ts",
+          "type": "registry:hook",
+          "target": "@hooks/soundcn/use-sound.ts"
+        },
+        {
+          "path": "src/lib/soundcn/metal-click.ts",
+          "type": "registry:lib",
+          "target": "@lib/soundcn/metal-click.ts"
+        },
+        {
+          "path": "src/lib/soundcn/sound-engine.ts",
+          "type": "registry:lib",
+          "target": "@lib/soundcn/sound-engine.ts"
+        },
+        {
+          "path": "src/lib/soundcn/sound-types.ts",
+          "type": "registry:lib",
+          "target": "@lib/soundcn/sound-types.ts"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-08-19"
+      },
+      "docs": "https://tentui.com/components/theme-toggle",
+      "categories": [
+        "buttons"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "copy-button",
       "title": "Copy Button",
       "description": "Copy text to the clipboard with visual, sound, and haptic feedback.",
