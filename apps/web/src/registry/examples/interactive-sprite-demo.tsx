@@ -5,7 +5,8 @@ import { type ChangeEvent, useEffect, useRef, useState } from "react";
 
 import { InteractiveSprite } from "@/registry/components/interactive-sprite";
 
-const DEFAULT_SPRITE_SRC = "/images/components/interactive-sprite.webp";
+const DEFAULT_SPRITE_SRC =
+	"https://cdn.tentui.com/images/components/interactive-sprite-kitten.png";
 
 export default function InteractiveSpriteDemo() {
 	const uploadInputRef = useRef<HTMLInputElement>(null);
@@ -37,8 +38,8 @@ export default function InteractiveSpriteDemo() {
 	return (
 		<div className="flex min-h-96 w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-xl p-8">
 			<InteractiveSprite
-				alt="Interactive illustrated character"
-				className="size-48 select-none rounded-full ring-1 ring-border ring-offset-4 ring-offset-background"
+				alt="TentUI mascot looking toward the pointer"
+				className="size-48 select-none rounded-full ring-1 ring-border ring-offset-4 ring-offset-background [&>[aria-hidden]]:translate-y-3"
 				deadZone={params.deadZone}
 				idleDelay={params.idleDelay}
 				src={spriteSrc}
