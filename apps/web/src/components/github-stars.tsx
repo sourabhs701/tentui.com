@@ -7,7 +7,7 @@ import {
 	TooltipTrigger,
 } from "@tentui.com/ui/components/tooltip";
 import { motion, useReducedMotion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UTM_PARAMS } from "@/config/site";
 import { addQueryParams } from "@/utils/url";
 
@@ -50,7 +50,26 @@ type GitHubStarsProps = {
 
 export function GitHubStars({ repo, stargazersCount }: GitHubStarsProps) {
 	const [hovered, setHovered] = useState(false);
+	const [displayCount, setDisplayCount] = useState(stargazersCount);
 	const reduceMotion = useReducedMotion();
+
+	useEffect(() => {
+		const controller = new AbortController();
+
+		fetch("/api/github-stars", { signal: controller.signal })
+			.then((response) => {
+				if (!response.ok) throw new Error("GitHub star request failed");
+				return response.json() as Promise<{ stargazersCount?: unknown }>;
+			})
+			.then(({ stargazersCount }) => {
+				if (typeof stargazersCount === "number") {
+					setDisplayCount(stargazersCount);
+				}
+			})
+			.catch(() => {});
+
+		return () => controller.abort();
+	}, []);
 	const transition = reduceMotion ? { duration: 0 } : morphSpring;
 
 	return (
@@ -68,9 +87,9 @@ export function GitHubStars({ repo, stargazersCount }: GitHubStarsProps) {
 								target="_blank"
 								rel="noopener"
 								aria-label={
-									stargazersCount == null
+									displayCount == null
 										? "Star TentUI on GitHub"
-										: `Star TentUI on GitHub (${stargazersCount} stars)`
+										: `Star TentUI on GitHub (${displayCount} stars)`
 								}
 								onMouseEnter={() => setHovered(true)}
 								onMouseLeave={() => setHovered(false)}
@@ -141,9 +160,9 @@ export function GitHubStars({ repo, stargazersCount }: GitHubStarsProps) {
 										<SparkleIcon className="size-1" />
 									</motion.span>
 								</span>
-								{stargazersCount != null ? (
+								{displayCount != null ? (
 									<span className="text-[0.8125rem]/none text-muted-foreground tabular-nums">
-										{compactNumber.format(stargazersCount).toLowerCase()}
+										{compactNumber.format(displayCount).toLowerCase()}
 									</span>
 								) : null}
 							</a>
@@ -152,9 +171,9 @@ export function GitHubStars({ repo, stargazersCount }: GitHubStarsProps) {
 				}
 			/>
 			<TooltipContent className="tabular-nums">
-				{stargazersCount == null
+				{displayCount == null
 					? "Star TentUI on GitHub"
-					: `${fullNumber.format(stargazersCount)} stars`}
+					: `${fullNumber.format(displayCount)} stars`}
 			</TooltipContent>
 		</Tooltip>
 	);
