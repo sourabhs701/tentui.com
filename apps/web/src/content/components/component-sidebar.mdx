@@ -1,8 +1,8 @@
 ---
 title: Component Sidebar
-description: Navigate dense component libraries with proximity-reactive guide lines.
+description: Navigate dense component libraries with tactile, proximity-reactive guide lines.
 createdAt: 2026-07-26
-updatedAt: 2026-07-26
+updatedAt: 2026-08-19
 ---
 
 <ComponentPreview name="component-sidebar-demo" />
@@ -13,8 +13,10 @@ updatedAt: 2026-07-26
 - Supports controlled and uncontrolled open state with an optional single-key shortcut.
 - Accepts a custom link renderer for Next.js, React Router, or other routing libraries.
 - Scrolls the active item into view and marks it with `aria-current="page"`.
+- Shows accessible blue markers for new items and yellow markers for updated items.
 - Ignores touch pointers and removes movement for reduced-motion users.
-- Exposes interaction callbacks so applications can add sound or haptic feedback without coupling it to the component.
+- Plays a soft scan tick, uses a metal click when opening or closing, and pairs navigation with click sounds and selection haptics.
+- Exposes interaction callbacks for application-specific behavior.
 
 ## Installation
 
@@ -37,7 +39,7 @@ npx shadcn@latest add @tentui/component-sidebar
 <Step>Install the following dependencies</Step>
 
 ```bash
-npm install motion clsx tailwind-merge
+npm install @rexa-developer/tiks motion web-haptics clsx tailwind-merge
 npx shadcn@latest add badge button kbd tooltip
 ```
 
@@ -46,6 +48,38 @@ npx shadcn@latest add badge button kbd tooltip
 <ComponentSource
   src="src/registry/lib/utils.ts"
   title="lib/utils.ts"
+  collapsible="false"
+/>
+
+<Step>Add the metal click sound</Step>
+
+<ComponentSource
+  src="src/hooks/soundcn/use-metal-click-sound.ts"
+  title="hooks/soundcn/use-metal-click-sound.ts"
+  collapsible="false"
+/>
+
+<ComponentSource
+  src="src/hooks/soundcn/use-sound.ts"
+  title="hooks/soundcn/use-sound.ts"
+  collapsible="false"
+/>
+
+<ComponentSource
+  src="src/lib/soundcn/metal-click.ts"
+  title="lib/soundcn/metal-click.ts"
+  collapsible="false"
+/>
+
+<ComponentSource
+  src="src/lib/soundcn/sound-engine.ts"
+  title="lib/soundcn/sound-engine.ts"
+  collapsible="false"
+/>
+
+<ComponentSource
+  src="src/lib/soundcn/sound-types.ts"
+  title="lib/soundcn/sound-types.ts"
   collapsible="false"
 />
 
@@ -94,7 +128,7 @@ const groups = [
     title: "Components",
     newCount: 1,
     items: [
-      { title: "Button", href: "/button" },
+      { title: "Button", href: "/button", isUpdated: true },
       { title: "Dialog", href: "/dialog", isNew: true },
     ],
   },
@@ -110,7 +144,7 @@ const groups = [
 
 ### Framework links
 
-Use `renderLink` to preserve client-side navigation. The component supplies the active ref, accessibility attributes, external-link attributes, and children.
+Use `renderLink` to preserve client-side navigation. The component supplies the active ref, accessibility attributes, external-link attributes, feedback handlers, and children, so spread all supplied props.
 
 ```tsx
 import type { Route } from "next";

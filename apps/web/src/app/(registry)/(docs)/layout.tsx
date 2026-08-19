@@ -4,7 +4,7 @@ import { Sidebar, SidebarContent } from "@/components/sidebar";
 import { ComponentLeftCol } from "@/components/sidebar/component-page-layout";
 import { ComponentPageRoot } from "@/components/sidebar/component-page-root";
 import { components } from "@/registry/components/_registry";
-import { isNewRegistryItem } from "@/utils/registry";
+import { isNewRegistryItem, isUpdatedRegistryItem } from "@/utils/registry";
 
 function sortByTitle<T extends { name: string; title?: string }>(items: T[]) {
 	return [...items].sort((a, b) =>
@@ -18,6 +18,7 @@ const sidebarComponentItems = sortByTitle(components).map((component) => ({
 	title: component.title ?? component.name,
 	href: `/components/${component.name}` as Route,
 	isNew: isNewRegistryItem(component),
+	isUpdated: isUpdatedRegistryItem(component),
 }));
 
 const sidebarGroups = [

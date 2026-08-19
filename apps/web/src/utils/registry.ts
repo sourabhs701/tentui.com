@@ -1,17 +1,24 @@
 import { registryConfig } from "@/config/registry";
 
-const NEW_BADGE_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const BADGE_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 export type RegistryItemMetadata = {
-	meta?: { createdAt?: string };
+	meta?: { createdAt?: string; updatedAt?: string };
 };
 
-export function isNewRegistryItem(item: RegistryItemMetadata): boolean {
-	const addedAt = item.meta?.createdAt;
-	if (!addedAt) return false;
+function isRecent(date?: string) {
+	return date
+		? Date.now() - new Date(date).getTime() < BADGE_DURATION_MS
+		: false;
+}
 
-	const addedTime = new Date(addedAt).getTime();
-	return Date.now() - addedTime < NEW_BADGE_DURATION_MS;
+export function isNewRegistryItem(item: RegistryItemMetadata): boolean {
+	return isRecent(item.meta?.createdAt);
+}
+
+export function isUpdatedRegistryItem(item: RegistryItemMetadata): boolean {
+	const { createdAt, updatedAt } = item.meta ?? {};
+	return updatedAt !== createdAt && isRecent(updatedAt);
 }
 
 export function getRegistryItemUrl(item: string) {

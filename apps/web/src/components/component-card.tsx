@@ -4,8 +4,37 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import type { RegistryItem } from "shadcn/schema";
+import { cn } from "@/lib/utils";
 
 const themes = ["light", "dark"] as const;
+
+export function ComponentPreviewImage({
+	component,
+	className,
+	sizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw",
+}: {
+	component: RegistryItem;
+	className?: string;
+	sizes?: string;
+}) {
+	const imageBase = `https://cdn.tentui.com/images/${encodeURIComponent(component.name)}-`;
+
+	return themes.map((theme) => (
+		<Image
+			key={theme}
+			src={`${imageBase}${theme}.png`}
+			alt={`${component.title ?? component.name} ${theme} preview`}
+			fill
+			sizes={sizes}
+			className={cn(
+				"absolute inset-0 size-full object-cover",
+				className,
+				theme === "light" ? "block dark:hidden" : "hidden dark:block",
+			)}
+			unoptimized
+		/>
+	));
+}
 
 // ─── Component Card ────────────────────────────────────────────────────────
 export function ComponentCard({
@@ -125,17 +154,13 @@ export function ComponentCard({
 								/>
 							))}
 
-						{themes.map((theme) => (
-							<Image
-								key={theme}
-								src={`${imageBase}${theme}.png`}
-								alt={`${component.title ?? component.name} ${theme} preview`}
-								fill
-								sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-								className={`absolute inset-0 size-full object-cover transition-all duration-300 group-hover:scale-105 ${videoBase ? "group-hover:opacity-0" : ""} ${theme === "light" ? "block dark:hidden" : "hidden dark:block"}`}
-								unoptimized
-							/>
-						))}
+						<ComponentPreviewImage
+							component={component}
+							className={cn(
+								"transition-all duration-300 group-hover:scale-105",
+								videoBase && "group-hover:opacity-0",
+							)}
+						/>
 					</motion.div>
 				</div>
 			</Link>

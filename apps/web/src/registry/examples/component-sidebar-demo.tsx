@@ -21,7 +21,7 @@ const GROUPS = [
 	{
 		title: "Components",
 		items: [
-			{ title: "Button", href: "/button" },
+			{ title: "Button", href: "/button", isUpdated: true },
 			{ title: "Dialog", href: "/dialog" },
 			{ title: "Tooltip", href: "/tooltip" },
 			{ title: "Tabs", href: "/tabs" },

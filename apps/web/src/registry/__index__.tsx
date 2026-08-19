@@ -350,9 +350,9 @@ export const Index = {
 	"component-sidebar": {
 		name: "component-sidebar",
 		title: "Component Sidebar",
-		description: "Navigate dense component libraries with proximity-reactive guide lines.",
+		description: "Navigate dense component libraries with tactile, proximity-reactive guide lines.",
 		type: "registry:component",
-		files: [{"path":"src/registry/components/component-sidebar/component-sidebar.tsx","type":"registry:component","target":"@components/component-sidebar.tsx"}],
+		files: [{"path":"src/registry/components/component-sidebar/component-sidebar.tsx","type":"registry:component","target":"@components/component-sidebar.tsx"},{"path":"src/hooks/soundcn/use-metal-click-sound.ts","type":"registry:hook","target":"@hooks/soundcn/use-metal-click-sound.ts"},{"path":"src/hooks/soundcn/use-sound.ts","type":"registry:hook","target":"@hooks/soundcn/use-sound.ts"},{"path":"src/lib/soundcn/metal-click.ts","type":"registry:lib","target":"@lib/soundcn/metal-click.ts"},{"path":"src/lib/soundcn/sound-engine.ts","type":"registry:lib","target":"@lib/soundcn/sound-engine.ts"},{"path":"src/lib/soundcn/sound-types.ts","type":"registry:lib","target":"@lib/soundcn/sound-types.ts"}],
 		component: React.lazy(async () => {
 			const module = (await import("@/registry/components/component-sidebar/component-sidebar")) as unknown as {
 				default?: React.ComponentType;
@@ -363,7 +363,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["navigation"],
-		meta: {"createdAt":"2026-07-26"},
+		meta: {"createdAt":"2026-07-26","updatedAt":"2026-08-19"},
 	},
 	"peeping-button": {
 		name: "peeping-button",
@@ -453,7 +453,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/copy-button","video":"https://cdn.srb.codes/videos/components/copy-button"},
+		meta: {"createdAt":"2026-07-20","updatedAt":"2026-08-19","image":"https://cdn.srb.codes/images/components/copy-button","video":"https://cdn.srb.codes/videos/components/copy-button"},
 	},
 	"email-dock": {
 		name: "email-dock",

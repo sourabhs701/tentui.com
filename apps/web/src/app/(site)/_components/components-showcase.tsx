@@ -1,11 +1,9 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
-import { useInView, useReducedMotion } from "motion/react";
 import type { Route } from "next";
 import Link from "next/link";
-import { useTheme } from "next-themes";
-import { useEffect, useRef } from "react";
+import { ComponentPreviewImage } from "@/components/component-card";
 import { TentUiMark } from "@/components/tentui-mark";
 import { components } from "@/lib/components";
 import { cn } from "@/lib/utils";
@@ -15,49 +13,6 @@ const featuredComponents = components
 	.slice(1);
 
 type ComponentItem = (typeof components)[number];
-
-function PreviewVideo({ item }: { item: ComponentItem }) {
-	const ref = useRef<HTMLVideoElement>(null);
-	const inView = useInView(ref, { amount: 0.2 });
-	const reducedMotion = useReducedMotion();
-	const { resolvedTheme } = useTheme();
-	const theme = resolvedTheme === "dark" ? "dark" : "light";
-	const video = typeof item.meta?.video === "string" ? item.meta.video : null;
-	const image = typeof item.meta?.image === "string" ? item.meta.image : null;
-	const src = video ? `${video}-${theme}.mp4` : null;
-
-	useEffect(() => {
-		if (!src) return;
-
-		if (inView && !reducedMotion) {
-			void ref.current?.play().catch(() => {});
-		} else {
-			ref.current?.pause();
-		}
-	}, [inView, reducedMotion, src]);
-
-	if (!src) {
-		return (
-			<div className="flex size-full items-center justify-center text-muted-foreground text-sm">
-				{item.title ?? item.name}
-			</div>
-		);
-	}
-
-	return (
-		<video
-			key={theme}
-			ref={ref}
-			src={src}
-			poster={image ? `${image}-${theme}.webp` : undefined}
-			muted
-			loop
-			playsInline
-			preload="metadata"
-			className="size-full object-cover"
-		/>
-	);
-}
 
 function ShowcaseCard({
 	item,
@@ -83,7 +38,10 @@ function ShowcaseCard({
 					large && "lg:aspect-auto lg:flex-1",
 				)}
 			>
-				<PreviewVideo item={item} />
+				<ComponentPreviewImage
+					component={item}
+					sizes="(min-width: 1024px) 50vw, (min-width: 640px) 100vw, 100vw"
+				/>
 			</div>
 
 			<div className="flex items-center justify-between gap-3 px-3 pt-2 pb-1">

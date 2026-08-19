@@ -1,5 +1,6 @@
 "use client";
 
+import { useTiks } from "@rexa-developer/tiks/react";
 import {
 	MotionConfig,
 	type MotionValue,
@@ -11,6 +12,7 @@ import {
 	useTransform,
 } from "motion/react";
 import * as React from "react";
+import { useWebHaptics } from "web-haptics/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
@@ -20,6 +22,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { useMetalClickSound } from "@/hooks/soundcn/use-metal-click-sound";
 import { cn } from "@/lib/utils";
 
 const NORMAL_LINE_WIDTH = 24;
@@ -32,6 +35,7 @@ export type ComponentSidebarItem = {
 	title: string;
 	href: string;
 	isNew?: boolean;
+	isUpdated?: boolean;
 	external?: boolean;
 };
 
@@ -85,6 +89,8 @@ export function ComponentSidebar({
 	const isOpen = open ?? internalOpen;
 	const panelId = React.useId();
 	const shouldReduceMotion = useReducedMotion();
+	const [playMetalClick] = useMetalClickSound();
+	const { trigger: haptic } = useWebHaptics();
 	const normalizedShortcut =
 		typeof shortcutKey === "string" ? shortcutKey.trim().toLowerCase() : null;
 
@@ -98,10 +104,13 @@ export function ComponentSidebar({
 
 	const toggleSidebar = React.useCallback(
 		(animate: boolean) => {
+			const nextOpen = !isOpen;
 			if (!animate) setInstant(true);
-			setOpen(!isOpen);
+			playMetalClick();
+			void haptic("selection");
+			setOpen(nextOpen);
 		},
-		[isOpen, setOpen],
+		[haptic, isOpen, playMetalClick, setOpen],
 	);
 
 	React.useEffect(() => {
@@ -252,6 +261,8 @@ export function ComponentSidebarContent({
 	const pointerY = useMotionValue(Number.POSITIVE_INFINITY);
 	const shouldReduceMotion = useReducedMotion();
 	const lastCrossAtRef = React.useRef(Number.NEGATIVE_INFINITY);
+	const { click: playClick, hover: playHover } = useTiks();
+	const { trigger: haptic } = useWebHaptics();
 
 	const handleItemCrossCenter = React.useCallback(
 		(item: ComponentSidebarItem) => {
@@ -259,10 +270,16 @@ export function ComponentSidebarContent({
 			if (now - lastCrossAtRef.current < itemCrossInterval) return;
 
 			lastCrossAtRef.current = now;
+			playHover();
 			onItemCrossCenter?.(item);
 		},
-		[itemCrossInterval, onItemCrossCenter],
+		[itemCrossInterval, onItemCrossCenter, playHover],
 	);
+
+	const handleItemSelect = React.useCallback(() => {
+		playClick();
+		void haptic("selection");
+	}, [haptic, playClick]);
 
 	React.useEffect(() => {
 		if (activeHref) {
@@ -332,6 +349,7 @@ export function ComponentSidebarContent({
 									item={item}
 									key={item.href}
 									onCrossCenter={handleItemCrossCenter}
+									onSelect={handleItemSelect}
 									pointerY={pointerY}
 									renderLink={renderLink}
 								/>
@@ -460,6 +478,7 @@ type ComponentSidebarMenuItemProps = {
 	isLast: boolean;
 	item: ComponentSidebarItem;
 	onCrossCenter: (item: ComponentSidebarItem) => void;
+	onSelect: () => void;
 	pointerY: MotionValue<number>;
 	renderLink: ComponentSidebarRenderLink;
 };
@@ -470,6 +489,7 @@ const ComponentSidebarMenuItem = React.memo(function ComponentSidebarMenuItem({
 	isLast,
 	item,
 	onCrossCenter,
+	onSelect,
 	pointerY,
 	renderLink,
 }: ComponentSidebarMenuItemProps) {
@@ -487,6 +507,7 @@ const ComponentSidebarMenuItem = React.memo(function ComponentSidebarMenuItem({
 			className:
 				"group relative flex h-px items-center gap-3 after:absolute after:top-1/2 after:left-0 after:size-full after:-translate-y-1/2 after:p-3.5",
 			href: item.href,
+			onClick: onSelect,
 			rel: isExternal ? "noreferrer" : undefined,
 			target: isExternal ? "_blank" : undefined,
 			children: (
@@ -509,6 +530,15 @@ const ComponentSidebarMenuItem = React.memo(function ComponentSidebarMenuItem({
 									className="size-1.5 shrink-0 rounded-full bg-primary"
 								/>
 								<span className="sr-only">New</span>
+							</>
+						) : null}
+						{item.isUpdated ? (
+							<>
+								<span
+									aria-hidden="true"
+									className="size-1.5 shrink-0 rounded-full bg-yellow-400"
+								/>
+								<span className="sr-only">Updated</span>
 							</>
 						) : null}
 					</motion.span>

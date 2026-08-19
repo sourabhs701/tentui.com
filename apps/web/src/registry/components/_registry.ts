@@ -86,8 +86,8 @@ export const components: Registry["items"] = [
 		type: "registry:component",
 		title: "Component Sidebar",
 		description:
-			"Navigate dense component libraries with proximity-reactive guide lines.",
-		dependencies: ["motion"],
+			"Navigate dense component libraries with tactile, proximity-reactive guide lines.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
 		registryDependencies: ["badge", "button", "kbd", "tooltip"],
 		files: [
 			{
@@ -95,10 +95,36 @@ export const components: Registry["items"] = [
 				type: "registry:component",
 				target: "@components/component-sidebar.tsx",
 			},
+			{
+				path: "src/hooks/soundcn/use-metal-click-sound.ts",
+				type: "registry:hook",
+				target: "@hooks/soundcn/use-metal-click-sound.ts",
+			},
+			{
+				path: "src/hooks/soundcn/use-sound.ts",
+				type: "registry:hook",
+				target: "@hooks/soundcn/use-sound.ts",
+			},
+			{
+				path: "src/lib/soundcn/metal-click.ts",
+				type: "registry:lib",
+				target: "@lib/soundcn/metal-click.ts",
+			},
+			{
+				path: "src/lib/soundcn/sound-engine.ts",
+				type: "registry:lib",
+				target: "@lib/soundcn/sound-engine.ts",
+			},
+			{
+				path: "src/lib/soundcn/sound-types.ts",
+				type: "registry:lib",
+				target: "@lib/soundcn/sound-types.ts",
+			},
 		],
 		categories: ["navigation"],
 		meta: {
 			createdAt: "2026-07-26",
+			updatedAt: "2026-08-19",
 		},
 		docs: "https://tentui.com/components/component-sidebar",
 	},
@@ -254,6 +280,7 @@ export const components: Registry["items"] = [
 		categories: ["buttons"],
 		meta: {
 			createdAt: "2026-07-20",
+			updatedAt: "2026-08-19",
 			image: "https://cdn.srb.codes/images/components/copy-button",
 			video: "https://cdn.srb.codes/videos/components/copy-button",
 		},
