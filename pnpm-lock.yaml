@@ -169,6 +169,9 @@ importers:
       '@openpanel/web':
         specifier: ^1.4.1
         version: 1.4.1
+      '@rexa-developer/tiks':
+        specifier: ^0.3.0
+        version: 0.3.0(react@19.2.7)
       '@swc/helpers':
         specifier: ^0.5.23
         version: 0.5.23
@@ -301,6 +304,9 @@ importers:
       unist-util-visit:
         specifier: ^5.1.0
         version: 5.1.0
+      web-haptics:
+        specifier: ^0.0.6
+        version: 0.0.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -2658,6 +2664,17 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
     peerDependenciesMeta:
       '@types/react':
+        optional: true
+
+  '@rexa-developer/tiks@0.3.0':
+    resolution: {integrity: sha512-7tW/lb53Nr8U0dn9ZlWOvDXtsZ7fK3dZN90Xvp/S4AkjruopuP8992+3KhFCrIQ7bXFEsaVFUZsm/+NC3ufA1w==}
+    peerDependencies:
+      react: '>=18.0.0'
+      vue: '>=3.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      vue:
         optional: true
 
   '@rolldown/binding-android-arm64@1.1.5':
@@ -6444,6 +6461,23 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
+  web-haptics@0.0.6:
+    resolution: {integrity: sha512-eCzcf1LDi20+Fr0x9V3OkX92k0gxEQXaHajmhXHitsnk6SxPeshv8TBtBRqxyst8HI1uf2FyFVE7QS3jo1gkrw==}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+      svelte: '>=4'
+      vue: '>=3'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+
   web-namespaces@2.0.1:
     resolution: {integrity: sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==}
 
@@ -8712,6 +8746,10 @@ snapshots:
       react: 19.2.7
     optionalDependencies:
       '@types/react': 19.2.17
+
+  '@rexa-developer/tiks@0.3.0(react@19.2.7)':
+    optionalDependencies:
+      react: 19.2.7
 
   '@rolldown/binding-android-arm64@1.1.5':
     optional: true
@@ -12807,6 +12845,11 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
+
+  web-haptics@0.0.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+    optionalDependencies:
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
 
   web-namespaces@2.0.1: {}
 

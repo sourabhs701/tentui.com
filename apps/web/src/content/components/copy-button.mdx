@@ -1,8 +1,8 @@
 ---
 title: Copy Button
-description: Copy text to the clipboard with visual feedback.
+description: Copy text to the clipboard with visual, sound, and haptic feedback.
 createdAt: 2026-07-20
-updatedAt: 2026-07-21
+updatedAt: 2026-08-19
 ---
 
 <ComponentPreview name="copy-button-demo" />
@@ -11,6 +11,7 @@ updatedAt: 2026-07-21
 
 - Accepts text as a value or a function resolved when the button is clicked.
 - Animates idle, success, and error icons before returning to idle.
+- Plays matching UI sounds and haptics for successful and failed copies.
 - Supports custom state icons and copy outcome callbacks.
 
 ## Installation
@@ -40,7 +41,7 @@ npx shadcn@latest add button
 <Step>Install the following dependencies</Step>
 
 ```bash
-npm install lucide-react motion
+npm install @rexa-developer/tiks lucide-react motion web-haptics
 ```
 
 <Step>Add the clipboard hook</Step>

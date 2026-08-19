@@ -169,8 +169,14 @@ export const components: Registry["items"] = [
 		name: "copy-button",
 		type: "registry:component",
 		title: "Copy Button",
-		description: "Copy text to the clipboard with visual feedback.",
-		dependencies: ["lucide-react", "motion"],
+		description:
+			"Copy text to the clipboard with visual, sound, and haptic feedback.",
+		dependencies: [
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
 		registryDependencies: ["button"],
 		files: [
 			{

@@ -422,7 +422,7 @@ export const Index = {
 	"copy-button": {
 		name: "copy-button",
 		title: "Copy Button",
-		description: "Copy text to the clipboard with visual feedback.",
+		description: "Copy text to the clipboard with visual, sound, and haptic feedback.",
 		type: "registry:component",
 		files: [{"path":"src/registry/components/copy-button/copy-button.tsx","type":"registry:component","target":"@components/copy-button.tsx"},{"path":"src/registry/components/icon-swap/icon-swap.tsx","type":"registry:component","target":"@components/icon-swap/icon-swap.tsx"},{"path":"src/hooks/use-copy-to-clipboard.ts","type":"registry:hook","target":"@hooks/use-copy-to-clipboard.ts"}],
 		component: React.lazy(async () => {
