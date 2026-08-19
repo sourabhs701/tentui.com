@@ -13,7 +13,6 @@ import Link from "next/link";
 import { ComponentViewTracker } from "@/components/component-view-tracker";
 import { DocShareMenu } from "@/components/doc-share-menu";
 import { MDX } from "@/components/mdx";
-import { ComponentFeedback } from "@/components/mdx/component-feedback";
 import { DocKeyboardShortcuts } from "@/components/mdx/doc-keyboard-shortcuts";
 import { LLMCopyButtonWithViewOptions } from "@/components/mdx/doc-page-actions";
 import { TOCInline } from "@/components/mdx/toc-inline";
@@ -173,10 +172,7 @@ export function ComponentPage({ doc }: { doc: Doc }) {
 					<Prose className="pt-8 [--page-padding:--spacing(4)]">
 						<p className="text-muted-foreground">{doc.metadata.description}</p>
 						<TOCInline className="xl:hidden" items={toc} />
-						<div>
-							<MDX code={doc.content} />
-							<ComponentFeedback slug={doc.slug} />
-						</div>
+						<MDX code={doc.content} />
 					</Prose>
 				</ComponentContentCol>
 			</div>

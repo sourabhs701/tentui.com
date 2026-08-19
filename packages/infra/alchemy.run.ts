@@ -1,5 +1,5 @@
 import alchemy from "alchemy";
-import { D1Database, RateLimit, Worker } from "alchemy/cloudflare";
+import { D1Database, Worker } from "alchemy/cloudflare";
 import { config } from "dotenv";
 
 config({ path: "../env/.env" });
@@ -8,11 +8,6 @@ const app = await alchemy("tentui.com");
 
 const db = await D1Database("database", {
 	migrationsDir: "../../packages/db/src/migrations",
-});
-
-const feedbackRateLimiter = RateLimit({
-	namespace_id: 1001,
-	simple: { limit: 5, period: 60 },
 });
 
 export const server = await Worker("server", {
@@ -35,7 +30,6 @@ export const server = await Worker("server", {
 	},
 	bindings: {
 		DB: db,
-		FEEDBACK_RATE_LIMITER: feedbackRateLimiter,
 		CORS_ORIGIN: alchemy.env.CORS_ORIGIN!,
 		BETTER_AUTH_SECRET: alchemy.secret.env.BETTER_AUTH_SECRET!,
 		BETTER_AUTH_URL: alchemy.env.BETTER_AUTH_URL!,

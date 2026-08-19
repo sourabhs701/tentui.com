@@ -8,6 +8,13 @@
 			"when": 1786103647645,
 			"tag": "0000_certain_dragon_lord",
 			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "6",
+			"when": 1787160918459,
+			"tag": "0001_material_vampiro",
+			"breakpoints": true
 		}
 	]
 }
