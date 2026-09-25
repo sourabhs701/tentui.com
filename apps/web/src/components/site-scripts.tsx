@@ -16,7 +16,7 @@ export function SiteScripts() {
 				strategy="afterInteractive"
 			/>
 			<Script
-				data-project-id="a0yPCWkO"
+				data-project-id="X8TUXbyv"
 				src="https://cdn.tkit.ai/widget.js"
 				strategy="afterInteractive"
 			/>
