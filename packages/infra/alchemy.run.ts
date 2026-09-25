@@ -7,6 +7,7 @@ config({ path: "../env/.env" });
 const app = await alchemy("tentui.com");
 
 const db = await D1Database("database", {
+	adopt: true,
 	migrationsDir: "../../packages/db/src/migrations",
 });
 
