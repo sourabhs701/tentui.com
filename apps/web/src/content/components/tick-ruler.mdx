@@ -1,0 +1,129 @@
+---
+title: Tick Ruler
+description: A ruler-style number picker you drag or flick, with a click and a haptic tick on every step.
+createdAt: 2026-10-23
+updatedAt: 2026-10-23
+---
+
+<ComponentPreview name="tick-ruler-demo" />
+
+## Features
+
+- Scrolls a tick strip under a fixed needle, with minor, major, and labelled
+  ticks and faded edges.
+- Coasts after a flick and lands on the nearest step with a spring; dragging
+  past either end rubber-bands and springs back.
+- Plays a click and a selection haptic for every step crossed, a stronger
+  haptic on labelled ticks, and a pop at the bounds.
+- Rolls the readout digits up or down in the direction you moved.
+- Supports wheel and trackpad, tapping a tick, preset chips, double-click to
+  reset, and full keyboard control.
+- Moves with motion values and transforms only, and draws just the visible
+  ticks on long ranges.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/tick-ruler
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="tick-ruler" title="components/tick-ruler.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { TickRuler } from "@/components/tick-ruler";
+```
+
+```tsx
+<TickRuler
+  label="Focus session length"
+  defaultValue={25}
+  max={90}
+  labelEvery={15}
+  unit="min"
+  presets={[5, 15, 25, 45]}
+/>
+```
+
+Use `value` and `onValueChange` to control it. `onValueChange` fires on every
+step; `onValueCommit` fires once the ruler settles. Changes that come from the
+`value` prop glide silently, and a drag in progress always wins.
+
+```tsx
+const [weight, setWeight] = useState(72.5);
+
+<TickRuler
+  label="Weight"
+  value={weight}
+  onValueChange={setWeight}
+  min={30}
+  max={200}
+  step={0.5}
+  majorEvery={2}
+  labelEvery={10}
+  unit="kg"
+/>
+```
+
+Pass `format` to control the readout, chips, and `aria-valuetext`.
+
+```tsx
+<TickRuler
+  label="Tip"
+  defaultValue={18}
+  max={40}
+  format={(value) => `${value}%`}
+/>
+```
+
+Set `orientation="vertical"` for height-style pickers, where higher values sit
+above the needle, and `size` to `sm`, `md`, or `lg`.
+
+## Accessibility
+
+The ruler is a `slider` with `aria-valuenow`, `aria-valuemin`,
+`aria-valuemax`, and an `aria-valuetext` built from `format` and `unit`. Name
+it with `label`. Arrow keys move one step, `Shift` with an arrow or
+`PageUp`/`PageDown` move ten, and `Home`/`End` jump to the bounds. The ticks
+are hidden from assistive technology.
+
+With reduced motion enabled there is no coast, rubber band, or digit roll, and
+the strip jumps straight to each step. Sound and haptics stay on because they
+confirm each step rather than decorate movement; turn them off with
+`sound={false}` and `haptics={false}`.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/tick-ruler/tick-ruler.tsx"
+  name="TickRulerProps"
+/>

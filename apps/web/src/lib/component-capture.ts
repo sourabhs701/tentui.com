@@ -26,6 +26,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"peeping-button": { zoom: 1.35 },
 	"stateful-button": { zoom: 1.15 },
 	"theme-toggle": { zoom: 2.4 },
+	"tick-ruler": { zoom: 1.15 },
 };
 
 export const componentCaptureNames = components.map((component) =>

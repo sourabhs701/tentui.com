@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "tick-ruler-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("tick-ruler")],
+		files: [
+			{
+				path: "examples/tick-ruler-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-80 place-items-center content-center",
+		},
+	},
+	{
 		name: "hold-to-confirm-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("hold-to-confirm")],

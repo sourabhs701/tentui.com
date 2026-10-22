@@ -448,6 +448,33 @@
       "type": "registry:block"
     },
     {
+      "name": "tick-ruler",
+      "title": "Tick Ruler",
+      "description": "A ruler-style number picker you drag or flick, with a click and a haptic tick on every step.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/tick-ruler/tick-ruler.tsx",
+          "type": "registry:component",
+          "target": "@components/tick-ruler.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-10-23",
+        "image": "https://cdn.srb.codes/images/components/tick-ruler",
+        "video": "https://cdn.srb.codes/videos/components/tick-ruler"
+      },
+      "docs": "https://tentui.com/components/tick-ruler",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "hold-to-confirm",
       "title": "Hold to Confirm",
       "description": "Guard destructive actions behind a press-and-hold fill with rising sound, haptic ticks, and a checkmark.",

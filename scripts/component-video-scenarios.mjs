@@ -3,7 +3,51 @@
 // Playwright selectors resolved when the step runs. Every scenario starts and
 // ends with the cursor at rest so the clip loops cleanly.
 
+// Pointer travel, in px, for the tick-ruler flicks and the final drag.
+const TICK_RULER_FLICKS = [84, 137, 200];
+
 export const scenarios = {
+	"tick-ruler": {
+		async run(d) {
+			const track = '[data-slot="tick-ruler-track"]';
+			const easeIn = (t) => t * t;
+			const box = await d.page.locator(track).boundingBox();
+			const y = box.y + box.height * 0.55;
+			const right = box.x + box.width * 0.82;
+			const flick = async (distance) => {
+				await d.move({ x: right, y }, 700);
+				await d.wait(200);
+				await d.down();
+				await d.move({ x: right - distance, y }, 160, {}, easeIn);
+				await d.up();
+			};
+			await d.wait(400);
+			// Flick from 25: coasts and ticks, then lands on 45.
+			await flick(TICK_RULER_FLICKS[0]);
+			await d.wait(1100);
+			// A harder flick coasts most of the way to the top.
+			await flick(TICK_RULER_FLICKS[1]);
+			await d.wait(1100);
+			// Drag past 90: the strip rubber-bands, pops, then springs back.
+			await d.move({ x: right, y }, 500);
+			await d.wait(150);
+			await d.down();
+			await d.move({ x: right - TICK_RULER_FLICKS[2], y }, 800);
+			await d.wait(450);
+			await d.up();
+			await d.wait(900);
+			await d.move(
+				'[data-slot="tick-ruler-presets"] button:has-text("15")',
+				750,
+			);
+			await d.wait(200);
+			await d.click();
+			await d.wait(1100);
+			await d.move(d.rest, 800);
+			await d.wait(500);
+		},
+	},
+
 	"hold-to-confirm": {
 		async run(d) {
 			const button = '[data-slot="hold-to-confirm"]';

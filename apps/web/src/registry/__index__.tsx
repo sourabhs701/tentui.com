@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"tick-ruler": {
+		name: "tick-ruler",
+		title: "Tick Ruler",
+		description: "A ruler-style number picker you drag or flick, with a click and a haptic tick on every step.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/tick-ruler/tick-ruler.tsx","type":"registry:component","target":"@components/tick-ruler.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/tick-ruler/tick-ruler")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for tick-ruler");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-10-23","image":"https://cdn.srb.codes/images/components/tick-ruler","video":"https://cdn.srb.codes/videos/components/tick-ruler"},
+	},
 	"hold-to-confirm": {
 		name: "hold-to-confirm",
 		title: "Hold to Confirm",
@@ -544,6 +562,24 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
+	},
+	"tick-ruler-demo": {
+		name: "tick-ruler-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/tick-ruler-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/tick-ruler-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for tick-ruler-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-80 place-items-center content-center"},
 	},
 	"hold-to-confirm-demo": {
 		name: "hold-to-confirm-demo",

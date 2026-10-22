@@ -6,7 +6,10 @@ import Script from "next/script";
 export function SiteScripts() {
 	const pathname = usePathname();
 
-	if (pathname.startsWith("/preview/")) return null;
+	// Keep previews and media captures free of analytics and the chat widget.
+	if (pathname.startsWith("/preview/") || pathname.startsWith("/capture/")) {
+		return null;
+	}
 
 	return (
 		<>

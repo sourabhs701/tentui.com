@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "tick-ruler",
+		type: "registry:component",
+		title: "Tick Ruler",
+		description:
+			"A ruler-style number picker you drag or flick, with a click and a haptic tick on every step.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/tick-ruler/tick-ruler.tsx",
+				type: "registry:component",
+				target: "@components/tick-ruler.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-10-23",
+			image: "https://cdn.srb.codes/images/components/tick-ruler",
+			video: "https://cdn.srb.codes/videos/components/tick-ruler",
+		},
+		docs: "https://tentui.com/components/tick-ruler",
+	},
+	{
 		name: "hold-to-confirm",
 		type: "registry:component",
 		title: "Hold to Confirm",
