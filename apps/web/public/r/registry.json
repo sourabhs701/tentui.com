@@ -448,6 +448,36 @@
       "type": "registry:block"
     },
     {
+      "name": "hold-to-confirm",
+      "title": "Hold to Confirm",
+      "description": "Guard destructive actions behind a press-and-hold fill with rising sound, haptic ticks, and a checkmark.",
+      "dependencies": [
+        "lucide-react",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/hold-to-confirm/hold-to-confirm.tsx",
+          "type": "registry:component",
+          "target": "@components/hold-to-confirm.tsx"
+        },
+        {
+          "path": "src/hooks/use-hold-to-confirm.ts",
+          "type": "registry:hook",
+          "target": "@hooks/use-hold-to-confirm.ts"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-10-22"
+      },
+      "docs": "https://tentui.com/components/hold-to-confirm",
+      "categories": [
+        "buttons"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "interactive-sprite",
       "title": "Interactive Sprite",
       "description": "Turn a directional sprite sheet into a character that follows the pointer and returns to rest.",

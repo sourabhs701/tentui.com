@@ -2,6 +2,31 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "hold-to-confirm",
+		type: "registry:component",
+		title: "Hold to Confirm",
+		description:
+			"Guard destructive actions behind a press-and-hold fill with rising sound, haptic ticks, and a checkmark.",
+		dependencies: ["lucide-react", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/hold-to-confirm/hold-to-confirm.tsx",
+				type: "registry:component",
+				target: "@components/hold-to-confirm.tsx",
+			},
+			{
+				path: "src/hooks/use-hold-to-confirm.ts",
+				type: "registry:hook",
+				target: "@hooks/use-hold-to-confirm.ts",
+			},
+		],
+		categories: ["buttons"],
+		meta: {
+			createdAt: "2026-10-22",
+		},
+		docs: "https://tentui.com/components/hold-to-confirm",
+	},
+	{
 		name: "interactive-sprite",
 		type: "registry:component",
 		title: "Interactive Sprite",

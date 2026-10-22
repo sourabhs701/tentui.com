@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "hold-to-confirm-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("hold-to-confirm")],
+		files: [
+			{
+				path: "examples/hold-to-confirm-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "interactive-sprite-demo",
 		type: "registry:example",
 		dependencies: ["dialkit"],

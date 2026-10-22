@@ -1,0 +1,127 @@
+---
+title: Hold to Confirm
+description: Guard destructive actions behind a press-and-hold fill with rising sound, haptic ticks, and a checkmark.
+createdAt: 2026-10-22
+updatedAt: 2026-10-22
+---
+
+<ComponentPreview name="hold-to-confirm-demo" />
+
+## Features
+
+- Sweeps a destructive fill across the button while it is held, with the label
+  redrawn on the fill so it stays readable.
+- Plays a tone that rises in pitch with progress and resolves into a chime on
+  confirm.
+- Ticks haptics at each tenth of the hold, a little stronger each time, and
+  finishes with a success pattern on supported devices.
+- Springs the fill back when released early, and resumes from where it is if
+  pressed again mid-spring.
+- Ends with a drawn checkmark, then resets after a configurable delay.
+- Works with pointer, touch, and keyboard (hold `Space` or
+  `Enter`).
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/hold-to-confirm
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install lucide-react motion web-haptics
+```
+
+<Step>Add the hold-to-confirm hook</Step>
+
+<ComponentSource
+  src="src/hooks/use-hold-to-confirm.ts"
+  title="hooks/use-hold-to-confirm.ts"
+  collapsible="false"
+/>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="hold-to-confirm" title="components/hold-to-confirm.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { HoldToConfirm } from "@/components/hold-to-confirm";
+```
+
+```tsx
+<HoldToConfirm onConfirm={() => deleteProject(project.id)} />
+```
+
+Customize the labels, timing, and fill color.
+
+```tsx
+<HoldToConfirm
+  icon={<LogOutIcon />}
+  confirmedLabel="Signed out"
+  holdDuration={1200}
+  fillClassName="bg-amber-500 text-black"
+>
+  Hold to sign out
+</HoldToConfirm>
+```
+
+Pass `resetDelay={false}` to keep the button confirmed, for example while the
+deletion request is in flight or before navigating away.
+
+```tsx
+<HoldToConfirm resetDelay={false} onConfirm={handleDelete} />
+```
+
+### Hook
+
+Use `useHoldToConfirm` to build your own surface. It returns the hold `state`,
+a `progress` motion value from `0` to `1`, the event `handlers` to spread on a
+button, and a `reset` function.
+
+```tsx
+const { state, progress, handlers } = useHoldToConfirm({
+  onConfirm: handleDelete,
+});
+```
+
+## Accessibility
+
+The button keeps native focus behavior and is held from the keyboard with
+`Space` or `Enter`; releasing the key or moving focus away
+cancels the hold. The `instructions` prop is linked through
+`aria-describedby`, and the confirmed label is announced through a polite live
+region.
+
+With reduced motion enabled, the press scale and spring-back are replaced by a
+short fade, and sound is muted to match the rest of TentUI. The fill and
+checkmark remain because they communicate the state.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/hold-to-confirm/hold-to-confirm.tsx"
+  name="HoldToConfirmProps"
+/>

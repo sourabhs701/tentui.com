@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"hold-to-confirm": {
+		name: "hold-to-confirm",
+		title: "Hold to Confirm",
+		description: "Guard destructive actions behind a press-and-hold fill with rising sound, haptic ticks, and a checkmark.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/hold-to-confirm/hold-to-confirm.tsx","type":"registry:component","target":"@components/hold-to-confirm.tsx"},{"path":"src/hooks/use-hold-to-confirm.ts","type":"registry:hook","target":"@hooks/use-hold-to-confirm.ts"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/hold-to-confirm/hold-to-confirm")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for hold-to-confirm");
+			}
+			return { default: module.default };
+		}),
+		categories: ["buttons"],
+		meta: {"createdAt":"2026-10-22"},
+	},
 	"interactive-sprite": {
 		name: "interactive-sprite",
 		title: "Interactive Sprite",
@@ -526,6 +544,24 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
+	},
+	"hold-to-confirm-demo": {
+		name: "hold-to-confirm-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/hold-to-confirm-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/hold-to-confirm-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for hold-to-confirm-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
 	"interactive-sprite-demo": {
 		name: "interactive-sprite-demo",
