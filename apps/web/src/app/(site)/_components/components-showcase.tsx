@@ -3,14 +3,24 @@
 import { ArrowUpRight } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
-import { ComponentPreviewImage } from "@/components/component-card";
+import { ComponentPreviewMedia } from "@/components/component-preview-media";
 import { TentUiMark } from "@/components/tentui-mark";
 import { components } from "@/lib/components";
 import { cn } from "@/lib/utils";
 
-const featuredComponents = components
-	.filter((item) => typeof item.meta?.video === "string")
-	.slice(1);
+// The first entry fills the large card.
+const FEATURED = [
+	"search-command",
+	"hold-to-confirm",
+	"stateful-button",
+	"animated-tabs",
+	"scribbled-text",
+];
+
+const featuredComponents = FEATURED.flatMap((name) => {
+	const component = components.find((item) => item.name === name);
+	return component ? [component] : [];
+});
 
 type ComponentItem = (typeof components)[number];
 
@@ -38,9 +48,13 @@ function ShowcaseCard({
 					large && "lg:aspect-auto lg:flex-1",
 				)}
 			>
-				<ComponentPreviewImage
+				<ComponentPreviewMedia
 					component={item}
-					sizes="(min-width: 1024px) 50vw, (min-width: 640px) 100vw, 100vw"
+					sizes={
+						large
+							? "(min-width: 1024px) 66vw, 100vw"
+							: "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+					}
 				/>
 			</div>
 

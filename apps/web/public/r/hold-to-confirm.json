@@ -23,7 +23,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-10-22"
+    "createdAt": "2026-10-22",
+    "image": "https://cdn.srb.codes/images/components/hold-to-confirm",
+    "video": "https://cdn.srb.codes/videos/components/hold-to-confirm"
   },
   "docs": "https://tentui.com/components/hold-to-confirm",
   "categories": [

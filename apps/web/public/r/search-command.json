@@ -21,7 +21,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-07-30"
+    "createdAt": "2026-07-30",
+    "image": "https://cdn.srb.codes/images/components/search-command",
+    "video": "https://cdn.srb.codes/videos/components/search-command"
   },
   "docs": "https://tentui.com/components/search-command",
   "categories": [

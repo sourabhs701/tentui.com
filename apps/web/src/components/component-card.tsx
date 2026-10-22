@@ -1,40 +1,11 @@
 import { motion } from "motion/react";
 import type { Route } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import type { RegistryItem } from "shadcn/schema";
-import { cn } from "@/lib/utils";
+import { ComponentPreviewMedia } from "@/components/component-preview-media";
 
-const themes = ["light", "dark"] as const;
-
-export function ComponentPreviewImage({
-	component,
-	className,
-	sizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw",
-}: {
-	component: RegistryItem;
-	className?: string;
-	sizes?: string;
-}) {
-	const imageBase = `https://cdn.tentui.com/images/${encodeURIComponent(component.name)}-`;
-
-	return themes.map((theme) => (
-		<Image
-			key={theme}
-			src={`${imageBase}${theme}.png`}
-			alt={`${component.title ?? component.name} ${theme} preview`}
-			fill
-			sizes={sizes}
-			className={cn(
-				"absolute inset-0 size-full object-cover",
-				className,
-				theme === "light" ? "block dark:hidden" : "hidden dark:block",
-			)}
-			unoptimized
-		/>
-	));
-}
+export { ComponentPreviewImage } from "@/components/component-preview-media";
 
 // ─── Component Card ────────────────────────────────────────────────────────
 export function ComponentCard({
@@ -44,29 +15,9 @@ export function ComponentCard({
 	component: RegistryItem;
 	index: number;
 }) {
-	const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
 	const [isHovered, setIsHovered] = useState(false);
-	const imageBase = `https://cdn.tentui.com/images/${encodeURIComponent(component.name)}-`;
-	const videoBase =
-		typeof component.meta?.video === "string"
-			? encodeURI(component.meta.video)
-			: undefined;
-
-	const startPreview = () => {
-		setIsHovered(true);
-		for (const video of videoRefs.current) {
-			if (video) void video.play().catch(() => {});
-		}
-	};
-
-	const stopPreview = () => {
-		setIsHovered(false);
-		for (const video of videoRefs.current) {
-			if (!video) continue;
-			video.pause();
-			video.currentTime = 0;
-		}
-	};
+	const startPreview = () => setIsHovered(true);
+	const stopPreview = () => setIsHovered(false);
 
 	return (
 		<motion.div
@@ -137,30 +88,7 @@ export function ComponentCard({
 						}}
 						className="relative w-full overflow-hidden rounded-xl bg-background shadow-surface-inset transition-colors"
 					>
-						{videoBase &&
-							themes.map((theme, index) => (
-								<video
-									key={theme}
-									ref={(video) => {
-										videoRefs.current[index] = video;
-									}}
-									src={`${videoBase}-${theme}.mp4`}
-									poster={`${imageBase}${theme}.png`}
-									muted
-									loop
-									playsInline
-									preload="metadata"
-									className={`absolute inset-0 size-full object-cover ${theme === "light" ? "block dark:hidden" : "hidden dark:block"}`}
-								/>
-							))}
-
-						<ComponentPreviewImage
-							component={component}
-							className={cn(
-								"transition-all duration-300 group-hover:scale-105",
-								videoBase && "group-hover:opacity-0",
-							)}
-						/>
+						<ComponentPreviewMedia component={component} playing={isHovered} />
 					</motion.div>
 				</div>
 			</Link>

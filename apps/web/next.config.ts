@@ -6,6 +6,7 @@ import type { NextConfig } from "next";
 loadEnvFiles();
 
 const nextConfig: NextConfig = {
+	allowedDevOrigins: ["tentui.localhost", "*.tentui.localhost"],
 	typedRoutes: true,
 	reactCompiler: true,
 	turbopack: {

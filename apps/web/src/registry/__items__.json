@@ -514,7 +514,9 @@
       "buttons"
     ],
     "meta": {
-      "createdAt": "2026-10-22"
+      "createdAt": "2026-10-22",
+      "image": "https://cdn.srb.codes/images/components/hold-to-confirm",
+      "video": "https://cdn.srb.codes/videos/components/hold-to-confirm"
     },
     "dependencies": [
       "lucide-react",
@@ -538,7 +540,9 @@
     ],
     "categories": [],
     "meta": {
-      "createdAt": "2026-08-06"
+      "createdAt": "2026-08-06",
+      "image": "https://cdn.srb.codes/images/components/interactive-sprite",
+      "video": "https://cdn.srb.codes/videos/components/interactive-sprite"
     }
   },
   "tile-field": {
@@ -559,7 +563,9 @@
       "typography"
     ],
     "meta": {
-      "createdAt": "2026-07-30"
+      "createdAt": "2026-07-30",
+      "image": "https://cdn.srb.codes/images/components/tile-field",
+      "video": "https://cdn.srb.codes/videos/components/tile-field"
     }
   },
   "search-command": {
@@ -580,7 +586,9 @@
       "menus"
     ],
     "meta": {
-      "createdAt": "2026-07-30"
+      "createdAt": "2026-07-30",
+      "image": "https://cdn.srb.codes/images/components/search-command",
+      "video": "https://cdn.srb.codes/videos/components/search-command"
     },
     "dependencies": [
       "lucide-react",
@@ -610,7 +618,9 @@
       "buttons"
     ],
     "meta": {
-      "createdAt": "2026-07-26"
+      "createdAt": "2026-07-26",
+      "image": "https://cdn.srb.codes/images/components/tailwindcss-buttons",
+      "video": "https://cdn.srb.codes/videos/components/tailwindcss-buttons"
     },
     "dependencies": [
       "react-element-to-jsx-string",
@@ -674,7 +684,9 @@
     ],
     "meta": {
       "createdAt": "2026-07-26",
-      "updatedAt": "2026-08-19"
+      "updatedAt": "2026-08-19",
+      "image": "https://cdn.srb.codes/images/components/component-sidebar",
+      "video": "https://cdn.srb.codes/videos/components/component-sidebar"
     },
     "dependencies": [
       "@rexa-developer/tiks",
@@ -706,7 +718,9 @@
       "buttons"
     ],
     "meta": {
-      "createdAt": "2026-07-22"
+      "createdAt": "2026-07-22",
+      "image": "https://cdn.srb.codes/images/components/peeping-button",
+      "video": "https://cdn.srb.codes/videos/components/peeping-button"
     },
     "dependencies": [
       "motion"
@@ -730,7 +744,9 @@
       "menus"
     ],
     "meta": {
-      "createdAt": "2026-07-21"
+      "createdAt": "2026-07-21",
+      "image": "https://cdn.srb.codes/images/components/brand-context-menu",
+      "video": "https://cdn.srb.codes/videos/components/brand-context-menu"
     },
     "dependencies": [
       "lucide-react",
@@ -834,7 +850,9 @@
       "buttons"
     ],
     "meta": {
-      "createdAt": "2026-08-19"
+      "createdAt": "2026-08-19",
+      "image": "https://cdn.srb.codes/images/components/theme-toggle",
+      "video": "https://cdn.srb.codes/videos/components/theme-toggle"
     },
     "dependencies": [
       "lucide-react",
@@ -936,8 +954,8 @@
     ],
     "meta": {
       "createdAt": "2026-07-19",
-      "video": "https://cdn.srb.codes/videos/components/animated-save-button",
-      "image": "https://cdn.srb.codes/images/components/animated-save-button"
+      "image": "https://cdn.srb.codes/images/components/stateful-button",
+      "video": "https://cdn.srb.codes/videos/components/stateful-button"
     },
     "dependencies": [
       "lucide-react",
@@ -961,8 +979,8 @@
     "categories": [],
     "meta": {
       "createdAt": "2026-07-19",
-      "video": "https://cdn.srb.codes/videos/components/animated-arrow",
-      "image": "https://cdn.srb.codes/images/components/animated-arrow"
+      "image": "https://cdn.srb.codes/images/components/animated-arrow",
+      "video": "https://cdn.srb.codes/videos/components/animated-arrow"
     },
     "dependencies": [
       "lucide-react"

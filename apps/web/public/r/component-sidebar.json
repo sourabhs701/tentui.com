@@ -54,7 +54,9 @@
   ],
   "meta": {
     "createdAt": "2026-07-26",
-    "updatedAt": "2026-08-19"
+    "updatedAt": "2026-08-19",
+    "image": "https://cdn.srb.codes/images/components/component-sidebar",
+    "video": "https://cdn.srb.codes/videos/components/component-sidebar"
   },
   "docs": "https://tentui.com/components/component-sidebar",
   "categories": [

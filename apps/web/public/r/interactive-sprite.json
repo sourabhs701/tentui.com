@@ -12,7 +12,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-08-06"
+    "createdAt": "2026-08-06",
+    "image": "https://cdn.srb.codes/images/components/interactive-sprite",
+    "video": "https://cdn.srb.codes/videos/components/interactive-sprite"
   },
   "docs": "https://tentui.com/components/interactive-sprite",
   "categories": [],

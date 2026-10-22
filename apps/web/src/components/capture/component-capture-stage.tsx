@@ -33,6 +33,24 @@ async function waitForImages(root: HTMLElement) {
 	);
 }
 
+async function waitForBackgroundImages(root: HTMLElement) {
+	const urls = new Set<string>();
+	for (const element of [root, ...root.querySelectorAll<HTMLElement>("*")]) {
+		const { backgroundImage } = getComputedStyle(element);
+		for (const match of backgroundImage.matchAll(/url\(["']?(.*?)["']?\)/g)) {
+			if (match[1]) urls.add(match[1]);
+		}
+	}
+
+	await Promise.all(
+		Array.from(urls, (url) => {
+			const image = new Image();
+			image.src = url;
+			return image.decode().catch(() => undefined);
+		}),
+	);
+}
+
 async function waitForFiniteAnimations(root: HTMLElement) {
 	const animations = root
 		.getAnimations({ subtree: true })
@@ -48,17 +66,19 @@ async function waitForFiniteAnimations(root: HTMLElement) {
 export function ComponentCaptureStage({
 	children,
 	className,
-	minHeight,
+	height,
 	name,
 	theme,
 	width,
+	zoom,
 }: {
 	children: ReactNode;
 	className?: string;
-	minHeight: number;
+	height: number;
 	name: string;
 	theme: ComponentCaptureTheme;
 	width: number;
+	zoom?: number;
 }) {
 	const stageRef = useRef<HTMLDivElement>(null);
 	const [ready, setReady] = useState(false);
@@ -81,6 +101,7 @@ export function ComponentCaptureStage({
 
 			await document.fonts.ready;
 			await waitForImages(stage);
+			await waitForBackgroundImages(stage);
 			await afterTwoFrames();
 			await waitForFiniteAnimations(stage);
 			await afterTwoFrames();
@@ -104,9 +125,18 @@ export function ComponentCaptureStage({
 				"style-preview box-border flex items-center justify-center overflow-hidden bg-background text-foreground",
 				className,
 			)}
-			style={{ minHeight, width }}
+			style={{ height, maxHeight: height, minHeight: height, width }}
 		>
-			{children}
+			{zoom ? (
+				<div
+					className="flex w-full items-center justify-center"
+					style={{ zoom }}
+				>
+					{children}
+				</div>
+			) : (
+				children
+			)}
 		</div>
 	);
 }

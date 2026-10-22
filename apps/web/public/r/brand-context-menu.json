@@ -20,7 +20,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-07-21"
+    "createdAt": "2026-07-21",
+    "image": "https://cdn.srb.codes/images/components/brand-context-menu",
+    "video": "https://cdn.srb.codes/videos/components/brand-context-menu"
   },
   "docs": "https://tentui.com/components/brand-context-menu",
   "categories": [

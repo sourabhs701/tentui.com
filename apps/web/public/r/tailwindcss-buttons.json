@@ -19,7 +19,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-07-26"
+    "createdAt": "2026-07-26",
+    "image": "https://cdn.srb.codes/images/components/tailwindcss-buttons",
+    "video": "https://cdn.srb.codes/videos/components/tailwindcss-buttons"
   },
   "docs": "https://tentui.com/components/tailwindcss-buttons",
   "categories": [

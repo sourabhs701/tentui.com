@@ -291,7 +291,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-10-22"},
+		meta: {"createdAt":"2026-10-22","image":"https://cdn.srb.codes/images/components/hold-to-confirm","video":"https://cdn.srb.codes/videos/components/hold-to-confirm"},
 	},
 	"interactive-sprite": {
 		name: "interactive-sprite",
@@ -309,7 +309,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: [],
-		meta: {"createdAt":"2026-08-06"},
+		meta: {"createdAt":"2026-08-06","image":"https://cdn.srb.codes/images/components/interactive-sprite","video":"https://cdn.srb.codes/videos/components/interactive-sprite"},
 	},
 	"tile-field": {
 		name: "tile-field",
@@ -327,7 +327,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["typography"],
-		meta: {"createdAt":"2026-07-30"},
+		meta: {"createdAt":"2026-07-30","image":"https://cdn.srb.codes/images/components/tile-field","video":"https://cdn.srb.codes/videos/components/tile-field"},
 	},
 	"search-command": {
 		name: "search-command",
@@ -345,7 +345,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["menus"],
-		meta: {"createdAt":"2026-07-30"},
+		meta: {"createdAt":"2026-07-30","image":"https://cdn.srb.codes/images/components/search-command","video":"https://cdn.srb.codes/videos/components/search-command"},
 	},
 	"tailwindcss-buttons": {
 		name: "tailwindcss-buttons",
@@ -363,7 +363,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-07-26"},
+		meta: {"createdAt":"2026-07-26","image":"https://cdn.srb.codes/images/components/tailwindcss-buttons","video":"https://cdn.srb.codes/videos/components/tailwindcss-buttons"},
 	},
 	"component-sidebar": {
 		name: "component-sidebar",
@@ -381,7 +381,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["navigation"],
-		meta: {"createdAt":"2026-07-26","updatedAt":"2026-08-19"},
+		meta: {"createdAt":"2026-07-26","updatedAt":"2026-08-19","image":"https://cdn.srb.codes/images/components/component-sidebar","video":"https://cdn.srb.codes/videos/components/component-sidebar"},
 	},
 	"peeping-button": {
 		name: "peeping-button",
@@ -399,7 +399,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-07-22"},
+		meta: {"createdAt":"2026-07-22","image":"https://cdn.srb.codes/images/components/peeping-button","video":"https://cdn.srb.codes/videos/components/peeping-button"},
 	},
 	"brand-context-menu": {
 		name: "brand-context-menu",
@@ -417,7 +417,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["menus"],
-		meta: {"createdAt":"2026-07-21"},
+		meta: {"createdAt":"2026-07-21","image":"https://cdn.srb.codes/images/components/brand-context-menu","video":"https://cdn.srb.codes/videos/components/brand-context-menu"},
 	},
 	"animated-tabs": {
 		name: "animated-tabs",
@@ -453,7 +453,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-08-19"},
+		meta: {"createdAt":"2026-08-19","image":"https://cdn.srb.codes/images/components/theme-toggle","video":"https://cdn.srb.codes/videos/components/theme-toggle"},
 	},
 	"copy-button": {
 		name: "copy-button",
@@ -507,7 +507,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-07-19","video":"https://cdn.srb.codes/videos/components/animated-save-button","image":"https://cdn.srb.codes/images/components/animated-save-button"},
+		meta: {"createdAt":"2026-07-19","image":"https://cdn.srb.codes/images/components/stateful-button","video":"https://cdn.srb.codes/videos/components/stateful-button"},
 	},
 	"animated-arrow": {
 		name: "animated-arrow",
@@ -525,7 +525,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: [],
-		meta: {"createdAt":"2026-07-19","video":"https://cdn.srb.codes/videos/components/animated-arrow","image":"https://cdn.srb.codes/images/components/animated-arrow"},
+		meta: {"createdAt":"2026-07-19","image":"https://cdn.srb.codes/images/components/animated-arrow","video":"https://cdn.srb.codes/videos/components/animated-arrow"},
 	},
 	"scribbled-text": {
 		name: "scribbled-text",

@@ -9,9 +9,9 @@ export default function CaptureLayout({ children }: { children: ReactNode }) {
 					display: none !important;
 				}
 
-				[data-component-capture] *,
-				[data-component-capture] *::before,
-				[data-component-capture] *::after {
+				[data-component-capture]:not([data-capture-motion]) *,
+				[data-component-capture]:not([data-capture-motion]) *::before,
+				[data-component-capture]:not([data-capture-motion]) *::after {
 					animation-delay: 0s !important;
 					animation-duration: 0s !important;
 					caret-color: transparent !important;

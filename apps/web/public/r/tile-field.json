@@ -12,7 +12,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-07-30"
+    "createdAt": "2026-07-30",
+    "image": "https://cdn.srb.codes/images/components/tile-field",
+    "video": "https://cdn.srb.codes/videos/components/tile-field"
   },
   "docs": "https://tentui.com/components/tile-field",
   "categories": [

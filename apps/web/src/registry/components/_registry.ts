@@ -23,6 +23,8 @@ export const components: Registry["items"] = [
 		categories: ["buttons"],
 		meta: {
 			createdAt: "2026-10-22",
+			image: "https://cdn.srb.codes/images/components/hold-to-confirm",
+			video: "https://cdn.srb.codes/videos/components/hold-to-confirm",
 		},
 		docs: "https://tentui.com/components/hold-to-confirm",
 	},
@@ -42,6 +44,8 @@ export const components: Registry["items"] = [
 		categories: [],
 		meta: {
 			createdAt: "2026-08-06",
+			image: "https://cdn.srb.codes/images/components/interactive-sprite",
+			video: "https://cdn.srb.codes/videos/components/interactive-sprite",
 		},
 		docs: "https://tentui.com/components/interactive-sprite",
 	},
@@ -61,6 +65,8 @@ export const components: Registry["items"] = [
 		categories: ["typography"],
 		meta: {
 			createdAt: "2026-07-30",
+			image: "https://cdn.srb.codes/images/components/tile-field",
+			video: "https://cdn.srb.codes/videos/components/tile-field",
 		},
 		docs: "https://tentui.com/components/tile-field",
 	},
@@ -82,6 +88,8 @@ export const components: Registry["items"] = [
 		categories: ["menus"],
 		meta: {
 			createdAt: "2026-07-30",
+			image: "https://cdn.srb.codes/images/components/search-command",
+			video: "https://cdn.srb.codes/videos/components/search-command",
 		},
 		docs: "https://tentui.com/components/search-command",
 	},
@@ -103,6 +111,8 @@ export const components: Registry["items"] = [
 		categories: ["buttons"],
 		meta: {
 			createdAt: "2026-07-26",
+			image: "https://cdn.srb.codes/images/components/tailwindcss-buttons",
+			video: "https://cdn.srb.codes/videos/components/tailwindcss-buttons",
 		},
 		docs: "https://tentui.com/components/tailwindcss-buttons",
 	},
@@ -150,6 +160,8 @@ export const components: Registry["items"] = [
 		meta: {
 			createdAt: "2026-07-26",
 			updatedAt: "2026-08-19",
+			image: "https://cdn.srb.codes/images/components/component-sidebar",
+			video: "https://cdn.srb.codes/videos/components/component-sidebar",
 		},
 		docs: "https://tentui.com/components/component-sidebar",
 	},
@@ -170,6 +182,8 @@ export const components: Registry["items"] = [
 		categories: ["buttons"],
 		meta: {
 			createdAt: "2026-07-22",
+			image: "https://cdn.srb.codes/images/components/peeping-button",
+			video: "https://cdn.srb.codes/videos/components/peeping-button",
 		},
 		docs: "https://tentui.com/components/peeping-button",
 	},
@@ -191,6 +205,8 @@ export const components: Registry["items"] = [
 		categories: ["menus"],
 		meta: {
 			createdAt: "2026-07-21",
+			image: "https://cdn.srb.codes/images/components/brand-context-menu",
+			video: "https://cdn.srb.codes/videos/components/brand-context-menu",
 		},
 		docs: "https://tentui.com/components/brand-context-menu",
 	},
@@ -269,6 +285,8 @@ export const components: Registry["items"] = [
 		categories: ["buttons"],
 		meta: {
 			createdAt: "2026-08-19",
+			image: "https://cdn.srb.codes/images/components/theme-toggle",
+			video: "https://cdn.srb.codes/videos/components/theme-toggle",
 		},
 		docs: "https://tentui.com/components/theme-toggle",
 	},
@@ -350,8 +368,8 @@ export const components: Registry["items"] = [
 		categories: ["buttons"],
 		meta: {
 			createdAt: "2026-07-19",
-			video: "https://cdn.srb.codes/videos/components/animated-save-button",
-			image: "https://cdn.srb.codes/images/components/animated-save-button",
+			image: "https://cdn.srb.codes/images/components/stateful-button",
+			video: "https://cdn.srb.codes/videos/components/stateful-button",
 		},
 		docs: "https://tentui.com/components/stateful-button",
 	},
@@ -372,8 +390,8 @@ export const components: Registry["items"] = [
 		categories: [],
 		meta: {
 			createdAt: "2026-07-19",
-			video: "https://cdn.srb.codes/videos/components/animated-arrow",
 			image: "https://cdn.srb.codes/images/components/animated-arrow",
+			video: "https://cdn.srb.codes/videos/components/animated-arrow",
 		},
 		docs: "https://tentui.com/components/animated-arrow",
 	},

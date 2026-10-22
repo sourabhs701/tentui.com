@@ -95,7 +95,7 @@ async function getCaptureManifest(baseUrl, timeout) {
 		!Array.isArray(manifest.components) ||
 		!Array.isArray(manifest.themes) ||
 		typeof manifest.frame?.width !== "number" ||
-		typeof manifest.frame?.minHeight !== "number"
+		typeof manifest.frame?.height !== "number"
 	) {
 		throw new Error(`Invalid capture manifest: ${url}`);
 	}
@@ -117,7 +117,7 @@ async function exportImage(browser, component, theme, manifest, options) {
 		deviceScaleFactor: options.deviceScaleFactor,
 		reducedMotion: "reduce",
 		viewport: {
-			height: manifest.frame.minHeight,
+			height: manifest.frame.height,
 			width: manifest.frame.width,
 		},
 	});

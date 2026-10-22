@@ -15,7 +15,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-07-22"
+    "createdAt": "2026-07-22",
+    "image": "https://cdn.srb.codes/images/components/peeping-button",
+    "video": "https://cdn.srb.codes/videos/components/peeping-button"
   },
   "docs": "https://tentui.com/components/peeping-button",
   "categories": [

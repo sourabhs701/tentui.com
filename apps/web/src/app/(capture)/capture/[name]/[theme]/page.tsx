@@ -2,9 +2,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
 
+import {
+	ComponentSidebarScene,
+	ScribbledTextScene,
+	TailwindcssButtonsScene,
+} from "@/components/capture/capture-scenes";
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
 import {
 	COMPONENT_CAPTURE_FRAME,
+	COMPONENT_CAPTURE_FRAMING,
 	COMPONENT_CAPTURE_THEMES,
 	componentCaptureNames,
 	isComponentCaptureName,
@@ -18,6 +24,13 @@ type CaptureIndexItem = {
 };
 
 const captureIndex = Index as Record<string, CaptureIndexItem>;
+
+// Capture-only framings for demos that don't fit the 4:3 frame.
+const captureScenes: Record<string, ComponentType> = {
+	"component-sidebar": ComponentSidebarScene,
+	"scribbled-text": ScribbledTextScene,
+	"tailwindcss-buttons": TailwindcssButtonsScene,
+};
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -44,21 +57,24 @@ export default async function ComponentCapturePage({
 	}
 
 	const example = captureIndex[`${name}-demo`];
-	const Component = example?.component;
+	const Component = captureScenes[name] ?? example?.component;
 	if (!Component) notFound();
 
+	const framing = COMPONENT_CAPTURE_FRAMING[name];
 	const previewClassName =
-		typeof example.meta?.previewClassName === "string"
+		framing?.className ??
+		(typeof example?.meta?.previewClassName === "string"
 			? example.meta.previewClassName
-			: undefined;
+			: undefined);
 
 	return (
 		<ComponentCaptureStage
 			className={previewClassName}
-			minHeight={COMPONENT_CAPTURE_FRAME.minHeight}
+			height={COMPONENT_CAPTURE_FRAME.height}
 			name={name}
 			theme={theme}
 			width={COMPONENT_CAPTURE_FRAME.width}
+			zoom={framing?.zoom}
 		>
 			<Component />
 		</ComponentCaptureStage>
