@@ -34,6 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			url: `${SITE_INFO.url}/changelog`,
 			lastModified: new Date("2026-07-26"),
 		},
+		{ url: `${SITE_INFO.url}/sponsor` },
 		{ url: `${SITE_INFO.url}/license` },
 		{ url: `${SITE_INFO.url}/terms` },
 		{ url: `${SITE_INFO.url}/privacy` },

@@ -8,11 +8,11 @@ import {
 } from "motion/react";
 import type { Route } from "next";
 import Link from "next/link";
-import type { ComponentPropsWithoutRef } from "react";
 import { useEffect, useRef, useState } from "react";
 import { ComponentPreviewMedia } from "@/components/component-preview-media";
 import { components } from "@/lib/components";
-import { cn } from "@/lib/utils";
+
+import { SoftButton } from "./soft-button";
 
 // Order mixes shapes and colors so neighbouring cards read differently.
 const SHOWCASE_ORDER = [
@@ -46,38 +46,6 @@ const CAROUSEL_ITEMS = [
 
 const CARD_WIDTH = { mobile: 300, desktop: 360 } as const;
 const CARD_GAP = 20;
-
-type SoftButtonProps = ComponentPropsWithoutRef<typeof Link> & {
-	variant?: "default" | "outline";
-};
-
-function SoftButton({
-	className,
-	variant = "default",
-	...props
-}: SoftButtonProps) {
-	return (
-		<Link
-			className={cn(
-				"group relative inline-flex items-center justify-center rounded-xl border-2 px-6 py-4 font-semibold uppercase transition-all duration-150 ease-[cubic-bezier(0,0,0.58,1)]",
-				"shadow-[0_12px_0_-2px_#60a5fa,0_12px_0_0_#1d4ed8,0_22px_0_0_#dbeafe]",
-				"dark:shadow-[0_12px_0_-2px_#60a5fa,0_12px_0_0_#1d4ed8,0_22px_15px_-5px_rgba(0,0,0,0.3)]",
-				"hover:translate-y-1 hover:shadow-[0_8px_0_-2px_#60a5fa,0_8px_0_0_#1d4ed8,0_16px_0_0_#dbeafe]",
-				"dark:hover:shadow-[0_8px_0_-2px_#60a5fa,0_8px_0_0_#1d4ed8,0_16px_10px_-5px_rgba(0,0,0,0.3)]",
-				"active:translate-y-3 active:shadow-[0_0px_0_-2px_#60a5fa,0_0px_0_0_#1d4ed8,0_0px_0_0_#dbeafe]",
-				"dark:active:shadow-[0_0px_0_-2px_#60a5fa,0_0px_0_0_#1d4ed8,0_0px_0_0_rgba(0,0,0,0)]",
-				{
-					"border-blue-700 bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-600":
-						variant === "default",
-					"border-blue-600 bg-transparent text-blue-600 dark:text-blue-400":
-						variant === "outline",
-				},
-				className,
-			)}
-			{...props}
-		/>
-	);
-}
 
 export function Hero() {
 	const reduceMotion = useReducedMotion();
@@ -167,7 +135,7 @@ export function Hero() {
 					{CAROUSEL_ITEMS.map((component, index) => (
 						<motion.div
 							key={`${component.name}-${index}`}
-							className="w-[300px] shrink-0 select-none sm:w-[600px]"
+							className="w-[300px] shrink-0 select-none sm:w-[420px]"
 							animate={
 								hoveredIndex === index
 									? { scale: 1.03, rotateX: -8, y: -12 }

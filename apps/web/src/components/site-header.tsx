@@ -12,6 +12,7 @@ const BrandContextMenu = dynamic(
 );
 
 import { cn } from "@/lib/utils";
+import { HeaderSponsor } from "./header-sponsor";
 import Marker from "./marker";
 import { NavItemGitHub } from "./nav-item-github";
 import {
@@ -63,9 +64,10 @@ export function SiteHeader({ showGutters = true }: SiteHeaderProps) {
 						<div className="flex-1" />
 
 						<div className="flex items-center max-sm:*:data-[slot=command-menu-trigger]:hidden">
+							<HeaderSponsor />
 							<Separator
 								orientation="vertical"
-								className="mr-2 hidden data-vertical:h-5 data-vertical:self-center sm:block"
+								className="mx-2 data-vertical:h-5 data-vertical:self-center"
 							/>
 							<SiteHeaderSearchCommand
 								components={headerCommandComponents}

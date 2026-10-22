@@ -47,6 +47,10 @@ const legalLinks: FooterLink[] = [
 
 const brandLinks: FooterLink[] = [
 	{
+		label: "Sponsor",
+		href: "/sponsor",
+	},
+	{
 		label: "Changelog",
 		href: "/changelog",
 		icon: <HistoryIcon className="size-3" aria-hidden="true" />,

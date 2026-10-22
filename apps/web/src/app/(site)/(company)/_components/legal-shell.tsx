@@ -30,7 +30,7 @@ export function ContactBlock({
 	subject: string;
 	description: string;
 }) {
-	const href = `mailto:srb@tentui.com?subject=${encodeURIComponent(subject)}`;
+	const href = `mailto:sourabh@srb.codes?subject=${encodeURIComponent(subject)}`;
 	return (
 		<section className="mt-16 border-border border-t pt-8">
 			<h2 className="font-semibold text-[15px] text-foreground tracking-tight">
@@ -42,7 +42,7 @@ export function ContactBlock({
 					href={href}
 					className="text-foreground underline decoration-muted-foreground/40 underline-offset-4 hover:decoration-foreground"
 				>
-					srb@tentui.com
+					sourabh@srb.codes
 				</a>
 				.
 			</p>
