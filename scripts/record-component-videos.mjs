@@ -7,9 +7,13 @@
 // paused and stepped to the same virtual time, so 60fps output is smooth no
 // matter how long a 4x screenshot takes. The pointer is a drawn cursor that
 // follows each component's scripted scenario.
+//
+// With --audio, AudioContext is swapped for an OfflineAudioContext whose
+// currentTime follows the same virtual clock, so every UI sound is scheduled
+// at the exact frame it belongs to and rendered afterwards in one pass.
 
-import { execFileSync } from "node:child_process";
-import { mkdir, rm } from "node:fs/promises";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -22,6 +26,7 @@ const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(SCRIPT_DIR, "..");
 
 const DEFAULTS = {
+	audioSampleRate: 48_000,
 	baseUrl: "http://localhost:3001",
 	deviceScaleFactor: 4,
 	fps: 60,
@@ -45,11 +50,16 @@ Options:
   --pad <seconds>      Held frames on each end of the .mov for media:publish's
                        trim (default: ${DEFAULTS.padSeconds})
   --keep-frames        Keep the rendered PNG frames
+  --audio              Capture UI sounds and add a social cut with audio
   -h, --help           Show this help
 
 Output per component and theme:
   <slug>-<theme>.mp4   Web-ready loop
   <slug>-<theme>.mov   Padded source for 'pnpm media:publish'
+
+With --audio, also:
+  <slug>-<theme>.wav       Captured UI sound, in sync with the .mp4
+  <slug>-<theme>-social.mp4  1440x1080 H.264 + AAC cut for X and other feeds
 `);
 }
 
@@ -57,6 +67,7 @@ function getOptions(args) {
 	const { values } = parseArgs({
 		args,
 		options: {
+			audio: { type: "boolean", default: false },
 			"base-url": { type: "string", default: DEFAULTS.baseUrl },
 			component: { type: "string", multiple: true, default: [] },
 			dpr: { type: "string", default: String(DEFAULTS.deviceScaleFactor) },
@@ -75,6 +86,7 @@ function getOptions(args) {
 	}
 
 	return {
+		audio: values.audio,
 		baseUrl: values["base-url"],
 		components: values.component,
 		deviceScaleFactor: Number(values.dpr),
@@ -152,6 +164,96 @@ function syncFrame({ now, previous, cursor }) {
 	element.style.transform = `translate(${cursor.x - hotX}px, ${cursor.y - hotY}px) scale(${cursor.scale})`;
 }
 
+// Runs before any page script. tiks and friends read window.AudioContext at
+// import time, so they pick up the offline context transparently.
+function installAudioCapture({ frameMs, sampleRate, seconds }) {
+	const Offline = window.OfflineAudioContext;
+	class CaptureAudioContext extends Offline {
+		constructor() {
+			super({
+				length: Math.ceil(seconds * sampleRate),
+				numberOfChannels: 2,
+				sampleRate,
+			});
+			window.__captureAudioContexts ??= [];
+			window.__captureAudioContexts.push(this);
+		}
+		// Frame N is captured at virtual time (N + 1) * frameMs but shown at
+		// N * frameMs, so sounds shift back by one frame to line up.
+		get currentTime() {
+			const start = window.__captureAudioStart;
+			if (start === undefined) return 0;
+			return Math.max(0, (performance.now() - start - frameMs) / 1000);
+		}
+		get state() {
+			return "running";
+		}
+		resume() {
+			return Promise.resolve();
+		}
+		suspend() {
+			return Promise.resolve();
+		}
+		close() {
+			return Promise.resolve();
+		}
+	}
+	window.AudioContext = CaptureAudioContext;
+	window.webkitAudioContext = CaptureAudioContext;
+}
+
+// Renders every captured context, mixes them, and returns 16-bit stereo PCM.
+async function renderCapturedAudio({ seconds }) {
+	const contexts = window.__captureAudioContexts ?? [];
+	const buffers = await Promise.all(
+		contexts.map((context) =>
+			OfflineAudioContext.prototype.startRendering.call(context),
+		),
+	);
+	const sampleRate = buffers[0]?.sampleRate ?? 48_000;
+	const length = Math.round(seconds * sampleRate);
+	const pcm = new Int16Array(length * 2);
+	for (let channel = 0; channel < 2; channel++) {
+		const mixed = new Float32Array(length);
+		for (const buffer of buffers) {
+			const data = buffer.getChannelData(
+				Math.min(channel, buffer.numberOfChannels - 1),
+			);
+			for (let i = 0; i < Math.min(length, data.length); i++) {
+				mixed[i] += data[i];
+			}
+		}
+		for (let i = 0; i < length; i++) {
+			const sample = Math.max(-1, Math.min(1, mixed[i]));
+			pcm[i * 2 + channel] = sample < 0 ? sample * 0x8000 : sample * 0x7fff;
+		}
+	}
+	const bytes = new Uint8Array(pcm.buffer);
+	let binary = "";
+	for (let i = 0; i < bytes.length; i += 0x8000) {
+		binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+	}
+	return { base64: btoa(binary), sampleRate, sounds: contexts.length };
+}
+
+function toWav(pcm, sampleRate) {
+	const header = Buffer.alloc(44);
+	header.write("RIFF", 0);
+	header.writeUInt32LE(36 + pcm.length, 4);
+	header.write("WAVE", 8);
+	header.write("fmt ", 12);
+	header.writeUInt32LE(16, 16);
+	header.writeUInt16LE(1, 20);
+	header.writeUInt16LE(2, 22);
+	header.writeUInt32LE(sampleRate, 24);
+	header.writeUInt32LE(sampleRate * 4, 28);
+	header.writeUInt16LE(4, 32);
+	header.writeUInt16LE(16, 34);
+	header.write("data", 36);
+	header.writeUInt32LE(pcm.length, 40);
+	return Buffer.concat([header, pcm]);
+}
+
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 const lerp = (a, b, t) => a + (b - a) * t;
 
@@ -206,12 +308,12 @@ function createDirector(page, stage, framesDir, options) {
 			const end = now + ms;
 			while (now < end - frameMs / 2) await renderFrame();
 		},
-		async move(target, ms = 650, anchor = {}) {
+		async move(target, ms = 650, anchor = {}, ease = easeInOut) {
 			const from = { ...cursor };
 			const to = await resolvePoint(target, anchor);
 			const start = now;
 			while (now < start + ms - frameMs / 2) {
-				const t = easeInOut(Math.min((now - start) / ms, 1));
+				const t = ease(Math.min((now - start) / ms, 1));
 				cursor = { x: lerp(from.x, to.x, t), y: lerp(from.y, to.y, t) };
 				await page.mouse.move(cursor.x, cursor.y);
 				await renderFrame();
@@ -291,6 +393,14 @@ async function recordFrames(browser, name, theme, manifest, options) {
 		await context.grantPermissions(["clipboard-read", "clipboard-write"], {
 			origin: new URL(options.baseUrl).origin,
 		});
+		if (options.audio) {
+			await context.addInitScript(installAudioCapture, {
+				frameMs: 1000 / options.fps,
+				sampleRate: DEFAULTS.audioSampleRate,
+				// Room for the longest scenario; trimmed to the video on render.
+				seconds: 120,
+			});
+		}
 		await context.addInitScript((selectedTheme) => {
 			localStorage.setItem("theme", selectedTheme);
 			// Seeded random so light and dark takes behave identically.
@@ -335,16 +445,41 @@ async function recordFrames(browser, name, theme, manifest, options) {
 			fps: options.fps,
 			frame: { rest },
 		});
+		await page.evaluate(() => {
+			window.__captureAudioStart = performance.now();
+		});
 		await scenario.run(director);
-		return { frameCount: director.frameCount, framesDir };
+
+		let audioPath = null;
+		if (options.audio) {
+			const seconds = director.frameCount / options.fps;
+			const audio = await page.evaluate(renderCapturedAudio, { seconds });
+			audioPath = path.join(options.outputDir, `${name}-${theme}.wav`);
+			await writeFile(
+				audioPath,
+				toWav(Buffer.from(audio.base64, "base64"), audio.sampleRate),
+			);
+		}
+		return { audioPath, frameCount: director.frameCount, framesDir };
 	} finally {
 		await context.close();
 	}
 }
 
-function encode(name, theme, framesDir, options) {
+function peakVolume(file) {
+	const { stderr } = spawnSync(
+		"ffmpeg",
+		["-hide_banner", "-i", file, "-af", "volumedetect", "-f", "null", "-"],
+		{ encoding: "utf8" },
+	);
+	const match = /max_volume: (-?[\d.]+) dB/.exec(stderr);
+	return match ? Number(match[1]) : 0;
+}
+
+function encode(name, theme, framesDir, audioPath, options) {
 	const input = path.join(framesDir, "%04d.png");
 	const base = path.join(options.outputDir, `${name}-${theme}`);
+	const pad = String(options.padSeconds);
 	execFileSync(
 		"ffmpeg",
 		[
@@ -355,7 +490,6 @@ function encode(name, theme, framesDir, options) {
 		],
 		{ stdio: "inherit" },
 	);
-	const pad = String(options.padSeconds);
 	execFileSync(
 		"ffmpeg",
 		[
@@ -365,6 +499,26 @@ function encode(name, theme, framesDir, options) {
 			...["-c:v", "libx264", "-preset", "slow", "-crf", "10"],
 			...["-pix_fmt", "yuv420p", "-an"],
 			`${base}.mov`,
+		],
+		{ stdio: "inherit" },
+	);
+	if (!audioPath) return;
+
+	// Feeds cap video at 1920x1200, so scale 4:3 down to 1440x1080. UI sounds
+	// are mixed quiet, so peak-normalize them to -3 dB for phone speakers.
+	const gain = Math.max(0, -3 - peakVolume(audioPath));
+	execFileSync(
+		"ffmpeg",
+		[
+			...["-v", "error", "-y", "-framerate", String(options.fps), "-i", input],
+			...["-i", audioPath],
+			...["-vf", "scale=1440:1080:flags=lanczos"],
+			...["-af", `volume=${gain.toFixed(1)}dB`],
+			...["-c:v", "libx264", "-preset", "slow", "-crf", "16"],
+			...["-profile:v", "high", "-pix_fmt", "yuv420p"],
+			...["-c:a", "aac", "-b:a", "192k", "-ar", "48000"],
+			...["-shortest", "-movflags", "+faststart"],
+			`${base}-social.mp4`,
 		],
 		{ stdio: "inherit" },
 	);
@@ -397,14 +551,14 @@ async function main() {
 		for (const name of components) {
 			for (const theme of themes) {
 				const started = Date.now();
-				const { frameCount, framesDir } = await recordFrames(
+				const { audioPath, frameCount, framesDir } = await recordFrames(
 					browser,
 					name,
 					theme,
 					manifest,
 					options,
 				);
-				encode(name, theme, framesDir, options);
+				encode(name, theme, framesDir, audioPath, options);
 				if (!options.keepFrames) {
 					await rm(framesDir, { force: true, recursive: true });
 				}
