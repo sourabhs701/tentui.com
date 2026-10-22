@@ -10,7 +10,7 @@
 		"start": "next start",
 		"dev": "next dev --port 3001",
 		"dev:portless": "next dev --hostname 127.0.0.1",
-		"deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
+		"deploy": "node --env-file=../../packages/env/.env.prod node_modules/@opennextjs/cloudflare/dist/cli/index.js build && node --env-file=../../packages/env/.env.prod node_modules/@opennextjs/cloudflare/dist/cli/index.js deploy"
 	},
 	"dependencies": {
 		"@opennextjs/cloudflare": "^1.20.1",

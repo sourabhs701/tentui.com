@@ -21,6 +21,7 @@
 		"db:generate": "turbo run db:generate -F @tentui.com/db",
 		"deploy": "turbo run deploy",
 		"destroy": "turbo run destroy -F @tentui.com/infra",
+		"cf:check": "bash packages/infra/scripts/check-cf-token.sh",
 		"check": "biome check --write .",
 		"prepare": "husky"
 	},
