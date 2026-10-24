@@ -7,6 +7,47 @@
 const TICK_RULER_FLICKS = [84, 137, 200];
 
 export const scenarios = {
+	"swipe-actions": {
+		rest: { x: 455, y: 330 },
+		async run(d) {
+			const row = (sender) =>
+				`[data-slot="swipe-actions"][aria-label="Email from ${sender}"]`;
+			const swipe = async (sender, from, distance, ms, holdMs = 150) => {
+				const box = await d.page.locator(row(sender)).boundingBox();
+				const y = box.y + box.height * 0.55;
+				const x = box.x + box.width * from;
+				await d.move({ x, y }, 650);
+				await d.wait(150);
+				await d.down();
+				await d.move({ x: x + distance, y }, ms);
+				// Hold so the release has no velocity and the position decides.
+				await d.wait(holdMs);
+				await d.up();
+			};
+			await d.wait(2000);
+			// A long swipe right on row 1 arms Pin, fires it, and snaps back.
+			await swipe("Ava Chen", 0.18, 250, 750, 300);
+			await d.wait(900);
+			// A shorter swipe left on row 2 reveals Archive and Delete.
+			await swipe("Marcus Webb", 0.8, -150, 600);
+			await d.wait(1000);
+			// A full swipe on row 3 arms Delete, stretches it, and collapses the row.
+			await swipe("Priya Raman", 0.85, -280, 900, 350);
+			await d.wait(1100);
+			await d.move(row("Leo Park"), 700, { x: 0.6, y: 0.5 });
+			await d.wait(400);
+			await d.move(
+				`${row("Leo Park")} [data-slot="swipe-actions-handle"]`,
+				450,
+			);
+			await d.wait(200);
+			await d.click();
+			await d.wait(2000);
+			await d.move(d.rest, 800);
+			await d.wait(500);
+		},
+	},
+
 	"tick-ruler": {
 		async run(d) {
 			const track = '[data-slot="tick-ruler-track"]';

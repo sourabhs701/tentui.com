@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "swipe-actions-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("swipe-actions")],
+		files: [
+			{
+				path: "examples/swipe-actions-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[480px] place-items-center content-center",
+		},
+	},
+	{
 		name: "tick-ruler-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("tick-ruler")],

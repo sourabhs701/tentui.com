@@ -2,6 +2,33 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "swipe-actions",
+		type: "registry:component",
+		title: "Swipe Actions",
+		description:
+			"iOS-style list rows you swipe to reveal actions, with threshold haptics, a full-swipe snap, and keyboard support.",
+		dependencies: [
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/swipe-actions/swipe-actions.tsx",
+				type: "registry:component",
+				target: "@components/swipe-actions.tsx",
+			},
+		],
+		categories: ["lists"],
+		meta: {
+			createdAt: "2026-10-24",
+			image: "https://cdn.tentui.com/images/components/swipe-actions",
+			video: "https://cdn.tentui.com/videos/components/swipe-actions",
+		},
+		docs: "https://tentui.com/components/swipe-actions",
+	},
+	{
 		name: "tick-ruler",
 		type: "registry:component",
 		title: "Tick Ruler",

@@ -1,0 +1,159 @@
+---
+title: Swipe Actions
+description: iOS-style list rows you swipe to reveal actions, with threshold haptics, a full-swipe snap, and keyboard support.
+createdAt: 2026-10-24
+updatedAt: 2026-10-24
+---
+
+<ComponentPreview name="swipe-actions-demo" />
+
+## Features
+
+- Swipe a row either way to reveal `leading` or `trailing` actions. Let go
+  past 40% of the actions and they stay open; less and the row springs closed.
+- Swipe past `fullSwipeThreshold`, or flick an open row faster than 800 px/s,
+  to fire the outermost action. It stretches across the row as you cross the
+  line and shrinks back if you drag back.
+- Gives a selection haptic at the reveal line, a toggle and a medium haptic
+  when armed, a swoosh when an action fires, and a pop for destructive ones.
+  Each cue plays once per crossing, so jitter at a line never repeats it.
+- Collapses destructive rows before calling `onAction`, and the rows below
+  slide up. If `onAction` rejects, the row comes back with an error cue.
+- Waits for 8 px of travel before picking an axis, so vertical scrolling and
+  taps on the row's content still work.
+- Keeps one row open per `SwipeList`. Tapping anywhere else or scrolling
+  closes it.
+- Shows a ⋯ button on hover devices, supports full keyboard control, and
+  swaps leading and trailing in RTL.
+- Drags with motion values and transforms only, so a drag never re-renders
+  React.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/swipe-actions
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="swipe-actions" title="components/swipe-actions.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { SwipeActions, SwipeList } from "@/components/swipe-actions";
+```
+
+```tsx
+<SwipeList label="Inbox">
+  {emails.map((email) => (
+    <SwipeActions
+      key={email.id}
+      label={`Email from ${email.sender}`}
+      leading={[
+        { id: "pin", label: "Pin", icon: <Pin />, tone: "amber", onAction: () => pin(email.id) },
+      ]}
+      trailing={[
+        { id: "archive", label: "Archive", icon: <Archive />, tone: "blue", destructive: true, onAction: () => archive(email.id) },
+        { id: "delete", label: "Delete", icon: <Trash2 />, tone: "destructive", destructive: true, onAction: () => remove(email.id) },
+      ]}
+    >
+      <EmailRow email={email} />
+    </SwipeActions>
+  ))}
+</SwipeList>
+```
+
+List actions in the order they appear on screen in a left-to-right layout.
+The outermost action, which a full swipe fires, is the first `leading` action
+and the last `trailing` action.
+
+A `destructive` action collapses the row and then calls `onAction`. Remove
+the item from your state there; the row is already zero height, so nothing
+jumps. Other actions spring the row closed and then call `onAction`.
+
+Set `confirm` to ask before firing. The first press stretches the action
+across the group and shows "Confirm?". The second press fires it.
+
+```tsx
+{ id: "delete", label: "Delete", icon: <Trash2 />, tone: "destructive", destructive: true, confirm: true, onAction: remove }
+```
+
+`onAction` can return a promise. If it rejects, the row springs back, plays
+an error sound and haptic, and announces the failure.
+
+`SwipeList` takes a `variant`: `plain` is edge-to-edge rows with dividers,
+and `inset` is rounded cards with a gap. Set `showLabels={false}` for
+icon-only actions. The labels stay available to screen readers.
+
+```tsx
+<SwipeList variant="inset" showLabels={false}>
+  …
+</SwipeList>
+```
+
+A `SwipeActions` row also works without a list. It then has its own live
+region, and nothing closes it when other rows open.
+
+## Accessibility
+
+Each row is a focusable `group`, named by `label`. With the row focused, the
+arrow keys reveal a side and `Tab` moves through its action buttons. `Enter`
+fires the focused action, `Escape` closes the row, and `Delete` or
+`Backspace` fires its destructive action. Hidden actions are `inert`, so
+assistive technology and `Tab` skip them until they are revealed. The ⋯
+button sets `aria-expanded` and stays reachable by screen readers on touch
+devices. A polite live region announces each action, using `announce` when
+you set it.
+
+With reduced motion enabled there is no rubber band, stretch, or icon pop.
+Rows open and close with a 120 ms fade instead of sliding. Sound and haptics
+stay on because they confirm a threshold rather than decorate movement; turn
+them off with `sound={false}` and `haptics={false}`.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/swipe-actions/swipe-actions.tsx"
+  name="SwipeActionsProps"
+/>
+
+### SwipeAction
+
+<AutoTypeTable
+  path="src/registry/components/swipe-actions/swipe-actions.tsx"
+  name="SwipeAction"
+/>
+
+### SwipeList
+
+<AutoTypeTable
+  path="src/registry/components/swipe-actions/swipe-actions.tsx"
+  name="SwipeListProps"
+/>

@@ -25,6 +25,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"hold-to-confirm": { zoom: 1.6 },
 	"peeping-button": { zoom: 1.35 },
 	"stateful-button": { zoom: 1.15 },
+	"swipe-actions": { zoom: 0.92 },
 	"theme-toggle": { zoom: 2.4 },
 	"tick-ruler": { zoom: 1.15 },
 };
