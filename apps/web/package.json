@@ -13,6 +13,7 @@
 		"deploy": "node --env-file=../../packages/env/.env.prod node_modules/@opennextjs/cloudflare/dist/cli/index.js build && node --env-file=../../packages/env/.env.prod node_modules/@opennextjs/cloudflare/dist/cli/index.js deploy"
 	},
 	"dependencies": {
+		"@base-ui/react": "^1.6.0",
 		"@opennextjs/cloudflare": "^1.20.1",
 		"@openpanel/web": "^1.4.1",
 		"@rexa-developer/tiks": "^0.3.0",

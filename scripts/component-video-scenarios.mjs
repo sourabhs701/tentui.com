@@ -7,6 +7,42 @@
 const TICK_RULER_FLICKS = [84, 137, 200];
 
 export const scenarios = {
+	"snap-sheet": {
+		rest: { x: 420, y: 320 },
+		async run(d) {
+			const handle = '[data-slot="snap-sheet-handle"]';
+			const easeIn = (t) => t * t;
+			// Grab the handle and drag it to `y`; a short hold zeroes the velocity.
+			const drag = async (y, ms, { holdMs = 150, ease } = {}) => {
+				const box = await d.page.locator(handle).boundingBox();
+				const x = box.x + box.width / 2;
+				await d.move({ x, y: box.y + box.height / 2 }, 650);
+				await d.wait(150);
+				await d.down();
+				await d.move({ x, y }, ms, {}, ease);
+				if (holdMs) await d.wait(holdMs);
+				await d.up();
+			};
+			await d.wait(1500);
+			// Half to full: the sheet pops at the top and the map scales back.
+			await drag(40, 700);
+			await d.wait(1000);
+			// Full down to the peek height.
+			await drag(285, 800);
+			await d.wait(1000);
+			// A flick down from peek closes it.
+			const box = await d.page.locator(handle).boundingBox();
+			await drag(box.y + 90, 120, { holdMs: 0, ease: easeIn });
+			await d.wait(1000);
+			await d.move('[data-slot="snap-sheet-trigger"]', 700, { x: 0.6, y: 0.6 });
+			await d.wait(200);
+			await d.click();
+			await d.wait(1600);
+			await d.move(d.rest, 800);
+			await d.wait(500);
+		},
+	},
+
 	"swipe-actions": {
 		rest: { x: 455, y: 330 },
 		async run(d) {

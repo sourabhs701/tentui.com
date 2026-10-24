@@ -29,6 +29,34 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/swipe-actions",
 	},
 	{
+		name: "snap-sheet",
+		type: "registry:component",
+		title: "Snap Sheet",
+		description:
+			"A bottom sheet you drag between snap points, with detent haptics, a rubber band, and flick to close.",
+		dependencies: [
+			"@base-ui/react",
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/snap-sheet/snap-sheet.tsx",
+				type: "registry:component",
+				target: "@components/snap-sheet.tsx",
+			},
+		],
+		categories: ["overlays"],
+		meta: {
+			createdAt: "2026-10-24",
+			image: "https://cdn.tentui.com/images/components/snap-sheet",
+			video: "https://cdn.tentui.com/videos/components/snap-sheet",
+		},
+		docs: "https://tentui.com/components/snap-sheet",
+	},
+	{
 		name: "tick-ruler",
 		type: "registry:component",
 		title: "Tick Ruler",

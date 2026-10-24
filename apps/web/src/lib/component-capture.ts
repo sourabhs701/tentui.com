@@ -24,6 +24,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"email-dock": { zoom: 1.2 },
 	"hold-to-confirm": { zoom: 1.6 },
 	"peeping-button": { zoom: 1.35 },
+	"snap-sheet": { zoom: 0.62 },
 	"stateful-button": { zoom: 1.15 },
 	"swipe-actions": { zoom: 0.92 },
 	"theme-toggle": { zoom: 2.4 },

@@ -18,6 +18,20 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "snap-sheet-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("snap-sheet")],
+		files: [
+			{
+				path: "examples/snap-sheet-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[560px] place-items-center content-center",
+		},
+	},
+	{
 		name: "tick-ruler-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("tick-ruler")],

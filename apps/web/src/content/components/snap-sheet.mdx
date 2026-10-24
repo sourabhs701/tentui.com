@@ -1,0 +1,219 @@
+---
+title: Snap Sheet
+description: A bottom sheet you drag between snap points, with detent haptics, a rubber band, and flick to close.
+createdAt: 2026-10-24
+updatedAt: 2026-10-24
+---
+
+<ComponentPreview name="snap-sheet-demo" />
+
+## Features
+
+- Drags between snap points such as peek, half, and full, sized in px or as
+  fractions of the viewport height.
+- Projects the release from its velocity, springs into the nearest snap point,
+  rubber-bands past full height, and closes on a flick down.
+- Clicks into each new snap point with a sound and a selection haptic, pops at
+  full height, and ticks a soft haptic for every snap point crossed mid-drag.
+- Hands gestures to scrollable content when it should scroll, and locks to the
+  vertical axis so carousels inside keep working.
+- Dims the overlay and scales the page back as it rises, all from motion values
+  with no re-render per frame.
+- Built on Base UI Dialog for the portal, focus trap, `Esc`, scroll lock, and
+  returned focus. Can render as a dialog or side sheet on desktop.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/snap-sheet
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @base-ui/react @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="snap-sheet" title="components/snap-sheet.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { SnapSheet } from "@/components/snap-sheet";
+```
+
+```tsx
+<SnapSheet snapPoints={["148px", 0.5, 1]}>
+  <SnapSheet.Trigger>Find a ride</SnapSheet.Trigger>
+  <SnapSheet.Content>
+    <SnapSheet.Handle />
+    <SnapSheet.Title>3 rides nearby</SnapSheet.Title>
+    <SnapSheet.Description>Pickup in 2 min</SnapSheet.Description>
+    <div className="min-h-0 flex-1 overflow-y-auto">{/* … */}</div>
+  </SnapSheet.Content>
+</SnapSheet>
+```
+
+Snap points are listed lowest first. Numbers are fractions of the viewport
+height and strings such as `"148px"` are fixed heights. `1` is as tall as the
+sheet gets, which leaves a 24 px gap at the top.
+
+Put long content in a child with `overflow-y-auto` and `min-h-0 flex-1`. A drag
+inside it moves the sheet until the sheet is at full height; from then on it
+scrolls the content, and a drag down only moves the sheet once the content is
+scrolled to the top.
+
+### Controlled
+
+```tsx
+const [open, setOpen] = useState(false);
+const [snap, setSnap] = useState(0);
+
+<SnapSheet
+  open={open}
+  onOpenChange={setOpen}
+  activeSnap={snap}
+  onSnapChange={setSnap}
+  snapPoints={[0.4, 1]}
+>
+  {/* … */}
+</SnapSheet>
+```
+
+Changes that come from `open` and `activeSnap` animate silently. Pass
+`soundOnProgrammatic` to play the cues for them too. A drag in progress always
+wins over an `activeSnap` change.
+
+### Non-modal
+
+Set `modal={false}` for map- or player-style sheets. The page stays
+interactive, focus isn't trapped, scroll isn't locked, and clicking outside
+doesn't close the sheet. The overlay only fades in between the last two snap
+points.
+
+```tsx
+<SnapSheet modal={false} defaultOpen snapPoints={["120px", 0.5, 1]}>
+  <SnapSheet.Content variant="floating">{/* … */}</SnapSheet.Content>
+</SnapSheet>
+```
+
+### Background scale
+
+Add `data-sheet-wrapper` to the element that wraps your page and set
+`scaleBackground`. It scales to 0.94 with rounded corners as the sheet rises to
+full height. Give `body` a dark background so the gap behind it looks like iOS.
+
+```tsx
+<body className="bg-black">
+  <div data-sheet-wrapper className="min-h-dvh bg-background">
+    {children}
+  </div>
+</body>
+```
+
+### Inside a container
+
+Pass `container` to render the sheet inside an element, such as a phone frame,
+instead of the viewport. Snap points are then sized from that element. Give it
+`position: relative` and `overflow: clip`.
+
+```tsx
+const screenRef = useRef<HTMLDivElement>(null);
+
+<div ref={screenRef} className="relative h-[540px] overflow-clip">
+  <SnapSheet modal={false} defaultOpen>
+    <SnapSheet.Content container={screenRef}>{/* … */}</SnapSheet.Content>
+  </SnapSheet>
+</div>
+```
+
+### Desktop
+
+From the `md` breakpoint up, `desktop="dialog"` renders a centered dialog and
+`desktop="sheet"` a side sheet. Neither has snap points or a handle.
+
+```tsx
+<SnapSheet desktop="dialog">{/* … */}</SnapSheet>
+```
+
+## Migrating from Vaul
+
+Vaul is no longer maintained. Most props map one to one.
+
+| Vaul                                   | Snap Sheet                            |
+| -------------------------------------- | ------------------------------------- |
+| `Drawer.Root`                          | `SnapSheet`                           |
+| `Drawer.Trigger`                       | `SnapSheet.Trigger`                   |
+| `Drawer.Portal` + `Drawer.Overlay`     | Built into `SnapSheet.Content`        |
+| `Drawer.Content`                       | `SnapSheet.Content`                   |
+| `Drawer.Handle`                        | `SnapSheet.Handle`                    |
+| `Drawer.Title` / `Drawer.Description`  | `SnapSheet.Title` / `.Description`    |
+| `Drawer.Close`                         | `SnapSheet.Close`                     |
+| `open` / `onOpenChange`                | `open` / `onOpenChange`               |
+| `snapPoints={[0.5, 1]}`                | `snapPoints={[0.5, 1]}`               |
+| `snapPoints={["148px", 1]}`            | `snapPoints={["148px", 1]}`           |
+| `activeSnapPoint={0.5}` (a value)      | `activeSnap={0}` (an index)           |
+| `setActiveSnapPoint`                   | `onSnapChange`                        |
+| `modal`                                | `modal`                               |
+| `dismissible`                          | `dismissible`                         |
+| `handleOnly`                           | `handleOnly`                          |
+| `shouldScaleBackground`                | `scaleBackground`                     |
+| `[data-vaul-drawer-wrapper]`           | `[data-sheet-wrapper]`                |
+| `container`                            | `SnapSheet.Content` `container`       |
+| `fadeFromIndex`                        | Automatic: modal fades from closed, non-modal from the second-to-last snap |
+| `direction="right"`                    | `desktop="sheet"` (desktop only)      |
+| `[data-vaul-no-drag]`                  | `[data-sheet-no-drag]`                |
+
+## Accessibility
+
+The sheet is a Base UI dialog, so it gets `role="dialog"`, `aria-modal`, a
+focus trap, scroll lock, `Esc` to close, and focus returned to the trigger.
+`modal={false}` turns off the trap and the lock. Always render a
+`SnapSheet.Title`, and a `SnapSheet.Close` in modal sheets so touch screen
+readers can leave.
+
+`SnapSheet.Handle` is a focusable slider labelled "Resize sheet" with an
+`aria-valuetext` such as "Half height". `ArrowUp` and `ArrowDown` move one snap
+point, `Home` and `End` jump to the ends, and `Enter` or a tap cycles through
+them. A polite live region announces each snap change.
+
+With reduced motion enabled the springs become a 120 ms tween and the
+background no longer scales. Dragging still works, and sound and haptics stay
+on because they confirm each snap rather than decorate movement; turn them off
+with `sound={false}` and `haptics={false}`.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/snap-sheet/snap-sheet.tsx"
+  name="SnapSheetProps"
+/>
+
+### SnapSheet.Content
+
+<AutoTypeTable
+  path="src/registry/components/snap-sheet/snap-sheet.tsx"
+  name="SnapSheetContentProps"
+/>
