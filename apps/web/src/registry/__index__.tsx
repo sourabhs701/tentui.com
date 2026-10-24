@@ -275,6 +275,42 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"swipe-actions": {
+		name: "swipe-actions",
+		title: "Swipe Actions",
+		description: "iOS-style list rows you swipe to reveal actions, with threshold haptics, a full-swipe snap, and keyboard support.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/swipe-actions/swipe-actions.tsx","type":"registry:component","target":"@components/swipe-actions.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/swipe-actions/swipe-actions")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for swipe-actions");
+			}
+			return { default: module.default };
+		}),
+		categories: ["lists"],
+		meta: {"createdAt":"2026-10-24","image":"https://cdn.tentui.com/images/components/swipe-actions","video":"https://cdn.tentui.com/videos/components/swipe-actions"},
+	},
+	"snap-sheet": {
+		name: "snap-sheet",
+		title: "Snap Sheet",
+		description: "A bottom sheet you drag between snap points, with detent haptics, a rubber band, and flick to close.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/snap-sheet/snap-sheet.tsx","type":"registry:component","target":"@components/snap-sheet.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/snap-sheet/snap-sheet")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for snap-sheet");
+			}
+			return { default: module.default };
+		}),
+		categories: ["overlays"],
+		meta: {"createdAt":"2026-10-24","image":"https://cdn.tentui.com/images/components/snap-sheet","video":"https://cdn.tentui.com/videos/components/snap-sheet"},
+	},
 	"tick-ruler": {
 		name: "tick-ruler",
 		title: "Tick Ruler",
@@ -562,6 +598,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
+	},
+	"swipe-actions-demo": {
+		name: "swipe-actions-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/swipe-actions-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/swipe-actions-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for swipe-actions-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[480px] place-items-center content-center"},
+	},
+	"snap-sheet-demo": {
+		name: "snap-sheet-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/snap-sheet-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/snap-sheet-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for snap-sheet-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[560px] place-items-center content-center"},
 	},
 	"tick-ruler-demo": {
 		name: "tick-ruler-demo",
