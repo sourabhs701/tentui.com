@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"number-stepper": {
+		name: "number-stepper",
+		title: "Number Stepper",
+		description: "A quantity field whose digits roll the way you count, with a click per step, hold-to-accelerate, and a soft wall at the limits.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/number-stepper/number-stepper.tsx","type":"registry:component","target":"@components/number-stepper.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/number-stepper/number-stepper")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for number-stepper");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-10-24","image":"https://cdn.tentui.com/images/components/number-stepper","video":"https://cdn.tentui.com/videos/components/number-stepper"},
+	},
 	"swipe-actions": {
 		name: "swipe-actions",
 		title: "Swipe Actions",
@@ -327,7 +345,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-10-23","image":"https://cdn.srb.codes/images/components/tick-ruler","video":"https://cdn.srb.codes/videos/components/tick-ruler"},
+		meta: {"createdAt":"2026-10-23","image":"https://cdn.tentui.com/images/components/tick-ruler","video":"https://cdn.tentui.com/videos/components/tick-ruler"},
 	},
 	"hold-to-confirm": {
 		name: "hold-to-confirm",
@@ -345,7 +363,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-10-22","image":"https://cdn.srb.codes/images/components/hold-to-confirm","video":"https://cdn.srb.codes/videos/components/hold-to-confirm"},
+		meta: {"createdAt":"2026-10-22","image":"https://cdn.tentui.com/images/components/hold-to-confirm","video":"https://cdn.tentui.com/videos/components/hold-to-confirm"},
 	},
 	"interactive-sprite": {
 		name: "interactive-sprite",
@@ -363,7 +381,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: [],
-		meta: {"createdAt":"2026-08-06","image":"https://cdn.srb.codes/images/components/interactive-sprite","video":"https://cdn.srb.codes/videos/components/interactive-sprite"},
+		meta: {"createdAt":"2026-08-06","image":"https://cdn.tentui.com/images/components/interactive-sprite","video":"https://cdn.tentui.com/videos/components/interactive-sprite"},
 	},
 	"tile-field": {
 		name: "tile-field",
@@ -381,7 +399,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["typography"],
-		meta: {"createdAt":"2026-07-30","image":"https://cdn.srb.codes/images/components/tile-field","video":"https://cdn.srb.codes/videos/components/tile-field"},
+		meta: {"createdAt":"2026-07-30","image":"https://cdn.tentui.com/images/components/tile-field","video":"https://cdn.tentui.com/videos/components/tile-field"},
 	},
 	"search-command": {
 		name: "search-command",
@@ -399,7 +417,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["menus"],
-		meta: {"createdAt":"2026-07-30","image":"https://cdn.srb.codes/images/components/search-command","video":"https://cdn.srb.codes/videos/components/search-command"},
+		meta: {"createdAt":"2026-07-30","image":"https://cdn.tentui.com/images/components/search-command","video":"https://cdn.tentui.com/videos/components/search-command"},
 	},
 	"tailwindcss-buttons": {
 		name: "tailwindcss-buttons",
@@ -417,7 +435,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-07-26","image":"https://cdn.srb.codes/images/components/tailwindcss-buttons","video":"https://cdn.srb.codes/videos/components/tailwindcss-buttons"},
+		meta: {"createdAt":"2026-07-26","image":"https://cdn.tentui.com/images/components/tailwindcss-buttons","video":"https://cdn.tentui.com/videos/components/tailwindcss-buttons"},
 	},
 	"component-sidebar": {
 		name: "component-sidebar",
@@ -435,7 +453,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["navigation"],
-		meta: {"createdAt":"2026-07-26","updatedAt":"2026-08-19","image":"https://cdn.srb.codes/images/components/component-sidebar","video":"https://cdn.srb.codes/videos/components/component-sidebar"},
+		meta: {"createdAt":"2026-07-26","updatedAt":"2026-08-19","image":"https://cdn.tentui.com/images/components/component-sidebar","video":"https://cdn.tentui.com/videos/components/component-sidebar"},
 	},
 	"peeping-button": {
 		name: "peeping-button",
@@ -453,7 +471,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-07-22","image":"https://cdn.srb.codes/images/components/peeping-button","video":"https://cdn.srb.codes/videos/components/peeping-button"},
+		meta: {"createdAt":"2026-07-22","image":"https://cdn.tentui.com/images/components/peeping-button","video":"https://cdn.tentui.com/videos/components/peeping-button"},
 	},
 	"brand-context-menu": {
 		name: "brand-context-menu",
@@ -471,7 +489,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["menus"],
-		meta: {"createdAt":"2026-07-21","image":"https://cdn.srb.codes/images/components/brand-context-menu","video":"https://cdn.srb.codes/videos/components/brand-context-menu"},
+		meta: {"createdAt":"2026-07-21","image":"https://cdn.tentui.com/images/components/brand-context-menu","video":"https://cdn.tentui.com/videos/components/brand-context-menu"},
 	},
 	"animated-tabs": {
 		name: "animated-tabs",
@@ -489,7 +507,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["navigation"],
-		meta: {"createdAt":"2026-07-21","image":"https://cdn.srb.codes/images/components/animated-tabs","video":"https://cdn.srb.codes/videos/components/animated-tabs"},
+		meta: {"createdAt":"2026-07-21","image":"https://cdn.tentui.com/images/components/animated-tabs","video":"https://cdn.tentui.com/videos/components/animated-tabs"},
 	},
 	"theme-toggle": {
 		name: "theme-toggle",
@@ -507,7 +525,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-08-19","image":"https://cdn.srb.codes/images/components/theme-toggle","video":"https://cdn.srb.codes/videos/components/theme-toggle"},
+		meta: {"createdAt":"2026-08-19","image":"https://cdn.tentui.com/images/components/theme-toggle","video":"https://cdn.tentui.com/videos/components/theme-toggle"},
 	},
 	"copy-button": {
 		name: "copy-button",
@@ -525,7 +543,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-07-20","updatedAt":"2026-08-19","image":"https://cdn.srb.codes/images/components/copy-button","video":"https://cdn.srb.codes/videos/components/copy-button"},
+		meta: {"createdAt":"2026-07-20","updatedAt":"2026-08-19","image":"https://cdn.tentui.com/images/components/copy-button","video":"https://cdn.tentui.com/videos/components/copy-button"},
 	},
 	"email-dock": {
 		name: "email-dock",
@@ -543,7 +561,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: [],
-		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/email-dock","video":"https://cdn.srb.codes/videos/components/email-dock"},
+		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/email-dock","video":"https://cdn.tentui.com/videos/components/email-dock"},
 	},
 	"stateful-button": {
 		name: "stateful-button",
@@ -561,7 +579,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["buttons"],
-		meta: {"createdAt":"2026-07-19","image":"https://cdn.srb.codes/images/components/stateful-button","video":"https://cdn.srb.codes/videos/components/stateful-button"},
+		meta: {"createdAt":"2026-07-19","image":"https://cdn.tentui.com/images/components/stateful-button","video":"https://cdn.tentui.com/videos/components/stateful-button"},
 	},
 	"animated-arrow": {
 		name: "animated-arrow",
@@ -579,7 +597,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: [],
-		meta: {"createdAt":"2026-07-19","image":"https://cdn.srb.codes/images/components/animated-arrow","video":"https://cdn.srb.codes/videos/components/animated-arrow"},
+		meta: {"createdAt":"2026-07-19","image":"https://cdn.tentui.com/images/components/animated-arrow","video":"https://cdn.tentui.com/videos/components/animated-arrow"},
 	},
 	"scribbled-text": {
 		name: "scribbled-text",
@@ -597,7 +615,25 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["typography"],
-		meta: {"createdAt":"2026-07-20","image":"https://cdn.srb.codes/images/components/scribbled-text","video":"https://cdn.srb.codes/videos/components/scribbled-text"},
+		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"number-stepper-demo": {
+		name: "number-stepper-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/number-stepper-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/number-stepper-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for number-stepper-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
 	"swipe-actions-demo": {
 		name: "swipe-actions-demo",

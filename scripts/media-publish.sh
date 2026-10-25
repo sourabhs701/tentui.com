@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Convert component media from .media and publish it to S3.
+# Convert component media from .media and publish it to Cloudflare R2.
 #
 # Input (one image pair is required; the video pair is optional):
 #   .media/<slug>-{light,dark}.png
@@ -13,24 +13,28 @@
 # Usage:
 #   pnpm media:publish
 #   pnpm media:publish --flush
-#   pnpm media:publish --flush --wait
 #   pnpm media:publish --skip-upload
 #
+# Uploads go through wrangler (run 'wrangler login' first). --flush purges
+# the uploaded URLs from the Cloudflare cache with CLOUDFLARE_API_TOKEN from
+# packages/env/.env.prod (needs Zone > Cache Purge).
+#
 # Environment overrides:
-#   S3_BUCKET                   (default: dropinme)
-#   MEDIA_DIR                   (default: .media)
-#   IMAGE_S3_PREFIX             (default: images/components)
-#   VIDEO_S3_PREFIX             (default: videos/components)
-#   CROP_FILTER                 (default: crop=iw-8:ih-8:4:4)
-#   TRIM_START_SECS             (default: 2)
-#   TRIM_END_SECS               (default: 2)
-#   CACHE_CONTROL               (default: public, max-age=3600, must-revalidate)
-#   CLOUDFRONT_DISTRIBUTION_ID  (default: E1KG4OWN5ENLUL)
+#   R2_BUCKET        (default: tentui)
+#   CDN_URL          (default: https://cdn.tentui.com)
+#   CDN_ZONE         (default: tentui.com)
+#   ENV_FILE         (default: packages/env/.env.prod)
+#   MEDIA_DIR        (default: .media)
+#   IMAGE_PREFIX     (default: images/components)
+#   VIDEO_PREFIX     (default: videos/components)
+#   CROP_FILTER      (default: crop=iw-8:ih-8:4:4)
+#   TRIM_START_SECS  (default: 2)
+#   TRIM_END_SECS    (default: 2)
+#   CACHE_CONTROL    (default: public, max-age=3600, must-revalidate)
 
 set -euo pipefail
 
 FLUSH=0
-WAIT=0
 SKIP_UPLOAD=0
 
 print_help() {
@@ -40,11 +44,6 @@ print_help() {
 while [[ $# -gt 0 ]]; do
 	case "$1" in
 		--flush)
-			FLUSH=1
-			shift
-			;;
-		--wait)
-			WAIT=1
 			FLUSH=1
 			shift
 			;;
@@ -66,15 +65,18 @@ done
 
 cd "$(dirname "$0")/.."
 
-S3_BUCKET="${S3_BUCKET:-dropinme}"
+R2_BUCKET="${R2_BUCKET:-tentui}"
+CDN_URL="${CDN_URL:-https://cdn.tentui.com}"
+CDN_ZONE="${CDN_ZONE:-tentui.com}"
+ENV_FILE="${ENV_FILE:-packages/env/.env.prod}"
 MEDIA_DIR="${MEDIA_DIR:-.media}"
-IMAGE_S3_PREFIX="${IMAGE_S3_PREFIX:-images/components}"
-VIDEO_S3_PREFIX="${VIDEO_S3_PREFIX:-videos/components}"
+IMAGE_PREFIX="${IMAGE_PREFIX:-images/components}"
+VIDEO_PREFIX="${VIDEO_PREFIX:-videos/components}"
 CROP_FILTER="${CROP_FILTER:-crop=iw-8:ih-8:4:4}"
 TRIM_START_SECS="${TRIM_START_SECS:-2}"
 TRIM_END_SECS="${TRIM_END_SECS:-2}"
 CACHE_CONTROL="${CACHE_CONTROL:-public, max-age=3600, must-revalidate}"
-CLOUDFRONT_DISTRIBUTION_ID="${CLOUDFRONT_DISTRIBUTION_ID:-E1KG4OWN5ENLUL}"
+WRANGLER=(pnpm --dir apps/web exec wrangler)
 
 if [[ ! -d "$MEDIA_DIR" ]]; then
 	echo "Error: media directory not found: $MEDIA_DIR" >&2
@@ -88,15 +90,26 @@ for command_name in ffmpeg ffprobe; do
 	fi
 done
 
-if [[ "$SKIP_UPLOAD" != "1" ]] && ! command -v aws >/dev/null 2>&1; then
-	echo "Error: aws CLI is not installed or not on PATH." >&2
+if [[ "$SKIP_UPLOAD" != "1" ]] && ! "${WRANGLER[@]}" whoami 2>/dev/null | grep "You are logged in" >/dev/null; then
+	echo "Error: wrangler is not authenticated." >&2
+	echo "Run 'pnpm --dir apps/web exec wrangler login', then retry 'pnpm media:publish'." >&2
 	exit 1
 fi
 
-if [[ "$SKIP_UPLOAD" != "1" ]] && ! aws sts get-caller-identity >/dev/null 2>&1; then
-	echo "Error: AWS CLI is not authenticated." >&2
-	echo "Run 'aws login', then retry 'pnpm media:publish'." >&2
-	exit 1
+if [[ "$SKIP_UPLOAD" != "1" && "$FLUSH" == "1" ]]; then
+	if ! command -v jq >/dev/null 2>&1; then
+		echo "Error: jq is required with --flush." >&2
+		exit 1
+	fi
+	if [[ ! -f "$ENV_FILE" ]]; then
+		echo "Error: env file not found: $ENV_FILE" >&2
+		exit 1
+	fi
+	CLOUDFLARE_API_TOKEN="$(sed -n 's/^CLOUDFLARE_API_TOKEN=//p' "$ENV_FILE" | tr -d '"'"'"'"')"
+	if [[ -z "$CLOUDFLARE_API_TOKEN" ]]; then
+		echo "Error: CLOUDFLARE_API_TOKEN is required in $ENV_FILE with --flush." >&2
+		exit 1
+	fi
 fi
 
 WEBP_MODE="ffmpeg"
@@ -247,50 +260,54 @@ if [[ "$SKIP_UPLOAD" == "1" ]]; then
 	exit 0
 fi
 
-INVALIDATION_PATHS=()
+PURGE_URLS=()
 
-echo "Uploading to s3://$S3_BUCKET/..."
-for file in "${GENERATED_IMAGES[@]}"; do
-	key="$IMAGE_S3_PREFIX/$(basename "$file")"
-	aws s3 cp "$file" "s3://$S3_BUCKET/$key" \
-		--content-type "image/webp" \
+upload() {
+	local file="$1"
+	local key="$2"
+	local content_type="$3"
+	"${WRANGLER[@]}" r2 object put "$R2_BUCKET/$key" \
+		--remote \
+		--file "$file" \
+		--content-type "$content_type" \
 		--cache-control "$CACHE_CONTROL" \
-		--only-show-errors
-	INVALIDATION_PATHS+=("/$key")
-	echo "  /$key"
+		>/dev/null
+	PURGE_URLS+=("$CDN_URL/$key")
+	echo "  $CDN_URL/$key"
+}
+
+echo "Uploading to R2 bucket $R2_BUCKET..."
+for file in "${GENERATED_IMAGES[@]}"; do
+	upload "$file" "$IMAGE_PREFIX/$(basename "$file")" "image/webp"
 done
 
 if [[ ${#GENERATED_VIDEOS[@]} -gt 0 ]]; then
 	for file in "${GENERATED_VIDEOS[@]}"; do
-		key="$VIDEO_S3_PREFIX/$(basename "$file")"
-		aws s3 cp "$file" "s3://$S3_BUCKET/$key" \
-			--content-type "video/mp4" \
-			--cache-control "$CACHE_CONTROL" \
-			--only-show-errors
-		INVALIDATION_PATHS+=("/$key")
-		echo "  /$key"
+		upload "$file" "$VIDEO_PREFIX/$(basename "$file")" "video/mp4"
 	done
 fi
 
 if [[ "$FLUSH" == "1" ]]; then
-	if [[ -z "$CLOUDFRONT_DISTRIBUTION_ID" ]]; then
-		echo "Error: CLOUDFRONT_DISTRIBUTION_ID is required with --flush." >&2
+	api="https://api.cloudflare.com/client/v4"
+	auth=(-H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
+	zone_id="$(curl -fsS "${auth[@]}" "$api/zones?name=$CDN_ZONE" | jq -r '.result[0].id // empty')"
+	if [[ -z "$zone_id" ]]; then
+		echo "Error: could not find the Cloudflare zone $CDN_ZONE." >&2
 		exit 1
 	fi
 
-	echo "Invalidating CloudFront paths..."
-	INVALIDATION_ID="$(aws cloudfront create-invalidation \
-		--distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
-		--paths "${INVALIDATION_PATHS[@]}" \
-		--query 'Invalidation.Id' \
-		--output text)"
-	echo "  $INVALIDATION_ID"
-
-	if [[ "$WAIT" == "1" ]]; then
-		aws cloudfront wait invalidation-completed \
-			--distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
-			--id "$INVALIDATION_ID"
-	fi
+	echo "Purging Cloudflare cache..."
+	# The purge API takes at most 30 URLs per request.
+	for ((i = 0; i < ${#PURGE_URLS[@]}; i += 30)); do
+		body="$(printf '%s\n' "${PURGE_URLS[@]:i:30}" | jq -R . | jq -s '{files: .}')"
+		if ! curl -fsS "${auth[@]}" -H "content-type: application/json" \
+			-X POST "$api/zones/$zone_id/purge_cache" -d "$body" \
+			| jq -e '.success' >/dev/null; then
+			echo "Error: cache purge failed." >&2
+			exit 1
+		fi
+	done
+	echo "  purged ${#PURGE_URLS[@]} URL(s)"
 fi
 
 echo "Done."

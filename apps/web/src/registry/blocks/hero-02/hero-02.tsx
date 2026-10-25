@@ -13,8 +13,8 @@ export { SiteHeader };
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 
 export const HERO_02_ASSETS = {
-	background: "https://cdn.srb.codes/pixel-mountain-lake-hero-v2.png",
-	dashboard: "https://cdn.srb.codes/saas-hero-dashboard.png",
+	background: "https://cdn.tentui.com/pixel-mountain-lake-hero-v2.png",
+	dashboard: "https://cdn.tentui.com/saas-hero-dashboard.png",
 } as const;
 
 const SERIF =

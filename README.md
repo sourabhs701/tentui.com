@@ -1,7 +1,7 @@
 <div align="center">
   <br />
   <a href="https://tentui.com">
-    <img src="https://cdn.srb.codes/brand/LogoType.svg" alt="TentUI" width="204" />
+    <img src="https://cdn.tentui.com/brand/LogoType.svg" alt="TentUI" width="204" />
   </a>
   <p>
     <strong>Hand-crafted React components and landing-page blocks.</strong>
@@ -29,7 +29,7 @@
 
 <div align="center">
   <a href="https://tentui.com">
-    <img src="https://cdn.srb.codes/og-image.png" alt="TentUI component showcase" width="1000" />
+    <img src="https://cdn.tentui.com/og-image.png" alt="TentUI component showcase" width="1000" />
   </a>
 </div>
 

@@ -20,32 +20,32 @@ export type BrandAsset = {
 
 export const BRAND_MARK_ASSET = {
 	name: "Mark",
-	path: "https://cdn.srb.codes/brand/mark-brand.svg",
+	path: "https://cdn.tentui.com/brand/mark-brand.svg",
 	filename: "tentui-mark.svg",
 } as const satisfies BrandAsset;
 
 export const BRAND_LOGOTYPE_ASSET = {
 	name: "Logotype",
-	path: "https://cdn.srb.codes/brand/LogoType.svg",
+	path: "https://cdn.tentui.com/brand/LogoType.svg",
 	filename: "tentui-logotype.svg",
 } as const satisfies BrandAsset;
 
 export const BRAND_ASSETS = [
 	{
 		name: "Logo",
-		path: "https://cdn.srb.codes/brand/Logo.svg",
+		path: "https://cdn.tentui.com/brand/Logo.svg",
 		filename: "tentui-logo.svg",
 	},
 	BRAND_LOGOTYPE_ASSET,
 	BRAND_MARK_ASSET,
 	{
 		name: "Mark for light backgrounds",
-		path: "https://cdn.srb.codes/brand/mark-light.svg",
+		path: "https://cdn.tentui.com/brand/mark-light.svg",
 		filename: "tentui-mark-light.svg",
 	},
 	{
 		name: "Mark for dark backgrounds",
-		path: "https://cdn.srb.codes/brand/Mark-dark.svg",
+		path: "https://cdn.tentui.com/brand/Mark-dark.svg",
 		filename: "tentui-mark-dark.svg",
 	},
 ] as const satisfies readonly BrandAsset[];
@@ -105,7 +105,7 @@ export function BrandContextMenu({
 	children,
 	markAsset = BRAND_MARK_ASSET,
 	logotypeAsset = BRAND_LOGOTYPE_ASSET,
-	brandAssetsZipPath = "https://cdn.srb.codes/brand/tentui-brand-assets.zip",
+	brandAssetsZipPath = "https://cdn.tentui.com/brand/tentui-brand-assets.zip",
 }: BrandContextMenuProps) {
 	return (
 		<ContextMenu>

@@ -19,12 +19,13 @@ export function ComponentPreviewImage({
 	className?: string;
 	sizes?: string;
 }) {
-	const imageBase = `https://cdn.tentui.com/images/${encodeURIComponent(component.name)}-`;
+	const image = component.meta?.image;
+	if (typeof image !== "string") return null;
 
 	return themes.map((theme) => (
 		<Image
 			key={theme}
-			src={`${imageBase}${theme}.png`}
+			src={`${encodeURI(image)}-${theme}.webp`}
 			alt={`${component.title ?? component.name} ${theme} preview`}
 			fill
 			sizes={sizes}

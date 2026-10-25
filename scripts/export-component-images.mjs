@@ -16,7 +16,7 @@ const DEFAULTS = {
 	cacheControl: "public, max-age=3600, must-revalidate",
 	deviceScaleFactor: 4,
 	outputDir: path.join(ROOT_DIR, ".media", "captures"),
-	remote: "tentui:tentui/images",
+	remote: "tentui/images",
 	timeout: 30_000,
 };
 
@@ -32,8 +32,8 @@ Options:
   --output-dir <path>      Local image directory (default: .media/captures)
   --dpr <number>           Device pixel ratio (default: ${DEFAULTS.deviceScaleFactor})
   --timeout <ms>           Readiness timeout (default: ${DEFAULTS.timeout})
-  --upload                 Upload exported images with rclone
-  --remote <rclone-path>   Upload destination (default: ${DEFAULTS.remote})
+  --upload                 Upload exported images to R2 with wrangler
+  --remote <bucket/path>   R2 upload destination (default: ${DEFAULTS.remote})
   --cache-control <value>  Uploaded object Cache-Control metadata
   -h, --help               Show this help
 `);
@@ -172,18 +172,25 @@ async function exportImage(browser, component, theme, manifest, options) {
 
 function uploadImage(image, options) {
 	execFileSync(
-		"rclone",
+		"pnpm",
 		[
-			"copyto",
-			image.outputPath,
+			"--dir",
+			"apps/web",
+			"exec",
+			"wrangler",
+			"r2",
+			"object",
+			"put",
 			`${options.remote}/${image.filename}`,
-			"--metadata",
-			"--metadata-set",
-			`cache-control=${options.cacheControl}`,
-			"--no-check-dest",
-			"--s3-no-check-bucket",
+			"--remote",
+			"--file",
+			image.outputPath,
+			"--content-type",
+			"image/png",
+			"--cache-control",
+			options.cacheControl,
 		],
-		{ stdio: "inherit" },
+		{ cwd: ROOT_DIR, stdio: "inherit" },
 	);
 }
 

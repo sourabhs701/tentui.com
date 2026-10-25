@@ -11,7 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Marquee from "react-fast-marquee";
 
-const ICON_CDN = "https://cdn.srb.codes/images/tech-stack-icons";
+const ICON_CDN = "https://cdn.tentui.com/images/tech-stack-icons";
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 
@@ -164,7 +164,7 @@ export default function Hero01() {
 								fill
 								priority
 								sizes="100vw"
-								src="https://cdn.srb.codes/images/hero-bg.avif"
+								src="https://cdn.tentui.com/images/hero-bg.avif"
 								unoptimized
 							/>
 							<Image
@@ -172,7 +172,7 @@ export default function Hero01() {
 								className="hidden object-cover object-top dark:block"
 								fill
 								sizes="100vw"
-								src="https://cdn.srb.codes/images/hero-bg-dark.avif"
+								src="https://cdn.tentui.com/images/hero-bg-dark.avif"
 								unoptimized
 							/>
 						</div>

@@ -102,7 +102,7 @@ export default function LandingFaq() {
 												<Avatar size="lg">
 													<AvatarImage
 														alt="Sourabh"
-														src="https://cdn.srb.codes/srb.avif"
+														src="https://cdn.tentui.com/srb.avif"
 													/>
 													<AvatarFallback>SR</AvatarFallback>
 												</Avatar>

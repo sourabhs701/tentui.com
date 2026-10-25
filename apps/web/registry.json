@@ -448,6 +448,35 @@
       "type": "registry:block"
     },
     {
+      "name": "number-stepper",
+      "title": "Number Stepper",
+      "description": "A quantity field whose digits roll the way you count, with a click per step, hold-to-accelerate, and a soft wall at the limits.",
+      "dependencies": [
+        "@number-flow/react",
+        "@rexa-developer/tiks",
+        "lucide-react",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/number-stepper/number-stepper.tsx",
+          "type": "registry:component",
+          "target": "@components/number-stepper.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-10-24",
+        "image": "https://cdn.tentui.com/images/components/number-stepper",
+        "video": "https://cdn.tentui.com/videos/components/number-stepper"
+      },
+      "docs": "https://tentui.com/components/number-stepper",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "swipe-actions",
       "title": "Swipe Actions",
       "description": "iOS-style list rows you swipe to reveal actions, with threshold haptics, a full-swipe snap, and keyboard support.",
@@ -522,8 +551,8 @@
       ],
       "meta": {
         "createdAt": "2026-10-23",
-        "image": "https://cdn.srb.codes/images/components/tick-ruler",
-        "video": "https://cdn.srb.codes/videos/components/tick-ruler"
+        "image": "https://cdn.tentui.com/images/components/tick-ruler",
+        "video": "https://cdn.tentui.com/videos/components/tick-ruler"
       },
       "docs": "https://tentui.com/components/tick-ruler",
       "categories": [
@@ -554,8 +583,8 @@
       ],
       "meta": {
         "createdAt": "2026-10-22",
-        "image": "https://cdn.srb.codes/images/components/hold-to-confirm",
-        "video": "https://cdn.srb.codes/videos/components/hold-to-confirm"
+        "image": "https://cdn.tentui.com/images/components/hold-to-confirm",
+        "video": "https://cdn.tentui.com/videos/components/hold-to-confirm"
       },
       "docs": "https://tentui.com/components/hold-to-confirm",
       "categories": [
@@ -576,8 +605,8 @@
       ],
       "meta": {
         "createdAt": "2026-08-06",
-        "image": "https://cdn.srb.codes/images/components/interactive-sprite",
-        "video": "https://cdn.srb.codes/videos/components/interactive-sprite"
+        "image": "https://cdn.tentui.com/images/components/interactive-sprite",
+        "video": "https://cdn.tentui.com/videos/components/interactive-sprite"
       },
       "docs": "https://tentui.com/components/interactive-sprite",
       "categories": [],
@@ -596,8 +625,8 @@
       ],
       "meta": {
         "createdAt": "2026-07-30",
-        "image": "https://cdn.srb.codes/images/components/tile-field",
-        "video": "https://cdn.srb.codes/videos/components/tile-field"
+        "image": "https://cdn.tentui.com/images/components/tile-field",
+        "video": "https://cdn.tentui.com/videos/components/tile-field"
       },
       "docs": "https://tentui.com/components/tile-field",
       "categories": [
@@ -627,8 +656,8 @@
       ],
       "meta": {
         "createdAt": "2026-07-30",
-        "image": "https://cdn.srb.codes/images/components/search-command",
-        "video": "https://cdn.srb.codes/videos/components/search-command"
+        "image": "https://cdn.tentui.com/images/components/search-command",
+        "video": "https://cdn.tentui.com/videos/components/search-command"
       },
       "docs": "https://tentui.com/components/search-command",
       "categories": [
@@ -656,8 +685,8 @@
       ],
       "meta": {
         "createdAt": "2026-07-26",
-        "image": "https://cdn.srb.codes/images/components/tailwindcss-buttons",
-        "video": "https://cdn.srb.codes/videos/components/tailwindcss-buttons"
+        "image": "https://cdn.tentui.com/images/components/tailwindcss-buttons",
+        "video": "https://cdn.tentui.com/videos/components/tailwindcss-buttons"
       },
       "docs": "https://tentui.com/components/tailwindcss-buttons",
       "categories": [
@@ -715,8 +744,8 @@
       "meta": {
         "createdAt": "2026-07-26",
         "updatedAt": "2026-08-19",
-        "image": "https://cdn.srb.codes/images/components/component-sidebar",
-        "video": "https://cdn.srb.codes/videos/components/component-sidebar"
+        "image": "https://cdn.tentui.com/images/components/component-sidebar",
+        "video": "https://cdn.tentui.com/videos/components/component-sidebar"
       },
       "docs": "https://tentui.com/components/component-sidebar",
       "categories": [
@@ -740,8 +769,8 @@
       ],
       "meta": {
         "createdAt": "2026-07-22",
-        "image": "https://cdn.srb.codes/images/components/peeping-button",
-        "video": "https://cdn.srb.codes/videos/components/peeping-button"
+        "image": "https://cdn.tentui.com/images/components/peeping-button",
+        "video": "https://cdn.tentui.com/videos/components/peeping-button"
       },
       "docs": "https://tentui.com/components/peeping-button",
       "categories": [
@@ -770,8 +799,8 @@
       ],
       "meta": {
         "createdAt": "2026-07-21",
-        "image": "https://cdn.srb.codes/images/components/brand-context-menu",
-        "video": "https://cdn.srb.codes/videos/components/brand-context-menu"
+        "image": "https://cdn.tentui.com/images/components/brand-context-menu",
+        "video": "https://cdn.tentui.com/videos/components/brand-context-menu"
       },
       "docs": "https://tentui.com/components/brand-context-menu",
       "categories": [
@@ -795,8 +824,8 @@
       ],
       "meta": {
         "createdAt": "2026-07-21",
-        "image": "https://cdn.srb.codes/images/components/animated-tabs",
-        "video": "https://cdn.srb.codes/videos/components/animated-tabs"
+        "image": "https://cdn.tentui.com/images/components/animated-tabs",
+        "video": "https://cdn.tentui.com/videos/components/animated-tabs"
       },
       "docs": "https://tentui.com/components/animated-tabs",
       "categories": [
@@ -861,8 +890,8 @@
       ],
       "meta": {
         "createdAt": "2026-08-19",
-        "image": "https://cdn.srb.codes/images/components/theme-toggle",
-        "video": "https://cdn.srb.codes/videos/components/theme-toggle"
+        "image": "https://cdn.tentui.com/images/components/theme-toggle",
+        "video": "https://cdn.tentui.com/videos/components/theme-toggle"
       },
       "docs": "https://tentui.com/components/theme-toggle",
       "categories": [
@@ -903,8 +932,8 @@
       "meta": {
         "createdAt": "2026-07-20",
         "updatedAt": "2026-08-19",
-        "image": "https://cdn.srb.codes/images/components/copy-button",
-        "video": "https://cdn.srb.codes/videos/components/copy-button"
+        "image": "https://cdn.tentui.com/images/components/copy-button",
+        "video": "https://cdn.tentui.com/videos/components/copy-button"
       },
       "docs": "https://tentui.com/components/copy-button",
       "categories": [
@@ -928,8 +957,8 @@
       ],
       "meta": {
         "createdAt": "2026-07-20",
-        "image": "https://cdn.srb.codes/images/components/email-dock",
-        "video": "https://cdn.srb.codes/videos/components/email-dock"
+        "image": "https://cdn.tentui.com/images/components/email-dock",
+        "video": "https://cdn.tentui.com/videos/components/email-dock"
       },
       "docs": "https://tentui.com/components/email-dock",
       "categories": [],
@@ -952,8 +981,8 @@
       ],
       "meta": {
         "createdAt": "2026-07-19",
-        "image": "https://cdn.srb.codes/images/components/stateful-button",
-        "video": "https://cdn.srb.codes/videos/components/stateful-button"
+        "image": "https://cdn.tentui.com/images/components/stateful-button",
+        "video": "https://cdn.tentui.com/videos/components/stateful-button"
       },
       "docs": "https://tentui.com/components/stateful-button",
       "categories": [
@@ -977,8 +1006,8 @@
       ],
       "meta": {
         "createdAt": "2026-07-19",
-        "image": "https://cdn.srb.codes/images/components/animated-arrow",
-        "video": "https://cdn.srb.codes/videos/components/animated-arrow"
+        "image": "https://cdn.tentui.com/images/components/animated-arrow",
+        "video": "https://cdn.tentui.com/videos/components/animated-arrow"
       },
       "docs": "https://tentui.com/components/animated-arrow",
       "categories": [],
@@ -1000,8 +1029,8 @@
       ],
       "meta": {
         "createdAt": "2026-07-20",
-        "image": "https://cdn.srb.codes/images/components/scribbled-text",
-        "video": "https://cdn.srb.codes/videos/components/scribbled-text"
+        "image": "https://cdn.tentui.com/images/components/scribbled-text",
+        "video": "https://cdn.tentui.com/videos/components/scribbled-text"
       },
       "docs": "https://tentui.com/components/scribbled-text",
       "categories": [

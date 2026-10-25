@@ -229,7 +229,7 @@ function Wordmark({
 					aria-hidden="true"
 					className="h-9 w-auto"
 					height={166}
-					src="https://cdn.srb.codes/tkit-logo.svg"
+					src="https://cdn.tentui.com/tkit-logo.svg"
 					unoptimized
 					width={455}
 				/>
