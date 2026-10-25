@@ -84,6 +84,49 @@ export const scenarios = {
 		},
 	},
 
+	"number-stepper": {
+		rest: { x: 455, y: 335 },
+		async run(d) {
+			const plus = '[aria-label="Increase Guests"]';
+			const minus = '[aria-label="Decrease Guests"]';
+			const tip = 'input[aria-label="Tip"]';
+			await d.wait(2000);
+			// Two taps roll Guests up from 2 to 4.
+			await d.move(plus, 750, { x: 0.55, y: 0.6 });
+			await d.wait(250);
+			await d.click();
+			await d.wait(350);
+			await d.click();
+			await d.wait(700);
+			// Hold: repeats speed up until 12, where the wall nudges and stops it.
+			await d.down();
+			await d.wait(1500);
+			await d.up();
+			await d.wait(700);
+			// Hold minus back down. On the virtual clock the 10th step (2) lands at
+			// 1148 ms and the 11th (1) at 1214 ms, so let go in between.
+			await d.move(minus, 650, { x: 0.45, y: 0.6 });
+			await d.wait(250);
+			await d.down();
+			await d.wait(1180);
+			await d.up();
+			await d.wait(800);
+			// Type 99 into Tip: Enter warns and snaps it to the 30% max.
+			await d.move(tip, 750, { x: 0.6, y: 0.55 });
+			await d.wait(200);
+			await d.click();
+			await d.key("ControlOrMeta+a");
+			await d.wait(250);
+			await d.type("99", 160);
+			await d.wait(400);
+			await d.key("Enter");
+			await d.wait(1200);
+			await d.blur();
+			await d.move(d.rest, 800);
+			await d.wait(2000);
+		},
+	},
+
 	"tick-ruler": {
 		async run(d) {
 			const track = '[data-slot="tick-ruler-track"]';

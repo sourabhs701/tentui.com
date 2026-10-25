@@ -2,6 +2,34 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "number-stepper",
+		type: "registry:component",
+		title: "Number Stepper",
+		description:
+			"A quantity field whose digits roll the way you count, with a click per step, hold-to-accelerate, and a soft wall at the limits.",
+		dependencies: [
+			"@number-flow/react",
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/number-stepper/number-stepper.tsx",
+				type: "registry:component",
+				target: "@components/number-stepper.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-10-24",
+			image: "https://cdn.tentui.com/images/components/number-stepper",
+			video: "https://cdn.tentui.com/videos/components/number-stepper",
+		},
+		docs: "https://tentui.com/components/number-stepper",
+	},
+	{
 		name: "swipe-actions",
 		type: "registry:component",
 		title: "Swipe Actions",

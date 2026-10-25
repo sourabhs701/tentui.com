@@ -1,0 +1,135 @@
+---
+title: Number Stepper
+description: A quantity field whose digits roll the way you count, with a click per step, hold-to-accelerate, and a soft wall at the limits.
+createdAt: 2026-10-24
+updatedAt: 2026-10-24
+---
+
+<ComponentPreview name="number-stepper-demo" />
+
+## Features
+
+- Rolls the digits up when you count up and down when you count down, with
+  NumberFlow.
+- Plays a click and a selection haptic on every step, throttled so a fast hold
+  never stacks sounds.
+- Repeats when held, speeds up over the first second and a half, and moves ten
+  steps at a time after ten repeats.
+- Nudges the value with a pop and a rigid haptic when it hits `min` or `max`,
+  and fades out the button that can't go further.
+- Takes typed and pasted values, then clamps and snaps them to `step` on
+  commit, with a warning cue when it had to correct them.
+- Formats currency, percent, and units through `Intl.NumberFormat`, and comes
+  in `outline`, `pill`, and `ghost` variants with a vertical orientation.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/number-stepper
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @number-flow/react @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="number-stepper" title="components/number-stepper.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { NumberStepper } from "@/components/number-stepper";
+```
+
+```tsx
+<NumberStepper label="Guests" variant="pill" defaultValue={2} min={1} max={12} />
+```
+
+Use `value` and `onValueChange` to control it. `onValueChange` fires on every
+step; `onValueCommit` fires once a press is released, a typed value is
+committed, or a key steps. Changes that come from the `value` prop stay silent,
+and a new `value` from outside stops a hold in progress.
+
+```tsx
+const [seats, setSeats] = useState(1);
+
+<NumberStepper
+  label="Seats"
+  value={seats}
+  onValueChange={setSeats}
+  min={1}
+  max={8}
+/>
+```
+
+Pass `format` for currency, percent, or units. Percent values are fractions,
+so typing `15` into the field below means `0.15`.
+
+```tsx
+<NumberStepper
+  label="Tip"
+  defaultValue={0.15}
+  max={0.3}
+  step={0.05}
+  format={{ style: "percent" }}
+/>
+
+<NumberStepper
+  label="Budget"
+  defaultValue={40}
+  step={5}
+  format={{ style: "currency", currency: "EUR" }}
+  locale="de-DE"
+/>
+```
+
+Set `orientation="vertical"` to put the increase button above the value, and
+`size` to `sm`, `md`, or `lg`. Give it a `name` to submit the value with a
+native form, and set `wheel` to let the scroll wheel change a focused field.
+
+## Accessibility
+
+The input is a `spinbutton` with `aria-valuenow`, `aria-valuemin`,
+`aria-valuemax`, and an `aria-valuetext` built from `format`. Name it with
+`label`. The buttons read "Increase" and "Decrease" followed by the label, and
+are left out of the tab order so `Tab` goes straight to the input.
+
+Arrow keys move one step, `Shift` with an arrow or `PageUp`/`PageDown` move
+`largeStep` steps, `Home`/`End` jump to the limits, `Enter` commits a typed
+value, and `Escape` reverts it. Changes made with the buttons are announced
+through a polite live region once the value settles, so a hold doesn't chatter.
+
+With reduced motion enabled the digits change without rolling, and there is no
+nudge or pulsing ring. Sound and haptics stay on because they confirm each step
+rather than decorate movement; turn them off with `sound={false}` and
+`haptics={false}`.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/number-stepper/number-stepper.tsx"
+  name="NumberStepperProps"
+/>

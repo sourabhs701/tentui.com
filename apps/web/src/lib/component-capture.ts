@@ -23,6 +23,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"copy-button": { zoom: 1.8 },
 	"email-dock": { zoom: 1.2 },
 	"hold-to-confirm": { zoom: 1.6 },
+	"number-stepper": { zoom: 1.15 },
 	"peeping-button": { zoom: 1.35 },
 	"snap-sheet": { zoom: 0.62 },
 	"stateful-button": { zoom: 1.15 },
