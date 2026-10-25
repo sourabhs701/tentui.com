@@ -1,0 +1,123 @@
+---
+title: Star Rating
+description: A 1–5 star input you tap, sweep across, or arrow through, with a tick per star, half stars, and a pop when a pick lands.
+createdAt: 2026-10-25
+updatedAt: 2026-10-25
+---
+
+<ComponentPreview name="star-rating-demo" />
+
+## Features
+
+- Rates with a tap, a press-and-sweep across the row, or the arrow keys, and
+  previews the value under a mouse before you click.
+- Takes half stars with `allowHalf`: the left half of a star gives x.5.
+- Plays a click and a selection haptic for each star crossed, throttled to one
+  per 35 ms, then a pop and a success haptic when the pick lands, or a success
+  chime when you give full marks.
+- Slides each star's fill to the pointer, lifts newly filled stars with a
+  staggered spring, and drains them right to left when cleared.
+- Clears when you tap the current value again, with `Backspace`, or with
+  `Delete`. Turn this off with `clearable={false}`.
+- Leaves vertical swipes to the page, so it can sit in a scrolling list on
+  touch screens.
+- Shows a caption per step with `labels`, submits with native forms through
+  `name`, and has a read-only mode for review cards and product lists.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/star-rating
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="star-rating" title="components/star-rating.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { StarRating } from "@/components/star-rating";
+```
+
+```tsx
+<StarRating
+  aria-label="Rate your stay"
+  allowHalf
+  labels={["Poor", "Fair", "Good", "Great", "Excellent"]}
+/>
+```
+
+Use `value` and `onValueChange` to control it. `onValueChange` fires on every
+change, including each step of a sweep; `onValueCommit` fires once a pick
+lands: when a press is released, a key moves the value, or the value is
+cleared. While a sweep is in progress the drag wins over the `value` prop.
+Changes that come from the `value` prop stay silent.
+
+```tsx
+const [rating, setRating] = useState(0);
+
+<StarRating value={rating} onValueChange={setRating} />
+```
+
+Set `readOnly` to show a rating without interaction. Read-only ratings show
+any fraction, so `4.3` fills 30% of the fifth star.
+
+```tsx
+<StarRating value={4.5} readOnly size="sm" />
+```
+
+Set `max` for up to 10 stars, and `size` to `sm`, `md`, or `lg`. Give it a
+`name` to submit the value with a native form; an empty rating submits an empty
+string.
+
+## Accessibility
+
+The stars are a `radiogroup` named with `aria-label` (default "Rating"), with
+one `radio` per step named "1 star", "2 stars", and so on, or "2.5 stars" with
+`allowHalf`. Only the checked radio is in the tab order, and the focus ring
+wraps the whole star. Read-only ratings are a single image named "Rated 4.5
+out of 5". Each star is 44 px tall, so it's an easy touch target.
+
+`←`/`→` and `↑`/`↓` move one step (half a star with `allowHalf`), `Home` and
+`End` jump to the lowest and highest rating, `Space` picks the focused radio,
+and `Backspace` or `Delete` clears the value when `clearable`. In right-to-left
+layouts the stars fill from the right and `←`/`→` are mirrored.
+
+With reduced motion enabled the fills change in place, with no rise, nudge,
+press dip, or drain. Sound and haptics stay on because they confirm each star
+rather than decorate movement; turn them off with `sound={false}` and
+`haptics={false}`.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/star-rating/star-rating.tsx"
+  name="StarRatingProps"
+/>
