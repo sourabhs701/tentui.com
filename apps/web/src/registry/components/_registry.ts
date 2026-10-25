@@ -2,6 +2,31 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "star-rating",
+		type: "registry:component",
+		title: "Star Rating",
+		description:
+			"A 1–5 star input you tap, sweep across, or arrow through, with a tick per star, half stars, and a pop when a pick lands.",
+		dependencies: [
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/star-rating/star-rating.tsx",
+				type: "registry:component",
+				target: "@components/star-rating.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-10-25",
+		},
+		docs: "https://tentui.com/components/star-rating",
+	},
+	{
 		name: "number-stepper",
 		type: "registry:component",
 		title: "Number Stepper",

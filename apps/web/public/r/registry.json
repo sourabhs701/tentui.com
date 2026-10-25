@@ -448,6 +448,32 @@
       "type": "registry:block"
     },
     {
+      "name": "star-rating",
+      "title": "Star Rating",
+      "description": "A 1–5 star input you tap, sweep across, or arrow through, with a tick per star, half stars, and a pop when a pick lands.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "lucide-react",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/star-rating/star-rating.tsx",
+          "type": "registry:component",
+          "target": "@components/star-rating.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-10-25"
+      },
+      "docs": "https://tentui.com/components/star-rating",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "number-stepper",
       "title": "Number Stepper",
       "description": "A quantity field whose digits roll the way you count, with a click per step, hold-to-accelerate, and a soft wall at the limits.",
