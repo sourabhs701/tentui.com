@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"star-rating": {
+		name: "star-rating",
+		title: "Star Rating",
+		description: "A 1–5 star input you tap, sweep across, or arrow through, with a tick per star, half stars, and a pop when a pick lands.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/star-rating/star-rating.tsx","type":"registry:component","target":"@components/star-rating.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/star-rating/star-rating")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for star-rating");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-10-25"},
+	},
 	"number-stepper": {
 		name: "number-stepper",
 		title: "Number Stepper",
@@ -616,6 +634,24 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"star-rating-demo": {
+		name: "star-rating-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/star-rating-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/star-rating-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for star-rating-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
 	"number-stepper-demo": {
 		name: "number-stepper-demo",
