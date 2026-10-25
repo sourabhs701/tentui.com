@@ -83,6 +83,9 @@ if [[ ! -d "$MEDIA_DIR" ]]; then
 	exit 1
 fi
 
+# wrangler runs from apps/web, so hand it absolute paths.
+MEDIA_DIR="$(cd "$MEDIA_DIR" && pwd)"
+
 for command_name in ffmpeg ffprobe; do
 	if ! command -v "$command_name" >/dev/null 2>&1; then
 		echo "Error: $command_name is not installed or not on PATH." >&2
