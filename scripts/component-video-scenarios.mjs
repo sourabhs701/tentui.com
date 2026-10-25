@@ -25,10 +25,10 @@ export const scenarios = {
 			};
 			await d.wait(1500);
 			// Half to full: the sheet pops at the top and the page scales back.
-			await drag(30, 700);
+			await drag(48, 700);
 			await d.wait(1000);
 			// Full down to the peek height.
-			await drag(258, 800);
+			await drag(232, 800);
 			await d.wait(1000);
 			// A flick down from peek closes it.
 			const box = await d.page.locator(handle).boundingBox();
