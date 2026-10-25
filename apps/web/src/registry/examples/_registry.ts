@@ -4,6 +4,202 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "peeping-button-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("peeping-button")],
+		files: [
+			{
+				path: "examples/peeping-button-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "tile-field-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("tile-field")],
+		files: [
+			{
+				path: "examples/tile-field-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 w-full p-0",
+		},
+	},
+	{
+		name: "scribbled-text-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scribbled-text")],
+		files: [
+			{
+				path: "examples/scribbled-text-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "tailwindcss-buttons-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("tailwindcss-buttons")],
+		files: [
+			{
+				path: "examples/tailwindcss-buttons-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "component-sidebar-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("component-sidebar")],
+		files: [
+			{
+				path: "examples/component-sidebar-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "brand-context-menu-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("brand-context-menu")],
+		files: [
+			{
+				path: "examples/brand-context-menu-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "interactive-sprite-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("interactive-sprite")],
+		files: [
+			{
+				path: "examples/interactive-sprite-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "star-rating-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("star-rating")],
+		files: [
+			{
+				path: "examples/star-rating-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "search-command-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("search-command")],
+		files: [
+			{
+				path: "examples/search-command-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "stateful-button-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("stateful-button")],
+		files: [
+			{
+				path: "examples/stateful-button-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "number-stepper-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("number-stepper")],
+		files: [
+			{
+				path: "examples/number-stepper-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "swipe-actions-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("swipe-actions")],
+		files: [
+			{
+				path: "examples/swipe-actions-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "snap-sheet-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("snap-sheet")],
+		files: [
+			{
+				path: "examples/snap-sheet-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "tick-ruler-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("tick-ruler")],
+		files: [
+			{
+				path: "examples/tick-ruler-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "star-rating-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("star-rating")],

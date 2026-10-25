@@ -23,6 +23,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-10-25",
+			image: "https://cdn.tentui.com/images/components/star-rating",
+			video: "https://cdn.tentui.com/videos/components/star-rating",
 		},
 		docs: "https://tentui.com/components/star-rating",
 	},

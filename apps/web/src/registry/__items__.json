@@ -1098,6 +1098,272 @@
       "motion"
     ]
   },
+  "peeping-button-preview": {
+    "name": "peeping-button-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "peeping-button-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport { PeepingButton } from \"@/components/peeping-button/peeping-button\";\n\nfunction PeepingButtonPreview() {\n\treturn (\n\t\t<PeepingButton\n\t\t\tclassName=\"min-w-44\"\n\t\t\tcoverClassName=\"px-7 py-3.5\"\n\t\t\tpeekDelay={[700, 1200]}\n\t\t\tpeekDuration={2600}\n\t\t>\n\t\t\tDon&apos;t look away\n\t\t</PeepingButton>\n\t);\n}\n",
+        "target": "components/peeping-button-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/peeping-button.json"
+    ]
+  },
+  "tile-field-preview": {
+    "name": "tile-field-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "tile-field-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport { TileField } from \"@/components/tile-field/tile-field\";\n\nfunction TileFieldPreview() {\n\treturn (\n\t\t<div className=\"flex min-h-72 w-full items-center bg-background px-16\">\n\t\t\t<TileField\n\t\t\t\taria-label=\"Tile field preview\"\n\t\t\t\tclassName=\"min-h-72\"\n\t\t\t\tcolor=\"#6366f1\"\n\t\t\t\tword=\"Localhost\"\n\t\t\t/>\n\t\t</div>\n\t);\n}\n",
+        "target": "components/tile-field-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 w-full p-0"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/tile-field.json"
+    ]
+  },
+  "scribbled-text-preview": {
+    "name": "scribbled-text-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "scribbled-text-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport { useEffect, useState } from \"react\";\n\nimport {\n\tScribbledText,\n\ttype ScribbledTextVariant,\n} from \"@/components/scribbled-text\";\n\nconst variants: ScribbledTextVariant[] = [\n\t\"wavyUnderline\",\n\t\"circle\",\n\t\"highlight\",\n\t\"crossOut\",\n];\n\nfunction ScribbledTextPreview() {\n\tconst [index, setIndex] = useState(0);\n\n\tuseEffect(() => {\n\t\tconst interval = window.setInterval(\n\t\t\t() => setIndex((current) => (current + 1) % variants.length),\n\t\t\t2000,\n\t\t);\n\t\treturn () => window.clearInterval(interval);\n\t}, []);\n\n\tconst variant = variants[index];\n\n\treturn (\n\t\t<p className=\"whitespace-nowrap px-6 text-center font-medium text-3xl text-foreground tracking-tight sm:text-4xl\">\n\t\t\tMake it{\" \"}\n\t\t\t<ScribbledText\n\t\t\t\tkey={variant}\n\t\t\t\tvariant={variant}\n\t\t\t\tscribbleClassName={\n\t\t\t\t\tvariant === \"highlight\" ? undefined : \"text-violet-400\"\n\t\t\t\t}\n\t\t\t>\n\t\t\t\tmemorable\n\t\t\t</ScribbledText>\n\t\t</p>\n\t);\n}\n",
+        "target": "components/scribbled-text-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/scribbled-text.json"
+    ]
+  },
+  "tailwindcss-buttons-preview": {
+    "name": "tailwindcss-buttons-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "tailwindcss-buttons-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport {\n\tPrimaryButton,\n\tSecondaryButton,\n\tThreeDButton,\n\tThreeDDestructiveButton,\n} from \"@/components/tailwindcss-buttons\";\n\nfunction TailwindcssButtonsPreview() {\n\treturn (\n\t\t<div className=\"grid grid-cols-2 place-items-center gap-x-10 gap-y-14 max-sm:gap-x-6 max-sm:gap-y-10\">\n\t\t\t<PrimaryButton />\n\t\t\t<SecondaryButton />\n\t\t\t<ThreeDButton />\n\t\t\t<ThreeDDestructiveButton />\n\t\t</div>\n\t);\n}\n",
+        "target": "components/tailwindcss-buttons-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/tailwindcss-buttons.json"
+    ]
+  },
+  "component-sidebar-preview": {
+    "name": "component-sidebar-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "component-sidebar-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport { useCallback, useState } from \"react\";\n\nimport {\n\tComponentSidebar,\n\tComponentSidebarContent,\n\ttype ComponentSidebarLinkProps,\n} from \"@/components/component-sidebar\";\n\nconst GROUPS = [\n\t{\n\t\ttitle: \"Getting started\",\n\t\titems: [\n\t\t\t{ title: \"Overview\", href: \"/overview\" },\n\t\t\t{ title: \"Installation\", href: \"/installation\" },\n\t\t\t{ title: \"Changelog\", href: \"/changelog\", isNew: true },\n\t\t],\n\t\tnewCount: 1,\n\t},\n\t{\n\t\ttitle: \"Components\",\n\t\titems: [\n\t\t\t{ title: \"Button\", href: \"/button\", isUpdated: true },\n\t\t\t{ title: \"Dialog\", href: \"/dialog\" },\n\t\t],\n\t},\n];\n\nfunction ComponentSidebarPreview() {\n\tconst [activeHref, setActiveHref] = useState(\"/overview\");\n\n\tconst renderLink = useCallback(\n\t\t({ href, onClick, ...props }: ComponentSidebarLinkProps) => (\n\t\t\t<a\n\t\t\t\thref={href}\n\t\t\t\tonClick={(event) => {\n\t\t\t\t\tonClick?.(event);\n\t\t\t\t\tif (event.defaultPrevented) return;\n\n\t\t\t\t\tevent.preventDefault();\n\t\t\t\t\tsetActiveHref(href);\n\t\t\t\t}}\n\t\t\t\t{...props}\n\t\t\t/>\n\t\t),\n\t\t[],\n\t);\n\n\treturn (\n\t\t<ComponentSidebar\n\t\t\tclassName=\"relative top-auto [--component-sidebar-height:19rem]\"\n\t\t\tshortcutKey={false}\n\t\t>\n\t\t\t<ComponentSidebarContent\n\t\t\t\tactiveHref={activeHref}\n\t\t\t\tgroups={GROUPS}\n\t\t\t\trenderLink={renderLink}\n\t\t\t/>\n\t\t</ComponentSidebar>\n\t);\n}\n",
+        "target": "components/component-sidebar-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/component-sidebar.json"
+    ]
+  },
+  "brand-context-menu-preview": {
+    "name": "brand-context-menu-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "brand-context-menu-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport Image from \"next/image\";\n\nimport { BrandContextMenu } from \"@/components/brand-context-menu\";\n\nfunction BrandContextMenuPreview() {\n\treturn (\n\t\t<BrandContextMenu>\n\t\t\t<button\n\t\t\t\ttype=\"button\"\n\t\t\t\tclassName=\"flex touch-manipulation items-center gap-2 rounded-md px-1 py-1 outline-none focus-visible:ring-2 focus-visible:ring-ring\"\n\t\t\t\taria-label=\"Open TentUI brand asset menu\"\n\t\t\t>\n\t\t\t\t<Image\n\t\t\t\t\talt=\"\"\n\t\t\t\t\tclassName=\"h-6 w-auto\"\n\t\t\t\t\theight={76}\n\t\t\t\t\tsrc=\"https://cdn.tentui.com/brand/Logo.svg\"\n\t\t\t\t\tunoptimized\n\t\t\t\t\twidth={89}\n\t\t\t\t/>\n\t\t\t\t<span className=\"font-semibold tracking-tight\">TentUI</span>\n\t\t\t</button>\n\t\t</BrandContextMenu>\n\t);\n}\n",
+        "target": "components/brand-context-menu-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/brand-context-menu.json"
+    ]
+  },
+  "interactive-sprite-preview": {
+    "name": "interactive-sprite-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "interactive-sprite-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport { InteractiveSprite } from \"@/components/interactive-sprite\";\n\nfunction InteractiveSpritePreview() {\n\treturn (\n\t\t<InteractiveSprite\n\t\t\talt=\"TentUI mascot looking toward the pointer\"\n\t\t\tclassName=\"size-48 select-none rounded-full ring-1 ring-border ring-offset-4 ring-offset-background [&>[aria-hidden]]:translate-y-3\"\n\t\t\tsrc=\"https://cdn.tentui.com/images/components/interactive-sprite-kitten.png\"\n\t\t/>\n\t);\n}\n",
+        "target": "components/interactive-sprite-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/interactive-sprite.json"
+    ]
+  },
+  "star-rating-preview": {
+    "name": "star-rating-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "star-rating-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport { StarRating } from \"@/components/star-rating/star-rating\";\n\nfunction StarRatingPreview() {\n\treturn (\n\t\t<StarRating\n\t\t\taria-label=\"Rating\"\n\t\t\tname=\"rating\"\n\t\t\tallowHalf\n\t\t\tsize=\"lg\"\n\t\t\tdefaultValue={3.5}\n\t\t/>\n\t);\n}\n",
+        "target": "components/star-rating-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/star-rating.json"
+    ]
+  },
+  "search-command-preview": {
+    "name": "search-command-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "search-command-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport {\n\tBookOpenIcon,\n\tCreditCardIcon,\n\tHomeIcon,\n\tSettingsIcon,\n\tUsersIcon,\n} from \"lucide-react\";\n\nimport {\n\tSearchCommand,\n\ttype SearchCommandGroup,\n} from \"@/components/search-command\";\n\nconst groups: readonly SearchCommandGroup[] = [\n\t{\n\t\theading: \"Menu\",\n\t\tactionLabel: \"Go to page\",\n\t\titems: [\n\t\t\t{ title: \"Home\", icon: <HomeIcon />, shortcut: \"GH\" },\n\t\t\t{ title: \"Customers\", icon: <UsersIcon />, shortcut: \"GC\" },\n\t\t\t{ title: \"Documentation\", icon: <BookOpenIcon />, shortcut: \"GD\" },\n\t\t],\n\t},\n\t{\n\t\theading: \"Workspace\",\n\t\tactionLabel: \"Run command\",\n\t\titems: [\n\t\t\t{ title: \"Billing\", icon: <CreditCardIcon /> },\n\t\t\t{ title: \"Settings\", icon: <SettingsIcon /> },\n\t\t],\n\t},\n];\n\nfunction SearchCommandPreview() {\n\treturn <SearchCommand enabledHotkeys={false} groups={groups} />;\n}\n",
+        "target": "components/search-command-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/search-command.json"
+    ]
+  },
+  "stateful-button-preview": {
+    "name": "stateful-button-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "stateful-button-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport { StatefulButton } from \"@/components/stateful-button\";\n\nfunction simulateAction() {\n\treturn new Promise<void>((resolve) => {\n\t\tsetTimeout(resolve, 1200);\n\t});\n}\n\nfunction StatefulButtonPreview() {\n\treturn (\n\t\t<StatefulButton\n\t\t\tlabels={{ loading: \"Saving\", success: \"Saved\", error: \"Try again\" }}\n\t\t\tonClick={simulateAction}\n\t\t>\n\t\t\tSave changes\n\t\t</StatefulButton>\n\t);\n}\n",
+        "target": "components/stateful-button-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/stateful-button.json"
+    ]
+  },
+  "number-stepper-preview": {
+    "name": "number-stepper-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "number-stepper-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport { NumberStepper } from \"@/components/number-stepper/number-stepper\";\n\nfunction NumberStepperPreview() {\n\treturn (\n\t\t<NumberStepper\n\t\t\tlabel=\"Quantity\"\n\t\t\tvariant=\"pill\"\n\t\t\tsize=\"lg\"\n\t\t\tdefaultValue={3}\n\t\t\tmin={1}\n\t\t\tmax={12}\n\t\t/>\n\t);\n}\n",
+        "target": "components/number-stepper-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/number-stepper.json"
+    ]
+  },
+  "swipe-actions-preview": {
+    "name": "swipe-actions-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "swipe-actions-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport { Archive, Pin, Trash2 } from \"lucide-react\";\nimport { useState } from \"react\";\n\nimport {\n\ttype SwipeAction,\n\tSwipeActions,\n\tSwipeList,\n} from \"@/components/swipe-actions/swipe-actions\";\n\nconst SWIPE_ROWS = [\n\t{ id: \"one\", title: \"Swipe left or right\", bar: \"w-32\" },\n\t{ id: \"two\", title: \"Full swipe to delete\", bar: \"w-40\" },\n\t{ id: \"three\", title: \"Tap to close\", bar: \"w-24\" },\n];\n\nfunction SwipeActionsPreview() {\n\tconst [rows, setRows] = useState(SWIPE_ROWS);\n\tconst remove = (id: string) =>\n\t\tsetRows((current) => current.filter((row) => row.id !== id));\n\n\treturn (\n\t\t<SwipeList label=\"Messages\" variant=\"inset\" className=\"w-[280px]\">\n\t\t\t{rows.map((row) => {\n\t\t\t\tconst pin: SwipeAction = {\n\t\t\t\t\tid: \"pin\",\n\t\t\t\t\tlabel: \"Pin\",\n\t\t\t\t\ticon: <Pin />,\n\t\t\t\t\ttone: \"amber\",\n\t\t\t\t\tonAction: () => {},\n\t\t\t\t};\n\t\t\t\tconst archive: SwipeAction = {\n\t\t\t\t\tid: \"archive\",\n\t\t\t\t\tlabel: \"Archive\",\n\t\t\t\t\ticon: <Archive />,\n\t\t\t\t\ttone: \"blue\",\n\t\t\t\t\tdestructive: true,\n\t\t\t\t\tonAction: () => remove(row.id),\n\t\t\t\t};\n\t\t\t\tconst del: SwipeAction = {\n\t\t\t\t\tid: \"delete\",\n\t\t\t\t\tlabel: \"Delete\",\n\t\t\t\t\ticon: <Trash2 />,\n\t\t\t\t\ttone: \"destructive\",\n\t\t\t\t\tdestructive: true,\n\t\t\t\t\tonAction: () => remove(row.id),\n\t\t\t\t};\n\n\t\t\t\treturn (\n\t\t\t\t\t<SwipeActions\n\t\t\t\t\t\tkey={row.id}\n\t\t\t\t\t\tlabel={row.title}\n\t\t\t\t\t\tleading={[pin]}\n\t\t\t\t\t\ttrailing={[archive, del]}\n\t\t\t\t\t\tshowHandle={false}\n\t\t\t\t\t>\n\t\t\t\t\t\t<div className=\"flex items-center gap-3 px-4 py-3.5\">\n\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\taria-hidden\n\t\t\t\t\t\t\t\tclassName=\"size-9 shrink-0 rounded-full bg-muted\"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<div className=\"grid min-w-0 flex-1 gap-1.5\">\n\t\t\t\t\t\t\t\t<p className=\"truncate font-medium text-sm\">{row.title}</p>\n\t\t\t\t\t\t\t\t<span className={`h-1.5 rounded-full bg-muted ${row.bar}`} />\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</SwipeActions>\n\t\t\t\t);\n\t\t\t})}\n\t\t</SwipeList>\n\t);\n}\n",
+        "target": "components/swipe-actions-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/swipe-actions.json"
+    ]
+  },
+  "snap-sheet-preview": {
+    "name": "snap-sheet-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "snap-sheet-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport { useRef } from \"react\";\n\nimport { SnapSheet } from \"@/components/snap-sheet/snap-sheet\";\n\nfunction SnapSheetPreview() {\n\tconst screenRef = useRef<HTMLDivElement>(null);\n\n\treturn (\n\t\t<div\n\t\t\tref={screenRef}\n\t\t\tclassName=\"relative h-[280px] w-[270px] overflow-clip rounded-[32px] border bg-muted/40\"\n\t\t>\n\t\t\t<SnapSheet\n\t\t\t\tdefaultOpen\n\t\t\t\tdefaultSnap={1}\n\t\t\t\tsnapPoints={[\"96px\", 0.55, 1]}\n\t\t\t\tmodal={false}\n\t\t\t\tscaleBackground\n\t\t\t>\n\t\t\t\t<div\n\t\t\t\t\tdata-sheet-wrapper\n\t\t\t\t\tclassName=\"absolute inset-0 grid content-start gap-3 bg-muted/40 p-6\"\n\t\t\t\t>\n\t\t\t\t\t<span className=\"h-2.5 w-24 rounded-full bg-muted-foreground/20\" />\n\t\t\t\t\t<span className=\"h-2 w-40 rounded-full bg-muted-foreground/15\" />\n\t\t\t\t\t<span className=\"mt-2 h-20 rounded-2xl bg-muted-foreground/10\" />\n\t\t\t\t\t<SnapSheet.Trigger className=\"absolute inset-x-6 bottom-6 h-11 cursor-pointer rounded-full bg-foreground font-medium text-background text-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50\">\n\t\t\t\t\t\tOpen sheet\n\t\t\t\t\t</SnapSheet.Trigger>\n\t\t\t\t</div>\n\n\t\t\t\t<SnapSheet.Content container={screenRef} className=\"max-w-none\">\n\t\t\t\t\t<SnapSheet.Handle className=\"mt-1.5\" />\n\t\t\t\t\t<div className=\"px-5 pt-1 pb-6\">\n\t\t\t\t\t\t<SnapSheet.Title>Snap sheet</SnapSheet.Title>\n\t\t\t\t\t\t<SnapSheet.Description>\n\t\t\t\t\t\t\tDrag between snap points\n\t\t\t\t\t\t</SnapSheet.Description>\n\t\t\t\t\t\t<div className=\"mt-5 grid gap-2.5\">\n\t\t\t\t\t\t\t<span className=\"h-2 w-full rounded-full bg-muted\" />\n\t\t\t\t\t\t\t<span className=\"h-2 w-5/6 rounded-full bg-muted\" />\n\t\t\t\t\t\t\t<span className=\"h-2 w-2/3 rounded-full bg-muted\" />\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</SnapSheet.Content>\n\t\t\t</SnapSheet>\n\t\t</div>\n\t);\n}\n",
+        "target": "components/snap-sheet-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/snap-sheet.json"
+    ]
+  },
+  "tick-ruler-preview": {
+    "name": "tick-ruler-preview",
+    "description": "",
+    "type": "registry:example",
+    "files": [
+      {
+        "path": "tick-ruler-preview.tsx",
+        "type": "registry:example",
+        "content": "\"use client\";\n\nimport { TickRuler } from \"@/components/tick-ruler/tick-ruler\";\n\nfunction TickRulerPreview() {\n\treturn (\n\t\t<div className=\"w-full max-w-[360px]\">\n\t\t\t<TickRuler\n\t\t\t\tlabel=\"Duration\"\n\t\t\t\tdefaultValue={25}\n\t\t\t\tmin={0}\n\t\t\t\tmax={90}\n\t\t\t\tmajorEvery={5}\n\t\t\t\tlabelEvery={15}\n\t\t\t\tunit=\"min\"\n\t\t\t/>\n\t\t</div>\n\t);\n}\n",
+        "target": "components/tick-ruler-preview.tsx"
+      }
+    ],
+    "meta": {
+      "previewClassName": "min-h-72 place-items-center content-center"
+    },
+    "registryDependencies": [
+      "https://tentui.com/r/tick-ruler.json"
+    ]
+  },
   "star-rating-demo": {
     "name": "star-rating-demo",
     "description": "",

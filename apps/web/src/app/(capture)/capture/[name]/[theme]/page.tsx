@@ -2,15 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
 
-import {
-	ComponentSidebarScene,
-	NumberStepperScene,
-	ScribbledTextScene,
-	SnapSheetScene,
-	SwipeActionsScene,
-	TailwindcssButtonsScene,
-	TickRulerScene,
-} from "@/components/capture/capture-scenes";
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
 import {
 	COMPONENT_CAPTURE_FRAME,
@@ -29,17 +20,8 @@ type CaptureIndexItem = {
 
 const captureIndex = Index as Record<string, CaptureIndexItem>;
 
-// Capture-only framings for demos that don't fit the 4:3 frame or are too
-// busy for a card.
-const captureScenes: Record<string, ComponentType> = {
-	"component-sidebar": ComponentSidebarScene,
-	"number-stepper": NumberStepperScene,
-	"scribbled-text": ScribbledTextScene,
-	"snap-sheet": SnapSheetScene,
-	"swipe-actions": SwipeActionsScene,
-	"tailwindcss-buttons": TailwindcssButtonsScene,
-	"tick-ruler": TickRulerScene,
-};
+// Capture-only framings for demos that don't fit the 4:3 frame.
+const captureScenes: Record<string, ComponentType> = {};
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -65,7 +47,9 @@ export default async function ComponentCapturePage({
 		notFound();
 	}
 
-	const example = captureIndex[`${name}-demo`];
+	// The minimal `<name>-preview` the docs page leads with, else the demo.
+	const example =
+		captureIndex[`${name}-preview`] ?? captureIndex[`${name}-demo`];
 	const Component = captureScenes[name] ?? example?.component;
 	if (!Component) notFound();
 

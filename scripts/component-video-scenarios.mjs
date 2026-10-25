@@ -153,6 +153,34 @@ export const scenarios = {
 		},
 	},
 
+	"star-rating": {
+		rest: { x: 420, y: 320 },
+		async run(d) {
+			const star = (index) => `[data-slot="star-rating-star"] >> nth=${index}`;
+			await d.wait(1200);
+			// Sweep across the row: each star ticks as the preview fills.
+			await d.move(star(0), 700, { x: 0.7, y: 0.55 });
+			await d.wait(200);
+			await d.move(star(4), 900, { x: 0.7, y: 0.55 });
+			await d.wait(250);
+			// A full five pops.
+			await d.click();
+			await d.wait(900);
+			// The left half of the second star picks 1.5.
+			await d.move(star(1), 700, { x: 0.25, y: 0.55 });
+			await d.wait(250);
+			await d.click();
+			await d.wait(900);
+			// Back to 3.5, where the clip started.
+			await d.move(star(3), 700, { x: 0.25, y: 0.55 });
+			await d.wait(250);
+			await d.click();
+			await d.wait(900);
+			await d.move(d.rest, 800);
+			await d.wait(800);
+		},
+	},
+
 	"hold-to-confirm": {
 		async run(d) {
 			const button = '[data-slot="hold-to-confirm"]';
@@ -255,7 +283,7 @@ export const scenarios = {
 			const link = (title) =>
 				`[data-slot="component-sidebar"] a:has-text("${title}")`;
 			await d.wait(300);
-			for (const title of ["Installation", "Changelog", "Button", "Tooltip"]) {
+			for (const title of ["Installation", "Changelog", "Button", "Dialog"]) {
 				await d.move(link(title), 600, { x: 0.35, y: 0.5 });
 				await d.wait(200);
 				await d.click();
@@ -389,7 +417,9 @@ export const scenarios = {
 			await d.wait(250);
 			await d.click();
 			await d.wait(2900);
-			await d.move(button(1), 700, { x: 0.6, y: 0.6 });
+			await d.move({ x: 330, y: 270 }, 600);
+			await d.wait(400);
+			await d.move(button(0), 700, { x: 0.4, y: 0.5 });
 			await d.wait(250);
 			await d.click();
 			await d.wait(2900);
