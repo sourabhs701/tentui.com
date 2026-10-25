@@ -1,0 +1,2 @@
+# Files in .open-next/assets that wrangler should not publish.
+.DS_Store

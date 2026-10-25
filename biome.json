@@ -13,6 +13,7 @@
 			"!**/.open-next",
 			"!**/dist",
 			"!**/.turbo",
+			"!**/.claude/worktrees",
 			"!**/.nx",
 			"!**/dev-dist",
 			"!**/.zed",
