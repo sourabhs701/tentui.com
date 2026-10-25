@@ -4,8 +4,12 @@ import type { ComponentType } from "react";
 
 import {
 	ComponentSidebarScene,
+	NumberStepperScene,
 	ScribbledTextScene,
+	SnapSheetScene,
+	SwipeActionsScene,
 	TailwindcssButtonsScene,
+	TickRulerScene,
 } from "@/components/capture/capture-scenes";
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
 import {
@@ -25,11 +29,16 @@ type CaptureIndexItem = {
 
 const captureIndex = Index as Record<string, CaptureIndexItem>;
 
-// Capture-only framings for demos that don't fit the 4:3 frame.
+// Capture-only framings for demos that don't fit the 4:3 frame or are too
+// busy for a card.
 const captureScenes: Record<string, ComponentType> = {
 	"component-sidebar": ComponentSidebarScene,
+	"number-stepper": NumberStepperScene,
 	"scribbled-text": ScribbledTextScene,
+	"snap-sheet": SnapSheetScene,
+	"swipe-actions": SwipeActionsScene,
 	"tailwindcss-buttons": TailwindcssButtonsScene,
+	"tick-ruler": TickRulerScene,
 };
 
 export const dynamic = "force-static";

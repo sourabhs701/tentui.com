@@ -24,11 +24,11 @@ export const scenarios = {
 				await d.up();
 			};
 			await d.wait(1500);
-			// Half to full: the sheet pops at the top and the map scales back.
-			await drag(40, 700);
+			// Half to full: the sheet pops at the top and the page scales back.
+			await drag(30, 700);
 			await d.wait(1000);
 			// Full down to the peek height.
-			await drag(285, 800);
+			await drag(258, 800);
 			await d.wait(1000);
 			// A flick down from peek closes it.
 			const box = await d.page.locator(handle).boundingBox();
@@ -46,10 +46,10 @@ export const scenarios = {
 	"swipe-actions": {
 		rest: { x: 455, y: 330 },
 		async run(d) {
-			const row = (sender) =>
-				`[data-slot="swipe-actions"][aria-label="Email from ${sender}"]`;
-			const swipe = async (sender, from, distance, ms, holdMs = 150) => {
-				const box = await d.page.locator(row(sender)).boundingBox();
+			const row = (title) =>
+				`[data-slot="swipe-actions"][aria-label="${title}"]`;
+			const swipe = async (title, from, distance, ms, holdMs = 150) => {
+				const box = await d.page.locator(row(title)).boundingBox();
 				const y = box.y + box.height * 0.55;
 				const x = box.x + box.width * from;
 				await d.move({ x, y }, 650);
@@ -60,25 +60,16 @@ export const scenarios = {
 				await d.wait(holdMs);
 				await d.up();
 			};
-			await d.wait(2000);
+			await d.wait(1500);
 			// A long swipe right on row 1 arms Pin, fires it, and snaps back.
-			await swipe("Ava Chen", 0.18, 250, 750, 300);
+			await swipe("Swipe left or right", 0.18, 260, 750, 300);
 			await d.wait(900);
-			// A shorter swipe left on row 2 reveals Archive and Delete.
-			await swipe("Marcus Webb", 0.8, -150, 600);
+			// A shorter swipe left on row 1 reveals Archive and Delete.
+			await swipe("Swipe left or right", 0.8, -150, 600);
 			await d.wait(1000);
-			// A full swipe on row 3 arms Delete, stretches it, and collapses the row.
-			await swipe("Priya Raman", 0.85, -280, 900, 350);
-			await d.wait(1100);
-			await d.move(row("Leo Park"), 700, { x: 0.6, y: 0.5 });
-			await d.wait(400);
-			await d.move(
-				`${row("Leo Park")} [data-slot="swipe-actions-handle"]`,
-				450,
-			);
-			await d.wait(200);
-			await d.click();
-			await d.wait(2000);
+			// A full swipe on row 2 arms Delete, stretches it, and collapses the row.
+			await swipe("Full swipe to delete", 0.85, -300, 900, 350);
+			await d.wait(1300);
 			await d.move(d.rest, 800);
 			await d.wait(500);
 		},
@@ -87,11 +78,10 @@ export const scenarios = {
 	"number-stepper": {
 		rest: { x: 455, y: 335 },
 		async run(d) {
-			const plus = '[aria-label="Increase Guests"]';
-			const minus = '[aria-label="Decrease Guests"]';
-			const tip = 'input[aria-label="Tip"]';
-			await d.wait(2000);
-			// Two taps roll Guests up from 2 to 4.
+			const plus = '[aria-label="Increase Quantity"]';
+			const minus = '[aria-label="Decrease Quantity"]';
+			await d.wait(1500);
+			// Two taps roll the value up from 3 to 5.
 			await d.move(plus, 750, { x: 0.55, y: 0.6 });
 			await d.wait(250);
 			await d.click();
@@ -110,20 +100,14 @@ export const scenarios = {
 			await d.down();
 			await d.wait(1180);
 			await d.up();
-			await d.wait(800);
-			// Type 99 into Tip: Enter warns and snaps it to the 30% max.
-			await d.move(tip, 750, { x: 0.6, y: 0.55 });
-			await d.wait(200);
+			await d.wait(500);
+			// One more tap to 1, then another bumps the min wall.
 			await d.click();
-			await d.key("ControlOrMeta+a");
-			await d.wait(250);
-			await d.type("99", 160);
-			await d.wait(400);
-			await d.key("Enter");
-			await d.wait(1200);
-			await d.blur();
+			await d.wait(450);
+			await d.click();
+			await d.wait(900);
 			await d.move(d.rest, 800);
-			await d.wait(2000);
+			await d.wait(1500);
 		},
 	},
 
@@ -156,13 +140,14 @@ export const scenarios = {
 			await d.wait(450);
 			await d.up();
 			await d.wait(900);
-			await d.move(
-				'[data-slot="tick-ruler-presets"] button:has-text("15")',
-				750,
-			);
+			// A flick the other way coasts back down the ruler.
+			const left = box.x + box.width * 0.18;
+			await d.move({ x: left, y }, 700);
 			await d.wait(200);
-			await d.click();
-			await d.wait(1100);
+			await d.down();
+			await d.move({ x: left + TICK_RULER_FLICKS[1], y }, 160, {}, easeIn);
+			await d.up();
+			await d.wait(1400);
 			await d.move(d.rest, 800);
 			await d.wait(500);
 		},
