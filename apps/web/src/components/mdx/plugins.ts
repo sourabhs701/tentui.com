@@ -1,7 +1,8 @@
-import rehypePrettyCode from "rehype-pretty-code";
+import rehypePrettyCode, { type Options } from "rehype-pretty-code";
 import { visit } from "unist-util-visit";
 import { Index } from "@/registry/__index__";
 import sourceFiles from "@/registry/__sources__.json";
+import { getHighlighter } from "./highlighter";
 import type { MdxAttribute, MdxNode, MdxTree } from "./mdx-types";
 
 type RegistryItem = {
@@ -77,6 +78,8 @@ export function rehypeHighlightCode() {
 	return rehypePrettyCode({
 		theme: { dark: "vesper", light: "github-light-default" },
 		keepBackground: false,
+		// Typed as the full bundled highlighter, but only core methods are used.
+		getHighlighter: getHighlighter as unknown as Options["getHighlighter"],
 		onVisitLine(node) {
 			if (node.children.length === 0)
 				node.children = [{ type: "text", value: " " }];

@@ -1,11 +1,15 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { createGenerator, type GeneratedDoc } from "fumadocs-typescript";
+import { remark } from "remark";
+import remarkMdx from "remark-mdx";
 import {
 	type Registry,
 	type RegistryItem,
 	registrySchema,
 } from "shadcn/schema";
 import { codeToHtml } from "shiki";
+import { visit } from "unist-util-visit";
 
 import { formatCode } from "../src/lib/format-code";
 import {
@@ -15,11 +19,17 @@ import {
 	relativePath,
 } from "../src/lib/registry-paths";
 import { fixImport, processFileContent } from "../src/lib/registry-transform";
+import {
+	componentPropTag,
+	getTypeTableKey,
+	type TypeTableQuery,
+} from "../src/lib/type-table-key";
 import { registry } from "../src/registry/index";
 
 const appRoot = process.cwd();
 const registryPath = path.join(appRoot, "src/registry");
-const componentContentPath = path.join(appRoot, "src/content/components");
+const contentPath = path.join(appRoot, "src/content");
+const componentContentPath = path.join(contentPath, "components");
 
 function withLocalFilePaths(item: RegistryItem): RegistryItem {
 	return {
@@ -224,6 +234,108 @@ async function buildSourcePayload(items: RegistryItem[]) {
 	return Object.fromEntries(entries);
 }
 
+type MdxJsxNode = {
+	type: string;
+	name?: string | null;
+	attributes?: Array<{ type: string; name?: string; value?: unknown }>;
+};
+
+async function getAutoTypeTableQueries() {
+	const contentFiles = (
+		await fs.readdir(contentPath, { recursive: true })
+	).filter((file) => file.endsWith(".mdx"));
+	const queries = new Map<
+		string,
+		{ query: TypeTableQuery; keepAllEntries: boolean }
+	>();
+	const parser = remark().use(remarkMdx);
+
+	for (const file of contentFiles.toSorted()) {
+		const content = await fs.readFile(path.join(contentPath, file), "utf8");
+		if (!content.includes("<AutoTypeTable")) continue;
+
+		visit(parser.parse(content) as never, (rawNode: unknown) => {
+			const node = rawNode as MdxJsxNode;
+			if (node.name !== "AutoTypeTable") return;
+
+			const query: TypeTableQuery = {};
+			// `include` can pick inherited props, so keep every entry for it.
+			let keepAllEntries = false;
+			for (const attribute of node.attributes ?? []) {
+				if (attribute.name === "include") keepAllEntries = true;
+				if (
+					attribute.name !== "path" &&
+					attribute.name !== "name" &&
+					attribute.name !== "type"
+				)
+					continue;
+				if (typeof attribute.value !== "string") {
+					throw new Error(
+						`AutoTypeTable "${attribute.name}" must be a string literal in ${file}`,
+					);
+				}
+				query[attribute.name] = attribute.value;
+			}
+			const key = getTypeTableKey(query);
+			queries.set(key, {
+				query,
+				keepAllEntries:
+					keepAllEntries || (queries.get(key)?.keepAllEntries ?? false),
+			});
+		});
+	}
+
+	return queries;
+}
+
+/** Drop inherited props (e.g. every HTML attribute) that the docs never show. */
+function keepComponentPropEntries(doc: GeneratedDoc): GeneratedDoc {
+	const componentEntries = doc.entries.filter((entry) =>
+		entry.tags.some((tag) => tag.name === componentPropTag),
+	);
+	return componentEntries.length > 0
+		? { ...doc, entries: componentEntries }
+		: doc;
+}
+
+/**
+ * Prop tables for <AutoTypeTable>. Generated here so the Worker never bundles
+ * fumadocs-typescript / ts-morph (the TypeScript compiler).
+ */
+async function buildTypeTablesPayload() {
+	// Fumadocs does not include generation options in its cache key. Keeping the
+	// filesystem cache would allow unfiltered prop data to bypass the transform.
+	const generator = createGenerator();
+	const entries: Array<[string, GeneratedDoc[]]> = [];
+
+	for (const [
+		key,
+		{ query, keepAllEntries },
+	] of await getAutoTypeTableQueries()) {
+		const docs = await generator.generateTypeTable(query, {
+			transform(entry, _propertyType, propertySymbol) {
+				const componentSource = this.declaration.getSourceFile().getFilePath();
+				const isComponentProp = propertySymbol
+					.getDeclarations()
+					.some(
+						(declaration) =>
+							declaration.getSourceFile().getFilePath() === componentSource,
+					);
+
+				if (isComponentProp) {
+					entry.tags.push({ name: componentPropTag, text: "" });
+				}
+			},
+		});
+		entries.push([
+			key,
+			keepAllEntries ? docs : docs.map(keepComponentPropEntries),
+		]);
+	}
+
+	return Object.fromEntries(entries.toSorted(([a], [b]) => a.localeCompare(b)));
+}
+
 /**
  * Build edge-safe display payload for one registry item.
  * Content + syntax highlighting are baked in so Workers never call fs/shiki/ts-morph.
@@ -379,8 +491,25 @@ export async function buildRegistry(sourceRegistry: Registry) {
 			.filter((item) => item.files?.length)
 			.map(async (item) => [item.name, await buildDisplayItem(item)] as const),
 	);
-	const displayItems = Object.fromEntries(displayEntries);
+	// Highlighted HTML is ~85% of the payload and only the block viewer needs it,
+	// so keep it out of __items__.json (also bundled into the llms routes).
+	const displayItems = Object.fromEntries(
+		displayEntries.map(([name, item]) => [
+			name,
+			{
+				...item,
+				files: item.files.map(({ highlightedContent: _, ...file }) => file),
+			},
+		]),
+	);
+	const highlightedItems = Object.fromEntries(
+		displayEntries.map(([name, item]) => [
+			name,
+			item.files.map((file) => file.highlightedContent),
+		]),
+	);
 	const sourcePayload = await buildSourcePayload(parsed.data.items);
+	const typeTablesPayload = await buildTypeTablesPayload();
 
 	const outputs = [
 		{
@@ -396,8 +525,16 @@ export async function buildRegistry(sourceRegistry: Registry) {
 			content: `${JSON.stringify(displayItems, null, 2)}\n`,
 		},
 		{
+			path: path.join(registryPath, "__highlighted__.json"),
+			content: `${JSON.stringify(highlightedItems, null, 2)}\n`,
+		},
+		{
 			path: path.join(registryPath, "__sources__.json"),
 			content: `${JSON.stringify(sourcePayload, null, 2)}\n`,
+		},
+		{
+			path: path.join(registryPath, "__type-tables__.json"),
+			content: `${JSON.stringify(typeTablesPayload, null, 2)}\n`,
 		},
 		{
 			path: path.join(registryPath, "__blocks__.json"),

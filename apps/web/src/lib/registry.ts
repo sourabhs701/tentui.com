@@ -11,13 +11,17 @@ import items from "@/registry/__items__.json";
 
 export { fixImport, processFileContent } from "@/lib/registry-transform";
 
-export type HighlightedRegistryFile = NonNullable<
-	RegistryItem["files"]
->[number] & {
+export type RegistryDisplayFile = NonNullable<RegistryItem["files"]>[number];
+
+export type HighlightedRegistryFile = RegistryDisplayFile & {
 	highlightedContent: string;
 };
 
 export type RegistryDisplayItem = RegistryItem & {
+	files: RegistryDisplayFile[];
+};
+
+export type HighlightedRegistryItem = RegistryItem & {
 	files: HighlightedRegistryFile[];
 };
 
@@ -35,14 +39,9 @@ export async function getRegistryItem(
 		return null;
 	}
 
-	const files = (result.data.files ?? []).map((file, index) => ({
-		...file,
-		highlightedContent: item.files[index]?.highlightedContent ?? "",
-	}));
-
 	return {
 		...result.data,
-		files,
+		files: result.data.files ?? [],
 	} as RegistryDisplayItem;
 }
 

@@ -1,14 +1,10 @@
 import "server-only";
 
-import type { GeneratedDoc, Generator } from "fumadocs-typescript";
 import type { Nodes } from "hast";
 import { type Jsx, toJsxRuntime } from "hast-util-to-jsx-runtime";
 import type { ComponentProps, ReactNode } from "react";
 import * as runtime from "react/jsx-runtime";
-import {
-	componentPropsOnly,
-	componentPropTag,
-} from "./auto-type-table-generator";
+import { componentPropTag, getTypeTable } from "@/lib/type-tables";
 import { mdxCodeBlockComponents } from "./code-block";
 import { markdownRenderer } from "./markdown";
 import { parseTags } from "./parse-tags";
@@ -20,11 +16,9 @@ export type AutoTypeTableProps = ComponentProps<"div"> & {
 	path?: string;
 	name?: string;
 	type?: string;
-	generator: Generator;
 };
 
 export async function AutoTypeTable({
-	generator,
 	include,
 	name,
 	path,
@@ -32,14 +26,7 @@ export async function AutoTypeTable({
 	...props
 }: AutoTypeTableProps) {
 	const renderer = markdownRenderer();
-	const output = (await generator.generateTypeTable(
-		{
-			name,
-			path,
-			type,
-		},
-		componentPropsOnly,
-	)) as GeneratedDoc[];
+	const output = getTypeTable({ name, path, type });
 
 	return Promise.all(
 		output.map(async (item) => {

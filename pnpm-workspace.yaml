@@ -25,3 +25,5 @@ catalog:
   "@types/react": ^19.2.17
   "@types/react-dom": ^19.2.3
   tailwindcss: ^4.3.2
+patchedDependencies:
+  rehype-pretty-code@0.14.4: patches/rehype-pretty-code@0.14.4.patch

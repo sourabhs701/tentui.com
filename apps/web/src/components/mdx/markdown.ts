@@ -1,9 +1,9 @@
-import { highlightHast } from "fumadocs-core/highlight";
 import type { ElementContent, Nodes } from "hast";
 import rehypeExternalLinks from "rehype-external-links";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
+import { getHighlighter } from "./highlighter";
 import {
 	rehypeCodeRawString,
 	rehypeHighlightCode,
@@ -21,7 +21,8 @@ export function markdownRenderer() {
 
 	return {
 		async renderTypeToHast(type: string): Promise<Nodes> {
-			const nodes = await highlightHast(type, {
+			const highlighter = await getHighlighter();
+			const nodes = highlighter.codeToHast(type, {
 				lang: "ts",
 				structure: "inline",
 				themes: { dark: "vesper", light: "github-light" },

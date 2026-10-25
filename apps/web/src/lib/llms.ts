@@ -6,14 +6,10 @@ import { remarkHeading } from "fumadocs-core/mdx-plugins/remark-heading";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm";
 import remarkMdx from "remark-mdx";
-import {
-	autoTypeTableGenerator,
-	componentPropsOnly,
-	componentPropTag,
-} from "@/components/mdx/auto-type-table-generator";
 import type { Doc } from "@/lib/documents";
 import type { RegistryDisplayItem } from "@/lib/registry";
 import { fixImport } from "@/lib/registry-transform";
+import { componentPropTag, getTypeTable } from "@/lib/type-tables";
 import { Index } from "@/registry/__index__";
 import { getRegistryItemNamespace, getRegistryItemUrl } from "@/utils/registry";
 
@@ -156,7 +152,7 @@ async function transformChildren(parent: LLMParent) {
 		}
 
 		if (node.name === "AutoTypeTable") {
-			const typeTableNodes = await getTypeTableNodes(node);
+			const typeTableNodes = getTypeTableNodes(node);
 			parent.children.splice(index, 1, ...typeTableNodes);
 			index += typeTableNodes.length;
 			continue;
@@ -253,14 +249,11 @@ function getComponentCodeNode(node: LLMNode): LLMNode {
 	};
 }
 
-async function getTypeTableNodes(node: LLMNode): Promise<LLMNode[]> {
+function getTypeTableNodes(node: LLMNode): LLMNode[] {
 	const path = getStringAttribute(node, "path");
 	const name = getStringAttribute(node, "name");
 	const type = getStringAttribute(node, "type");
-	const docs = await autoTypeTableGenerator.generateTypeTable(
-		{ path, name, type },
-		componentPropsOnly,
-	);
+	const docs = getTypeTable({ path, name, type });
 
 	return docs.flatMap((doc) => {
 		const componentEntries = doc.entries.filter(
