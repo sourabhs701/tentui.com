@@ -12,7 +12,6 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import { AutoTypeTable } from "./auto-type-table";
-import { autoTypeTableGenerator } from "./auto-type-table-generator";
 import { Callout } from "./callout";
 import { mdxCodeBlockComponents } from "./code-block";
 import { CodeTabs, TabsListInstallType } from "./code-tabs";
@@ -123,9 +122,7 @@ const components: MDXRemoteProps["components"] = {
 	YouTubeEmbed,
 	IframeEmbed,
 	FramedImage,
-	AutoTypeTable: (props) => (
-		<AutoTypeTable {...props} generator={autoTypeTableGenerator} />
-	),
+	AutoTypeTable,
 };
 
 const options: MDXRemoteProps["options"] = {

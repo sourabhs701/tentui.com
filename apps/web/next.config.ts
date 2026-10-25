@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
 	allowedDevOrigins: ["tentui.localhost", "*.tentui.localhost"],
 	typedRoutes: true,
 	reactCompiler: true,
+	// Next externalizes shiki by default, and OpenNext then bundles the package
+	// root (every language and theme) into the Worker. Bundling it lets
+	// Turbopack keep only the grammars src/components/mdx/highlighter.ts imports.
+	transpilePackages: ["shiki"],
 	turbopack: {
 		root: path.resolve(import.meta.dirname, "../.."),
 	},

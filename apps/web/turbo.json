@@ -12,6 +12,9 @@
 				"registry.json",
 				"src/registry/__index__.tsx",
 				"src/registry/__items__.json",
+				"src/registry/__highlighted__.json",
+				"src/registry/__sources__.json",
+				"src/registry/__type-tables__.json",
 				"src/registry/__blocks__.json",
 				"public/r/**"
 			]

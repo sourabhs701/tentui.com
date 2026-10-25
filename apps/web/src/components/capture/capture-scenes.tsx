@@ -72,7 +72,7 @@ export function SwipeActionsScene() {
 		setRows((current) => current.filter((row) => row.id !== id));
 
 	return (
-		<SwipeList label="Messages" variant="inset" className="w-[340px]">
+		<SwipeList label="Messages" variant="inset" className="w-[280px]">
 			{rows.map((row) => {
 				const pin: SwipeAction = {
 					id: "pin",
@@ -129,7 +129,7 @@ export function SnapSheetScene() {
 	return (
 		<div
 			ref={screenRef}
-			className="relative h-[330px] w-[300px] overflow-clip rounded-[32px] border bg-muted/40"
+			className="relative h-[280px] w-[270px] overflow-clip rounded-[32px] border bg-muted/40"
 		>
 			<SnapSheet
 				defaultOpen

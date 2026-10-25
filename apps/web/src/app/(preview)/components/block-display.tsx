@@ -1,10 +1,7 @@
 import { cache } from "react";
 import { BlockViewer } from "@/app/(preview)/components/block-viewer";
-import {
-	createFileTreeForRegistryItemFiles,
-	getRegistryItem,
-	type HighlightedRegistryFile,
-} from "@/lib/registry";
+import { createFileTreeForRegistryItemFiles } from "@/lib/registry";
+import { getHighlightedRegistryItem } from "@/lib/registry-highlighted";
 
 export async function BlockDisplay({ name }: { name: string }) {
 	const item = await getCachedRegistryItem(name);
@@ -15,15 +12,11 @@ export async function BlockDisplay({ name }: { name: string }) {
 
 	const tree = await getCachedFileTree(item.files);
 
-	const highlightedFiles = item.files as HighlightedRegistryFile[];
-
-	return (
-		<BlockViewer item={item} tree={tree} highlightedFiles={highlightedFiles} />
-	);
+	return <BlockViewer item={item} tree={tree} highlightedFiles={item.files} />;
 }
 
 const getCachedRegistryItem = cache(async (name: string) =>
-	getRegistryItem(name),
+	getHighlightedRegistryItem(name),
 );
 
 const getCachedFileTree = cache(

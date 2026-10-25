@@ -1,0 +1,28 @@
+diff --git a/dist/index.js b/dist/index.js
+index cae4b6fbf009707bcae9e38f3da8d9ec7297ab35..2c4fce9ab0e3625c35a31a081e27a73d6f7ca2b9 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -1,4 +1,3 @@
+-import { getSingletonHighlighter } from 'shiki';
+ import { visit } from 'unist-util-visit';
+ import { toString } from 'hast-util-to-string';
+ import rangeParser2 from 'parse-numeric-range';
+@@ -478,7 +477,7 @@ function rehypePrettyCode(options = {}) {
+     defaultLang = "",
+     tokensMap = {},
+     filterMetaString = (v) => v,
+-    getHighlighter = getSingletonHighlighter,
++    getHighlighter,
+     transformers,
+     onVisitLine,
+     onVisitHighlightedLine,
+@@ -486,6 +485,9 @@ function rehypePrettyCode(options = {}) {
+     onVisitTitle,
+     onVisitCaption
+   } = options;
++  if (!getHighlighter) {
++    throw new Error("rehype-pretty-code: pass `getHighlighter` (patched to avoid bundling every Shiki language)");
++  }
+   const key = JSON.stringify(theme);
+   let cachedHighlighter = globalHighlighterCache.get(key);
+   if (!cachedHighlighter) {
