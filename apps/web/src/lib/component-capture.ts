@@ -25,6 +25,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"brand-context-menu": { zoom: 2 },
 	"hold-to-confirm": { zoom: 1.6 },
 	"number-stepper": { zoom: 1.6 },
+	"otp-field": { zoom: 1.2 },
 	"peeping-button": { zoom: 1.35 },
 	"search-command": { zoom: 2 },
 	"snap-sheet": {},

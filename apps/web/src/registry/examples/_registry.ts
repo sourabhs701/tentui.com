@@ -102,6 +102,20 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "otp-field-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("otp-field")],
+		files: [
+			{
+				path: "examples/otp-field-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "star-rating-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("star-rating")],
@@ -192,6 +206,20 @@ export const examples: Registry["items"] = [
 		files: [
 			{
 				path: "examples/tick-ruler-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "otp-field-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("otp-field")],
+		files: [
+			{
+				path: "examples/otp-field-demo.tsx",
 				type: "registry:example",
 			},
 		],
