@@ -106,7 +106,7 @@ export function ComponentPage({ doc }: { doc: Doc }) {
 
 	return (
 		<div className="mb-5 flex min-w-0 px-2">
-			<div className="mx-auto max-w-4xl">
+			<div className="mx-auto min-w-0 max-w-4xl">
 				<ComponentContentCol>
 					<ComponentViewTracker slug={doc.slug} title={doc.metadata.title} />
 					<JsonLdScript data={softwareSourceCodeJsonLd(doc)} />
