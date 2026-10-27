@@ -1,0 +1,168 @@
+---
+title: OTP Field
+description: A one-time code input with a slot per digit, a tick per keystroke, a cascade on paste, and a shake when the code is wrong.
+createdAt: 2026-10-26
+updatedAt: 2026-10-26
+---
+
+<ComponentPreview name="otp-field-preview" />
+
+## Example
+
+<ComponentPreview name="otp-field-demo" />
+
+## Features
+
+- Uses one real `<input>` with `autocomplete="one-time-code"` over the slots,
+  so SMS autofill on iOS and Android, password managers, and paste all work
+  natively.
+- Lifts each digit into its slot with a spring, plays a click and a selection
+  haptic per keystroke, and throttles the cues so fast typing never stacks
+  sounds or drops a character.
+- Cascades a pasted or autofilled code in from the left with a single pop,
+  after stripping spaces and dashes and dropping characters the `pattern`
+  doesn't allow.
+- Sweeps a shimmer across the slots while `verifying`, pops them green with a
+  check on `success`, and shakes, tints, and clears the code on `error`.
+- Fires `onComplete` once per completed code, and again only after the code
+  changes and completes again.
+- Comes in `sm`, `md`, and `lg`, with groups and a separator, masked dots, and
+  digit, alphanumeric, or custom patterns.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/otp-field
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="otp-field" title="components/otp-field.tsx" />
+
+<Step>Add a `--success` color if your theme doesn't have one</Step>
+
+```css
+:root {
+  --success: oklch(0.723 0.219 149.579);
+}
+
+@theme inline {
+  --color-success: var(--success);
+}
+```
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { OTPField } from "@/components/otp-field";
+```
+
+```tsx
+<OTPField groups={[3, 3]} onComplete={(code) => verify(code)} />
+```
+
+Use `value` and `onValueChange` to control it. `onValueChange` fires on every
+edit, including the clear after an error, and `onComplete` fires once each time
+the code fills every slot. Changes that come from the `value` prop stay silent,
+and characters in it that don't match `pattern` are dropped for display.
+
+Drive the verify flow with `status`. `verifying` sweeps a shimmer and pauses
+typing, `success` locks the code, and `error` shakes the row and clears it
+600 ms later, then puts the caret back in the first slot. Set
+`clearOnError={false}` to keep the wrong code, and set `status` back to `idle`
+once the user edits it.
+
+```tsx
+const [code, setCode] = useState("");
+const [status, setStatus] = useState<OTPFieldStatus>("idle");
+
+<OTPField
+  name="code"
+  groups={[3, 3]}
+  value={code}
+  onValueChange={(next) => {
+    setCode(next);
+    if (status === "error") setStatus("idle");
+  }}
+  onComplete={async (next) => {
+    setStatus("verifying");
+    setStatus((await checkCode(next)) ? "success" : "error");
+  }}
+  status={status}
+/>
+```
+
+Set `pattern="alphanumeric"` for letters and digits, or pass a RegExp that
+matches one allowed character. Digit fields open the numeric keypad on mobile.
+
+```tsx
+<OTPField length={8} groups={[4, 4]} pattern="alphanumeric" />
+<OTPField length={4} pattern={/^[0-9a-f]$/i} mask />
+```
+
+Set `size` to `sm`, `md`, or `lg`, and `mask` to show dots in place of the
+characters. Give it a `name` to submit the code with a native form.
+
+## Keyboard
+
+| Key | Action |
+| --- | --- |
+| Any allowed character | Fills the active slot and moves to the next one |
+| `Backspace` | Clears the selected slot, or the one before the caret |
+| `Delete` | Clears the selected slot |
+| `←` / `→` | Moves the caret one slot, never past the first empty slot |
+| `Home` / `End` | Moves the caret to the first slot or the first empty slot |
+| `Cmd`/`Ctrl` + `V` | Pastes a code from the first slot |
+
+Clicking or tapping a slot moves the caret there, or to the first empty slot
+if it is further along.
+
+## Accessibility
+
+The field is a single text input, so screen readers announce one labeled
+textbox rather than six. It is named "One-time code" by default; pass
+`aria-label` or `aria-labelledby` to name it, and `aria-describedby` for helper
+or error text. The slots are `aria-hidden`. The input has `aria-invalid` while
+`status` is `error`, and a polite live region announces "Verifying code",
+"Code verified", and "Incorrect code, try again".
+
+The active slot shows a focus ring that slides between slots as the caret
+moves. A disabled field can't be focused, plays no sound, and is dimmed.
+
+With reduced motion enabled, digits appear in place with no rise or cascade,
+there is no shimmer, pop, or shake, and the caret doesn't blink; only colors
+change. Sound and haptics stay on because they confirm input rather than
+decorate movement; turn them off with `sound={false}` and `haptics={false}`.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/otp-field/otp-field.tsx"
+  name="OTPFieldProps"
+/>

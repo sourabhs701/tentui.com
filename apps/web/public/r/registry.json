@@ -448,6 +448,43 @@
       "type": "registry:block"
     },
     {
+      "name": "otp-field",
+      "title": "OTP Field",
+      "description": "A one-time code input with a slot per digit, a tick per keystroke, a cascade on paste, and a shake when the code is wrong.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "lucide-react",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/otp-field/otp-field.tsx",
+          "type": "registry:component",
+          "target": "@components/otp-field.tsx"
+        }
+      ],
+      "cssVars": {
+        "theme": {
+          "color-success": "var(--success)"
+        },
+        "light": {
+          "success": "oklch(0.723 0.219 149.579)"
+        },
+        "dark": {
+          "success": "oklch(0.723 0.219 149.579)"
+        }
+      },
+      "meta": {
+        "createdAt": "2026-10-26"
+      },
+      "docs": "https://tentui.com/components/otp-field",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "star-rating",
       "title": "Star Rating",
       "description": "A 1–5 star input you tap, sweep across, or arrow through, with a tick per star, half stars, and a pop when a pick lands.",
@@ -465,7 +502,9 @@
         }
       ],
       "meta": {
-        "createdAt": "2026-10-25"
+        "createdAt": "2026-10-25",
+        "image": "https://cdn.tentui.com/images/components/star-rating",
+        "video": "https://cdn.tentui.com/videos/components/star-rating"
       },
       "docs": "https://tentui.com/components/star-rating",
       "categories": [

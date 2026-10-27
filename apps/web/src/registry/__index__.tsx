@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"otp-field": {
+		name: "otp-field",
+		title: "OTP Field",
+		description: "A one-time code input with a slot per digit, a tick per keystroke, a cascade on paste, and a shake when the code is wrong.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/otp-field/otp-field.tsx","type":"registry:component","target":"@components/otp-field.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/otp-field/otp-field")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for otp-field");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-10-26"},
+	},
 	"star-rating": {
 		name: "star-rating",
 		title: "Star Rating",
@@ -291,7 +309,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-10-25"},
+		meta: {"createdAt":"2026-10-25","image":"https://cdn.tentui.com/images/components/star-rating","video":"https://cdn.tentui.com/videos/components/star-rating"},
 	},
 	"number-stepper": {
 		name: "number-stepper",
@@ -761,6 +779,24 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
+	"otp-field-preview": {
+		name: "otp-field-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/otp-field-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/otp-field-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for otp-field-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"star-rating-preview": {
 		name: "star-rating-preview",
 		title: undefined,
@@ -881,6 +917,24 @@ export const Index = {
 			};
 			if (!module.default) {
 				throw new Error("No default export found for tick-ruler-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"otp-field-demo": {
+		name: "otp-field-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/otp-field-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/otp-field-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for otp-field-demo");
 			}
 			return { default: module.default };
 		}),

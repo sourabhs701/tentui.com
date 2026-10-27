@@ -2,6 +2,42 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "otp-field",
+		type: "registry:component",
+		title: "OTP Field",
+		description:
+			"A one-time code input with a slot per digit, a tick per keystroke, a cascade on paste, and a shake when the code is wrong.",
+		dependencies: [
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/otp-field/otp-field.tsx",
+				type: "registry:component",
+				target: "@components/otp-field.tsx",
+			},
+		],
+		cssVars: {
+			theme: {
+				"color-success": "var(--success)",
+			},
+			light: {
+				success: "oklch(0.723 0.219 149.579)",
+			},
+			dark: {
+				success: "oklch(0.723 0.219 149.579)",
+			},
+		},
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-10-26",
+		},
+		docs: "https://tentui.com/components/otp-field",
+	},
+	{
 		name: "star-rating",
 		type: "registry:component",
 		title: "Star Rating",
