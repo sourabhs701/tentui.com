@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"rotary-knob": {
+		name: "rotary-knob",
+		title: "Rotary Knob",
+		description: "A hardware-style dial you turn by dragging, scrolling, or with the keyboard, with a tick and a haptic notch on every detent and a thunk at the end stops.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/rotary-knob/rotary-knob.tsx","type":"registry:component","target":"@components/rotary-knob.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/rotary-knob/rotary-knob")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for rotary-knob");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-10-28"},
+	},
 	"otp-field": {
 		name: "otp-field",
 		title: "OTP Field",
@@ -779,6 +797,24 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
+	"rotary-knob-preview": {
+		name: "rotary-knob-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/rotary-knob-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/rotary-knob-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for rotary-knob-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"otp-field-preview": {
 		name: "otp-field-preview",
 		title: undefined,
@@ -917,6 +953,24 @@ export const Index = {
 			};
 			if (!module.default) {
 				throw new Error("No default export found for tick-ruler-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"rotary-knob-demo": {
+		name: "rotary-knob-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/rotary-knob-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/rotary-knob-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for rotary-knob-demo");
 			}
 			return { default: module.default };
 		}),

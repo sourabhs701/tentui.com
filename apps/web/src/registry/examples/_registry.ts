@@ -102,6 +102,20 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "rotary-knob-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("rotary-knob")],
+		files: [
+			{
+				path: "examples/rotary-knob-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "otp-field-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("otp-field")],
@@ -206,6 +220,20 @@ export const examples: Registry["items"] = [
 		files: [
 			{
 				path: "examples/tick-ruler-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "rotary-knob-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("rotary-knob")],
+		files: [
+			{
+				path: "examples/rotary-knob-demo.tsx",
 				type: "registry:example",
 			},
 		],
