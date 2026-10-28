@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "rotary-knob",
+		type: "registry:component",
+		title: "Rotary Knob",
+		description:
+			"A hardware-style dial you turn by dragging, scrolling, or with the keyboard, with a tick and a haptic notch on every detent and a thunk at the end stops.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/rotary-knob/rotary-knob.tsx",
+				type: "registry:component",
+				target: "@components/rotary-knob.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-10-28",
+		},
+		docs: "https://tentui.com/components/rotary-knob",
+	},
+	{
 		name: "otp-field",
 		type: "registry:component",
 		title: "OTP Field",

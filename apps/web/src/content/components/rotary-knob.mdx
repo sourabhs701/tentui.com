@@ -1,0 +1,179 @@
+---
+title: Rotary Knob
+description: A hardware-style dial you turn by dragging, scrolling, or with the keyboard, with a tick and a haptic notch on every detent and a thunk at the end stops.
+createdAt: 2026-10-28
+updatedAt: 2026-10-28
+---
+
+<ComponentPreview name="rotary-knob-preview" />
+
+## Example
+
+<ComponentPreview name="rotary-knob-demo" />
+
+## Features
+
+- Turns by dragging up and down, or around the dial with
+  `dragMode="circular"`, and by mouse wheel, trackpad, and keyboard.
+  Double-click resets to `defaultValue`.
+- Snaps to every `step`, or to a list of labelled `stops` drawn around the
+  dial. Values are rounded to the step's precision, so `0.1` steps never drift.
+- Springs the pointer onto each detent with a slight overshoot while the value
+  arc fills behind it. Turning past an end stop rubber-bands a few degrees and
+  springs back.
+- Plays one tick and a selection haptic per detent, throttled so a fast spin
+  becomes a rattle, and a lower thunk with a firmer haptic at the end stops.
+- Comes in `default`, `minimal`, and `tactile` variants and `sm`, `md`, and
+  `lg` sizes.
+- Animates only `transform` and `opacity`.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/rotary-knob
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="rotary-knob" title="components/rotary-knob.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { RotaryKnob } from "@/components/rotary-knob";
+```
+
+```tsx
+<RotaryKnob aria-label="Volume" variant="tactile" defaultValue={40} showValue />
+```
+
+Use `value` and `onValueChange` to control it. `onValueChange` fires each time
+the knob lands on a new detent; `onValueCommit` fires once a drag is released,
+or a key, wheel step, or reset lands. A drag in progress keeps control until
+the pointer is released, then the knob follows `value` again.
+
+```tsx
+const [volume, setVolume] = useState(40);
+
+<RotaryKnob
+  aria-label="Volume"
+  value={volume}
+  onValueChange={setVolume}
+  onValueCommit={saveVolume}
+/>
+```
+
+Pass `stops` for labelled detents. They replace `min`, `max`, and `step`, sit
+around the dial in proportion to their values, and are used for the readout
+and `aria-valuetext`. A fast spin passes through every stop in between, so
+`onValueChange` sees each one.
+
+```tsx
+<RotaryKnob
+  aria-label="Fan speed"
+  stops={[
+    { value: 0, label: "Off" },
+    { value: 1, label: "Low" },
+    { value: 2, label: "Med" },
+    { value: 3, label: "High" },
+  ]}
+  angleRange={240}
+  showValue
+/>
+```
+
+Set `angleRange` to change how far the knob turns, centered at the top, and
+`dragMode="circular"` to follow the pointer around the dial. Pass
+`formatValue` to control the readout and `aria-valuetext`.
+
+```tsx
+<RotaryKnob
+  aria-label="Hue"
+  max={360}
+  angleRange={360}
+  dragMode="circular"
+  formatValue={(value) => `${value}°`}
+  showValue
+/>
+```
+
+Give it a `name` to submit the value with a native form. The accent color
+comes from the `--rotary-knob-accent` variable, which you can set through
+`className`, for example `[--rotary-knob-accent:var(--color-sky-500)]`.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Drag up / down | Turns the knob; the full range is about 200 px of travel |
+| Drag around the dial | Turns the knob with `dragMode="circular"` |
+| Wheel or trackpad | One detent per wheel notch; trackpads turn like a drag |
+| `Shift` while dragging or on a trackpad | Turns ten times slower for fine control |
+| `↑` / `→` | Increases one detent |
+| `↓` / `←` | Decreases one detent |
+| `PageUp` / `PageDown` | Moves ten detents |
+| `Home` / `End` | Jumps to the minimum or maximum |
+| Double-click | Resets to `defaultValue` |
+
+Arrow keys always move one detent, the smallest change the knob can make, so
+`Shift` has no extra effect on them. In a right-to-left layout `←` and `→`
+swap, as on a native range input. Turning the knob on a touch screen never
+scrolls the page, and the page still scrolls everywhere else.
+
+## Sound and haptics
+
+Every detent the knob lands on plays a tiks click and a `selection` haptic.
+Cues are throttled to one per 35 ms, so spinning through many detents sounds
+like a smooth rattle while the value still lands on each detent. Reaching
+either end plays a lower, firmer sound with a `medium` haptic, and pushing
+into an end stop with a key or the wheel plays it again.
+
+Sound and haptics only follow user input. The first render and changes to the
+`value` prop are silent, and nothing plays while the tab is hidden. Turn each
+off with `sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+The dial is a `slider` with `aria-valuenow`, `aria-valuemin`,
+`aria-valuemax`, and an `aria-valuetext` that uses the stop label when `stops`
+is set, or `formatValue` otherwise. Name it with `aria-label` or
+`aria-labelledby`. The dial shows a focus ring when focused from the keyboard,
+and the ticks, labels, and readout are hidden from assistive technology. A
+disabled knob can't be focused or turned.
+
+With reduced motion enabled the pointer moves straight to each detent with no
+overshoot, rubber band, or bump at the end stops. Sound and haptics stay on
+because they confirm each detent rather than decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/rotary-knob/rotary-knob.tsx"
+  name="RotaryKnobProps"
+/>

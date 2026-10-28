@@ -27,6 +27,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"number-stepper": { zoom: 1.6 },
 	"otp-field": { zoom: 1.2 },
 	"peeping-button": { zoom: 1.35 },
+	"rotary-knob": { zoom: 1.5 },
 	"search-command": { zoom: 2 },
 	"snap-sheet": {},
 	"star-rating": { zoom: 1.5 },
