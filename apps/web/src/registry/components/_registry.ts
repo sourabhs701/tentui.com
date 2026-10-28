@@ -18,6 +18,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-10-28",
+			image: "https://cdn.tentui.com/images/components/rotary-knob",
+			video: "https://cdn.tentui.com/videos/components/rotary-knob",
 		},
 		docs: "https://tentui.com/components/rotary-knob",
 	},
@@ -54,6 +56,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-10-26",
+			image: "https://cdn.tentui.com/images/components/otp-field",
+			video: "https://cdn.tentui.com/videos/components/otp-field",
 		},
 		docs: "https://tentui.com/components/otp-field",
 	},
