@@ -30,6 +30,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"rotary-knob": { zoom: 1.5 },
 	"search-command": { zoom: 2 },
 	"snap-sheet": {},
+	"split-flap": { zoom: 1.3 },
 	"star-rating": { zoom: 1.5 },
 	"stateful-button": { zoom: 1.5 },
 	"swipe-actions": { zoom: 1.1 },
