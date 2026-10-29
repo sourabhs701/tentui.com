@@ -448,6 +448,31 @@
       "type": "registry:block"
     },
     {
+      "name": "split-flap",
+      "title": "Split-Flap Display",
+      "description": "A departure-board display whose cells flip forward through a real deck, one flap at a time, with a board-wide rattle, a settle thunk, and haptics.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/split-flap/split-flap.tsx",
+          "type": "registry:component",
+          "target": "@components/split-flap.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-10-29"
+      },
+      "docs": "https://tentui.com/components/split-flap",
+      "categories": [
+        "display"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "rotary-knob",
       "title": "Rotary Knob",
       "description": "A hardware-style dial you turn by dragging, scrolling, or with the keyboard, with a tick and a haptic notch on every detent and a thunk at the end stops.",

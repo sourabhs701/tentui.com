@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "split-flap",
+		type: "registry:component",
+		title: "Split-Flap Display",
+		description:
+			"A departure-board display whose cells flip forward through a real deck, one flap at a time, with a board-wide rattle, a settle thunk, and haptics.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/split-flap/split-flap.tsx",
+				type: "registry:component",
+				target: "@components/split-flap.tsx",
+			},
+		],
+		categories: ["display"],
+		meta: {
+			createdAt: "2026-10-29",
+		},
+		docs: "https://tentui.com/components/split-flap",
+	},
+	{
 		name: "rotary-knob",
 		type: "registry:component",
 		title: "Rotary Knob",
