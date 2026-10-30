@@ -102,6 +102,20 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "wind-chimes-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("wind-chimes")],
+		files: [
+			{
+				path: "examples/wind-chimes-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "rotary-knob-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("rotary-knob")],
@@ -220,6 +234,20 @@ export const examples: Registry["items"] = [
 		files: [
 			{
 				path: "examples/tick-ruler-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "wind-chimes-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("wind-chimes")],
+		files: [
+			{
+				path: "examples/wind-chimes-demo.tsx",
 				type: "registry:example",
 			},
 		],

@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"wind-chimes": {
+		name: "wind-chimes",
+		title: "Wind Chimes",
+		description: "A row of hanging tubes you brush to ring. Each swings on a real pendulum and rings a tuned, synthesized note, with a soft haptic on each strike.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/wind-chimes/wind-chimes.tsx","type":"registry:component","target":"@components/wind-chimes.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/wind-chimes/wind-chimes")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wind-chimes");
+			}
+			return { default: module.default };
+		}),
+		categories: [],
+		meta: {"createdAt":"2026-10-30"},
+	},
 	"rotary-knob": {
 		name: "rotary-knob",
 		title: "Rotary Knob",
@@ -797,6 +815,24 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
+	"wind-chimes-preview": {
+		name: "wind-chimes-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/wind-chimes-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/wind-chimes-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wind-chimes-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"rotary-knob-preview": {
 		name: "rotary-knob-preview",
 		title: undefined,
@@ -953,6 +989,24 @@ export const Index = {
 			};
 			if (!module.default) {
 				throw new Error("No default export found for tick-ruler-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"wind-chimes-demo": {
+		name: "wind-chimes-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/wind-chimes-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/wind-chimes-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wind-chimes-demo");
 			}
 			return { default: module.default };
 		}),
