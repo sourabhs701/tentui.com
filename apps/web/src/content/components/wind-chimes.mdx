@@ -1,0 +1,188 @@
+---
+title: Wind Chimes
+description: A row of hanging tubes you brush to ring. Each swings on a real pendulum and rings a tuned, synthesized note, with a soft haptic on each strike.
+createdAt: 2026-10-30
+updatedAt: 2026-10-30
+---
+
+<ComponentPreview name="wind-chimes-preview" />
+
+## Example
+
+<ComponentPreview name="wind-chimes-demo" />
+
+## Features
+
+- Brush across the row with a mouse, finger, or pen. A tube rings each time
+  the pointer crosses its center, and the pointer speed at the crossing sets
+  how loud, how bright, and how wide the swing is.
+- Each tube is a damped pendulum. It swings up to about 35 degrees, rings, and
+  settles back to vertical. One `requestAnimationFrame` loop runs the whole row
+  in fixed 1/120 s steps and goes to sleep once every tube is at rest.
+- A swinging tube pushes its neighbour with a quarter of its own impulse, so a
+  brush rolls down the row as a ripple. A tube can't ring again within 130 ms.
+- Notes come from a scale, with the longest tube on the left playing the
+  lowest note. The default is C major pentatonic across about 1.5 octaves.
+- `material` changes both the ring and the look: metal rings for about
+  2.5 s, bamboo knocks for half a second, and glass rings high and pure for
+  about 3 s.
+- `wind` lets slow gusts sway and ring the tubes on their own, with a button
+  to pause them.
+- Plays a soft, selection, or medium haptic by strike strength on supported
+  phones.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/wind-chimes
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="wind-chimes" title="components/wind-chimes.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { WindChimes } from "@/components/wind-chimes";
+```
+
+```tsx
+<WindChimes />
+```
+
+Pick the tuning with `scale` and `root`. Named scales (`pentatonic`,
+`hirajoshi`, `whole-tone`, and `major`) are spread across about 1.5 octaves
+above `root`. An array of semitone offsets is used as written, one note per
+tube, and repeats up the octaves when there are more tubes than offsets. An
+invalid `root` falls back to C4.
+
+```tsx
+<WindChimes count={7} scale="hirajoshi" root="D4" material="glass" />
+<WindChimes scale={[0, 3, 5, 7, 10]} root="A3" showNotes />
+```
+
+`onStrike` fires for every note, with the tube index, the note name, the
+strength from 0 to 1, and whether the strike came from the pointer, the
+keyboard, or the wind.
+
+```tsx
+<WindChimes onStrike={({ note, velocity }) => console.log(note, velocity)} />
+```
+
+Set `wind` to let gusts move the row. `windStrength` sets how hard and how
+often it blows. The component renders a "Pause wind" button under the row
+while the wind is on.
+
+```tsx
+<WindChimes wind windStrength={0.5} />
+```
+
+Set `size` to `sm`, `md`, or `lg`. The row also shrinks to fit its container.
+On phones, keep `count` at 7 or fewer: five tubes keep hit zones of at least
+36 px at a 390 px wide viewport, while nine tubes get narrower ones.
+
+`sway` adds a barely visible, silent idle sway, which the preview at the top
+of this page uses.
+
+## How the sound is built
+
+There are no audio files. Each strike plays a short voice from a small Web
+Audio synth inside the component:
+
+- Five sine partials at the ratios 1 : 2.76 : 5.40 : 8.93 : 13.34 of a struck
+  tube, each with a 2 ms attack and an exponential decay. Higher partials
+  decay faster, and `material` sets the decay times and partial levels.
+- A 7 ms triangle tick for the strike transient.
+- Loudness follows the square of the strike strength, so soft brushes stay
+  quiet, and each note is detuned by up to 0.6% so repeats differ slightly.
+- A short low-passed echo, about 90 ms with a feedback of 0.25, mixed in at
+  0.12. Turn it off with `reverb={false}`.
+
+All instances share one `AudioContext`, a compressor, and a cap of 12 live
+voices, so a quick flick across several rows doesn't clip. When the cap is
+hit, the oldest voice fades out early. A tube struck again while it is still
+ringing fades its previous note over 30 ms first. `volume` sets the level of
+each row.
+
+## iOS audio and haptics
+
+Browsers keep audio locked until the page gets a click, tap, or key press.
+The `AudioContext` is created and resumed inside the first such gesture, never
+during render or on the server. Until then, the chimes still swing but stay
+silent. Hovering alone doesn't unlock audio, so on desktop a brush plays
+sound once the visitor has clicked somewhere on the page. On iOS Safari, the
+first tap on the chimes unlocks audio.
+
+Haptics use `web-haptics`, which works in Safari on iOS 18 and later and in
+Chrome on Android. Elsewhere they do nothing. Haptics only follow pointer and
+keyboard strikes, never the wind, and are limited to one every 45 ms across
+the row.
+
+No sound or haptics play on first render, in a hidden tab, or while the
+chimes are scrolled off-screen. When a hidden tab comes back, the tubes are
+reset to rest rather than catching up. If Web Audio is blocked or missing,
+the chimes still animate without errors. Turn each output off on its own with
+`sound={false}` and `haptics={false}`.
+
+## Keyboard
+
+| Key | Action |
+| --- | --- |
+| `Tab` | Moves focus into the row, onto the last focused tube |
+| `←` / `→` | Moves focus to the previous or next tube |
+| `Home` / `End` | Moves focus to the first or last tube |
+| `Enter` / `Space` | Strikes the focused tube at medium strength |
+
+Clicking or tapping a single tube also strikes it at medium strength.
+
+## Accessibility
+
+The row is a `group` named "Wind chimes" by default; pass `aria-label` to name
+it. Each tube is a real button named "Chime 1 of 5", with the note added when
+`showNotes` is set. The row is a single tab stop, so every note can be played
+from the keyboard, and brushing is an extra on top.
+
+Set `announce` to read the note of the last strike through a polite live
+region. It waits for the row to go quiet, so a ripple is announced once, not
+once per tube.
+
+The row sets `touch-action: pan-y`, so a horizontal brush plays the chimes
+and a vertical swipe still scrolls the page.
+
+With reduced motion enabled, a strike is a small, quick twitch of about
+6 degrees, and there is no idle sway or wind. Sound and haptics stay on
+because they respond to input rather than decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/wind-chimes/wind-chimes.tsx"
+  name="WindChimesProps"
+/>

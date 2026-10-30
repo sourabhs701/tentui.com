@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "wind-chimes",
+		type: "registry:component",
+		title: "Wind Chimes",
+		description:
+			"A row of hanging tubes you brush to ring. Each swings on a real pendulum and rings a tuned, synthesized note, with a soft haptic on each strike.",
+		dependencies: ["motion", "web-haptics"],
+		files: [
+			{
+				path: "components/wind-chimes/wind-chimes.tsx",
+				type: "registry:component",
+				target: "@components/wind-chimes.tsx",
+			},
+		],
+		categories: [],
+		meta: {
+			createdAt: "2026-10-30",
+		},
+		docs: "https://tentui.com/components/wind-chimes",
+	},
+	{
 		name: "rotary-knob",
 		type: "registry:component",
 		title: "Rotary Knob",

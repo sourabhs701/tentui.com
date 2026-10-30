@@ -448,6 +448,28 @@
       "type": "registry:block"
     },
     {
+      "name": "wind-chimes",
+      "title": "Wind Chimes",
+      "description": "A row of hanging tubes you brush to ring. Each swings on a real pendulum and rings a tuned, synthesized note, with a soft haptic on each strike.",
+      "dependencies": [
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/wind-chimes/wind-chimes.tsx",
+          "type": "registry:component",
+          "target": "@components/wind-chimes.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-10-30"
+      },
+      "docs": "https://tentui.com/components/wind-chimes",
+      "categories": [],
+      "type": "registry:component"
+    },
+    {
       "name": "rotary-knob",
       "title": "Rotary Knob",
       "description": "A hardware-style dial you turn by dragging, scrolling, or with the keyboard, with a tick and a haptic notch on every detent and a thunk at the end stops.",
