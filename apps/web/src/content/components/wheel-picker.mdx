@@ -1,0 +1,216 @@
+---
+title: Wheel Picker
+description: An iOS-style scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.
+createdAt: 2026-10-31
+updatedAt: 2026-10-31
+---
+
+<ComponentPreview name="wheel-picker-preview" />
+
+## Example
+
+<ComponentPreview name="wheel-picker-demo" />
+
+## Features
+
+- Places rows on a 3D drum that curves away from the centre, with the selected
+  row in a flat highlight band.
+- Drags with mouse, touch, or pen, and scrolls with the wheel or trackpad. A
+  flick coasts with exponential friction, then springs onto the nearest row.
+- Loops endlessly with `loop`, or rubber-bands at the ends with a rigid haptic.
+- Plays a detent click and a selection haptic for each row that crosses the
+  centre, rate limited so a fast flick sounds like a ratchet, and a pop when
+  the wheel settles.
+- Skips disabled options, so the wheel never settles on one.
+- Lines several wheels up under one band with `WheelPickerGroup`.
+- Moves with one motion value and writes only `transform` and `opacity`, so
+  dragging and coasting never re-render.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/wheel-picker
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="wheel-picker" title="components/wheel-picker.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { WheelPicker, WheelPickerGroup } from "@/components/wheel-picker";
+```
+
+```tsx
+const durations = Array.from({ length: 60 }, (_, index) => ({
+  value: String(index + 1),
+  label: `${index + 1} min`,
+}));
+
+<WheelPicker
+  aria-label="Timer duration"
+  options={durations}
+  defaultValue="15"
+/>
+```
+
+Use `value` and `onValueChange` to control it. `onValueChange` fires once each
+time the wheel settles on a new value, not for every row it passes, and once
+for each key press that moves it. `onScrollValue` fires for every enabled row
+that crosses the centre while the user scrolls, which suits a live preview.
+
+```tsx
+const [minutes, setMinutes] = useState("15");
+
+<WheelPicker
+  aria-label="Timer duration"
+  options={durations}
+  value={minutes}
+  onValueChange={setMinutes}
+  onScrollValue={previewDuration}
+/>
+```
+
+A `value` that isn't an enabled option shows the first enabled option without
+calling `onValueChange`. When `value` changes from the parent, the wheel stops
+any coast and glides to the new row silently.
+
+Give each option a unique `value`. Labels can be any React node; pass
+`textValue` when a label isn't plain text, for type-ahead and screen readers.
+Mark an option `disabled` to show it muted and keep the wheel from landing on
+it.
+
+```tsx
+<WheelPicker
+  aria-label="Delivery slot"
+  options={[
+    { value: "09", label: "9:00" },
+    { value: "10", label: "10:00", disabled: true },
+    { value: "11", label: "11:00" },
+  ]}
+/>
+```
+
+### Time picker
+
+`WheelPickerGroup` lays wheels side by side under one shared band, in document
+order, so they follow right-to-left layouts. Each wheel keeps its own value.
+Set `loop` on hours and minutes so they wrap.
+
+```tsx
+<WheelPickerGroup aria-label="Alarm time">
+  <WheelPicker aria-label="Hour" options={hours} loop />
+  <WheelPicker aria-label="Minute" options={minutes} loop />
+  <WheelPicker aria-label="AM or PM" options={periods} />
+</WheelPickerGroup>
+```
+
+`loop` turns itself off when there are fewer options than `visibleCount`,
+because the wrap would show the same row twice.
+
+### Sizes and layout
+
+`size` sets the row height and type: `sm` is 32 px, `md` is 40 px, and `lg` is
+48 px. Pass `rowHeight` to override it. `visibleCount` sets how many rows the
+drum shows, from 3 to 9. A wheel is as wide as its widest label; set a width
+with `className`, and restyle parts with `classNames`, for example
+`classNames={{ option: "justify-end" }}` to right-align an hour column.
+
+`friction` sets how much speed a coast keeps per 16 ms frame, from `0.8` for a
+short coast to `0.98` for a long one.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Drag up / down | Scrolls the wheel; a flick keeps it coasting |
+| Wheel or trackpad | A mouse notch moves one row; a trackpad scrolls freely and settles 120 ms after it stops |
+| Tap a row | Scrolls that row to the centre |
+| Tap a moving wheel | Stops it and settles on the nearest row |
+| `↑` / `↓` | Moves one row |
+| `PageUp` / `PageDown` | Moves by `visibleCount` rows |
+| `Home` / `End` | Jumps to the first or last enabled option |
+| Type letters | Jumps to the next option whose label starts with them |
+
+The wheel captures wheel events only while the pointer is over it, and sets
+`touch-action: none` only on itself, so the page scrolls everywhere else.
+
+## Sound and haptics
+
+Every row that crosses the centre during a drag, coast, wheel scroll, or key
+move plays a tiks click and a `selection` haptic. Clicks are limited to one
+per 28 ms and haptics to one per 45 ms, and extra ones are dropped rather than
+queued, so a fast flick sounds like a ratchet speeding up and slowing down.
+The wheel plays a pop with a `light` haptic when it settles after a gesture,
+and a `rigid` haptic when it hits the end of a non-looping list.
+
+Sound and haptics only follow user input. The first render, server rendering,
+changes to the `value` prop, and hidden tabs are silent. Turn each off with
+`sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+Each wheel is a `listbox` with one tab stop. Its options are `option` elements
+with `aria-selected`, and `aria-activedescendant` points at the selected one,
+so screen readers read the option and its position as the value changes. Name
+each wheel with `aria-label` or `aria-labelledby`, and the group with its own
+`aria-label`. Rows outside the drum are hidden from assistive technology, and
+the selection layer is decorative. The wheel shows a focus ring when focused
+from the keyboard. A disabled wheel can't be focused or scrolled.
+
+Rows are at least 40 px tall at the default size. The selected label uses
+`foreground` and the others `muted-foreground`, which keeps their contrast at
+4.5:1 and 3:1 in light and dark themes.
+
+With reduced motion enabled the drum is a flat list that fades towards its
+ends. A release snaps to the nearest row in 120 ms without coasting, and key
+moves are instant. Sound and haptics stay on because they confirm each row
+rather than decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/wheel-picker/wheel-picker.tsx"
+  name="WheelPickerProps"
+/>
+
+### WheelPickerOption
+
+<AutoTypeTable
+  path="src/registry/components/wheel-picker/wheel-picker.tsx"
+  name="WheelPickerOption"
+/>
+
+### WheelPickerGroup
+
+<AutoTypeTable
+  path="src/registry/components/wheel-picker/wheel-picker.tsx"
+  name="WheelPickerGroupProps"
+/>

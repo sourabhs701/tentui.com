@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"wheel-picker": {
+		name: "wheel-picker",
+		title: "Wheel Picker",
+		description: "An iOS-style scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/wheel-picker/wheel-picker.tsx","type":"registry:component","target":"@components/wheel-picker.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/wheel-picker/wheel-picker")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wheel-picker");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-10-31"},
+	},
 	"rotary-knob": {
 		name: "rotary-knob",
 		title: "Rotary Knob",
@@ -797,6 +815,24 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
+	"wheel-picker-preview": {
+		name: "wheel-picker-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/wheel-picker-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/wheel-picker-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wheel-picker-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"rotary-knob-preview": {
 		name: "rotary-knob-preview",
 		title: undefined,
@@ -953,6 +989,24 @@ export const Index = {
 			};
 			if (!module.default) {
 				throw new Error("No default export found for tick-ruler-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"wheel-picker-demo": {
+		name: "wheel-picker-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/wheel-picker-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/wheel-picker-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wheel-picker-demo");
 			}
 			return { default: module.default };
 		}),
