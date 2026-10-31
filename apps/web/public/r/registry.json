@@ -448,6 +448,31 @@
       "type": "registry:block"
     },
     {
+      "name": "wheel-picker",
+      "title": "Wheel Picker",
+      "description": "An iOS-style scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/wheel-picker/wheel-picker.tsx",
+          "type": "registry:component",
+          "target": "@components/wheel-picker.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-10-31"
+      },
+      "docs": "https://tentui.com/components/wheel-picker",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "rotary-knob",
       "title": "Rotary Knob",
       "description": "A hardware-style dial you turn by dragging, scrolling, or with the keyboard, with a tick and a haptic notch on every detent and a thunk at the end stops.",
