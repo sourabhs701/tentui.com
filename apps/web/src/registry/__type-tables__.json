@@ -353,8 +353,8 @@
 							"text": ""
 						}
 					],
-					"type": "string | (() => string)",
-					"simplifiedType": "union",
+					"type": "CopyText",
+					"simplifiedType": "CopyText",
 					"required": true,
 					"deprecated": false
 				},

@@ -17,7 +17,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-10-28"
+    "createdAt": "2026-10-28",
+    "image": "https://cdn.tentui.com/images/components/rotary-knob",
+    "video": "https://cdn.tentui.com/videos/components/rotary-knob"
   },
   "docs": "https://tentui.com/components/rotary-knob",
   "categories": [

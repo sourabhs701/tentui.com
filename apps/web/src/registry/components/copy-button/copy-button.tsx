@@ -4,7 +4,7 @@ import { CheckIcon, CircleXIcon, CopyIcon } from "lucide-react";
 import { motion } from "motion/react";
 import type { ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
-import type { CopyState } from "@/hooks/use-copy-to-clipboard";
+import type { CopyState, CopyText } from "@/hooks/use-copy-to-clipboard";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { cn } from "@/lib/utils";
 import {
@@ -53,7 +53,7 @@ export function CopyStateIcon({
 
 export type CopyButtonProps = ComponentProps<typeof Button> & {
 	/** The text to copy, or a function that returns the text. */
-	text: string | (() => string);
+	text: CopyText;
 	/** Called with the copied text on successful copy. */
 	onCopySuccess?: (text: string) => void;
 	/** Called with the error if the copy operation fails. */

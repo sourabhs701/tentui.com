@@ -291,7 +291,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-10-31"},
+		meta: {"createdAt":"2026-10-31","image":"https://cdn.tentui.com/images/components/wheel-picker","video":"https://cdn.tentui.com/videos/components/wheel-picker"},
 	},
 	"dynamic-island": {
 		name: "dynamic-island",
@@ -309,7 +309,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["overlays"],
-		meta: {"createdAt":"2026-11-01"},
+		meta: {"createdAt":"2026-11-01","image":"https://cdn.tentui.com/images/components/dynamic-island","video":"https://cdn.tentui.com/videos/components/dynamic-island"},
 	},
 	"rotary-knob": {
 		name: "rotary-knob",

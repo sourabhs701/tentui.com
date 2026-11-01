@@ -17,7 +17,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-10-31"
+    "createdAt": "2026-10-31",
+    "image": "https://cdn.tentui.com/images/components/wheel-picker",
+    "video": "https://cdn.tentui.com/videos/components/wheel-picker"
   },
   "docs": "https://tentui.com/components/wheel-picker",
   "categories": [

@@ -464,7 +464,9 @@
         }
       ],
       "meta": {
-        "createdAt": "2026-10-31"
+        "createdAt": "2026-10-31",
+        "image": "https://cdn.tentui.com/images/components/wheel-picker",
+        "video": "https://cdn.tentui.com/videos/components/wheel-picker"
       },
       "docs": "https://tentui.com/components/wheel-picker",
       "categories": [
@@ -489,7 +491,9 @@
         }
       ],
       "meta": {
-        "createdAt": "2026-11-01"
+        "createdAt": "2026-11-01",
+        "image": "https://cdn.tentui.com/images/components/dynamic-island",
+        "video": "https://cdn.tentui.com/videos/components/dynamic-island"
       },
       "docs": "https://tentui.com/components/dynamic-island",
       "categories": [
@@ -927,12 +931,11 @@
       "title": "Brand Context Menu",
       "description": "Share copy-ready and downloadable brand assets from a contextual menu.",
       "dependencies": [
-        "lucide-react",
-        "sonner"
+        "lucide-react"
       ],
       "registryDependencies": [
         "context-menu",
-        "sonner"
+        "https://tentui.com/r/copy-button.json"
       ],
       "files": [
         {

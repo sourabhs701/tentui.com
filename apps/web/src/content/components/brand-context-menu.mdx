@@ -2,7 +2,7 @@
 title: Brand Context Menu
 description: Share copy-ready and downloadable brand assets from a contextual menu.
 createdAt: 2026-07-21
-updatedAt: 2026-07-21
+updatedAt: 2026-11-01
 ---
 
 <ComponentPreview name="brand-context-menu-preview" />
@@ -13,7 +13,8 @@ updatedAt: 2026-07-21
 
 ## Features
 
-- Copies the primary mark or logotype as raw SVG markup.
+- Copies the primary mark or logotype as raw SVG markup with sound, haptic, and inline icon feedback.
+- Keeps the menu open after copying so the row can confirm the result.
 - Keeps the menu compact with three focused actions.
 - Downloads the complete SVG and PNG brand kit as a ZIP archive.
 
@@ -35,27 +36,10 @@ npx shadcn@latest add @tentui/brand-context-menu
 
 <Steps>
 
-<Step>Add the Context Menu and Sonner components</Step>
+<Step>Add the Context Menu and Copy Button components</Step>
 
 ```bash
-npx shadcn@latest add context-menu sonner
-```
-
-<Step>Mount the Sonner toaster in your root layout</Step>
-
-```tsx
-import { Toaster } from "@/components/ui/sonner";
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>
-        {children}
-        <Toaster />
-      </body>
-    </html>
-  );
-}
+npx shadcn@latest add context-menu @tentui/copy-button
 ```
 
 <Step>Copy and paste the following code into your project</Step>

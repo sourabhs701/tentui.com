@@ -429,8 +429,11 @@ export const components: Registry["items"] = [
 		title: "Brand Context Menu",
 		description:
 			"Share copy-ready and downloadable brand assets from a contextual menu.",
-		dependencies: ["lucide-react", "sonner"],
-		registryDependencies: ["context-menu", "sonner"],
+		dependencies: ["lucide-react"],
+		registryDependencies: [
+			"context-menu",
+			"https://tentui.com/r/copy-button.json",
+		],
 		files: [
 			{
 				path: "components/brand-context-menu/brand-context-menu.tsx",

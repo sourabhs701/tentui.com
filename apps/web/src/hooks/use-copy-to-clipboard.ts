@@ -6,11 +6,26 @@ import { useWebHaptics } from "web-haptics/react";
 
 export type CopyState = "idle" | "done" | "error";
 
+export type CopyText = string | (() => string | Promise<string>);
+
 export type UseCopyToClipboardOptions = {
 	onCopySuccess?: (text: string) => void;
 	onCopyError?: (error: Error) => void;
 	resetDelay?: number;
 };
+
+// Async text goes through a ClipboardItem promise so Safari keeps the
+// user-gesture context while the text is still being fetched.
+async function writeClipboard(text: CopyText) {
+	const value = typeof text === "function" ? text() : text;
+	if (typeof value === "string") {
+		await navigator.clipboard.writeText(value);
+		return value;
+	}
+	const blob = value.then((v) => new Blob([v], { type: "text/plain" }));
+	await navigator.clipboard.write([new ClipboardItem({ "text/plain": blob })]);
+	return value;
+}
 
 export function useCopyToClipboard({
 	onCopySuccess,
@@ -31,15 +46,14 @@ export function useCopyToClipboard({
 	}, []);
 
 	const copy = useCallback(
-		async (text: string | (() => string)) => {
+		async (text: CopyText) => {
 			// Clear any pending reset
 			if (resetTimeoutRef.current) {
 				clearTimeout(resetTimeoutRef.current);
 			}
 
 			try {
-				const finalText = typeof text === "function" ? text() : text;
-				await navigator.clipboard.writeText(finalText);
+				const finalText = await writeClipboard(text);
 
 				setState("done");
 				void haptic("success");

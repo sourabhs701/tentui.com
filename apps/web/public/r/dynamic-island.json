@@ -17,7 +17,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-11-01"
+    "createdAt": "2026-11-01",
+    "image": "https://cdn.tentui.com/images/components/dynamic-island",
+    "video": "https://cdn.tentui.com/videos/components/dynamic-island"
   },
   "docs": "https://tentui.com/components/dynamic-island",
   "categories": [

@@ -1,8 +1,7 @@
 "use client";
 
 import { DownloadIcon, TypeIcon } from "lucide-react";
-import type { ReactElement } from "react";
-import { toast } from "sonner";
+import type { ReactElement, ReactNode } from "react";
 import {
 	ContextMenu,
 	ContextMenuContent,
@@ -11,6 +10,8 @@ import {
 	ContextMenuSeparator,
 	ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { CopyStateIcon } from "@/registry/components/copy-button/copy-button";
 
 export type BrandAsset = {
 	name: string;
@@ -57,28 +58,38 @@ export type BrandContextMenuProps = {
 	brandAssetsZipPath?: string;
 };
 
-async function fetchAsset(asset: BrandAsset) {
+async function fetchSvg(asset: BrandAsset) {
 	const response = await fetch(asset.path);
 
 	if (!response.ok) {
 		throw new Error(`Could not load ${asset.name.toLowerCase()}.`);
 	}
 
-	return response;
+	return response.text();
 }
 
-async function copyAsset(asset: BrandAsset) {
-	try {
-		const response = await fetchAsset(asset);
-		await navigator.clipboard.writeText(await response.text());
-		toast.success(`${asset.name} copied`, {
-			description: "SVG copied to clipboard.",
-		});
-	} catch {
-		toast.error("Copy failed", {
-			description: `Could not copy the ${asset.name.toLowerCase()}.`,
-		});
-	}
+function CopyAssetItem({
+	asset,
+	label,
+	icon,
+}: {
+	asset: BrandAsset;
+	label: string;
+	icon: ReactNode;
+}) {
+	// closeOnClick is off so the menu stays open and the row shows its state.
+	const { state, copy } = useCopyToClipboard();
+
+	return (
+		<ContextMenuItem
+			closeOnClick={false}
+			className="h-9 rounded-lg px-2.5"
+			onClick={() => void copy(() => fetchSvg(asset))}
+		>
+			<CopyStateIcon state={state} idleIcon={icon} />
+			{state === "done" ? "Copied" : state === "error" ? "Copy failed" : label}
+		</ContextMenuItem>
+	);
 }
 
 function BrandMarkIcon() {
@@ -112,20 +123,16 @@ export function BrandContextMenu({
 			<ContextMenuTrigger render={children} />
 			<ContextMenuContent className="w-60 rounded-xl p-1.5">
 				<ContextMenuGroup>
-					<ContextMenuItem
-						className="h-9 rounded-lg px-2.5"
-						onClick={() => void copyAsset(markAsset)}
-					>
-						<BrandMarkIcon />
-						Copy Mark as SVG
-					</ContextMenuItem>
-					<ContextMenuItem
-						className="h-9 rounded-lg px-2.5"
-						onClick={() => void copyAsset(logotypeAsset)}
-					>
-						<TypeIcon />
-						Copy Logotype as SVG
-					</ContextMenuItem>
+					<CopyAssetItem
+						asset={markAsset}
+						label="Copy Mark as SVG"
+						icon={<BrandMarkIcon />}
+					/>
+					<CopyAssetItem
+						asset={logotypeAsset}
+						label="Copy Logotype as SVG"
+						icon={<TypeIcon />}
+					/>
 				</ContextMenuGroup>
 				<ContextMenuSeparator />
 				<ContextMenuGroup>
