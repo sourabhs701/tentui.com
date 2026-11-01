@@ -180,10 +180,7 @@ function SponsorMedia({
 				fill
 				sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
 				unoptimized
-				className={cn(
-					"object-cover object-left",
-					sponsor.imageDarkSrc && "dark:hidden",
-				)}
+				className={cn("object-cover", sponsor.imageDarkSrc && "dark:hidden")}
 			/>
 			{sponsor.imageDarkSrc ? (
 				<Image
@@ -192,7 +189,7 @@ function SponsorMedia({
 					fill
 					sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
 					unoptimized
-					className="hidden object-cover object-left dark:block"
+					className="hidden object-cover dark:block"
 				/>
 			) : null}
 			{sponsor.videoSrc ? (

@@ -39,9 +39,8 @@ export const FEED_SPONSOR: FeedSponsor | null = {
 	href: "https://work.srb.codes",
 	logoSrc: "/images/srb-logo.svg",
 	logoDarkSrc: "/images/srb-logo-dark.svg",
-	description: "Landing pages people remember",
-	imageSrc: "/images/sponsors/srb-work-light.webp",
-	imageDarkSrc: "/images/sponsors/srb-work-dark.webp",
+	description: "A design studio that ships in days",
+	imageSrc: "/images/sponsors/srb-work.webp",
 };
 
 /** Position of the feed card: the end of the first row at three columns. */
