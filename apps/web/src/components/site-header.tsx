@@ -2,7 +2,7 @@ import { Separator } from "@tentui.com/ui/components/separator";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
-import { MAIN_NAV } from "@/config/site";
+import { MAIN_NAV, MOBILE_NAV } from "@/config/site";
 
 const SiteHeaderSearchCommand = dynamic(
 	() => import("@/components/command-menu"),
@@ -14,11 +14,11 @@ const BrandContextMenu = dynamic(
 import { cn } from "@/lib/utils";
 import { HeaderSponsor } from "./header-sponsor";
 import Marker from "./marker";
-import { NavItemGitHub } from "./nav-item-github";
 import {
 	headerCommandBlocks,
 	headerCommandComponents,
 } from "./site-header-data";
+import { SiteMobileNav } from "./site-mobile-nav";
 import { SiteNavigation } from "./site-navigation";
 import { SiteThemeToggle } from "./site-theme-toggle";
 import { TentUiMark } from "./tentui-mark";
@@ -78,12 +78,8 @@ export function SiteHeader({ showGutters = true }: SiteHeaderProps) {
 								orientation="vertical"
 								className="mx-2 hidden data-vertical:h-5 data-vertical:self-center sm:block"
 							/>
-							<NavItemGitHub />
-							<Separator
-								orientation="vertical"
-								className="mx-2 data-vertical:h-5 data-vertical:self-center"
-							/>
 							<SiteThemeToggle />
+							<SiteMobileNav items={MOBILE_NAV} className="ml-1 sm:hidden" />
 						</div>
 					</div>
 					<Marker position="bottom-left" />

@@ -1,5 +1,4 @@
 import Footer from "@/components/footer";
-import { SiteBottomNav } from "@/components/site-bottom-nav";
 import { SiteHeader } from "@/components/site-header";
 
 export default function SiteLayout({
@@ -22,7 +21,6 @@ export default function SiteLayout({
 			<main id="main-content" className="min-w-0">
 				{children}
 			</main>
-			<SiteBottomNav />
 			<Footer />
 		</div>
 	);

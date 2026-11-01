@@ -1,5 +1,4 @@
 import { DocsFooter } from "@/components/docs-footer";
-import { SiteBottomNav } from "@/components/site-bottom-nav";
 import { SiteHeader } from "@/components/site-header";
 
 export default function BlocksRootLayout({
@@ -17,7 +16,6 @@ export default function BlocksRootLayout({
 				{children}
 			</main>
 			<DocsFooter />
-			<SiteBottomNav />
 		</div>
 	);
 }
