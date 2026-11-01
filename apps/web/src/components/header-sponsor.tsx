@@ -39,7 +39,7 @@ function SponsoredMark({ sponsor }: { sponsor: HeaderSponsorBrand }) {
 						nativeButton={false}
 						variant="outline"
 						size="icon-sm"
-						className="border-border bg-background p-1 hover:bg-muted"
+						className="border-border bg-background p-1.5 hover:bg-muted"
 						render={
 							<a
 								href={sponsorHref(sponsor.href)}
