@@ -133,7 +133,7 @@ export function ComponentPage({ doc }: { doc: Doc }) {
 							render={
 								<Link href="/components">
 									<ArrowLeftIcon />
-									Components
+									<span className="max-[22.5rem]:sr-only">Components</span>
 								</Link>
 							}
 						/>
