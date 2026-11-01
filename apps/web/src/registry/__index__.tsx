@@ -293,6 +293,24 @@ export const Index = {
 		categories: ["inputs"],
 		meta: {"createdAt":"2026-10-31"},
 	},
+	"split-flap": {
+		name: "split-flap",
+		title: "Split-Flap Display",
+		description: "A departure-board display whose cells flip forward through a real deck, one flap at a time, with a board-wide rattle, a settle thunk, and haptics.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/split-flap/split-flap.tsx","type":"registry:component","target":"@components/split-flap.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/split-flap/split-flap")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for split-flap");
+			}
+			return { default: module.default };
+		}),
+		categories: ["display"],
+		meta: {"createdAt":"2026-10-29"},
+	},
 	"rotary-knob": {
 		name: "rotary-knob",
 		title: "Rotary Knob",
@@ -309,7 +327,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-10-28"},
+		meta: {"createdAt":"2026-10-28","image":"https://cdn.tentui.com/images/components/rotary-knob","video":"https://cdn.tentui.com/videos/components/rotary-knob"},
 	},
 	"otp-field": {
 		name: "otp-field",
@@ -327,7 +345,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-10-26"},
+		meta: {"createdAt":"2026-10-26","image":"https://cdn.tentui.com/images/components/otp-field","video":"https://cdn.tentui.com/videos/components/otp-field"},
 	},
 	"star-rating": {
 		name: "star-rating",
@@ -833,6 +851,24 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
+	"split-flap-preview": {
+		name: "split-flap-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/split-flap-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/split-flap-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for split-flap-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"rotary-knob-preview": {
 		name: "rotary-knob-preview",
 		title: undefined,
@@ -1007,6 +1043,24 @@ export const Index = {
 			};
 			if (!module.default) {
 				throw new Error("No default export found for wheel-picker-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"split-flap-demo": {
+		name: "split-flap-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/split-flap-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/split-flap-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for split-flap-demo");
 			}
 			return { default: module.default };
 		}),

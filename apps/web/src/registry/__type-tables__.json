@@ -2350,6 +2350,379 @@
 			]
 		}
 	],
+	"src/registry/components/split-flap/split-flap.tsx#SplitFlapProps#": [
+		{
+			"id": "split-flap.tsx-SplitFlapProps",
+			"name": "SplitFlapProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "value",
+					"description": "The text to show. Pass an array for a multi-row board, one string per row.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Message | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "length",
+					"description": "Cells per row. Defaults to the longest row; longer text is cropped.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "rows",
+					"description": "Rows on the board. Defaults to the most rows in `value` or `values`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "align",
+					"description": "Which side short text sits on; the rest is padded with blanks.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Align | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "chars",
+					"description": "The deck, in flip order. Cells only ever flip forward through it.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "words",
+					"description": "Whole-word flaps for the first cell of each row, like \"ON TIME\" or \"DELAYED\".",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string[] | undefined",
+					"simplifiedType": "array",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "flipMs",
+					"description": "Duration of one flap, in ms.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "stagger",
+					"description": "Delay between cells starting, in ms, left to right then top to bottom.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "settle",
+					"description": "Slow the last two flaps of each cell and bounce the final one.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "tone",
+					"description": "`ink` is light on dark; `paper` is dark on light.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"ink\" | \"paper\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"sm\" | \"md\" | \"lg\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "accent",
+					"description": "Colors specific cells, such as status words.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "SplitFlapAccent | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "values",
+					"description": "Messages to rotate through with `autoplay`. Replaces `value`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Message[] | undefined",
+					"simplifiedType": "array",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "interval",
+					"description": "Ms each message stays up once it lands, with `autoplay`. At least 5000 under reduced motion.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "autoplay",
+					"description": "Loop through `values`, pausing while off-screen or in a hidden tab.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play the flap rattle and the settle thunk. Off under reduced motion unless set to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptics for user-triggered changes. Off under reduced motion unless set to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "volume",
+					"description": "Sound volume, 0 to 1.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "soundToggle",
+					"description": "Show a button that mutes and unmutes the board.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "announce",
+					"description": "Announce the final text through a polite live region once the board settles.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onClick",
+					"description": "Makes the board a button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onFlipStart",
+					"description": "Called when a change starts flipping a resting board.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onSettled",
+					"description": "Called once every cell has landed, with the value it shows.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((value: Message) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "aria-label",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "className",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "cellClassName",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/star-rating/star-rating.tsx#StarRatingProps#": [
 		{
 			"id": "star-rating.tsx-StarRatingProps",
