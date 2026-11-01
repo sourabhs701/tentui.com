@@ -2,6 +2,32 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "time-ring",
+		type: "registry:component",
+		title: "Time Ring",
+		description:
+			"A 24-hour dial for picking a time range, like a bedtime and wake-up schedule, with rolling digits, a tick per step, a deeper click per hour, and a thunk at the limits.",
+		dependencies: [
+			"@number-flow/react",
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/time-ring/time-ring.tsx",
+				type: "registry:component",
+				target: "@components/time-ring.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-11-01",
+		},
+		docs: "https://tentui.com/components/time-ring",
+	},
+	{
 		name: "wheel-picker",
 		type: "registry:component",
 		title: "Wheel Picker",

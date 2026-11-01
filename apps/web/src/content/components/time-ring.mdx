@@ -1,0 +1,175 @@
+---
+title: Time Ring
+description: A 24-hour dial for picking a time range, like a bedtime and wake-up schedule, with rolling digits, a tick per step, a deeper click per hour, and a thunk at the limits.
+createdAt: 2026-11-01
+updatedAt: 2026-11-01
+---
+
+<ComponentPreview name="time-ring-preview" />
+
+## Example
+
+<ComponentPreview name="time-ring-demo" />
+
+## Features
+
+- Picks a start and end time on a 24-hour dial, with midnight at the top.
+  Ranges that cross midnight just work: 11:00 PM to 7:00 AM is 8 hours.
+- Drags either handle, or the arc itself to move both ends and keep the
+  duration. Arrow keys move the focused handle by one `step`, and `Shift`
+  moves it by an hour.
+- Snaps to 5, 15, or 30 minute steps and holds the range between
+  `minDuration` and `maxDuration`.
+- Rolls the duration's digits in the centre as it changes, with the start and
+  end times underneath.
+- Plays a soft tick and a selection haptic per step, a deeper click and a
+  light haptic on each whole hour, and a thunk with a firmer haptic at the
+  limits.
+- Sizes itself to its container, up to the `size` diameter, so it fits a
+  320 px phone. Dragging on a touch screen never scrolls the page.
+- Animates only `transform`, `opacity`, and the arc's path.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/time-ring
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @number-flow/react @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="time-ring" title="components/time-ring.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { TimeRing } from "@/components/time-ring";
+```
+
+```tsx
+<TimeRing
+  aria-label="Sleep schedule"
+  defaultValue={{ start: 23 * 60, end: 7 * 60 }}
+/>
+```
+
+Times are minutes from midnight, from `0` to `1439`. An `end` earlier than
+`start` falls on the next day. Use `value` and `onValueChange` to control it;
+`onValueChange` fires each time either end lands on a new step.
+
+```tsx
+const [sleep, setSleep] = useState({ start: 22 * 60 + 30, end: 6 * 60 + 45 });
+
+<TimeRing
+  aria-label="Sleep schedule"
+  value={sleep}
+  onValueChange={setSleep}
+  step={15}
+  minDuration={6 * 60}
+  maxDuration={10 * 60}
+/>
+```
+
+`minDuration` and `maxDuration` are rounded to whole steps. The range is
+always at least one step long and never a whole day, so the handles never sit
+on top of each other.
+
+Set `format="24h"` for a 24-hour clock, and replace the moon and sun with
+`startIcon` and `endIcon`. `startLabel` and `endLabel` name the handles for
+assistive technology and default to "Bedtime" and "Wake up".
+
+```tsx
+<TimeRing
+  aria-label="Do not disturb"
+  format="24h"
+  step={30}
+  startIcon={<BellOff />}
+  endIcon={<Coffee />}
+  startLabel="Quiet from"
+  endLabel="Quiet until"
+/>
+```
+
+Give it a `name` to submit the range with a native form as `name[start]` and
+`name[end]`. The ring fills its container up to the `size` diameter: `sm` is
+240 px, `md` 288 px, and `lg` 336 px. The arc color comes from the
+`--time-ring-accent` variable, which you can set through `className`, for
+example `[--time-ring-accent:var(--color-sky-500)]`.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Drag a handle | Moves that end, snapping to `step` |
+| Drag the arc | Moves both ends together and keeps the duration |
+| `↑` / `→` | Moves the focused handle one step later |
+| `↓` / `←` | Moves the focused handle one step earlier |
+| `Shift` + arrow, `PageUp` / `PageDown` | Moves the focused handle by an hour |
+
+A handle dragged past a limit waits there until the pointer comes back around
+to it. The bare track between the handles does nothing, so a stray tap never
+moves the range. In a right-to-left layout `←` and `→` swap, as on a native
+range input.
+
+## Sound and haptics
+
+Each step plays a soft tiks click with a `selection` haptic, throttled to one
+per 35 ms so a fast drag sounds like a smooth rattle. Passing or landing on a
+whole hour plays a deeper click with a `light` haptic, and is never throttled,
+so you can count the hours as you drag. Reaching `minDuration` or
+`maxDuration` plays a low thunk with a `medium` haptic, and pressing an arrow
+key against a limit plays it again.
+
+Sound and haptics only follow user input. The first render and changes to the
+`value` prop are silent, and nothing plays while the tab is hidden. Turn each
+off with `sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+The ring is a `group` named by `aria-label` or `aria-labelledby`. Each handle
+is a `slider` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow` in
+minutes from midnight, and an `aria-valuetext` such as "Bedtime 11:00 PM".
+Both handles are described by the current duration. The labels, ticks, and
+readout are hidden from assistive technology. A disabled ring can't be focused
+or dragged.
+
+With reduced motion enabled the handles and arc move straight to each step and
+the digits change without rolling. Sound and haptics stay on because they
+confirm each step rather than decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/time-ring/time-ring.tsx"
+  name="TimeRingProps"
+/>
+
+<AutoTypeTable
+  path="src/registry/components/time-ring/time-ring.tsx"
+  name="TimeRingValue"
+/>

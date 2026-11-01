@@ -448,6 +448,33 @@
       "type": "registry:block"
     },
     {
+      "name": "time-ring",
+      "title": "Time Ring",
+      "description": "A 24-hour dial for picking a time range, like a bedtime and wake-up schedule, with rolling digits, a tick per step, a deeper click per hour, and a thunk at the limits.",
+      "dependencies": [
+        "@number-flow/react",
+        "@rexa-developer/tiks",
+        "lucide-react",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/time-ring/time-ring.tsx",
+          "type": "registry:component",
+          "target": "@components/time-ring.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-01"
+      },
+      "docs": "https://tentui.com/components/time-ring",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "wheel-picker",
       "title": "Wheel Picker",
       "description": "An iOS-style scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.",
