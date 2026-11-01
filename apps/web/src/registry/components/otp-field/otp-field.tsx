@@ -60,21 +60,21 @@ const patterns = {
 
 const sizes = {
 	sm: {
-		slot: "size-8 rounded-md text-sm",
+		slot: "w-8 rounded-md text-[clamp(0.625rem,44cqw,0.875rem)]",
 		gap: "gap-1.5",
 		caret: "h-3.5",
 		separator: "w-2",
 		check: "size-4",
 	},
 	md: {
-		slot: "size-10 rounded-lg text-lg",
+		slot: "w-10 rounded-lg text-[clamp(0.75rem,45cqw,1.125rem)]",
 		gap: "gap-2",
 		caret: "h-5",
 		separator: "w-2.5",
 		check: "size-5",
 	},
 	lg: {
-		slot: "size-12 rounded-lg text-2xl",
+		slot: "w-12 rounded-lg text-[clamp(0.875rem,50cqw,1.5rem)]",
 		gap: "gap-2.5",
 		caret: "h-6",
 		separator: "w-3",
@@ -643,7 +643,7 @@ export function OTPField({
 			data-complete={value.length === length || undefined}
 			data-disabled={disabled || undefined}
 			className={cn(
-				"relative inline-flex w-fit data-disabled:cursor-not-allowed data-disabled:opacity-50",
+				"relative inline-flex w-fit max-w-full data-disabled:cursor-not-allowed data-disabled:opacity-50",
 				className,
 			)}
 		>
@@ -653,7 +653,10 @@ export function OTPField({
 			<div
 				ref={rowRef}
 				data-slot="otp-field-row"
-				className={cn("relative flex items-center", sizeStyle.gap)}
+				className={cn(
+					"relative flex min-w-0 max-w-full items-center",
+					sizeStyle.gap,
+				)}
 			>
 				{Array.from({ length }, (_, index) => {
 					const char = chars[index];
@@ -676,7 +679,7 @@ export function OTPField({
 								data-active={isActive || undefined}
 								data-filled={char !== undefined || undefined}
 								className={cn(
-									"relative flex shrink-0 items-center justify-center border border-input bg-background font-medium text-foreground tabular-nums shadow-xs transition-[color,background-color,border-color] duration-200 motion-reduce:transition-none dark:bg-input/30",
+									"@container relative flex aspect-square min-w-0 shrink items-center justify-center border border-input bg-background font-medium text-foreground tabular-nums shadow-xs transition-[color,background-color,border-color] duration-200 motion-reduce:transition-none dark:bg-input/30",
 									sizeStyle.slot,
 									statusSlot[status],
 									slotClassName,
@@ -747,7 +750,7 @@ export function OTPField({
 									aria-hidden
 									data-slot="otp-field-separator"
 									className={cn(
-										"h-0.5 shrink-0 rounded-full bg-border",
+										"h-0.5 min-w-1 shrink rounded-full bg-border",
 										sizeStyle.separator,
 									)}
 								/>
