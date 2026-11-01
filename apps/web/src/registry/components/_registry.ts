@@ -18,6 +18,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-10-31",
+			image: "https://cdn.tentui.com/images/components/wheel-picker",
+			video: "https://cdn.tentui.com/videos/components/wheel-picker",
 		},
 		docs: "https://tentui.com/components/wheel-picker",
 	},
@@ -38,6 +40,8 @@ export const components: Registry["items"] = [
 		categories: ["overlays"],
 		meta: {
 			createdAt: "2026-11-01",
+			image: "https://cdn.tentui.com/images/components/dynamic-island",
+			video: "https://cdn.tentui.com/videos/components/dynamic-island",
 		},
 		docs: "https://tentui.com/components/dynamic-island",
 	},
