@@ -116,6 +116,34 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "wheel-picker-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("wheel-picker")],
+		files: [
+			{
+				path: "examples/wheel-picker-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "split-flap-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("split-flap")],
+		files: [
+			{
+				path: "examples/split-flap-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "rotary-knob-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("rotary-knob")],
@@ -234,6 +262,34 @@ export const examples: Registry["items"] = [
 		files: [
 			{
 				path: "examples/tick-ruler-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "wheel-picker-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("wheel-picker")],
+		files: [
+			{
+				path: "examples/wheel-picker-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "split-flap-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("split-flap")],
+		files: [
+			{
+				path: "examples/split-flap-demo.tsx",
 				type: "registry:example",
 			},
 		],

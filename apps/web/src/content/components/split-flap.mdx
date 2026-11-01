@@ -1,0 +1,187 @@
+---
+title: Split-Flap Display
+description: A departure-board display whose cells flip forward through a real deck, one flap at a time, with a board-wide rattle, a settle thunk, and haptics.
+createdAt: 2026-10-29
+updatedAt: 2026-10-29
+---
+
+<ComponentPreview name="split-flap-preview" />
+
+## Example
+
+<ComponentPreview name="split-flap-demo" />
+
+## Features
+
+- Holds an ordered deck in every cell and only flips forward through it, like
+  the hardware. `A` to `Z` passes all 25 flaps between them, and `Z` to `A`
+  wraps around the whole deck, so cells land at different times.
+- Leaves cells that don't change alone. When `value` changes mid-flip, cells
+  carry on forward from the card they're showing to the new target.
+- Flips each cell as two halves on a hinge: the top half falls and darkens,
+  then the next card's bottom half swings down from dark to lit. The last two
+  flaps slow down and the final one bounces 2° on a spring.
+- Plays one board-wide rattle, never a sound per cell, and a lower thunk when
+  the last cell lands.
+- Renders single-row and multi-row boards, whole-word flaps, `ink` and `paper`
+  tones, and `sm`, `md`, and `lg` sizes. Cells shrink to fit narrow containers
+  instead of overflowing.
+- Animates only `transform` and `opacity`.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/split-flap
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="split-flap" title="components/split-flap.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { SplitFlap } from "@/components/split-flap";
+```
+
+```tsx
+<SplitFlap value="DEPARTURES" />
+```
+
+The board is a display, not an input: change `value` and the cells that differ
+flip to it. It is `length` cells wide, which defaults to the longest row, and
+short text is padded with blanks on the side `align` leaves free. Text longer
+than `length` is cropped, ending in `…` when the deck has one.
+
+Pass an array for a multi-row board, one string per row. Use `accent` to color
+specific cells, such as a status column.
+
+```tsx
+<SplitFlap
+  value={["10:40 LONDON  ON TIME", "11:05 BERLIN  DELAYED"]}
+  accent={{
+    match: (_, row, col) => col >= 14 && row === 1,
+    className: "text-amber-400",
+  }}
+/>
+```
+
+### The deck
+
+`chars` sets the deck, in flip order. The default is
+`" ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,:-/!?"`. Characters that aren't in the
+deck are uppercased, then shown as a blank, so lowercase text works with the
+default deck and emoji become blanks. The blank is a space, or the deck's first
+card when it has no space, so a digits deck pads with zeros.
+
+```tsx
+// A four-digit counter: 42 shows as 0042.
+<SplitFlap value={String(count)} chars="0123456789" length={4} align="end" />
+
+// A clock.
+<SplitFlap value="09:41" chars="0123456789:" />
+```
+
+Pass `words` to give the first cell of each row a whole-word flap, like a
+station name or a status. A row that starts with one of the words shows it on
+that flap and the rest of the row in the character cells. With `words`, the
+word flap is column `0` for `accent` and the characters start at column `1`.
+
+```tsx
+<SplitFlap
+  value={["LONDON 10:40", "PARIS 10:55"]}
+  words={["LONDON", "PARIS", "BERLIN"]}
+/>
+```
+
+### Timing
+
+`flipMs` is the length of one flap and `stagger` is the delay between cells
+starting, left to right, with each row starting two cells' worth after the one
+above. With `settle`, the last two flaps of each cell take 1.3× and 1.7× as
+long and the final flap bounces. At most 120 cells flip at once; the rest wait
+for a free slot. `onFlipStart` fires when a change starts a resting board, and
+`onSettled` fires once every cell has landed.
+
+### Rotating messages
+
+Pass `values` with `autoplay` to loop through messages every `interval` ms. The
+board pauses while it's off-screen or the tab is hidden, and shows a pause
+button so people can stop it. Without `autoplay`, `values[0]` is shown.
+
+```tsx
+<SplitFlap values={["BOARDING", "ON TIME", "DEPARTED"]} autoplay interval={3000} />
+```
+
+## Sound and haptics
+
+A single sequencer drives every flap, so sound and haptics land with the flap
+they belong to. Instead of a sound per flap per cell, the board plays at most
+one click every 28 ms, jittered in pitch and level. A lone cell clacks on each
+flap, and a full board becomes a dense rattle. When the last cell lands it
+plays one lower thunk.
+
+Haptics follow changes the user triggered with a click, tap, or key: a
+selection pulse every 60 ms or so while cells flip, up to ten, and a rigid
+pulse when the board settles. Autoplay and the first render never trigger
+haptics.
+
+The board is silent on first render, while it's off-screen, and while the tab
+is hidden. Browsers block audio until the page has had a click, tap, or key
+press, so autoplay stays quiet until then. Turn the cues off with
+`sound={false}` and `haptics={false}`, set the level with `volume`, or set
+`soundToggle` to show a mute button.
+
+## Accessibility
+
+The cells are `aria-hidden`. The board is a `role="img"` labelled with the
+full text, and the text itself is in the DOM, visually hidden, so find in page
+still matches it. Pass `aria-label` to give a clearer label, such as one that
+reads a departure row as a sentence.
+
+Set `announce` to make the board a polite live region instead. It announces the
+final text once, after every cell has landed, and never the letters in between.
+It is off by default so a rotating board doesn't keep interrupting screen
+reader users.
+
+Glyphs contrast with the flaps by well over 4.5:1 in both tones. The board
+doesn't take focus. Passing `onClick` makes it a real `<button>`, and the pause
+and sound controls are buttons named "Pause board" and "Mute board sound".
+
+With reduced motion enabled, cells cross-fade to the new text in 120 ms with no
+3D flips and no stagger, and there is no rattle. Sound and haptics are off
+unless you set `sound` or `haptics` to `true`, and autoplay waits at least five
+seconds between messages.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/split-flap/split-flap.tsx"
+  name="SplitFlapProps"
+/>

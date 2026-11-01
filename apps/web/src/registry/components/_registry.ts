@@ -2,6 +2,46 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "wheel-picker",
+		type: "registry:component",
+		title: "Wheel Picker",
+		description:
+			"An iOS-style scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/wheel-picker/wheel-picker.tsx",
+				type: "registry:component",
+				target: "@components/wheel-picker.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-10-31",
+		},
+		docs: "https://tentui.com/components/wheel-picker",
+	},
+	{
+		name: "split-flap",
+		type: "registry:component",
+		title: "Split-Flap Display",
+		description:
+			"A departure-board display whose cells flip forward through a real deck, one flap at a time, with a board-wide rattle, a settle thunk, and haptics.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/split-flap/split-flap.tsx",
+				type: "registry:component",
+				target: "@components/split-flap.tsx",
+			},
+		],
+		categories: ["display"],
+		meta: {
+			createdAt: "2026-10-29",
+		},
+		docs: "https://tentui.com/components/split-flap",
+	},
+	{
 		name: "dynamic-island",
 		type: "registry:component",
 		title: "Dynamic Island",

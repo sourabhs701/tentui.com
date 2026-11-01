@@ -448,6 +448,56 @@
       "type": "registry:block"
     },
     {
+      "name": "wheel-picker",
+      "title": "Wheel Picker",
+      "description": "An iOS-style scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/wheel-picker/wheel-picker.tsx",
+          "type": "registry:component",
+          "target": "@components/wheel-picker.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-10-31"
+      },
+      "docs": "https://tentui.com/components/wheel-picker",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
+      "name": "split-flap",
+      "title": "Split-Flap Display",
+      "description": "A departure-board display whose cells flip forward through a real deck, one flap at a time, with a board-wide rattle, a settle thunk, and haptics.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/split-flap/split-flap.tsx",
+          "type": "registry:component",
+          "target": "@components/split-flap.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-10-29"
+      },
+      "docs": "https://tentui.com/components/split-flap",
+      "categories": [
+        "display"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "dynamic-island",
       "title": "Dynamic Island",
       "description": "An iPhone-style pill that morphs between an idle pill, a compact live activity, and an expanded card, with a liquid spring, a sound and a haptic per morph, and swipe up to dismiss.",
@@ -489,7 +539,9 @@
         }
       ],
       "meta": {
-        "createdAt": "2026-10-28"
+        "createdAt": "2026-10-28",
+        "image": "https://cdn.tentui.com/images/components/rotary-knob",
+        "video": "https://cdn.tentui.com/videos/components/rotary-knob"
       },
       "docs": "https://tentui.com/components/rotary-knob",
       "categories": [
@@ -526,7 +578,9 @@
         }
       },
       "meta": {
-        "createdAt": "2026-10-26"
+        "createdAt": "2026-10-26",
+        "image": "https://cdn.tentui.com/images/components/otp-field",
+        "video": "https://cdn.tentui.com/videos/components/otp-field"
       },
       "docs": "https://tentui.com/components/otp-field",
       "categories": [

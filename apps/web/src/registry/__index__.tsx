@@ -275,6 +275,42 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"wheel-picker": {
+		name: "wheel-picker",
+		title: "Wheel Picker",
+		description: "An iOS-style scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/wheel-picker/wheel-picker.tsx","type":"registry:component","target":"@components/wheel-picker.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/wheel-picker/wheel-picker")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wheel-picker");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-10-31"},
+	},
+	"split-flap": {
+		name: "split-flap",
+		title: "Split-Flap Display",
+		description: "A departure-board display whose cells flip forward through a real deck, one flap at a time, with a board-wide rattle, a settle thunk, and haptics.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/split-flap/split-flap.tsx","type":"registry:component","target":"@components/split-flap.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/split-flap/split-flap")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for split-flap");
+			}
+			return { default: module.default };
+		}),
+		categories: ["display"],
+		meta: {"createdAt":"2026-10-29"},
+	},
 	"dynamic-island": {
 		name: "dynamic-island",
 		title: "Dynamic Island",
@@ -309,7 +345,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-10-28"},
+		meta: {"createdAt":"2026-10-28","image":"https://cdn.tentui.com/images/components/rotary-knob","video":"https://cdn.tentui.com/videos/components/rotary-knob"},
 	},
 	"otp-field": {
 		name: "otp-field",
@@ -327,7 +363,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-10-26"},
+		meta: {"createdAt":"2026-10-26","image":"https://cdn.tentui.com/images/components/otp-field","video":"https://cdn.tentui.com/videos/components/otp-field"},
 	},
 	"star-rating": {
 		name: "star-rating",
@@ -833,6 +869,42 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
+	"wheel-picker-preview": {
+		name: "wheel-picker-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/wheel-picker-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/wheel-picker-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wheel-picker-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"split-flap-preview": {
+		name: "split-flap-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/split-flap-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/split-flap-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for split-flap-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"rotary-knob-preview": {
 		name: "rotary-knob-preview",
 		title: undefined,
@@ -989,6 +1061,42 @@ export const Index = {
 			};
 			if (!module.default) {
 				throw new Error("No default export found for tick-ruler-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"wheel-picker-demo": {
+		name: "wheel-picker-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/wheel-picker-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/wheel-picker-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wheel-picker-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"split-flap-demo": {
+		name: "split-flap-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/split-flap-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/split-flap-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for split-flap-demo");
 			}
 			return { default: module.default };
 		}),
