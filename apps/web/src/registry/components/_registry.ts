@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "wheel-picker",
+		type: "registry:component",
+		title: "Wheel Picker",
+		description:
+			"An iOS-style scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/wheel-picker/wheel-picker.tsx",
+				type: "registry:component",
+				target: "@components/wheel-picker.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-10-31",
+		},
+		docs: "https://tentui.com/components/wheel-picker",
+	},
+	{
 		name: "rotary-knob",
 		type: "registry:component",
 		title: "Rotary Knob",
