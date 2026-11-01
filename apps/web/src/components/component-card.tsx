@@ -88,7 +88,7 @@ export function ComponentCard({
 						}}
 						className="relative w-full overflow-hidden rounded-xl bg-background shadow-surface-inset transition-colors"
 					>
-						<ComponentPreviewMedia component={component} playing={isHovered} />
+						<ComponentPreviewMedia component={component} />
 					</motion.div>
 				</div>
 			</Link>

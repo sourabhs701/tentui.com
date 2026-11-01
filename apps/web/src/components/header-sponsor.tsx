@@ -29,8 +29,6 @@ export function HeaderSponsor() {
 }
 
 function SponsoredMark({ sponsor }: { sponsor: HeaderSponsorBrand }) {
-	const label = `Sponsored by ${sponsor.name}`;
-
 	return (
 		<Tooltip>
 			<TooltipTrigger
@@ -45,7 +43,7 @@ function SponsoredMark({ sponsor }: { sponsor: HeaderSponsorBrand }) {
 								href={sponsorHref(sponsor.href)}
 								target="_blank"
 								rel="sponsored noopener noreferrer"
-								aria-label={label}
+								aria-label={sponsor.name}
 							>
 								<Image
 									src={sponsor.logoSrc}
@@ -75,7 +73,7 @@ function SponsoredMark({ sponsor }: { sponsor: HeaderSponsorBrand }) {
 					/>
 				}
 			/>
-			<TooltipContent>{label}</TooltipContent>
+			<TooltipContent>{sponsor.name}</TooltipContent>
 		</Tooltip>
 	);
 }

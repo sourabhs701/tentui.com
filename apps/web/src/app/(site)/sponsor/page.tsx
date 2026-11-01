@@ -14,7 +14,7 @@ export const revalidate = false;
 
 const TITLE = "Sponsor";
 const DESCRIPTION =
-	"Put your logo in the bar at the top of every TentUI page. It links to your site.";
+	"Put your logo in the bar at the top of every TentUI page, or your image or video in the components feed.";
 const OG_IMAGE = `/og/simple?title=${encodeURIComponent("Sponsor TentUI")}&description=${encodeURIComponent(DESCRIPTION)}`;
 
 export const metadata: Metadata = {
@@ -58,7 +58,7 @@ export default function SponsorPage() {
 						TentUI is a library of production-ready React components and blocks
 						for shadcn/ui. Designers and developers come here when they are
 						choosing what to build next. A sponsorship puts your product in
-						front of them, in the bar at the top of every page.
+						front of them, right where they look for components.
 					</p>
 
 					<div className="mt-12 max-w-2xl rounded-[21px] border bg-muted p-0.5">
@@ -66,14 +66,27 @@ export default function SponsorPage() {
 							<h2 className="font-bold text-xl tracking-tight sm:text-2xl">
 								Where your brand shows
 							</h2>
-							<div className="mt-5 flex gap-4 rounded-2xl border bg-muted/40 p-3 sm:p-4">
-								<TopBarDiagram />
-								<div className="min-w-0">
-									<h3 className="font-semibold tracking-tight">Top bar</h3>
-									<p className="mt-1 text-muted-foreground text-sm leading-relaxed sm:text-base">
-										Your logo in the bar at the top of every page. It links to
-										your site.
-									</p>
+							<div className="mt-5 flex flex-col gap-3 rounded-2xl border bg-muted/40 p-3 sm:p-4">
+								<div className="flex gap-4">
+									<TopBarDiagram />
+									<div className="min-w-0">
+										<h3 className="font-semibold tracking-tight">Top bar</h3>
+										<p className="mt-1 text-muted-foreground text-sm leading-relaxed sm:text-base">
+											Your logo in the bar at the top of every page. It links to
+											your site.
+										</p>
+									</div>
+								</div>
+								<div className="flex gap-4">
+									<FeedCardDiagram />
+									<div className="min-w-0">
+										<h3 className="font-semibold tracking-tight">Feed card</h3>
+										<p className="mt-1 text-muted-foreground text-sm leading-relaxed sm:text-base">
+											Your image or video at the end of the first row on the
+											components page. It sits with the components around it,
+											with a small Sponsored tag.
+										</p>
+									</div>
 								</div>
 							</div>
 							<p className="mt-4 text-muted-foreground text-sm leading-relaxed sm:text-base">
@@ -127,7 +140,7 @@ function TopBarDiagram() {
 	return (
 		<div
 			aria-hidden
-			className="w-[108px] shrink-0 rounded-2xl border bg-background p-1.5"
+			className="w-[108px] shrink-0 self-start rounded-2xl border bg-background p-1.5"
 		>
 			<div className="flex items-center gap-1 rounded-lg bg-muted px-1 py-1">
 				<span className="size-2 rounded-[2px] bg-foreground/80" />
@@ -137,6 +150,33 @@ function TopBarDiagram() {
 			<div className="mt-1.5 grid grid-cols-3 gap-1 px-0.5">
 				{["a", "b", "c", "d", "e", "f"].map((id) => (
 					<span key={id} className="h-3.5 rounded-[4px] bg-muted" />
+				))}
+			</div>
+		</div>
+	);
+}
+
+function FeedCardDiagram() {
+	return (
+		<div
+			aria-hidden
+			className="w-[108px] shrink-0 self-start rounded-2xl border bg-background p-1.5"
+		>
+			<div className="flex items-center gap-1 rounded-lg bg-muted px-1 py-1">
+				<span className="size-2 rounded-[2px] bg-foreground/80" />
+				<span className="h-1 flex-1 rounded-full bg-background" />
+				<span className="size-3.5 rounded-[4px] bg-background" />
+			</div>
+			<div className="mt-1.5 grid grid-cols-3 gap-1 px-0.5">
+				{["a", "b", "c", "d", "e", "f"].map((id) => (
+					<span
+						key={id}
+						className={
+							id === "c"
+								? "h-3.5 rounded-[4px] bg-foreground ring-2 ring-foreground/15"
+								: "h-3.5 rounded-[4px] bg-muted"
+						}
+					/>
 				))}
 			</div>
 		</div>
