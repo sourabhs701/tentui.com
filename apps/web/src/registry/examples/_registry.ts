@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "dynamic-island-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("dynamic-island")],
+		files: [
+			{
+				path: "examples/dynamic-island-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "peeping-button-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("peeping-button")],
@@ -220,6 +234,20 @@ export const examples: Registry["items"] = [
 		files: [
 			{
 				path: "examples/tick-ruler-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "dynamic-island-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("dynamic-island")],
+		files: [
+			{
+				path: "examples/dynamic-island-demo.tsx",
 				type: "registry:example",
 			},
 		],

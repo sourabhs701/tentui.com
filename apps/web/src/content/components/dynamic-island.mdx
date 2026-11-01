@@ -1,0 +1,263 @@
+---
+title: Dynamic Island
+description: An iPhone-style pill that morphs between an idle pill, a compact live activity, and an expanded card, with a liquid spring, a sound and a haptic per morph, and swipe up to dismiss.
+createdAt: 2026-11-01
+updatedAt: 2026-11-01
+---
+
+<ComponentPreview name="dynamic-island-preview" />
+
+## Example
+
+<ComponentPreview name="dynamic-island-demo" />
+
+## Features
+
+- Morphs one black pill between views. The shell springs to each view's
+  measured size and corner radius, so it goes from pill to card and back
+  without ever swapping elements.
+- Cross-fades content with a slight blur and scale, entering just after the
+  shell starts to move, so content never squashes and the card unfurls down
+  out of the pill.
+- Plays a soft pop and a `soft` haptic when it grows into an expanded view, a
+  click and a `selection` haptic between compact views, and a quieter tick
+  with a `light` haptic when it settles back, at most once per 80 ms.
+- Squishes slightly on press. Tap a compact view to expand it; press Escape,
+  click outside, or swipe up to dismiss an expanded one. The swipe follows the
+  finger with rubber-band resistance.
+- Ships `useDynamicIsland`, which shows timed views like notifications and
+  queues them first in, first out.
+- Sits inline, or fixed at the top centre of the viewport with
+  `position="top"`.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/dynamic-island
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="dynamic-island" title="components/dynamic-island.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  DynamicIsland,
+  DynamicIslandView,
+} from "@/components/dynamic-island";
+```
+
+The island is controlled. `view` picks which `DynamicIslandView` to show by
+`id`, and `null` shows the idle pill. Every view needs a `label`, a short text
+summary for screen readers.
+
+```tsx
+const [view, setView] = useState<string | null>(null);
+
+<DynamicIsland
+  view={view}
+  onExpand={(id) => setView(id === "timer" ? "done" : "timer")}
+  onDismiss={() => setView(null)}
+>
+  <DynamicIslandView id="timer" label="Timer, 4 minutes 12 seconds">
+    <TimerIcon className="size-4" />
+    <span className="tabular-nums">4:12</span>
+  </DynamicIslandView>
+  <DynamicIslandView id="done" size="expanded" label="Timer done">
+    <p className="font-semibold">Timer done</p>
+    <div className="grid grid-cols-2 gap-2">
+      <button type="button" onClick={() => setView(null)}>Stop</button>
+      <button type="button" onClick={() => setView("timer")}>Repeat</button>
+    </div>
+  </DynamicIslandView>
+</DynamicIsland>
+```
+
+### Views
+
+There are three tiers, and they are just content:
+
+- **Idle**, while `view` is `null`: an empty 120 × 36 px pill, or whatever you
+  pass to `compact`.
+- **Compact**, the default `size`: a pill at least 36 px tall that lays its
+  children out in a row, so the first child leads and the last trails. The
+  slots mirror in right-to-left layouts.
+- **Expanded**, with `size="expanded"`: a 320 px card with 28 px corners and a
+  column of content.
+
+Each view sizes itself, and the island measures it with a `ResizeObserver`.
+Content that changes size inside the same view, like timer digits, resizes the
+shell smoothly without a sound. Wide content is capped at the island's
+container, or 360 px with `position="top"`, and wraps. Change a view's size
+with `className`, for example `className="w-40"` for a wider compact pill.
+
+An `id` that matches no view shows the idle pill without a sound.
+
+### Expanding and dismissing
+
+`onExpand` is called with the view's `id` when a compact view is tapped, or
+with `null` when the idle pill is tapped. Passing it turns compact views and
+the idle pill into buttons; without it they are plain status. `onDismiss` is
+called when the user presses Escape, clicks outside an expanded view, or
+swipes it up past 24 px or with a quick flick. The parent decides what to show
+next, so the island never changes view by itself.
+
+```tsx
+<DynamicIsland
+  view={view}
+  onExpand={(id) => setView(id ? `${id}-details` : "now-playing")}
+  onDismiss={() => setView(null)}
+>
+  {/* views */}
+</DynamicIsland>
+```
+
+Set `swipeToDismiss={false}` to keep the card in place while it is dragged.
+
+### Timed views
+
+`useDynamicIsland` keeps the view for you. `show(id)` sets the resting view.
+`show(id, { duration })` shows a view for `duration` ms and then returns to
+the resting view; timed views that arrive while another is showing wait in
+line. `hide()` drops the timed view on screen, or clears the resting view when
+nothing is queued, so it works as `onDismiss`.
+
+```tsx
+import {
+  DynamicIsland,
+  DynamicIslandView,
+  useDynamicIsland,
+} from "@/components/dynamic-island";
+
+const island = useDynamicIsland();
+
+<button onClick={() => island.show("airpods", { duration: 2000 })}>
+  Connect
+</button>
+
+<DynamicIsland view={island.view} onDismiss={island.hide}>
+  <DynamicIslandView id="airpods" label="AirPods connected">
+    <HeadphonesIcon className="size-4" />
+    <span>Connected</span>
+  </DynamicIslandView>
+</DynamicIsland>
+```
+
+Timers are cleared when the component using the hook unmounts.
+
+### Top of the viewport
+
+`position="top"` fixes the island to the top centre of the viewport, below the
+safe area. Only the island itself catches pointer events.
+
+```tsx
+<DynamicIsland view={view} position="top">
+  {/* views */}
+</DynamicIsland>
+```
+
+## Sound and haptics
+
+Every view change plays a tiks sound and a web-haptics pattern matched to where
+it lands:
+
+| Change | Sound | Haptic |
+| --- | --- | --- |
+| Grows into an expanded view | `pop` | `soft` |
+| To or between compact views | `click` | `selection` |
+| Back from an expanded view to a compact one | `click` | `light` |
+| Back to the idle pill | quieter tick | `light` |
+| A swipe stretches to the rubber band's limit | | `rigid` |
+
+Cues are rate limited to one per 80 ms, so rapid view changes never stack. The
+first render, and the server render, are silent.
+
+Changes driven by the parent do play, because a status surface is meant to be
+noticed. Set `silent` on a view to open it without a cue, or `quiet` on the
+island to mute every change the user didn't cause by tapping, pressing a key,
+clicking outside, or swiping. Turn sound and haptics off on their own with
+`sound={false}` and `haptics={false}`.
+
+```tsx
+<DynamicIsland view={view} quiet sound={false}>
+  <DynamicIslandView id="sync" label="Syncing" silent>
+    {/* ... */}
+  </DynamicIslandView>
+</DynamicIsland>
+```
+
+## Accessibility
+
+A polite live region announces the active view's `label` once each time the
+view changes. It ignores label changes inside the same view, so a ticking
+timer is not read out every second, and after several rapid changes only the
+last label is announced.
+
+With `onExpand`, a compact view or the idle pill is a `button` named by the
+view's `label`, or the island's `label` for the idle pill. `Enter` and `Space`
+expand it, and the pill is at least 36 px tall. An expanded view is a
+`region` named by its `label`. When it opens by itself, focus stays where it
+is. When the user opens it with a tap or a key, focus moves to its first
+control, and when it is dismissed with focus inside, focus returns to the
+island. `Escape` dismisses it. The island shows a focus ring when focused from
+the keyboard.
+
+The island uses `bg-foreground` and `text-background`, which pass 4.5:1
+contrast in light and dark themes.
+
+With reduced motion enabled the shell resizes with a 150 ms ease and no
+bounce, content only fades, and nothing squishes. Swiping up still dismisses,
+but the island doesn't follow the finger. Sound and haptics stay on because
+they confirm each change rather than decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/dynamic-island/dynamic-island.tsx"
+  name="DynamicIslandProps"
+/>
+
+### DynamicIslandView
+
+<AutoTypeTable
+  path="src/registry/components/dynamic-island/dynamic-island.tsx"
+  name="DynamicIslandViewProps"
+/>
+
+### useDynamicIsland
+
+`useDynamicIsland(initial?: string | null)` returns `{ view, show, hide }`.
+`show(id, options?)` takes these options:
+
+<AutoTypeTable
+  path="src/registry/components/dynamic-island/dynamic-island.tsx"
+  name="DynamicIslandShowOptions"
+/>

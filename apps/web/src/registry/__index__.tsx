@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"dynamic-island": {
+		name: "dynamic-island",
+		title: "Dynamic Island",
+		description: "An iPhone-style pill that morphs between an idle pill, a compact live activity, and an expanded card, with a liquid spring, a sound and a haptic per morph, and swipe up to dismiss.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/dynamic-island/dynamic-island.tsx","type":"registry:component","target":"@components/dynamic-island.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/dynamic-island/dynamic-island")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for dynamic-island");
+			}
+			return { default: module.default };
+		}),
+		categories: ["overlays"],
+		meta: {"createdAt":"2026-11-01"},
+	},
 	"rotary-knob": {
 		name: "rotary-knob",
 		title: "Rotary Knob",
@@ -671,6 +689,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"dynamic-island-preview": {
+		name: "dynamic-island-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/dynamic-island-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/dynamic-island-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for dynamic-island-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"peeping-button-preview": {
 		name: "peeping-button-preview",
 		title: undefined,
@@ -953,6 +989,24 @@ export const Index = {
 			};
 			if (!module.default) {
 				throw new Error("No default export found for tick-ruler-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"dynamic-island-demo": {
+		name: "dynamic-island-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/dynamic-island-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/dynamic-island-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for dynamic-island-demo");
 			}
 			return { default: module.default };
 		}),

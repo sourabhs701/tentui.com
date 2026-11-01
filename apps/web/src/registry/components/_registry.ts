@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "dynamic-island",
+		type: "registry:component",
+		title: "Dynamic Island",
+		description:
+			"An iPhone-style pill that morphs between an idle pill, a compact live activity, and an expanded card, with a liquid spring, a sound and a haptic per morph, and swipe up to dismiss.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/dynamic-island/dynamic-island.tsx",
+				type: "registry:component",
+				target: "@components/dynamic-island.tsx",
+			},
+		],
+		categories: ["overlays"],
+		meta: {
+			createdAt: "2026-11-01",
+		},
+		docs: "https://tentui.com/components/dynamic-island",
+	},
+	{
 		name: "rotary-knob",
 		type: "registry:component",
 		title: "Rotary Knob",

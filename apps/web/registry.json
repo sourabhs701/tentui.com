@@ -448,6 +448,31 @@
       "type": "registry:block"
     },
     {
+      "name": "dynamic-island",
+      "title": "Dynamic Island",
+      "description": "An iPhone-style pill that morphs between an idle pill, a compact live activity, and an expanded card, with a liquid spring, a sound and a haptic per morph, and swipe up to dismiss.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/dynamic-island/dynamic-island.tsx",
+          "type": "registry:component",
+          "target": "@components/dynamic-island.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-01"
+      },
+      "docs": "https://tentui.com/components/dynamic-island",
+      "categories": [
+        "overlays"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "rotary-knob",
       "title": "Rotary Knob",
       "description": "A hardware-style dial you turn by dragging, scrolling, or with the keyboard, with a tick and a haptic notch on every detent and a thunk at the end stops.",
