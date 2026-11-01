@@ -25,6 +25,8 @@ import {
 } from "@/components/icons";
 import { SOURCE_CODE_GITHUB_URL } from "@/config/site";
 import type { CopyState } from "@/hooks/use-copy-to-clipboard";
+import { TOOLBAR_GROUP_HIT_AREA, TOOLBAR_PRESS } from "@/lib/toolbar-button";
+import { cn } from "@/lib/utils";
 import { CopyStateIcon } from "@/registry/components/copy-button/copy-button";
 
 const cache = new Map<string, string>();
@@ -82,7 +84,11 @@ export function LLMCopyButton({ markdownUrl }: { markdownUrl: string }) {
 
 	return (
 		<Button
-			className="min-h-11 touch-manipulation gap-1.5 border-none px-3 text-[0.8125rem] transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [@media(hover:hover)_and_(pointer:fine)]:h-7 [@media(hover:hover)_and_(pointer:fine)]:min-h-0 [@media(hover:hover)_and_(pointer:fine)]:px-2"
+			className={cn(
+				"gap-1.5 px-2.5 text-[0.8125rem] max-[28rem]:w-8 max-[28rem]:px-0",
+				TOOLBAR_PRESS,
+				TOOLBAR_GROUP_HIT_AREA,
+			)}
 			variant="secondary"
 			size="sm"
 			aria-label="Copy page"
@@ -170,12 +176,12 @@ export function ViewOptions({
 			<DropdownMenuTrigger
 				render={
 					<Button
-						className="size-11 touch-manipulation border-none transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [@media(hover:hover)_and_(pointer:fine)]:size-7"
+						className={cn(TOOLBAR_PRESS, TOOLBAR_GROUP_HIT_AREA)}
 						variant="secondary"
 						size="icon-sm"
 						aria-label="View Options"
 					>
-						<ChevronDownIcon className="mt-0.5 size-4" />
+						<ChevronDownIcon className="mt-0.5" />
 					</Button>
 				}
 			/>

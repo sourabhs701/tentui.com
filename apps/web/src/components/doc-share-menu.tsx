@@ -10,6 +10,8 @@ import {
 import { EllipsisIcon, LinkIcon, ShareIcon } from "lucide-react";
 import { toast } from "sonner";
 import { LinkedInIcon, XIcon } from "@/components/icons";
+import { TOOLBAR_HIT_AREA, TOOLBAR_PRESS } from "@/lib/toolbar-button";
+import { cn } from "@/lib/utils";
 import { copyText } from "@/utils/copy";
 
 export function DocShareMenu({ title, url }: { title: string; url: string }) {
@@ -26,7 +28,7 @@ export function DocShareMenu({ title, url }: { title: string; url: string }) {
 			<DropdownMenuTrigger
 				render={
 					<Button
-						className="size-11 touch-manipulation border-none transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [@media(hover:hover)_and_(pointer:fine)]:size-7"
+						className={cn(TOOLBAR_PRESS, TOOLBAR_HIT_AREA)}
 						variant="secondary"
 						size="icon-sm"
 						aria-label="Share page"

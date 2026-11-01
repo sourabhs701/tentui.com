@@ -24,7 +24,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 
 	return (
 		<ComponentSidebar
-			className="[--component-sidebar-height:calc(100svh-var(--component-sidebar-top)-var(--fade-bottom-height))] [--component-sidebar-top:calc(var(--header-height)+(--spacing(2)))] max-lg:fixed max-lg:left-2 max-lg:z-50 max-lg:data-[open=false]:pointer-events-none"
+			className="[--component-sidebar-height:calc(100svh-var(--component-sidebar-top)-var(--fade-bottom-height))] [--component-sidebar-top:calc(var(--header-height)+(--spacing(2)))] *:data-sidebar-open:size-8 max-lg:fixed max-lg:left-2 max-lg:z-50 max-lg:data-[open=false]:pointer-events-none"
 			onOpenChange={setIsOpen}
 			open={isOpen}
 		>

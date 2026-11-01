@@ -30,6 +30,8 @@ import {
 	JSON_LD_ID,
 	JsonLdScript,
 } from "@/lib/json-ld";
+import { TOOLBAR_HIT_AREA, TOOLBAR_PRESS } from "@/lib/toolbar-button";
+import { cn } from "@/lib/utils";
 
 function getComponentHref(slug: string): Route {
 	return `/components/${slug}` as Route;
@@ -124,7 +126,7 @@ export function ComponentPage({ doc }: { doc: Doc }) {
 
 					<div className="flex items-center justify-between">
 						<Button
-							className="h-7 gap-2 border-none pr-0 pl-6 text-muted-foreground tracking-wider hover:text-foreground hover:no-underline sm:pl-0"
+							className="h-8 gap-2 border-none pr-0 pl-6 text-muted-foreground tracking-wider hover:text-foreground hover:no-underline sm:pl-0"
 							variant="link"
 							size="sm"
 							nativeButton={false}
@@ -204,7 +206,7 @@ function ComponentNavigationButton({
 			<TooltipTrigger
 				render={
 					<Button
-						className="size-7 border-none"
+						className={cn(TOOLBAR_PRESS, TOOLBAR_HIT_AREA)}
 						variant="secondary"
 						size="icon-sm"
 						nativeButton={false}
