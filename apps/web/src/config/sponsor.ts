@@ -12,11 +12,40 @@ export type HeaderSponsor = {
 
 /** Booked top-bar sponsor. `null` leaves the header slot open. */
 export const HEADER_SPONSOR: HeaderSponsor | null = {
-	name: "SRB",
+	name: "srb.codes",
 	href: "https://www.srb.codes",
 	logoSrc: "/images/srb-logo.svg",
 	logoDarkSrc: "/images/srb-logo-dark.svg",
 };
+
+export type FeedSponsor = {
+	name: string;
+	/** Destination for the feed card. `ref=tentui.com` is added. */
+	href: string;
+	/** Square mark shown in the card's bottom-left corner. */
+	logoSrc: string;
+	logoDarkSrc?: string;
+	/** One short line, revealed beside the logo on hover. */
+	description: string;
+	imageSrc: string;
+	imageDarkSrc?: string;
+	/** Optional looping clip, played while the card is hovered. */
+	videoSrc?: string;
+};
+
+/** Booked feed-card sponsor on /components. `null` shows the open slot. */
+export const FEED_SPONSOR: FeedSponsor | null = {
+	name: "srb.codes",
+	href: "https://work.srb.codes",
+	logoSrc: "/images/srb-logo.svg",
+	logoDarkSrc: "/images/srb-logo-dark.svg",
+	description: "Landing pages people remember",
+	imageSrc: "/images/sponsors/srb-work-light.webp",
+	imageDarkSrc: "/images/sponsors/srb-work-dark.webp",
+};
+
+/** Position of the feed card: the end of the first row at three columns. */
+export const FEED_SPONSOR_INDEX = 2;
 
 export function sponsorHref(href: string) {
 	const url = new URL(href);
