@@ -448,6 +448,32 @@
       "type": "registry:block"
     },
     {
+      "name": "elastic-slider",
+      "title": "Elastic Slider",
+      "description": "A slider that thickens under your finger and stretches like rubber past either end, with a soft tick at every detent and a dull thunk at the limits.",
+      "dependencies": [
+        "@number-flow/react",
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/elastic-slider/elastic-slider.tsx",
+          "type": "registry:component",
+          "target": "@components/elastic-slider.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-02"
+      },
+      "docs": "https://tentui.com/components/elastic-slider",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "wheel-picker",
       "title": "Wheel Picker",
       "description": "An iOS-style scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.",

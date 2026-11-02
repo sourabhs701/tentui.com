@@ -738,6 +738,323 @@
 			]
 		}
 	],
+	"src/registry/components/elastic-slider/elastic-slider.tsx#ElasticSliderProps#": [
+		{
+			"id": "elastic-slider.tsx-ElasticSliderProps",
+			"name": "ElasticSliderProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "label",
+					"description": "Visible label, also the slider's accessible name.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "hideLabel",
+					"description": "Keeps the label for assistive technology only.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "value",
+					"description": "Controlled value.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultValue",
+					"description": "Initial value when uncontrolled. Defaults to `min`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onValueChange",
+					"description": "Called on every change while dragging, clicking, or pressing keys.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((value: number) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onValueCommit",
+					"description": "Called once a drag is released, or a click, key press, or mark lands.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((value: number) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "min",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "max",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "step",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "largeStep",
+					"description": "Moved by `Shift`+arrows and `PageUp`/`PageDown`. Defaults to a tenth of the range.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "marks",
+					"description": "Detents a drag sticks to. Labelled marks render under the track.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(number | ElasticSliderMark)[] | undefined",
+					"simplifiedType": "array",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "format",
+					"description": "Formats the readout and `aria-valuetext`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((value: number) => string) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "startIcon",
+					"description": "Shown before the track, nudged outward when it stretches past `min`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "endIcon",
+					"description": "Shown after the track, nudged outward when it stretches past `max`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "`inline` puts the label and value inside the track; `stacked` puts them above a thin track.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"inline\" | \"stacked\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"sm\" | \"md\" | \"lg\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "maxStretch",
+					"description": "Furthest the track stretches past either end, in px.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a tick per step or mark and a thunk at the limits.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptics on supported devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "name",
+					"description": "Submits the value with a native form through a hidden input.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "className",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/email-dock/email-dock.tsx#EmailDockProps#": [
 		{
 			"id": "email-dock.tsx-EmailDockProps",
