@@ -435,6 +435,13 @@ async function recordFrames(browser, name, theme, manifest, options) {
 		});
 		await page.evaluate(() => document.fonts.ready);
 		await installCursor(page, theme === "dark");
+		// Capture only: scripted presses focus some components (rotary-knob,
+		// wheel-picker), which draws their focus-visible ring. Hide focus
+		// styling for the recording; component source is unchanged.
+		await page.addStyleTag({
+			content:
+				"*:focus,*:focus-visible{outline:none!important;box-shadow:none!important;--tw-ring-shadow:0 0 #0000!important;--tw-ring-offset-shadow:0 0 #0000!important}",
+		});
 
 		const startTime = await page.evaluate(() => Date.now());
 		await page.clock.pauseAt(startTime + 500);

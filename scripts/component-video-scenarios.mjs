@@ -452,4 +452,37 @@ export const scenarios = {
 			await d.wait(8000);
 		},
 	},
+
+	"rotary-knob": {
+		async run(d) {
+			const dial = '[data-slot="rotary-knob-dial"]';
+			await d.wait(600);
+			await d.move(dial, 650, { x: 0.5, y: 0.6 });
+			await d.wait(150);
+			const start = await d.point(dial, { x: 0.5, y: 0.6 });
+			// Drag up: the pointer springs onto each detent with a tick.
+			await d.down();
+			await d.wait(100);
+			await d.move({ x: start.x, y: start.y - 120 }, 1100);
+			await d.wait(250);
+			await d.up();
+			await d.wait(200);
+			// Second stroke runs into the max: it rubber-bands and thunks.
+			await d.move(start, 450);
+			await d.down();
+			await d.move({ x: start.x, y: start.y - 150 }, 900);
+			await d.wait(450);
+			await d.up();
+			await d.wait(400);
+			// A quick spin down: the ticks blur into a rattle.
+			await d.move(start, 450);
+			await d.down();
+			await d.move({ x: start.x, y: start.y + 150 }, 450);
+			await d.wait(150);
+			await d.up();
+			await d.wait(900);
+			await d.move(d.rest, 650);
+			await d.wait(300);
+		},
+	},
 };
