@@ -293,6 +293,24 @@ export const Index = {
 		categories: ["inputs"],
 		meta: {"createdAt":"2026-11-02"},
 	},
+	"time-ring": {
+		name: "time-ring",
+		title: "Time Ring",
+		description: "A 24-hour dial for picking a time range, like a bedtime and wake-up schedule, with rolling digits, a tick per step, a deeper click per hour, and a thunk at the limits.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/time-ring/time-ring.tsx","type":"registry:component","target":"@components/time-ring.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/time-ring/time-ring")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for time-ring");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-11-01"},
+	},
 	"wheel-picker": {
 		name: "wheel-picker",
 		title: "Wheel Picker",
@@ -743,6 +761,24 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
+	"time-ring-preview": {
+		name: "time-ring-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/time-ring-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/time-ring-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for time-ring-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"dynamic-island-preview": {
 		name: "dynamic-island-preview",
 		title: undefined,
@@ -1115,6 +1151,24 @@ export const Index = {
 			};
 			if (!module.default) {
 				throw new Error("No default export found for dynamic-island-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"time-ring-demo": {
+		name: "time-ring-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/time-ring-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/time-ring-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for time-ring-demo");
 			}
 			return { default: module.default };
 		}),

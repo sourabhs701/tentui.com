@@ -18,6 +18,20 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "time-ring-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("time-ring")],
+		files: [
+			{
+				path: "examples/time-ring-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "dynamic-island-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("dynamic-island")],
@@ -304,6 +318,20 @@ export const examples: Registry["items"] = [
 		files: [
 			{
 				path: "examples/dynamic-island-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "time-ring-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("time-ring")],
+		files: [
+			{
+				path: "examples/time-ring-demo.tsx",
 				type: "registry:example",
 			},
 		],

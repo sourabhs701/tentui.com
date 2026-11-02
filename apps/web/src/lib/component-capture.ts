@@ -37,6 +37,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"swipe-actions": { zoom: 1.1 },
 	"theme-toggle": { zoom: 2.4 },
 	"tick-ruler": { zoom: 1.15 },
+	"time-ring": { zoom: 1.1 },
 	"wheel-picker": { zoom: 1.3 },
 };
 
