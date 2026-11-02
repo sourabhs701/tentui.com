@@ -1,0 +1,192 @@
+---
+title: Elastic Slider
+description: A slider that thickens under your finger and stretches like rubber past either end, with a soft tick at every detent and a dull thunk at the limits.
+createdAt: 2026-11-02
+updatedAt: 2026-11-02
+---
+
+<ComponentPreview name="elastic-slider-preview" />
+
+## Example
+
+<ComponentPreview name="elastic-slider-demo" />
+
+## Features
+
+- Pressing anywhere on the track jumps to that value and starts a drag that
+  keeps going outside the slider. The track thickens while you hold it.
+- Dragging past either end clamps the value and stretches the track with
+  square-root resistance, up to `maxStretch` px. The end icon is nudged
+  outward. On release both spring back, carrying the release velocity.
+- `marks` act as detents: a drag sticks to a mark for a few px before moving
+  on. Labelled marks render under the track and can be clicked.
+- Plays a soft tick per step or mark and a slightly brighter one at `min` and
+  `max`. Pulling past an end plays a dull thunk, once per pull. Each cue comes
+  with a haptic.
+- `inline` puts the label and value inside the track. They switch color under
+  the fill and fade while the fill's edge passes through them. `stacked` puts
+  them above a thin track.
+- Fill, stretch, and icons move with motion values, so dragging never
+  re-renders per frame. Digits roll with NumberFlow.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/elastic-slider
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @number-flow/react @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="elastic-slider" title="components/elastic-slider.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ElasticSlider } from "@/components/elastic-slider";
+```
+
+```tsx
+<ElasticSlider
+  label="Volume"
+  defaultValue={40}
+  startIcon={<Volume1 />}
+  endIcon={<Volume2 />}
+/>
+```
+
+Use `value` and `onValueChange` to control it. `onValueChange` fires on every
+change while you drag. `onValueCommit` fires once when a drag is released, or
+when a click, key press, or mark lands. While a drag is in progress the slider
+ignores `value`, then follows it again after release. A `value` outside the
+range is clamped for display, and `onValueChange` is not called.
+
+```tsx
+const [brightness, setBrightness] = useState(60);
+
+<ElasticSlider
+  label="Brightness"
+  value={brightness}
+  onValueChange={setBrightness}
+  onValueCommit={saveBrightness}
+  step={5}
+/>
+```
+
+Pass `marks` as numbers or `{ value, label }` objects. A drag sticks to each
+mark, and only marks tick. Labelled marks render under the track.
+
+```tsx
+<ElasticSlider
+  label="Zoom"
+  variant="stacked"
+  defaultValue={50}
+  marks={[
+    { value: 0, label: "0" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+    { value: 75, label: "75" },
+    { value: 100, label: "100" },
+  ]}
+  format={(value) => `${value}%`}
+/>
+```
+
+For a continuous value, use a small `step`. Values are rounded to the step's
+precision, so `0.1 + 0.2` lands on `0.3`. `format` sets the readout and
+`aria-valuetext`. A custom `format` shows as plain text. Without one, the
+digits roll.
+
+```tsx
+<ElasticSlider
+  label="Opacity"
+  variant="stacked"
+  max={1}
+  step={0.01}
+  defaultValue={0.8}
+  format={(value) => `${Math.round(value * 100)}%`}
+/>
+```
+
+If `step` doesn't divide the range, the last position is still `max`. If
+`min` equals `max`, the slider renders disabled. Give the slider a `name` to
+submit its value with a native form.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Press on the track | Jumps to that value and starts a drag |
+| Drag past either end | Stretches the track with resistance; springs back on release |
+| Click a mark label | Moves to that mark |
+| `→` / `↑` | Increases by `step` |
+| `←` / `↓` | Decreases by `step` |
+| `Shift` + arrow, `PageUp` / `PageDown` | Moves by `largeStep`, a tenth of the range by default |
+| `Home` / `End` | Jumps to `min` or `max` |
+
+Pressing a key at a limit plays the thunk and gives the track a small
+one-shot stretch. In a right-to-left layout the stretch and `←` / `→`
+are mirrored. A second finger is ignored. The root uses
+`touch-action: pan-y`, so dragging sideways never scrolls the page, while
+vertical swipes still scroll it. On a touch screen a press starts once it
+moves sideways or lifts. A swipe that turns into a page scroll leaves the
+value alone.
+
+## Sound and haptics
+
+Each step plays a soft tiks click with a `selection` haptic. With marks, only
+marks tick. With more than 40 steps, ticks fall on every 10% of the range.
+`min` and `max` play a slightly brighter click. Ticks are limited to one per
+35 ms, so a fast drag never buzzes. The first time a drag pulls past an end it
+plays a low, muted thunk with a `rigid` haptic. It plays once per pull, not
+continuously. A commit plays a `light` haptic unless a tick just played one.
+
+Sound and haptics only follow user input. The first render, server rendering,
+and changes to the `value` prop are silent, and nothing plays while the tab is
+hidden. `sound={false}` and `haptics={false}` turn each off independently.
+
+## Accessibility
+
+The thumb is a `slider` with `aria-valuemin`, `aria-valuemax`,
+`aria-valuenow`, and an `aria-valuetext` from `format`. It is named by the
+visible label through `aria-labelledby`. With `hideLabel`, the label stays
+available to screen readers. Icons, the readout, and mark labels are hidden
+from assistive technology. The focus ring shows only for keyboard focus, never
+after a click or drag. The hit target is at least 44 px tall even when the
+track is thin. A disabled slider is dimmed and can't be focused or moved.
+
+With reduced motion enabled, the track doesn't stretch, thicken with a spring,
+or nudge the icons, and values update instantly. Sound and haptics stay on
+because they confirm input rather than decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/elastic-slider/elastic-slider.tsx"
+  name="ElasticSliderProps"
+/>

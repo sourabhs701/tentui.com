@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"elastic-slider": {
+		name: "elastic-slider",
+		title: "Elastic Slider",
+		description: "A slider that thickens under your finger and stretches like rubber past either end, with a soft tick at every detent and a dull thunk at the limits.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/elastic-slider/elastic-slider.tsx","type":"registry:component","target":"@components/elastic-slider.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/elastic-slider/elastic-slider")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for elastic-slider");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-11-02"},
+	},
 	"time-ring": {
 		name: "time-ring",
 		title: "Time Ring",
@@ -725,6 +743,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"elastic-slider-preview": {
+		name: "elastic-slider-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/elastic-slider-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/elastic-slider-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for elastic-slider-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"time-ring-preview": {
 		name: "time-ring-preview",
 		title: undefined,
@@ -1061,6 +1097,24 @@ export const Index = {
 			};
 			if (!module.default) {
 				throw new Error("No default export found for tick-ruler-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"elastic-slider-demo": {
+		name: "elastic-slider-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/elastic-slider-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/elastic-slider-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for elastic-slider-demo");
 			}
 			return { default: module.default };
 		}),

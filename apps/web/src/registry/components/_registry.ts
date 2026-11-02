@@ -2,6 +2,31 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "elastic-slider",
+		type: "registry:component",
+		title: "Elastic Slider",
+		description:
+			"A slider that thickens under your finger and stretches like rubber past either end, with a soft tick at every detent and a dull thunk at the limits.",
+		dependencies: [
+			"@number-flow/react",
+			"@rexa-developer/tiks",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/elastic-slider/elastic-slider.tsx",
+				type: "registry:component",
+				target: "@components/elastic-slider.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-11-02",
+		},
+		docs: "https://tentui.com/components/elastic-slider",
+	},
+	{
 		name: "time-ring",
 		type: "registry:component",
 		title: "Time Ring",
