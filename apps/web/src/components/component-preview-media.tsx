@@ -10,6 +10,21 @@ import { cn } from "@/lib/utils";
 
 const themes = ["light", "dark"] as const;
 
+/**
+ * `<base>-<theme>.<ext>`, keeping any query on the base (e.g. `?v=2` to
+ * bust caches after re-recording) at the end of the URL.
+ */
+function themedMediaUrl(
+	base: string,
+	theme: (typeof themes)[number],
+	extension: string,
+) {
+	const queryIndex = base.indexOf("?");
+	const path = queryIndex === -1 ? base : base.slice(0, queryIndex);
+	const query = queryIndex === -1 ? "" : base.slice(queryIndex);
+	return `${encodeURI(path)}-${theme}.${extension}${query}`;
+}
+
 export function ComponentPreviewImage({
 	component,
 	className,
@@ -25,7 +40,7 @@ export function ComponentPreviewImage({
 	return themes.map((theme) => (
 		<Image
 			key={theme}
-			src={`${encodeURI(image)}-${theme}.webp`}
+			src={themedMediaUrl(image, theme, "webp")}
 			alt={`${component.title ?? component.name} ${theme} preview`}
 			fill
 			sizes={sizes}
@@ -41,7 +56,7 @@ export function ComponentPreviewImage({
 
 function getVideoSrc(component: RegistryItem, theme: "light" | "dark") {
 	const video = component.meta?.video;
-	return typeof video === "string" ? `${encodeURI(video)}-${theme}.mp4` : null;
+	return typeof video === "string" ? themedMediaUrl(video, theme, "mp4") : null;
 }
 
 /**
