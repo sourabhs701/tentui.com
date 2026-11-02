@@ -23,6 +23,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-11-02",
+			image: "https://cdn.tentui.com/images/components/elastic-slider",
+			video: "https://cdn.tentui.com/videos/components/elastic-slider",
 		},
 		docs: "https://tentui.com/components/elastic-slider",
 	},
@@ -49,6 +51,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-11-01",
+			image: "https://cdn.tentui.com/images/components/time-ring",
+			video: "https://cdn.tentui.com/videos/components/time-ring",
 		},
 		docs: "https://tentui.com/components/time-ring",
 	},
@@ -113,8 +117,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-10-28",
-			image: "https://cdn.tentui.com/images/components/rotary-knob",
-			video: "https://cdn.tentui.com/videos/components/rotary-knob",
+			image: "https://cdn.tentui.com/images/components/rotary-knob?v=2",
+			video: "https://cdn.tentui.com/videos/components/rotary-knob?v=2",
 		},
 		docs: "https://tentui.com/components/rotary-knob",
 	},
