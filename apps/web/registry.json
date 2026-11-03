@@ -448,6 +448,32 @@
       "type": "registry:block"
     },
     {
+      "name": "pull-cord",
+      "title": "Pull Cord",
+      "description": "A ball-chain pull switch for a light. Drag the handle down and the chain feeds out bead by bead with a tick each, then flips with a click on release and swings back to rest.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/pull-cord/pull-cord.tsx",
+          "type": "registry:component",
+          "target": "@components/pull-cord.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-03",
+        "image": "https://cdn.tentui.com/images/components/pull-cord",
+        "video": "https://cdn.tentui.com/videos/components/pull-cord"
+      },
+      "docs": "https://tentui.com/components/pull-cord",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "elastic-slider",
       "title": "Elastic Slider",
       "description": "A slider that thickens under your finger and stretches like rubber past either end, with a soft tick at every detent and a dull thunk at the limits.",

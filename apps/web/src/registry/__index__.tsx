@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"pull-cord": {
+		name: "pull-cord",
+		title: "Pull Cord",
+		description: "A ball-chain pull switch for a light. Drag the handle down and the chain feeds out bead by bead with a tick each, then flips with a click on release and swings back to rest.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/pull-cord/pull-cord.tsx","type":"registry:component","target":"@components/pull-cord.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/pull-cord/pull-cord")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for pull-cord");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-11-03","image":"https://cdn.tentui.com/images/components/pull-cord","video":"https://cdn.tentui.com/videos/components/pull-cord"},
+	},
 	"elastic-slider": {
 		name: "elastic-slider",
 		title: "Elastic Slider",
@@ -743,6 +761,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"pull-cord-preview": {
+		name: "pull-cord-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/pull-cord-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/pull-cord-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for pull-cord-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-80 place-items-center content-center"},
+	},
 	"elastic-slider-preview": {
 		name: "elastic-slider-preview",
 		title: undefined,
@@ -1156,6 +1192,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"pull-cord-demo": {
+		name: "pull-cord-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/pull-cord-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/pull-cord-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for pull-cord-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-80 place-items-center content-center"},
 	},
 	"time-ring-demo": {
 		name: "time-ring-demo",

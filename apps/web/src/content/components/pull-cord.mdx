@@ -1,0 +1,137 @@
+---
+title: Pull Cord
+description: A ball-chain pull switch for a light. Drag the handle down and the chain feeds out bead by bead with a tick each, then flips with a click on release and swings back to rest.
+createdAt: 2026-11-03
+updatedAt: 2026-11-03
+---
+
+<ComponentPreview name="pull-cord-preview" />
+
+## Example
+
+<ComponentPreview name="pull-cord-demo" />
+
+## Features
+
+- A ceramic fixture, a steel ball chain, and a turned oak pull. The fixture's
+  lens glows warm when the switch is on and casts a soft pool of light below.
+- The chain is a small rope simulation with gravity and damping, run on a
+  fixed timestep so it moves the same at 60 Hz and 120 Hz. Beads feed out of
+  the fixture one at a time as you pull.
+- Pull past the threshold and let go to flip the switch. The chain recoils,
+  overshoots a little, and swings with the speed you let go at before it
+  settles. A short tug only wobbles.
+- Clicking the handle, or pressing `Space` or `Enter`, plays the same tug.
+- Plays a soft tick and a selection haptic per bead, a firm click on the flip,
+  and a low thunk at the end of the pull.
+- At rest the chain is perfectly still, and nothing renders per frame. While
+  it moves, React doesn't re-render: the beads and handle are moved directly.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/pull-cord
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="pull-cord" title="components/pull-cord.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { PullCord } from "@/components/pull-cord";
+```
+
+```tsx
+<PullCord label="Ceiling light" />
+```
+
+Use `checked` and `onCheckedChange` to control it. `onCheckedChange` fires
+once per flip, the moment the handle is let go.
+
+```tsx
+const [lit, setLit] = useState(false);
+
+<PullCord label="Reading lamp" checked={lit} onCheckedChange={setLit} />
+```
+
+Turn the sound off and keep the haptics, or the other way round:
+
+```tsx
+<PullCord label="Hallway light" sound={false} />
+```
+
+Give it a `name` to submit `"on"` or `"off"` with a native form. The component
+is 200 px wide and 304 px tall, with room for the pull below the handle.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Drag the handle down | Feeds the chain out; past the threshold, letting go flips the switch |
+| Drag sideways | The handle follows a little and swings on release |
+| Click the handle | Tugs the chain and flips the switch |
+| `Space` / `Enter` | Tugs the chain and flips the switch |
+
+Past the end of its travel the chain rubber-bands. Losing the pointer, the
+window, or the tab mid-pull lets go without flipping. A second finger is
+ignored while the first one pulls.
+
+## Sound and haptics
+
+Each bead that leaves the fixture while you pull plays a soft metallic tick
+with a `selection` haptic, throttled to one per 32 ms. The flip plays a firm
+click with a `medium` haptic, a touch lower when turning on than off. Reaching
+the end of the travel plays a low thunk with a `soft` haptic.
+
+Sound and haptics only follow user input. The first render and changes to the
+`checked` prop are silent, and nothing plays while the tab is hidden. Turn
+each off with `sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+The handle is a `button` with `role="switch"` and `aria-checked`, named by
+`label`, `aria-label`, or `aria-labelledby`. The fixture and chain are hidden
+from assistive technology. The focus ring shows for keyboard focus only. The
+handle's hit area is 48 by 64 px, and dragging it on a touch screen never
+scrolls the page. A disabled pull cord is dimmed and can't be focused or
+pulled.
+
+With reduced motion enabled the chain doesn't swing or overshoot: a pulled
+handle eases straight back, and a click or key press flips the light at once.
+Sound and haptics stay on because they confirm the switch rather than
+decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/pull-cord/pull-cord.tsx"
+  name="PullCordProps"
+/>
