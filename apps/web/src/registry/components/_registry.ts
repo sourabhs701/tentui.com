@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "pull-cord",
+		type: "registry:component",
+		title: "Pull Cord",
+		description:
+			"A ball-chain pull switch like the one on an old ceiling lamp, with a tick per bead as you pull, a firm click when it flips, and a chain that swings and settles.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/pull-cord/pull-cord.tsx",
+				type: "registry:component",
+				target: "@components/pull-cord.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-11-03",
+		},
+		docs: "https://tentui.com/components/pull-cord",
+	},
+	{
 		name: "elastic-slider",
 		type: "registry:component",
 		title: "Elastic Slider",

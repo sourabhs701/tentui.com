@@ -2019,6 +2019,267 @@
 			]
 		}
 	],
+	"src/registry/components/pull-cord/pull-cord.tsx#PullCordProps#": [
+		{
+			"id": "pull-cord.tsx-PullCordProps",
+			"name": "PullCordProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "checked",
+					"description": "Controlled state.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultChecked",
+					"description": "Initial state when uncontrolled.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onCheckedChange",
+					"description": "Called when a pull, click, or key press flips the switch.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((checked: boolean) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "label",
+					"description": "The switch's accessible name; shown under the cord with `showLabel`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showLabel",
+					"description": "Show `label` under the cord.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "travel",
+					"description": "Px the handle pulls freely before the chain resists.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "threshold",
+					"description": "How far to pull before a release flips the switch, as a fraction of `travel`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "chainLength",
+					"description": "Px of chain hanging between the housing and the handle at rest.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "beadSpacing",
+					"description": "Px between bead centers; one tick plays per bead.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "handle",
+					"description": "Replaces the default pull handle, e.g. an icon.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "The lit surface above the housing. Defaults to a small lamp panel. Style it with the root's `data-state`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "`minimal` drops the lit surface and shows only the housing, chain, and handle.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"default\" | \"minimal\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"sm\" | \"md\" | \"lg\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a tick per bead, a click on the flip, and a thunk at the end of travel.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptics on supported devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "name",
+					"description": "Submits `on` with a native form while checked, like a checkbox.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "className",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/rotary-knob/rotary-knob.tsx#RotaryKnobProps#": [
 		{
 			"id": "rotary-knob.tsx-RotaryKnobProps",

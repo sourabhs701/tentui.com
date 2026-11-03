@@ -448,6 +448,31 @@
       "type": "registry:block"
     },
     {
+      "name": "pull-cord",
+      "title": "Pull Cord",
+      "description": "A ball-chain pull switch like the one on an old ceiling lamp, with a tick per bead as you pull, a firm click when it flips, and a chain that swings and settles.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/pull-cord/pull-cord.tsx",
+          "type": "registry:component",
+          "target": "@components/pull-cord.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-03"
+      },
+      "docs": "https://tentui.com/components/pull-cord",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "elastic-slider",
       "title": "Elastic Slider",
       "description": "A slider that thickens under your finger and stretches like rubber past either end, with a soft tick at every detent and a dull thunk at the limits.",

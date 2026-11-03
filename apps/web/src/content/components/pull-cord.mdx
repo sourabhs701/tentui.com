@@ -1,0 +1,161 @@
+---
+title: Pull Cord
+description: A ball-chain pull switch like the one on an old ceiling lamp, with a tick per bead as you pull, a firm click when it flips, and a chain that swings and settles.
+createdAt: 2026-11-03
+updatedAt: 2026-11-03
+---
+
+<ComponentPreview name="pull-cord-preview" />
+
+## Example
+
+<ComponentPreview name="pull-cord-demo" />
+
+## Features
+
+- Drag the handle down and the beaded chain feeds out of the housing bead by
+  bead. Each bead plays a soft tick with a haptic, and nudges the housing by a
+  pixel.
+- The handle pulls freely for `travel` px, then the chain resists. Hitting the
+  end of travel plays a short, low thunk.
+- Letting go past `threshold` flips the switch with a firm click, like a real
+  lamp that clicks as you release. A short tug only wobbles the chain.
+- On release the handle springs back with a little overshoot, and the chain
+  swings like a pendulum that carries the release velocity, then settles.
+- A click, tap, `Space`, or `Enter` plays the same tug: down past the
+  threshold, flip, and back.
+- The chain, handle, and swing move with motion values, so pulling never
+  re-renders per frame.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/pull-cord
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="pull-cord" title="components/pull-cord.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { PullCord } from "@/components/pull-cord";
+```
+
+```tsx
+<PullCord label="Desk lamp" />
+```
+
+By default the chain hangs from a small lamp panel that lights up when the
+switch is on. Pass `children` to use your own lit surface. The root carries
+`data-state="checked"` or `"unchecked"` and the `group/pull-cord` class, so
+the surface can style itself from it.
+
+```tsx
+<PullCord label="Night light" handle={<Star className="fill-current" />}>
+  <div className="flex size-14 items-center justify-center rounded-full border bg-card group-data-[state=checked]/pull-cord:bg-amber-50">
+    <Star className="size-5 text-zinc-300 group-data-[state=checked]/pull-cord:fill-amber-400 group-data-[state=checked]/pull-cord:text-amber-400" />
+  </div>
+</PullCord>
+```
+
+`variant="minimal"` shows only the housing, chain, and handle. Use `checked`
+and `onCheckedChange` to let the parent react. Changing `checked` from the
+parent updates the switch silently, with no sound or haptics.
+
+```tsx
+const [dark, setDark] = useState(false);
+
+<PullCord
+  variant="minimal"
+  size="sm"
+  label="Dark reading mode"
+  checked={dark}
+  onCheckedChange={setDark}
+/>
+```
+
+`handle` replaces the default pull-bar, for example with an icon. Icons
+without a `size-*` class are sized to match `size`. `chainLength` sets the
+resting chain in px, so a shorter chain makes the whole switch shorter. The
+component reserves room under the handle for a full pull, so it never
+overlaps what comes next. Give the switch a `name` to submit `on` with a
+native form while it's checked, like a checkbox.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Drag the handle down | Feeds the chain out, one tick per bead |
+| Release past `threshold` | Flips the switch, then the chain swings back |
+| Release before `threshold` | The chain wobbles back without flipping |
+| Click or tap the handle | Plays a tug and flips the switch |
+| `Space` / `Enter` | Plays a tug and flips the switch |
+
+Pulling up does nothing; the handle stays at rest. After a flip the switch
+re-arms once the handle is back within 4 px of rest, so a second pull or key
+press while it's still springing back only wobbles the chain. A second finger
+is ignored. A cancelled pointer, a window blur, or a hidden tab lets go of the
+handle without flipping. In a right-to-left layout the chain swings the other
+way first; nothing else changes.
+
+## Sound and haptics
+
+Each bead that comes out of the housing plays a soft tiks click with a
+`selection` haptic, limited to one per 35 ms so a fast pull never buzzes.
+Flipping on plays a deep, firm click, and flipping off a slightly higher one,
+both with a `medium` haptic. Pulling into the end of travel plays a short low
+thunk with a `rigid` haptic, once per pull.
+
+Sound and haptics only follow user input. The first render, server rendering,
+and changes to the `checked` prop are silent, and nothing plays while the tab
+is hidden. `sound={false}` and `haptics={false}` turn each off independently.
+
+## Accessibility
+
+The handle is a `button` with `role="switch"` and `aria-checked`. It's named
+by `label`, or by `aria-label` or `aria-labelledby`. With `showLabel`, the
+label is shown under the cord and names the switch through
+`aria-labelledby`. The housing, chain, and beads are hidden from assistive
+technology. The focus ring shows only for keyboard focus, never after a click
+or pull. The hit target is at least 44 px even though the handle is smaller.
+A disabled switch is dimmed and can't be focused or pulled.
+
+With reduced motion enabled, the chain doesn't swing and the handle eases
+back without a spring or overshoot. A click or key press flips the switch
+instantly, without the tug. Sound and haptics stay on because they confirm
+input rather than decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/pull-cord/pull-cord.tsx"
+  name="PullCordProps"
+/>
