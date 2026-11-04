@@ -52,6 +52,40 @@ export function sponsorHref(href: string) {
 	return url.toString();
 }
 
+export type SponsorPlacement = "header" | "feed";
+
+export type SponsorPlacementInfo = {
+	label: string;
+	/** Monthly price in US dollars. Keep in step with the Dodo product. */
+	price: number;
+	summary: string;
+};
+
+/**
+ * Bookable placements. Each has one slot; the house ads above fill it until
+ * someone books it. Checkout uses the Dodo product in
+ * `DODO_PRODUCT_HEADER_ID` / `DODO_PRODUCT_FEED_ID`.
+ */
+export const SPONSOR_PLACEMENTS: Record<
+	SponsorPlacement,
+	SponsorPlacementInfo
+> = {
+	header: {
+		label: "Top bar",
+		price: 149,
+		summary: "Your logo in the bar at the top of every page.",
+	},
+	feed: {
+		label: "Feed card",
+		price: 299,
+		summary: "Your image at the end of the first row on /components.",
+	},
+};
+
+export const SPONSOR_PLACEMENT_IDS = Object.keys(
+	SPONSOR_PLACEMENTS,
+) as SponsorPlacement[];
+
 export function sponsorMailto() {
 	const subject = encodeURIComponent("Sponsorship — TentUI");
 	return `mailto:${SPONSOR_EMAIL}?subject=${subject}`;

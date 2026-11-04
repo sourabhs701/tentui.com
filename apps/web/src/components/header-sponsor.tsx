@@ -13,17 +13,23 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import {
-	HEADER_SPONSOR,
 	type HeaderSponsor as HeaderSponsorBrand,
 	sponsorHref,
 } from "@/config/sponsor";
+import { useShownSponsors } from "@/hooks/use-sponsor-slots";
 import { cn } from "@/lib/utils";
 
 export function HeaderSponsor() {
+	const shown = useShownSponsors();
+
 	return (
 		<div className="flex items-center gap-1.5">
 			<OpenSponsorSlot />
-			{HEADER_SPONSOR ? <SponsoredMark sponsor={HEADER_SPONSOR} /> : null}
+			{shown === undefined ? (
+				<span aria-hidden className="size-8 rounded-md border" />
+			) : shown.header ? (
+				<SponsoredMark sponsor={shown.header} />
+			) : null}
 		</div>
 	);
 }
