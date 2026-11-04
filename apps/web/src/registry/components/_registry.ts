@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "scratch-card",
+		type: "registry:component",
+		title: "Scratch Card",
+		description:
+			"A foil scratch-off card. Rub the foil away with a finger or cursor to reveal what is underneath, with a scratch texture that follows your speed, foil flakes, and a soft chime when the rest lifts off.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/scratch-card/scratch-card.tsx",
+				type: "registry:component",
+				target: "@components/scratch-card.tsx",
+			},
+		],
+		categories: [],
+		meta: {
+			createdAt: "2026-11-04",
+		},
+		docs: "https://tentui.com/components/scratch-card",
+	},
+	{
 		name: "pull-cord",
 		type: "registry:component",
 		title: "Pull Cord",

@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "scratch-card-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scratch-card")],
+		files: [
+			{
+				path: "examples/scratch-card-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "pull-cord-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("pull-cord")],
@@ -337,6 +351,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "scratch-card-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scratch-card")],
+		files: [
+			{
+				path: "examples/scratch-card-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
 		},
 	},
 	{

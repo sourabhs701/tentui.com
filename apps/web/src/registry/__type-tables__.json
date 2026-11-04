@@ -2443,6 +2443,192 @@
 			]
 		}
 	],
+	"src/registry/components/scratch-card/scratch-card.tsx#ScratchCardHandle#": [
+		{
+			"id": "scratch-card.tsx-ScratchCardHandle",
+			"name": "ScratchCardHandle",
+			"description": "",
+			"entries": [
+				{
+					"name": "reset",
+					"description": "Puts a fresh foil back over the content. Silent.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "() => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "reveal",
+					"description": "Reveals the content at once, as if scratched clear. Silent.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "() => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/scratch-card/scratch-card.tsx#ScratchCardProps#": [
+		{
+			"id": "scratch-card.tsx-ScratchCardProps",
+			"name": "ScratchCardProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "children",
+					"description": "The content under the foil. Hidden from assistive technology until revealed.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "threshold",
+					"description": "Fraction of the foil, 0 to 1, that has to be cleared before the rest lifts off.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "foil",
+					"description": "The foil finish.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "FoilName | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "hint",
+					"description": "Engraved into the foil, and scratched away with it.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onReveal",
+					"description": "Called once, when the card is revealed by scratching, the button, a key, or `reveal()`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onProgress",
+					"description": "Called with the cleared fraction, 0 to 1, as the foil is scratched.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((fraction: number) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a scratch texture that follows the pointer speed, and a chime on reveal.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptics on supported devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "ref",
+					"description": "Exposes `reset()` and `reveal()`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Ref<ScratchCardHandle> | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/scribbled-text/scribbled-text.tsx#ScribbledTextProps#": [
 		{
 			"id": "scribbled-text.tsx-ScribbledTextProps",
