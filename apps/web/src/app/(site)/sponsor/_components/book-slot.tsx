@@ -1,17 +1,52 @@
 "use client";
 
+import {
+	Alert,
+	AlertDescription,
+	AlertTitle,
+} from "@tentui.com/ui/components/alert";
 import { Button } from "@tentui.com/ui/components/button";
 import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
+	DialogFooter,
+	DialogHeader,
 	DialogTitle,
 } from "@tentui.com/ui/components/dialog";
+import {
+	Field,
+	FieldContent,
+	FieldDescription,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+	FieldLegend,
+	FieldSeparator,
+	FieldSet,
+	FieldTitle,
+} from "@tentui.com/ui/components/field";
 import { Input } from "@tentui.com/ui/components/input";
-import { Label } from "@tentui.com/ui/components/label";
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from "@tentui.com/ui/components/input-group";
+import {
+	RadioGroup,
+	RadioGroupItem,
+} from "@tentui.com/ui/components/radio-group";
+import { Spinner } from "@tentui.com/ui/components/spinner";
 import { Textarea } from "@tentui.com/ui/components/textarea";
-import { LoaderIcon, MegaphoneIcon, UploadIcon } from "lucide-react";
-import { type FormEvent, type ReactNode, useEffect, useState } from "react";
+import {
+	ArrowRightIcon,
+	CircleAlertIcon,
+	LinkIcon,
+	LockIcon,
+	MegaphoneIcon,
+	UploadIcon,
+} from "lucide-react";
+import { type FormEvent, useEffect, useState } from "react";
 
 import {
 	SPONSOR_EMAIL,
@@ -62,7 +97,7 @@ export function BookSlot() {
 							<div className="min-w-0 flex-1">
 								<p className="flex items-center gap-2 font-semibold tracking-tight">
 									{info.label}
-									<SlotStatus available={available} />
+									<SlotStatus slot={slots?.[id]} total={info.slots} />
 								</p>
 								<p className="mt-1 text-muted-foreground text-sm">
 									{info.summary}
@@ -95,10 +130,17 @@ export function BookSlot() {
 	);
 }
 
-function SlotStatus({ available }: { available: boolean | undefined }) {
-	if (available === undefined) {
-		return <span className="h-4 w-10 animate-pulse rounded-full bg-muted" />;
+function SlotStatus({
+	slot,
+	total,
+}: {
+	slot: { remaining: number } | undefined;
+	total: number;
+}) {
+	if (slot === undefined) {
+		return <span className="h-4 w-14 animate-pulse rounded-full bg-muted" />;
 	}
+	const available = slot.remaining > 0;
 	return (
 		<span
 			className={cn(
@@ -108,12 +150,14 @@ function SlotStatus({ available }: { available: boolean | undefined }) {
 					: "text-muted-foreground",
 			)}
 		>
-			{available ? "Open" : "Booked"}
+			{available ? `${slot.remaining} of ${total} open` : "Booked"}
 		</span>
 	);
 }
 
 // ─── Booking Dialog ────────────────────────────────────────────────────────
+// Fixed header and footer around a scrolling form, so the price and the
+// checkout button stay in view on small screens.
 
 function BookingDialog({
 	placement,
@@ -172,212 +216,266 @@ function BookingDialog({
 	};
 
 	return (
-		<DialogContent className="max-h-[calc(100dvh-2rem)] gap-0 overflow-y-auto rounded-[21px] p-5 sm:max-w-xl sm:p-8">
-			<span className="flex size-11 items-center justify-center rounded-xl border bg-muted/50">
-				<MegaphoneIcon className="size-5" />
-			</span>
-			<DialogTitle className="mt-5 font-bold text-2xl tracking-tight">
-				Sponsor a slot
-			</DialogTitle>
-			<DialogDescription className="mt-2 text-base text-foreground/80 leading-relaxed">
-				Two placements, one sponsor each. Your logo, your name and a link,
-				styled like the rest of the site. No tracking pixels, no pop-ups.
-			</DialogDescription>
-			<p className="mt-3 text-muted-foreground text-sm leading-relaxed">
-				Billed monthly through Dodo Payments · cancel any time. Your ad goes
-				live 24 hours after you pay, once we have checked it.
-			</p>
-
-			<form noValidate onSubmit={onSubmit} className="mt-6 flex flex-col gap-5">
-				<fieldset>
-					<legend className="mb-2 font-medium text-sm">Placement</legend>
-					<div
-						role="radiogroup"
-						aria-label="Placement"
-						className="grid grid-cols-2 gap-2"
-					>
-						{SPONSOR_PLACEMENT_IDS.map((id) => {
-							const slot = slots?.[id];
-							const selected = id === placement;
-							return (
-								<button
-									key={id}
-									type="button"
-									role="radio"
-									aria-checked={selected}
-									disabled={slot?.available === false}
-									onClick={() => {
-										onPlacementChange(id);
-										setErrors({});
-										setFormError(null);
-									}}
-									className={cn(
-										"flex flex-col items-center gap-0.5 rounded-xl border px-3 py-2.5 text-center transition-colors",
-										"outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
-										"disabled:cursor-not-allowed disabled:opacity-50",
-										selected
-											? "border-foreground bg-foreground text-background"
-											: "hover:bg-muted",
-									)}
-								>
-									<span className="font-semibold text-sm">
-										{SPONSOR_PLACEMENTS[id].label}
-									</span>
-									<span
-										className={cn(
-											"text-xs tabular-nums",
-											selected ? "text-background/70" : "text-muted-foreground",
-										)}
-									>
-										${SPONSOR_PLACEMENTS[id].price}/mo ·{" "}
-										{slot === undefined
-											? "…"
-											: slot.available
-												? "Open"
-												: "Booked"}
-									</span>
-								</button>
-							);
-						})}
-					</div>
-				</fieldset>
-
-				<div className="grid gap-5 sm:grid-cols-[1fr_9.5rem]">
-					<div className="flex flex-col gap-5">
-						<Field id="name" label="Name under your logo" error={errors.name}>
-							<Input
-								id="name"
-								name="name"
-								placeholder="Acme"
-								maxLength={40}
-								autoComplete="organization"
-								aria-invalid={!!errors.name}
-								className="h-10"
-							/>
-						</Field>
-						<Field id="href" label="Link" error={errors.href}>
-							<Input
-								id="href"
-								name="href"
-								placeholder="acme.com"
-								inputMode="url"
-								autoComplete="url"
-								aria-invalid={!!errors.href}
-								className="h-10"
-							/>
-						</Field>
-					</div>
-					<Field id="logo" label="Logo" error={errors.logo}>
-						<MediaUpload
-							id="logo"
-							name="logo"
-							hint="PNG, JPG, WebP or SVG"
-							invalid={!!errors.logo}
-							className="aspect-square w-36 sm:h-full sm:min-h-[9.5rem] sm:w-full"
-							previewClassName="object-contain p-5"
-						/>
-					</Field>
+		<DialogContent className="flex max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-xl">
+			<DialogHeader className="flex-row items-start gap-4 border-b px-6 pt-6 pr-14 pb-5">
+				<span className="flex size-10 shrink-0 items-center justify-center rounded-lg border bg-muted/50">
+					<MegaphoneIcon className="size-4.5" />
+				</span>
+				<div className="flex flex-col gap-1.5">
+					<DialogTitle className="font-semibold text-lg tracking-tight">
+						Sponsor a slot
+					</DialogTitle>
+					<DialogDescription className="leading-relaxed">
+						Your logo, your name and a link, styled like the rest of the site.
+						No tracking pixels, no pop-ups.
+					</DialogDescription>
 				</div>
-				<p className="-mt-2 text-muted-foreground text-xs">
-					Shown in its original colours. A square logo looks best.
-				</p>
+			</DialogHeader>
 
-				{isFeed ? (
-					<>
-						<Field
-							id="description"
-							label="One line, shown on hover"
-							error={errors.description}
-						>
-							<Input
-								id="description"
-								name="description"
-								placeholder="Analytics your team will actually open"
-								maxLength={60}
-								aria-invalid={!!errors.description}
-								className="h-10"
-							/>
-						</Field>
-						<Field id="image" label="Card image" error={errors.image}>
-							<MediaUpload
-								id="image"
-								name="image"
-								hint="1200 × 800 works best · up to 4 MB"
-								invalid={!!errors.image}
-								className="aspect-[3/2]"
-								previewClassName="object-cover"
-							/>
-						</Field>
-					</>
-				) : null}
+			<form
+				noValidate
+				onSubmit={onSubmit}
+				className="flex min-h-0 flex-1 flex-col"
+			>
+				<div className="min-h-0 flex-1 overflow-y-auto px-6 py-6">
+					<FieldGroup>
+						<FieldSet>
+							<FieldLegend variant="label">Placement</FieldLegend>
+							<RadioGroup
+								value={placement}
+								onValueChange={(value) => {
+									onPlacementChange(value as SponsorPlacement);
+									setErrors({});
+									setFormError(null);
+								}}
+								className="grid-cols-2"
+							>
+								{SPONSOR_PLACEMENT_IDS.map((id) => {
+									const info = SPONSOR_PLACEMENTS[id];
+									const booked = slots?.[id].available === false;
+									return (
+										<FieldLabel key={id} htmlFor={`placement-${id}`}>
+											<Field
+												orientation="horizontal"
+												data-disabled={booked || undefined}
+											>
+												<FieldContent>
+													<FieldTitle>
+														{info.label}
+														<SlotStatus slot={slots?.[id]} total={info.slots} />
+													</FieldTitle>
+													<FieldDescription className="tabular-nums">
+														${info.price} / month
+													</FieldDescription>
+												</FieldContent>
+												<RadioGroupItem
+													id={`placement-${id}`}
+													value={id}
+													disabled={booked}
+												/>
+											</Field>
+										</FieldLabel>
+									);
+								})}
+							</RadioGroup>
+							<FieldDescription>
+								{SPONSOR_PLACEMENTS[placement].summary}
+							</FieldDescription>
+						</FieldSet>
 
-				<div className="grid gap-5 sm:grid-cols-2">
-					<Field id="contactName" label="Your name" error={errors.contactName}>
-						<Input
-							id="contactName"
-							name="contactName"
-							placeholder="Alex Morgan"
-							autoComplete="name"
-							aria-invalid={!!errors.contactName}
-							className="h-10"
-						/>
-					</Field>
-					<Field
-						id="contactEmail"
-						label="Email (for the receipt)"
-						error={errors.contactEmail}
-					>
-						<Input
-							id="contactEmail"
-							name="contactEmail"
-							type="email"
-							placeholder="alex@acme.com"
-							autoComplete="email"
-							aria-invalid={!!errors.contactEmail}
-							className="h-10"
-						/>
-					</Field>
+						<FieldSeparator />
+
+						<FieldSet>
+							<FieldLegend>Your ad</FieldLegend>
+							<FieldDescription>
+								Goes live within 24 hours of payment, once we have checked it.
+							</FieldDescription>
+							<FieldGroup className="gap-5">
+								<div className="grid gap-5 sm:grid-cols-[1fr_9rem]">
+									<div className="flex flex-col gap-5">
+										<Field data-invalid={!!errors.name || undefined}>
+											<FieldLabel htmlFor="name">
+												Name under your logo
+											</FieldLabel>
+											<Input
+												id="name"
+												name="name"
+												placeholder="Acme"
+												maxLength={40}
+												autoComplete="organization"
+												aria-invalid={!!errors.name}
+											/>
+											<FieldError>{errors.name}</FieldError>
+										</Field>
+										<Field data-invalid={!!errors.href || undefined}>
+											<FieldLabel htmlFor="href">Link</FieldLabel>
+											<InputGroup>
+												<InputGroupAddon>
+													<LinkIcon />
+												</InputGroupAddon>
+												<InputGroupInput
+													id="href"
+													name="href"
+													placeholder="acme.com"
+													inputMode="url"
+													autoComplete="url"
+													aria-invalid={!!errors.href}
+												/>
+											</InputGroup>
+											<FieldError>{errors.href}</FieldError>
+										</Field>
+									</div>
+									<Field data-invalid={!!errors.logo || undefined}>
+										<FieldLabel htmlFor="logo">Logo</FieldLabel>
+										<MediaUpload
+											id="logo"
+											name="logo"
+											hint="Square"
+											invalid={!!errors.logo}
+											className="aspect-square w-36 sm:w-full"
+											previewClassName="object-contain p-4"
+										/>
+										<FieldError>{errors.logo}</FieldError>
+									</Field>
+								</div>
+								<FieldDescription className="-mt-2">
+									PNG, JPG, WebP or SVG, shown in its original colours.
+								</FieldDescription>
+
+								{isFeed ? (
+									<>
+										<Field data-invalid={!!errors.description || undefined}>
+											<FieldLabel htmlFor="description">Tagline</FieldLabel>
+											<Input
+												id="description"
+												name="description"
+												placeholder="Analytics your team will actually open"
+												maxLength={60}
+												aria-invalid={!!errors.description}
+											/>
+											<FieldDescription>
+												One line, shown when someone hovers the card.
+											</FieldDescription>
+											<FieldError>{errors.description}</FieldError>
+										</Field>
+										<Field data-invalid={!!errors.image || undefined}>
+											<FieldLabel htmlFor="image">Card image</FieldLabel>
+											<MediaUpload
+												id="image"
+												name="image"
+												hint="1200 × 800 · up to 4 MB"
+												invalid={!!errors.image}
+												className="aspect-[3/2]"
+												previewClassName="object-cover"
+											/>
+											<FieldError>{errors.image}</FieldError>
+										</Field>
+									</>
+								) : null}
+							</FieldGroup>
+						</FieldSet>
+
+						<FieldSeparator />
+
+						<FieldSet>
+							<FieldLegend>Contact</FieldLegend>
+							<FieldDescription>
+								Where we send the receipt and anything about your ad.
+							</FieldDescription>
+							<FieldGroup className="gap-5">
+								<div className="grid gap-5 sm:grid-cols-2">
+									<Field data-invalid={!!errors.contactName || undefined}>
+										<FieldLabel htmlFor="contactName">Your name</FieldLabel>
+										<Input
+											id="contactName"
+											name="contactName"
+											placeholder="Alex Morgan"
+											autoComplete="name"
+											aria-invalid={!!errors.contactName}
+										/>
+										<FieldError>{errors.contactName}</FieldError>
+									</Field>
+									<Field data-invalid={!!errors.contactEmail || undefined}>
+										<FieldLabel htmlFor="contactEmail">Email</FieldLabel>
+										<Input
+											id="contactEmail"
+											name="contactEmail"
+											type="email"
+											placeholder="alex@acme.com"
+											autoComplete="email"
+											aria-invalid={!!errors.contactEmail}
+										/>
+										<FieldError>{errors.contactEmail}</FieldError>
+									</Field>
+								</div>
+								<Field>
+									<FieldLabel htmlFor="notes">
+										Notes{" "}
+										<span className="font-normal text-muted-foreground">
+											(optional)
+										</span>
+									</FieldLabel>
+									<Textarea
+										id="notes"
+										name="notes"
+										placeholder="Questions, preferred start date"
+										maxLength={1000}
+										className="min-h-20"
+									/>
+								</Field>
+							</FieldGroup>
+						</FieldSet>
+
+						{formError ? (
+							<Alert variant="destructive">
+								<CircleAlertIcon />
+								<AlertTitle>Couldn't start checkout</AlertTitle>
+								<AlertDescription>{formError}</AlertDescription>
+							</Alert>
+						) : null}
+
+						<FieldDescription className="text-center text-xs">
+							Questions? <a href={sponsorMailto()}>{SPONSOR_EMAIL}</a>
+						</FieldDescription>
+					</FieldGroup>
 				</div>
 
-				<Field id="notes" label="Anything else (optional)">
-					<Textarea
-						id="notes"
-						name="notes"
-						placeholder="Questions, preferred start date"
-						maxLength={1000}
-						className="min-h-24"
-					/>
-				</Field>
-
-				{formError ? (
-					<p role="alert" className="text-destructive text-sm">
-						{formError}
-					</p>
-				) : null}
-
-				<Button
-					type="submit"
-					size="lg"
-					disabled={pending || !available}
-					className="h-12 rounded-xl text-base"
-				>
-					{pending ? (
-						<>
-							<LoaderIcon className="animate-spin" />
-							Opening checkout…
-						</>
-					) : allBooked ? (
-						"Both slots are booked"
-					) : (
-						`Continue to payment — $${price}/month`
-					)}
-				</Button>
-				<p className="text-center text-muted-foreground text-xs">
-					Payment is handled by Dodo Payments. Questions?{" "}
-					<a href={sponsorMailto()} className="underline underline-offset-2">
-						{SPONSOR_EMAIL}
-					</a>
-				</p>
+				<DialogFooter className="flex-row items-center justify-between gap-4 border-t bg-muted/40 px-6 py-4 sm:justify-between">
+					<div className="flex flex-col">
+						<p className="font-semibold text-base tabular-nums tracking-tight">
+							${price}
+							<span className="font-normal text-muted-foreground text-sm">
+								{" "}
+								/ month
+							</span>
+						</p>
+						<p className="flex items-center gap-1 text-muted-foreground text-xs">
+							<LockIcon className="size-3" />
+							<span className="max-sm:hidden">Secure checkout ·</span> Cancel
+							any time
+						</p>
+					</div>
+					<Button
+						type="submit"
+						size="lg"
+						disabled={pending || !available}
+						className="px-4"
+					>
+						{pending ? (
+							<>
+								<Spinner />
+								Opening checkout…
+							</>
+						) : allBooked ? (
+							"Both slots are booked"
+						) : (
+							<>
+								Continue to payment
+								<ArrowRightIcon data-icon="inline-end" />
+							</>
+						)}
+					</Button>
+				</DialogFooter>
 			</form>
 		</DialogContent>
 	);
@@ -422,30 +520,6 @@ function validate(form: FormData, isFeed: boolean) {
 	return errors;
 }
 
-function Field({
-	id,
-	label,
-	error,
-	children,
-}: {
-	id: string;
-	label: string;
-	error?: string;
-	children: ReactNode;
-}) {
-	return (
-		<div className="flex flex-col gap-2">
-			<Label htmlFor={id}>{label}</Label>
-			{children}
-			{error ? (
-				<p id={`${id}-error`} className="text-destructive text-xs">
-					{error}
-				</p>
-			) : null}
-		</div>
-	);
-}
-
 function MediaUpload({
 	id,
 	name,
@@ -473,9 +547,11 @@ function MediaUpload({
 		<label
 			htmlFor={id}
 			className={cn(
-				"group relative flex cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-dashed px-4 text-center transition-colors",
-				"hover:border-foreground/30 has-focus-visible:ring-3 has-focus-visible:ring-ring/50",
-				invalid && "border-destructive",
+				"group relative flex cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-lg border border-input border-dashed bg-muted/30 px-3 text-center transition-colors",
+				"hover:border-foreground/30 hover:bg-muted/60 has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50",
+				invalid &&
+					"border-destructive ring-3 ring-destructive/20 dark:ring-destructive/40",
+				preview && "border-solid bg-background",
 				className,
 			)}
 		>
@@ -484,6 +560,7 @@ function MediaUpload({
 				name={name}
 				type="file"
 				accept={MEDIA_ACCEPT}
+				aria-invalid={invalid}
 				className="sr-only"
 				onChange={(event) => {
 					const file = event.currentTarget.files?.[0];
@@ -491,17 +568,25 @@ function MediaUpload({
 				}}
 			/>
 			{preview ? (
-				// biome-ignore lint/performance/noImgElement: local blob preview
-				<img
-					src={preview}
-					alt=""
-					className={cn("absolute inset-0 size-full", previewClassName)}
-				/>
+				<>
+					{/* biome-ignore lint/performance/noImgElement: local blob preview */}
+					<img
+						src={preview}
+						alt=""
+						className={cn("absolute inset-0 size-full", previewClassName)}
+					/>
+					<span className="absolute inset-x-0 bottom-0 bg-background/85 py-1.5 font-medium text-xs opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 group-has-focus-visible:opacity-100">
+						Replace
+					</span>
+				</>
 			) : (
 				<>
-					<UploadIcon className="size-5 text-muted-foreground transition-colors group-hover:text-foreground" />
-					<span className="text-muted-foreground text-xs leading-relaxed">
-						{hint}
+					<span className="flex size-8 items-center justify-center rounded-full border bg-background shadow-xs">
+						<UploadIcon className="size-3.5 text-muted-foreground transition-colors group-hover:text-foreground" />
+					</span>
+					<span className="flex flex-col gap-0.5">
+						<span className="font-medium text-xs">Upload</span>
+						<span className="text-muted-foreground text-xs">{hint}</span>
 					</span>
 				</>
 			)}

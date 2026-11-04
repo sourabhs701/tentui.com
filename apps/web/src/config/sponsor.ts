@@ -43,8 +43,11 @@ export const FEED_SPONSOR: FeedSponsor | null = {
 	imageSrc: "/images/sponsors/srb-work.webp",
 };
 
-/** Position of the feed card: the end of the first row at three columns. */
-export const FEED_SPONSOR_INDEX = 2;
+/**
+ * Grid positions of the feed cards on /components: the end of the first three
+ * rows at three columns. One per feed slot.
+ */
+export const FEED_SPONSOR_POSITIONS = [2, 5, 8];
 
 export function sponsorHref(href: string) {
 	const url = new URL(href);
@@ -58,12 +61,14 @@ export type SponsorPlacementInfo = {
 	label: string;
 	/** Monthly price in US dollars. Keep in step with the Dodo product. */
 	price: number;
+	/** How many sponsors this placement takes at once. */
+	slots: number;
 	summary: string;
 };
 
 /**
- * Bookable placements. Each has one slot; the house ads above fill it until
- * someone books it. Checkout uses the Dodo product in
+ * Bookable placements, each with `slots` sponsors at once. The house ads above
+ * fill a free spot until the placement is fully booked. Checkout uses the Dodo product in
  * `DODO_PRODUCT_HEADER_ID` / `DODO_PRODUCT_FEED_ID`.
  */
 export const SPONSOR_PLACEMENTS: Record<
@@ -72,13 +77,15 @@ export const SPONSOR_PLACEMENTS: Record<
 > = {
 	header: {
 		label: "Top bar",
-		price: 149,
+		price: 19,
+		slots: 3,
 		summary: "Your logo in the bar at the top of every page.",
 	},
 	feed: {
 		label: "Feed card",
-		price: 299,
-		summary: "Your image at the end of the first row on /components.",
+		price: 29,
+		slots: 3,
+		summary: "Your image in the first rows of /components.",
 	},
 };
 

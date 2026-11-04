@@ -15,11 +15,11 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 // ─── Sponsor Card ──────────────────────────────────────────────────────────
 // Sits in the components grid with the same shell as a component card: the
-// booked sponsor's media, or an open slot that links to /sponsor.
-export function SponsorCard({ index }: { index: number }) {
+// sponsor booked in feed slot `slot`, or an open slot that links to /sponsor.
+export function SponsorCard({ slot, index }: { slot: number; index: number }) {
 	const [isHovered, setIsHovered] = useState(false);
 	const shown = useShownSponsors();
-	const sponsor = shown?.feed;
+	const sponsor = shown?.feed[slot];
 
 	const hoverProps = {
 		onMouseEnter: () => setIsHovered(true),

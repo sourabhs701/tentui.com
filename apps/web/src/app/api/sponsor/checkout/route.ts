@@ -96,7 +96,10 @@ export async function POST(request: Request) {
 		notes: values.notes ?? null,
 	});
 	if (!held) {
-		return fail(409, "Someone just booked this slot. Pick another one.");
+		return fail(
+			409,
+			"The last slot was just booked. Pick the other placement.",
+		);
 	}
 
 	try {

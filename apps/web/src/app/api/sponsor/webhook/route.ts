@@ -4,6 +4,7 @@ import {
 	getDodoConfig,
 	verifyWebhook,
 } from "@/lib/sponsors/dodo";
+import { sendReceipt } from "@/lib/sponsors/email";
 import { applySubscriptionEvent } from "@/lib/sponsors/store";
 
 // Dodo Payments → Developer → Webhooks: point an endpoint at
@@ -22,12 +23,20 @@ export async function POST(request: Request) {
 		return new Response(null, { status: 204 });
 	}
 
-	const { cancelSubscriptionId } = await applySubscriptionEvent(event);
+	const { cancelSubscriptionId, receipt } = await applySubscriptionEvent(event);
 	if (cancelSubscriptionId) {
 		console.error(
 			`Sponsor slot already booked; cancelling ${cancelSubscriptionId}. Refund it in Dodo.`,
 		);
 		await cancelSubscription(config, cancelSubscriptionId);
+	}
+
+	// The order is already saved, so a failed email must not make Dodo retry
+	// the event; the retry would find nothing new and send nothing.
+	if (receipt) {
+		await sendReceipt(receipt).catch((error) =>
+			console.error(`Sponsor receipt for ${receipt.order.id} failed`, error),
+		);
 	}
 
 	return new Response(null, { status: 204 });
