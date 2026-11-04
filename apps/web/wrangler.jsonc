@@ -36,6 +36,11 @@
 		{
 			"binding": "NEXT_INC_CACHE_R2_BUCKET",
 			"bucket_name": "tentui-opennext-cache"
+		},
+		{
+			// Sponsor logos and images, under sponsors/<order id>/.
+			"binding": "SPONSOR_MEDIA",
+			"bucket_name": "tentui"
 		}
 	],
 	"durable_objects": {
