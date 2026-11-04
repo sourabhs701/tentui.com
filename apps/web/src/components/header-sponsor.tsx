@@ -24,12 +24,14 @@ export function HeaderSponsor() {
 
 	return (
 		<div className="flex items-center gap-1.5">
-			<OpenSponsorSlot />
+			{shown?.headerOpen !== false ? <OpenSponsorSlot /> : null}
 			{shown === undefined ? (
 				<span aria-hidden className="size-8 rounded-md border" />
-			) : shown.header ? (
-				<SponsoredMark sponsor={shown.header} />
-			) : null}
+			) : (
+				shown.header.map((sponsor) => (
+					<SponsoredMark key={sponsor.href} sponsor={sponsor} />
+				))
+			)}
 		</div>
 	);
 }

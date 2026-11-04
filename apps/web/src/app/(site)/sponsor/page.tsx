@@ -70,8 +70,8 @@ export default function SponsorPage() {
 									<div className="min-w-0">
 										<h3 className="font-semibold tracking-tight">Top bar</h3>
 										<p className="mt-1 text-muted-foreground text-sm leading-relaxed sm:text-base">
-											Your logo in the bar at the top of every page. It links to
-											your site.
+											Your logo in the bar at the top of every page, beside up
+											to two other sponsors. It links to your site.
 										</p>
 									</div>
 								</div>
@@ -80,9 +80,9 @@ export default function SponsorPage() {
 									<div className="min-w-0">
 										<h3 className="font-semibold tracking-tight">Feed card</h3>
 										<p className="mt-1 text-muted-foreground text-sm leading-relaxed sm:text-base">
-											Your image or video at the end of the first row on the
-											components page. It sits with the components around it,
-											with a small Sponsored tag.
+											Your image or video in the first three rows of the
+											components page, one of three sponsor cards. It sits with
+											the components around it, with a small Sponsored tag.
 										</p>
 									</div>
 								</div>

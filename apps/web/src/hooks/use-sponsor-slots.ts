@@ -7,6 +7,7 @@ import {
 	type FeedSponsor,
 	HEADER_SPONSOR,
 	type HeaderSponsor,
+	SPONSOR_PLACEMENTS,
 } from "@/config/sponsor";
 import type { SponsorSlots } from "@/lib/sponsors/store";
 
@@ -24,33 +25,49 @@ export function useSponsorSlots() {
 }
 
 /**
- * The sponsor to show in each placement: a paid booking, else the house ad.
- * `undefined` while loading, so the slot can keep its space without flashing
- * the house ad first.
+ * What each placement shows: its paid bookings, then the house ad while a
+ * slot is still free. The feed gets one entry per card position; `null`
+ * there is an open slot. `undefined` while loading, so the slots can keep
+ * their space without flashing the house ad first.
  */
 export function useShownSponsors() {
 	const { data, isError } = useSponsorSlots();
 	if (!data && !isError) return undefined;
 
-	const header = data?.header.sponsor;
-	const feed = data?.feed.sponsor;
+	const header: HeaderSponsor[] = (data?.header.sponsors ?? []).map(
+		(sponsor) => ({
+			name: sponsor.name,
+			href: sponsor.href,
+			logoSrc: sponsor.logoSrc,
+		}),
+	);
+	if (HEADER_SPONSOR && header.length < SPONSOR_PLACEMENTS.header.slots) {
+		header.push(HEADER_SPONSOR);
+	}
+
+	const feed: (FeedSponsor | null)[] = (data?.feed.sponsors ?? []).flatMap(
+		(sponsor) =>
+			sponsor.imageSrc && sponsor.description
+				? [
+						{
+							name: sponsor.name,
+							href: sponsor.href,
+							logoSrc: sponsor.logoSrc,
+							description: sponsor.description,
+							imageSrc: sponsor.imageSrc,
+						},
+					]
+				: [],
+	);
+	if (FEED_SPONSOR && feed.length < SPONSOR_PLACEMENTS.feed.slots) {
+		feed.push(FEED_SPONSOR);
+	}
+	while (feed.length < SPONSOR_PLACEMENTS.feed.slots) feed.push(null);
+
 	return {
-		header: header
-			? ({
-					name: header.name,
-					href: header.href,
-					logoSrc: header.logoSrc,
-				} satisfies HeaderSponsor)
-			: HEADER_SPONSOR,
-		feed:
-			feed?.imageSrc && feed.description
-				? ({
-						name: feed.name,
-						href: feed.href,
-						logoSrc: feed.logoSrc,
-						description: feed.description,
-						imageSrc: feed.imageSrc,
-					} satisfies FeedSponsor)
-				: FEED_SPONSOR,
+		header: header.slice(0, SPONSOR_PLACEMENTS.header.slots),
+		/** Show the dashed "sponsor" button while a top-bar slot is free. */
+		headerOpen: data ? data.header.available : true,
+		feed: feed.slice(0, SPONSOR_PLACEMENTS.feed.slots),
 	};
 }

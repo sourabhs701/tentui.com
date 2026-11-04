@@ -43,6 +43,14 @@
 			"bucket_name": "tentui"
 		}
 	],
+	"send_email": [
+		{
+			// Sponsor receipts (src/lib/sponsors/email.ts). tentui.com must be
+			// onboarded in Cloudflare Email Service → Domains.
+			"name": "EMAIL",
+			"allowed_sender_addresses": ["sourabh@tentui.com"]
+		}
+	],
 	"durable_objects": {
 		"bindings": [
 			{

@@ -1,8 +1,13 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-import { SPONSOR_PLACEMENT_IDS, type SponsorPlacement } from "@/config/sponsor";
+import {
+	SPONSOR_PLACEMENT_IDS,
+	SPONSOR_PLACEMENTS,
+	type SponsorPlacement,
+} from "@/config/sponsor";
 
 import type { DodoWebhookEvent } from "./dodo";
+import type { Receipt } from "./email";
 
 // Sponsor orders live in D1 (`sponsor_orders`, see packages/db) and their
 // uploaded logos and images in R2 under `sponsors/<order id>/`.
@@ -32,7 +37,7 @@ function getBucket() {
 	return bucket;
 }
 
-// A row keeps its placement booked while it is paid, recovering from a failed
+// A row takes up one of its placement's slots while it is paid, recovering from a failed
 // payment, inside a cancelled-but-paid period, or held by an open checkout.
 const BLOCKING = `(
 	status IN ('active', 'on_hold')
@@ -56,9 +61,11 @@ export type PaidSponsor = {
 };
 
 export type SponsorSlot = {
+	/** Slots still free to book, out of the placement's `slots`. */
+	remaining: number;
 	available: boolean;
-	/** The paid sponsor on show, if any; otherwise the house ad shows. */
-	sponsor: PaidSponsor | null;
+	/** Paid sponsors on show, oldest booking first. */
+	sponsors: PaidSponsor[];
 };
 
 export type SponsorSlots = Record<SponsorPlacement, SponsorSlot>;
@@ -72,6 +79,9 @@ type OrderRow = {
 	description: string | null;
 	logo_key: string;
 	image_key: string | null;
+	contact_name: string;
+	contact_email: string;
+	notes: string | null;
 	subscription_id: string | null;
 	live_at: number | null;
 	paid_through: number | null;
@@ -95,18 +105,22 @@ export async function getSponsorSlots(now = Date.now()): Promise<SponsorSlots> {
 	const slots = {} as SponsorSlots;
 	for (const placement of SPONSOR_PLACEMENT_IDS) {
 		const rows = results.filter((row) => row.placement === placement);
-		const shown = rows.find((row) => row.visible);
+		const remaining = Math.max(
+			0,
+			SPONSOR_PLACEMENTS[placement].slots - rows.length,
+		);
 		slots[placement] = {
-			available: rows.length === 0,
-			sponsor: shown
-				? {
-						name: shown.name,
-						href: shown.href,
-						description: shown.description,
-						logoSrc: mediaUrl(shown.logo_key),
-						imageSrc: shown.image_key ? mediaUrl(shown.image_key) : null,
-					}
-				: null,
+			remaining,
+			available: remaining > 0,
+			sponsors: rows
+				.filter((row) => row.visible)
+				.map((row) => ({
+					name: row.name,
+					href: row.href,
+					description: row.description,
+					logoSrc: mediaUrl(row.logo_key),
+					imageSrc: row.image_key ? mediaUrl(row.image_key) : null,
+				})),
 		};
 	}
 	return slots;
@@ -128,8 +142,8 @@ export type NewOrder = {
 };
 
 /**
- * Inserts a `pending` order only if nothing else books its placement. D1 runs
- * writes one at a time, so two buyers cannot both get the hold.
+ * Inserts a `pending` order only if its placement has a free slot. D1 runs
+ * writes one at a time, so two buyers cannot both get the last one.
  */
 export async function holdPlacement(order: NewOrder, now = Date.now()) {
 	const result = await getDb()
@@ -139,9 +153,9 @@ export async function holdPlacement(order: NewOrder, now = Date.now()) {
 				contact_name, contact_email, notes, hold_expires_at, created_at, updated_at
 			)
 			SELECT ?2, ?3, 'pending', ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?1, ?1
-			WHERE NOT EXISTS (
-				SELECT 1 FROM sponsor_orders WHERE placement = ?3 AND ${BLOCKING}
-			)`,
+			WHERE (
+				SELECT COUNT(*) FROM sponsor_orders WHERE placement = ?3 AND ${BLOCKING}
+			) < ?13`,
 		)
 		.bind(
 			now,
@@ -156,6 +170,7 @@ export async function holdPlacement(order: NewOrder, now = Date.now()) {
 			order.contactEmail,
 			order.notes,
 			now + HOLD_MS,
+			SPONSOR_PLACEMENTS[order.placement].slots,
 		)
 		.run();
 	return result.meta.changes === 1;
@@ -218,13 +233,15 @@ const lockedStatuses = new Set(["rejected", "conflict", "ended"]);
 
 /**
  * Applies a Dodo subscription event to its order. Returns the subscription to
- * cancel when the payment landed on a placement someone else booked first
- * (the buyer paid after their hold ran out).
+ * cancel when the payment landed on a placement others filled first (the
+ * buyer paid after their hold ran out), and the receipt to email when the
+ * event is a new payment. A redelivered event changes nothing, so it never
+ * sends a second receipt.
  */
 export async function applySubscriptionEvent(
 	event: DodoWebhookEvent,
 	now = Date.now(),
-): Promise<{ cancelSubscriptionId?: string }> {
+): Promise<{ cancelSubscriptionId?: string; receipt?: Receipt }> {
 	const next = statusByEvent[event.type];
 	const { subscription_id: subscriptionId, metadata } = event.data;
 	if (!next || !subscriptionId) return {};
@@ -263,9 +280,32 @@ export async function applySubscriptionEvent(
 			.bind(row.id, status, subscriptionId, liveAt, paidThrough, now)
 			.run();
 
+	const receipt = (kind: Receipt["kind"], liveAt: number | null): Receipt => ({
+		kind,
+		order: {
+			id: row.id,
+			placement: row.placement,
+			name: row.name,
+			href: row.href,
+			logoKey: row.logo_key,
+			contactName: row.contact_name,
+			contactEmail: row.contact_email,
+			notes: row.notes,
+		},
+		subscriptionId,
+		paidAt: now,
+		liveAt,
+		paidThrough,
+	});
+
 	if (row.status !== "pending") {
 		await update(next);
-		return {};
+		// A renewal moves the paid period forward; a redelivery does not.
+		const renewed =
+			event.type === "subscription.renewed" &&
+			paidThrough !== null &&
+			paidThrough > (row.paid_through ?? 0);
+		return renewed ? { receipt: receipt("renewal", row.live_at) } : {};
 	}
 
 	// First event for a new order.
@@ -274,19 +314,19 @@ export async function applySubscriptionEvent(
 		return {};
 	}
 
-	const taken = await db
+	// Paid orders beat open holds, so only other paid orders can fill it.
+	const paid = await db
 		.prepare(
-			`SELECT 1 FROM sponsor_orders
-			WHERE placement = ?2 AND id != ?3 AND status != 'pending' AND ${BLOCKING}
-			LIMIT 1`,
+			`SELECT COUNT(*) AS count FROM sponsor_orders
+			WHERE placement = ?2 AND id != ?3 AND status != 'pending' AND ${BLOCKING}`,
 		)
 		.bind(now, row.placement, row.id)
-		.first();
-	if (taken) {
+		.first<{ count: number }>();
+	if ((paid?.count ?? 0) >= SPONSOR_PLACEMENTS[row.placement].slots) {
 		await update("conflict");
 		return { cancelSubscriptionId: subscriptionId };
 	}
 
 	await update("active", now + REVIEW_MS);
-	return {};
+	return { receipt: receipt("first", now + REVIEW_MS) };
 }
