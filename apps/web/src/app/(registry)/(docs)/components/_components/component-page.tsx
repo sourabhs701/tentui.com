@@ -12,6 +12,7 @@ import type { Metadata, Route } from "next";
 import Link from "next/link";
 import { ComponentDownloads } from "@/components/component-downloads";
 import { ComponentViewTracker } from "@/components/component-view-tracker";
+import { ComponentViews } from "@/components/component-views";
 import { DocShareMenu } from "@/components/doc-share-menu";
 import { MDX } from "@/components/mdx";
 import { DocKeyboardShortcuts } from "@/components/mdx/doc-keyboard-shortcuts";
@@ -170,7 +171,8 @@ export function ComponentPage({ doc }: { doc: Doc }) {
 						>
 							{doc.metadata.title}
 						</h1>
-						<div className="mt-3">
+						<div className="mt-3 flex items-center gap-4">
+							<ComponentViews slug={doc.slug} />
 							<ComponentDownloads slug={doc.slug} />
 						</div>
 					</div>

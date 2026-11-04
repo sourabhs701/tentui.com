@@ -1,11 +1,12 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getDb } from "@/lib/d1";
+import { isRegistrySlug } from "@/lib/registry-slugs";
 
 const registryItemPath = /^\/r\/([a-z0-9-]+)\.json$/;
 
 /** Slug of a registry item fetch (`/r/wheel-picker.json`), or null. */
 export function getRegistryItemSlug(pathname: string) {
 	const slug = pathname.match(registryItemPath)?.[1];
-	if (!slug || slug === "registry") return null;
+	if (!slug || !isRegistrySlug(slug)) return null;
 	return slug;
 }
 
@@ -38,10 +39,6 @@ export function isRepeatFetch(slug: string, headers: Headers) {
 	const isRepeat = recentFetches.has(key);
 	recentFetches.set(key, now);
 	return isRepeat;
-}
-
-function getDb() {
-	return (getCloudflareContext().env as { DB?: D1Database }).DB ?? null;
 }
 
 export async function incrementDownloads(slug: string) {
