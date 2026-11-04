@@ -22,6 +22,13 @@
 			"when": 1793790753164,
 			"tag": "0002_wakeful_tomorrow_man",
 			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "6",
+			"when": 1793791557795,
+			"tag": "0003_optimal_sunset_bain",
+			"breakpoints": true
 		}
 	]
 }
