@@ -12,7 +12,7 @@
 		"binding": "ASSETS",
 		"not_found_handling": "none",
 		"html_handling": "auto-trailing-slash",
-		"run_worker_first": false
+		"run_worker_first": ["/r/*"]
 	},
 	"routes": [
 		{ "pattern": "tentui.com", "custom_domain": true },
@@ -22,6 +22,14 @@
 		{
 			"binding": "WORKER_SELF_REFERENCE",
 			"service": "tent-web"
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "tentui-com-database-prod",
+			"database_id": "ea0d97e0-d7af-4372-bcb8-c9a3dcd5b90b",
+			"migrations_dir": "../../packages/db/src/migrations"
 		}
 	],
 	"r2_buckets": [
