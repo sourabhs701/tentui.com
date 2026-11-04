@@ -15,6 +15,13 @@
 			"when": 1787160918459,
 			"tag": "0001_material_vampiro",
 			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "6",
+			"when": 1793790753164,
+			"tag": "0002_wakeful_tomorrow_man",
+			"breakpoints": true
 		}
 	]
 }

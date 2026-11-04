@@ -10,6 +10,7 @@ import { getTableOfContents } from "fumadocs-core/content/toc";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import type { Metadata, Route } from "next";
 import Link from "next/link";
+import { ComponentDownloads } from "@/components/component-downloads";
 import { ComponentViewTracker } from "@/components/component-view-tracker";
 import { DocShareMenu } from "@/components/doc-share-menu";
 import { MDX } from "@/components/mdx";
@@ -169,6 +170,9 @@ export function ComponentPage({ doc }: { doc: Doc }) {
 						>
 							{doc.metadata.title}
 						</h1>
+						<div className="mt-3">
+							<ComponentDownloads slug={doc.slug} />
+						</div>
 					</div>
 
 					<Prose className="pt-8 [--page-padding:--spacing(4)]">

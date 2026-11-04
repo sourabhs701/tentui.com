@@ -1,9 +1,27 @@
-import type { NextRequest } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import {
+	getRegistryItemSlug,
+	incrementDownloads,
+	isInstallRequest,
+	isRepeatFetch,
+} from "@/lib/downloads";
 
 const componentPathPrefix = "/components/";
 
-export function middleware(request: NextRequest) {
+export function middleware(request: NextRequest, event: NextFetchEvent) {
+	const registrySlug = getRegistryItemSlug(request.nextUrl.pathname);
+	if (registrySlug) {
+		if (
+			request.method === "GET" &&
+			isInstallRequest(request.headers.get("user-agent")) &&
+			!isRepeatFetch(registrySlug, request.headers)
+		) {
+			event.waitUntil(incrementDownloads(registrySlug).catch(console.error));
+		}
+		return NextResponse.next();
+	}
+
 	if (request.nextUrl.pathname.endsWith(".mdx")) {
 		return NextResponse.next();
 	}
@@ -18,7 +36,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: "/components/:slug",
+	matcher: ["/components/:slug", "/r/:path*"],
 };
 
 function acceptsMarkdown(accept: string | null) {
