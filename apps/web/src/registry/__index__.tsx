@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"scratch-card": {
+		name: "scratch-card",
+		title: "Scratch Card",
+		description: "A foil scratch-off card. Rub the foil away with a finger or cursor to reveal what is underneath, with a scratch texture that follows your speed, foil flakes, and a soft chime when the rest lifts off.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/scratch-card/scratch-card.tsx","type":"registry:component","target":"@components/scratch-card.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/scratch-card/scratch-card")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scratch-card");
+			}
+			return { default: module.default };
+		}),
+		categories: [],
+		meta: {"createdAt":"2026-11-04"},
+	},
 	"pull-cord": {
 		name: "pull-cord",
 		title: "Pull Cord",
@@ -761,6 +779,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"scratch-card-preview": {
+		name: "scratch-card-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scratch-card-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scratch-card-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scratch-card-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
 	"pull-cord-preview": {
 		name: "pull-cord-preview",
 		title: undefined,
@@ -1192,6 +1228,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"scratch-card-demo": {
+		name: "scratch-card-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scratch-card-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scratch-card-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scratch-card-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
 	},
 	"pull-cord-demo": {
 		name: "pull-cord-demo",

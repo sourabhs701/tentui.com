@@ -1,0 +1,186 @@
+---
+title: Scratch Card
+description: A foil scratch-off card. Rub the foil away with a finger or cursor to reveal what is underneath, with a scratch texture that follows your speed, foil flakes, and a soft chime when the rest lifts off.
+createdAt: 2026-11-04
+updatedAt: 2026-11-04
+---
+
+<ComponentPreview name="scratch-card-preview" />
+
+## Example
+
+<ComponentPreview name="scratch-card-demo" />
+
+## Features
+
+- A brushed metal foil in `silver`, `gold`, or `graphite`, with fine grain, a
+  diagonal sheen, and an engraved hint that scratches away with the rest.
+- A soft round brush erases the foil the moment the pointer moves. Strokes fill
+  in between pointer events, so fast flicks leave no gaps.
+- Coverage is counted on a small grid as you scratch, without reading pixels
+  back from the canvas. Once `threshold` of the foil is gone, the rest fades
+  and lifts away and the content settles into place.
+- Tiny foil specks pop off the brush, and the sheen drifts a little with the
+  pointer.
+- The scratch is filtered noise that gets louder and brighter the faster you
+  move, and goes silent when you stop. A light haptic ticks as you scratch,
+  and the reveal plays a two-note chime with a firmer pulse.
+- At rest nothing animates or draws, so the card is perfectly still.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/scratch-card
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="scratch-card" title="components/scratch-card.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ScratchCard } from "@/components/scratch-card";
+```
+
+```tsx
+<ScratchCard aria-label="Scratch to reveal">
+  <p>You found it</p>
+</ScratchCard>
+```
+
+The card fills the width of its container up to 320 px and keeps a 28:17
+aspect ratio. Set a different width with `className`, for example
+`max-w-[280px]`. Content taller than the card is clipped.
+
+### Gold foil with a prize
+
+```tsx
+<ScratchCard
+  foil="gold"
+  hint="Scratch to win"
+  aria-label="Gold scratch card"
+  onReveal={() => claimPrize()}
+>
+  <div className="text-center">
+    <p className="text-xs uppercase">You won</p>
+    <p className="font-semibold text-3xl">20% off</p>
+  </div>
+</ScratchCard>
+```
+
+### Sound off
+
+Turn the sound off and keep the haptics, or the other way round:
+
+```tsx
+<ScratchCard foil="graphite" sound={false}>
+  <p>Free shipping</p>
+</ScratchCard>
+```
+
+### Reset and progress
+
+`onProgress` reports the cleared fraction from 0 to 1, and `onReveal` fires
+once per reveal. Put a fresh foil back with the `reset()` method on a ref, or
+remount the card by changing its `key`. `reveal()` uncovers it at once.
+
+```tsx
+const card = useRef<ScratchCardHandle>(null);
+const [progress, setProgress] = useState(0);
+
+<ScratchCard ref={card} onProgress={setProgress} onReveal={() => track()}>
+  <p>{Math.round(progress * 100)}% cleared</p>
+</ScratchCard>
+<button onClick={() => card.current?.reset()}>Reset</button>
+```
+
+When the card is resized mid-scratch, the foil is repainted at the new size
+and what was scratched off is stretched to match, so the cleared fraction is
+kept.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Drag on the foil | Scratches it away; past `threshold`, the rest lifts off |
+| **Reveal** button | Reveals the content at once |
+| `Enter` / `Space` on the foil | Reveals the content at once |
+
+The **Reveal** button sits in the bottom corner. It shows when it has keyboard
+focus, while a mouse hovers over the card, and always on touch screens. It
+hides while you scratch. Once the card is revealed it stays revealed until
+it's reset.
+
+Only one pointer scratches at a time: a second finger and a right click are
+ignored. Losing the pointer ends the stroke, and a reveal in the middle of a
+stroke ends it cleanly.
+
+## Sound and haptics
+
+While you scratch, short bursts of filtered noise play at most every 28 ms.
+Each one fades in and out, so strokes never click at the start or end. Faster
+strokes are louder and brighter, and rubbing over card that has already been
+cleared is quieter. Every 44 px scratched over foil triggers a `selection`
+haptic. The reveal plays a soft two-note chime with a `medium` haptic.
+
+Sound and haptics only follow user input. Mounting the card, `reset()`, and
+`reveal()` are silent, and nothing plays while the tab is hidden. Turn each
+off with `sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+The card is a `group` named by `aria-label` (`"Scratch card"` by default) or
+`aria-labelledby`. Scratching is a path-based gesture, so the **Reveal**
+button is the single-pointer and keyboard equivalent
+([WCAG 2.5.1](https://www.w3.org/WAI/WCAG22/Understanding/pointer-gestures.html)).
+It is always in the tab order and the accessibility tree.
+
+Until the card is revealed, the content is `aria-hidden` and `inert`, so
+screen readers can't read it early and its links can't take focus. On reveal
+a polite live region announces "Revealed", the content becomes available, and
+focus moves to it if it was on the card. The focus ring shows for keyboard
+focus only. Dragging on the foil never scrolls the page on touch screens. A
+disabled card is dimmed and can't be scratched or revealed.
+
+With reduced motion enabled no specks fly off, the sheen stays put, and the
+reveal swaps instantly. Sound and haptics still follow their props, because
+they confirm the scratch rather than decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/scratch-card/scratch-card.tsx"
+  name="ScratchCardProps"
+/>
+
+<AutoTypeTable
+  path="src/registry/components/scratch-card/scratch-card.tsx"
+  name="ScratchCardHandle"
+/>

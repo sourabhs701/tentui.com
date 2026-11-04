@@ -31,6 +31,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"peeping-button": { zoom: 1.35 },
 	"pull-cord": { zoom: 1.1 },
 	"rotary-knob": { zoom: 1.5 },
+	"scratch-card": { zoom: 1.3 },
 	"search-command": { zoom: 2 },
 	"snap-sheet": {},
 	"star-rating": { zoom: 1.5 },
