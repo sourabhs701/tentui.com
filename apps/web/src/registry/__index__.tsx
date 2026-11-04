@@ -291,7 +291,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: [],
-		meta: {"createdAt":"2026-11-04"},
+		meta: {"createdAt":"2026-11-04","image":"https://cdn.tentui.com/images/components/scratch-card","video":"https://cdn.tentui.com/videos/components/scratch-card"},
 	},
 	"pull-cord": {
 		name: "pull-cord",
@@ -327,7 +327,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-11-02"},
+		meta: {"createdAt":"2026-11-02","image":"https://cdn.tentui.com/images/components/elastic-slider","video":"https://cdn.tentui.com/videos/components/elastic-slider"},
 	},
 	"time-ring": {
 		name: "time-ring",
@@ -345,7 +345,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-11-01"},
+		meta: {"createdAt":"2026-11-01","image":"https://cdn.tentui.com/images/components/time-ring","video":"https://cdn.tentui.com/videos/components/time-ring"},
 	},
 	"wheel-picker": {
 		name: "wheel-picker",
@@ -399,7 +399,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-10-28","image":"https://cdn.tentui.com/images/components/rotary-knob","video":"https://cdn.tentui.com/videos/components/rotary-knob"},
+		meta: {"createdAt":"2026-10-28","image":"https://cdn.tentui.com/images/components/rotary-knob?v=2","video":"https://cdn.tentui.com/videos/components/rotary-knob?v=2"},
 	},
 	"otp-field": {
 		name: "otp-field",
