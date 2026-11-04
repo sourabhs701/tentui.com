@@ -7,7 +7,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
-import { FEED_SPONSOR, type FeedSponsor, sponsorHref } from "@/config/sponsor";
+import { type FeedSponsor, sponsorHref } from "@/config/sponsor";
+import { useShownSponsors } from "@/hooks/use-sponsor-slots";
 import { cn } from "@/lib/utils";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -17,7 +18,8 @@ const ease = [0.22, 1, 0.36, 1] as const;
 // booked sponsor's media, or an open slot that links to /sponsor.
 export function SponsorCard({ index }: { index: number }) {
 	const [isHovered, setIsHovered] = useState(false);
-	const sponsor = FEED_SPONSOR;
+	const shown = useShownSponsors();
+	const sponsor = shown?.feed;
 
 	const hoverProps = {
 		onMouseEnter: () => setIsHovered(true),
@@ -34,7 +36,11 @@ export function SponsorCard({ index }: { index: number }) {
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.3, delay: 0.02 * index, ease: "easeOut" }}
 		>
-			{sponsor ? (
+			{shown === undefined ? (
+				<div aria-hidden className={hoverProps.className}>
+					<div className="h-[260px] w-full rounded-xl bg-background shadow-surface-inset" />
+				</div>
+			) : sponsor ? (
 				<a
 					href={sponsorHref(sponsor.href)}
 					target="_blank"
