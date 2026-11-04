@@ -18,7 +18,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-11-02"
+    "createdAt": "2026-11-02",
+    "image": "https://cdn.tentui.com/images/components/elastic-slider",
+    "video": "https://cdn.tentui.com/videos/components/elastic-slider"
   },
   "docs": "https://tentui.com/components/elastic-slider",
   "categories": [

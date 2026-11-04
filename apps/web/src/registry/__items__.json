@@ -481,7 +481,9 @@
     ],
     "categories": [],
     "meta": {
-      "createdAt": "2026-11-04"
+      "createdAt": "2026-11-04",
+      "image": "https://cdn.tentui.com/images/components/scratch-card",
+      "video": "https://cdn.tentui.com/videos/components/scratch-card"
     },
     "dependencies": [
       "@rexa-developer/tiks",
@@ -532,7 +534,9 @@
       "inputs"
     ],
     "meta": {
-      "createdAt": "2026-11-02"
+      "createdAt": "2026-11-02",
+      "image": "https://cdn.tentui.com/images/components/elastic-slider",
+      "video": "https://cdn.tentui.com/videos/components/elastic-slider"
     },
     "dependencies": [
       "@number-flow/react",
@@ -558,7 +562,9 @@
       "inputs"
     ],
     "meta": {
-      "createdAt": "2026-11-01"
+      "createdAt": "2026-11-01",
+      "image": "https://cdn.tentui.com/images/components/time-ring",
+      "video": "https://cdn.tentui.com/videos/components/time-ring"
     },
     "dependencies": [
       "@number-flow/react",
@@ -640,8 +646,8 @@
     ],
     "meta": {
       "createdAt": "2026-10-28",
-      "image": "https://cdn.tentui.com/images/components/rotary-knob",
-      "video": "https://cdn.tentui.com/videos/components/rotary-knob"
+      "image": "https://cdn.tentui.com/images/components/rotary-knob?v=2",
+      "video": "https://cdn.tentui.com/videos/components/rotary-knob?v=2"
     },
     "dependencies": [
       "@rexa-developer/tiks",
