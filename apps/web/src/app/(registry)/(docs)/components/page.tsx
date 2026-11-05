@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ComponentsGrid } from "@/components/components-grid";
 import { getComponentDocs } from "@/lib/documents";
 import {
@@ -7,10 +8,13 @@ import {
 	JSON_LD_ID,
 	JsonLdScript,
 } from "@/lib/json-ld";
+import { components } from "@/registry/components/_registry";
+import { getComponentGroups } from "./_components/component-groups";
+import { ComponentsDirectory } from "./_components/components-directory";
 
-const title = "Components";
+const title = "Interactive React Components for shadcn/ui";
 const description =
-	"Beautiful, open-source React components for modern web applications.";
+	"Browse open-source interactive React components for shadcn/ui: buttons, sliders, pickers, menus, and sheets, each with a live demo and usage docs.";
 const ogImage = `/og/simple?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
 
 export const metadata: Metadata = {
@@ -63,10 +67,31 @@ export default function ComponentsPage() {
 			<JsonLdScript
 				data={breadcrumbJsonLd([
 					{ name: "Home", href: "/" },
-					{ name: title, href: "/components" },
+					{ name: "Components", href: "/components" },
 				])}
 			/>
+
+			<header className="px-2 pt-6 pb-8 sm:pt-10 sm:pb-10">
+				<h1 className="max-w-3xl text-balance font-medium text-3xl tracking-tight sm:text-4xl">
+					{title}
+				</h1>
+				<p className="mt-4 max-w-2xl text-pretty text-muted-foreground leading-relaxed">
+					TentUI is an open-source collection of interactive React components
+					for shadcn/ui projects. Each component has a documentation page with a
+					live demo, and most include a shadcn CLI install command, usage
+					examples, and an API reference. New to TentUI? Start with the{" "}
+					<Link
+						href="/docs/installation"
+						className="font-medium text-foreground underline underline-offset-4 transition-colors hover:text-primary"
+					>
+						installation guide
+					</Link>
+					.
+				</p>
+			</header>
+
 			<ComponentsGrid />
+			<ComponentsDirectory groups={getComponentGroups(components)} />
 		</>
 	);
 }
