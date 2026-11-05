@@ -18,6 +18,8 @@ export const components: Registry["items"] = [
 		categories: [],
 		meta: {
 			createdAt: "2026-11-05",
+			image: "https://cdn.tentui.com/images/components/bubble-wrap",
+			video: "https://cdn.tentui.com/videos/components/bubble-wrap",
 		},
 		docs: "https://tentui.com/components/bubble-wrap",
 	},
@@ -219,8 +221,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-10-26",
-			image: "https://cdn.tentui.com/images/components/otp-field",
-			video: "https://cdn.tentui.com/videos/components/otp-field",
+			image: "https://cdn.tentui.com/images/components/otp-field?v=2",
+			video: "https://cdn.tentui.com/videos/components/otp-field?v=2",
 		},
 		docs: "https://tentui.com/components/otp-field",
 	},
