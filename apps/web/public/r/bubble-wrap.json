@@ -17,7 +17,9 @@
     }
   ],
   "meta": {
-    "createdAt": "2026-11-05"
+    "createdAt": "2026-11-05",
+    "image": "https://cdn.tentui.com/images/components/bubble-wrap",
+    "video": "https://cdn.tentui.com/videos/components/bubble-wrap"
   },
   "docs": "https://tentui.com/components/bubble-wrap",
   "categories": [],

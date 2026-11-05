@@ -291,7 +291,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: [],
-		meta: {"createdAt":"2026-11-05"},
+		meta: {"createdAt":"2026-11-05","image":"https://cdn.tentui.com/images/components/bubble-wrap","video":"https://cdn.tentui.com/videos/components/bubble-wrap"},
 	},
 	"scratch-card": {
 		name: "scratch-card",
@@ -435,7 +435,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-10-26","image":"https://cdn.tentui.com/images/components/otp-field","video":"https://cdn.tentui.com/videos/components/otp-field"},
+		meta: {"createdAt":"2026-10-26","image":"https://cdn.tentui.com/images/components/otp-field?v=2","video":"https://cdn.tentui.com/videos/components/otp-field?v=2"},
 	},
 	"star-rating": {
 		name: "star-rating",
