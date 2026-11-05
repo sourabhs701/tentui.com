@@ -32,18 +32,30 @@ function BubbleWrapDemo() {
 
 	return (
 		<div className="flex w-full max-w-md flex-col items-center gap-10 py-4">
-			<Section title="Default">
-				<BubbleWrap />
+			<Section title="Sweep across, with a count">
+				<BubbleWrap showCount />
 			</Section>
 
-			<Section title="Blue, with count">
-				<BubbleWrap tint="blue" rows={4} showCount />
+			<Section title="Tinted film">
+				<div className="flex w-full flex-wrap justify-center gap-4">
+					<BubbleWrap
+						tint="blue"
+						rows={3}
+						columns={4}
+						aria-label="Blue bubble wrap"
+					/>
+					<BubbleWrap
+						tint="pink"
+						rows={3}
+						columns={4}
+						aria-label="Pink bubble wrap"
+					/>
+				</div>
 			</Section>
 
 			<Section title="Controlled, logging pops">
 				<BubbleWrap
 					ref={sheet}
-					tint="pink"
 					rows={3}
 					columns={5}
 					autoReset={false}

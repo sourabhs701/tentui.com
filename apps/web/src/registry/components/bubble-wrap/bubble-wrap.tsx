@@ -70,8 +70,13 @@ const CLEAR_SOUND = {
 	brightness: 1500,
 } as const;
 
-const squashEase = [0.33, 1, 0.68, 1] as const;
+/** Fast in, no tail: a press that bottoms out at once. */
+const squashEase = [0.2, 0.9, 0.3, 1] as const;
+/** The dome giving way speeds up, like a seal letting go. */
+const giveEase = [0.6, 0, 0.9, 0.4] as const;
 const settleEase = [0.23, 1, 0.32, 1] as const;
+/** A pressure wave races out, then dies away slowly. */
+const waveEase = [0.1, 0.8, 0.25, 1] as const;
 
 type TintName = "clear" | "blue" | "pink";
 
@@ -79,60 +84,95 @@ type TintName = "clear" | "blue" | "pink";
 const tints: Record<TintName, string> = {
 	clear:
 		"[--bubble-wrap-tint:148_163_184] [--bubble-wrap-tint-a:0] dark:[--bubble-wrap-tint-a:0]",
-	blue: "[--bubble-wrap-tint:96_165_250] [--bubble-wrap-tint-a:0.11] dark:[--bubble-wrap-tint-a:0.16]",
-	pink: "[--bubble-wrap-tint:244_114_182] [--bubble-wrap-tint-a:0.1] dark:[--bubble-wrap-tint-a:0.14]",
+	blue: "[--bubble-wrap-tint:96_165_250] [--bubble-wrap-tint-a:0.11] dark:[--bubble-wrap-tint-a:0.1]",
+	pink: "[--bubble-wrap-tint:244_114_182] [--bubble-wrap-tint-a:0.1] dark:[--bubble-wrap-tint-a:0.09]",
 };
 
 /**
- * Surface colors, light first. In light mode the clear plastic darkens at its
- * rim; in dark mode the rim catches the light instead. `ink` is the RGB of
- * shadows, `rim` the RGB of the bubble edge.
+ * Surface colors, light first. `ink` is the RGB of shadows, `band` of the
+ * plastic bending toward the rim, and `line` of the dome's hairline edge. On a
+ * light tray the rim darkens; on a dark tray it catches the light instead, and
+ * the body stays nearly invisible so the domes never turn chalky.
  */
 const surfaceVars =
-	"[--bubble-wrap-ink:24_24_32] [--bubble-wrap-rim:40_44_56] [--bubble-wrap-rim-a:0.26] [--bubble-wrap-body-a:0.16] [--bubble-wrap-sheen-a:0.5] [--bubble-wrap-caustic-a:0.75] [--bubble-wrap-light:1] [--bubble-wrap-inner-a:0.05] [--bubble-wrap-drop-a:0.24] [--bubble-wrap-flat-a:0.12] [--bubble-wrap-crease-a:0.09] [--bubble-wrap-crease-light:0.5] dark:[--bubble-wrap-ink:0_0_0] dark:[--bubble-wrap-rim:255_255_255] dark:[--bubble-wrap-rim-a:0.2] dark:[--bubble-wrap-body-a:0.035] dark:[--bubble-wrap-sheen-a:0.1] dark:[--bubble-wrap-caustic-a:0.16] dark:[--bubble-wrap-light:0.72] dark:[--bubble-wrap-inner-a:0.45] dark:[--bubble-wrap-drop-a:0.7] dark:[--bubble-wrap-flat-a:0.03] dark:[--bubble-wrap-crease-a:0.28] dark:[--bubble-wrap-crease-light:0.07]";
+	"[--bubble-wrap-ink:28_25_22] [--bubble-wrap-line:36_38_46] [--bubble-wrap-line-a:0.3] [--bubble-wrap-band:28_25_22] [--bubble-wrap-band-a:0.13] [--bubble-wrap-body-a:0.14] [--bubble-wrap-fill-a:0.4] [--bubble-wrap-spec-a:1] [--bubble-wrap-caustic-a:0.85] [--bubble-wrap-shadow-a:0.13] [--bubble-wrap-foot-a:0.7] [--bubble-wrap-flat-a:0.42] [--bubble-wrap-flat-rim-a:0.85] [--bubble-wrap-crease-a:0.13] [--bubble-wrap-crease-light:0.85] [--bubble-wrap-grain-a:0.5] [--bubble-wrap-wave-dark:0.1] [--bubble-wrap-wave-light:0.95] dark:[--bubble-wrap-ink:0_0_0] dark:[--bubble-wrap-line:255_255_255] dark:[--bubble-wrap-line-a:0.24] dark:[--bubble-wrap-band:255_255_255] dark:[--bubble-wrap-band-a:0.06] dark:[--bubble-wrap-body-a:0.05] dark:[--bubble-wrap-fill-a:0.08] dark:[--bubble-wrap-spec-a:0.8] dark:[--bubble-wrap-caustic-a:0.2] dark:[--bubble-wrap-shadow-a:0.5] dark:[--bubble-wrap-foot-a:0.07] dark:[--bubble-wrap-flat-a:0.055] dark:[--bubble-wrap-flat-rim-a:0.1] dark:[--bubble-wrap-crease-a:0.5] dark:[--bubble-wrap-crease-light:0.13] dark:[--bubble-wrap-grain-a:0.14] dark:[--bubble-wrap-wave-dark:0.45] dark:[--bubble-wrap-wave-light:0.2]";
 
-const domeStyle: CSSProperties = {
+/** A fine, tiling grain for the film, as a tiny inline SVG. */
+const grain =
+	"url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.9 -0.3'/%3E%3C/filter%3E%3Crect width='72' height='72' filter='url(%23g)'/%3E%3C/svg%3E\")";
+
+const domeBodyStyle: CSSProperties = {
 	background: [
-		// Soft sheen on the upper left of the dome.
-		"radial-gradient(70% 70% at 34% 30%, rgb(255 255 255 / var(--bubble-wrap-sheen-a)) 0%, rgb(255 255 255 / 0) 70%)",
-		// Light focused through the air, pooling inside the lower right edge.
-		"radial-gradient(46% 30% at 60% 80%, rgb(255 255 255 / var(--bubble-wrap-caustic-a)) 0%, rgb(255 255 255 / 0) 100%)",
-		"radial-gradient(closest-side, rgb(var(--bubble-wrap-tint) / calc(var(--bubble-wrap-tint-a) * 0.5)) 40%, rgb(var(--bubble-wrap-tint) / calc(var(--bubble-wrap-tint-a) * 1.8)) 100%)",
-		// Clear in the middle, thicker plastic toward the rim.
-		"radial-gradient(closest-side, rgb(255 255 255 / var(--bubble-wrap-body-a)) 0%, rgb(255 255 255 / var(--bubble-wrap-body-a)) 62%, rgb(var(--bubble-wrap-rim) / calc(var(--bubble-wrap-rim-a) * 0.45)) 88%, rgb(var(--bubble-wrap-rim) / var(--bubble-wrap-rim-a)) 100%)",
-	].join(", "),
-	boxShadow: [
-		"inset 0 0 0 0.5px rgb(var(--bubble-wrap-rim) / calc(var(--bubble-wrap-rim-a) * 0.9))",
-		"inset 0 -1.5px 2px rgb(255 255 255 / calc(var(--bubble-wrap-caustic-a) * 0.6))",
-		"0 0.5px 1px rgb(var(--bubble-wrap-ink) / calc(var(--bubble-wrap-drop-a) * 0.6))",
-		"1px 4px 7px -3px rgb(var(--bubble-wrap-ink) / var(--bubble-wrap-drop-a))",
+		// Soft fill: the window's glow spread across the upper dome.
+		"radial-gradient(52% 44% at 34% 27%, rgb(255 255 255 / var(--bubble-wrap-fill-a)), rgb(255 255 255 / 0) 100%)",
+		// Clear in the middle; the plastic thickens and bends toward the rim and
+		// ends in a thin hairline.
+		"radial-gradient(closest-side, rgb(var(--bubble-wrap-band) / 0) 60%, rgb(var(--bubble-wrap-band) / calc(var(--bubble-wrap-band-a) * 0.4)) 80%, rgb(var(--bubble-wrap-band) / var(--bubble-wrap-band-a)) 93%, rgb(var(--bubble-wrap-line) / var(--bubble-wrap-line-a)) 98.5%, rgb(var(--bubble-wrap-line) / 0) 100%)",
+		// The film's tint, densest where the plastic is thickest.
+		"radial-gradient(closest-side, rgb(var(--bubble-wrap-tint) / calc(var(--bubble-wrap-tint-a) * 0.3)) 30%, rgb(var(--bubble-wrap-tint) / calc(var(--bubble-wrap-tint-a) * 1.5)) 100%)",
+		"linear-gradient(160deg, rgb(255 255 255 / var(--bubble-wrap-body-a)) 12%, rgb(255 255 255 / 0) 62%)",
 	].join(", "),
 };
 
 const flatStyle: CSSProperties = {
-	background:
-		"radial-gradient(closest-side, rgb(var(--bubble-wrap-tint) / calc(var(--bubble-wrap-tint-a) * 0.4)), rgb(var(--bubble-wrap-tint) / calc(var(--bubble-wrap-tint-a) * 0.9))), rgb(255 255 255 / var(--bubble-wrap-flat-a))",
+	backgroundImage: [
+		// A flatter, sealed rim where the dome used to stand.
+		"radial-gradient(closest-side, rgb(255 255 255 / 0) 80%, rgb(255 255 255 / calc(var(--bubble-wrap-flat-rim-a) * 0.6)) 92%, rgb(var(--bubble-wrap-ink) / calc(var(--bubble-wrap-crease-a) * 0.7)) 100%)",
+		"radial-gradient(closest-side, rgb(var(--bubble-wrap-tint) / calc(var(--bubble-wrap-tint-a) * 0.5)), rgb(var(--bubble-wrap-tint) / calc(var(--bubble-wrap-tint-a) * 1.1)))",
+		// Cloudy, stretched film.
+		"radial-gradient(closest-side at 54% 46%, rgb(255 255 255 / calc(var(--bubble-wrap-flat-a) * 0.55)), rgb(255 255 255 / var(--bubble-wrap-flat-a)))",
+	].join(", "),
 	boxShadow: [
-		"inset 0 0 0 0.5px rgb(var(--bubble-wrap-rim) / calc(var(--bubble-wrap-rim-a) * 0.75))",
-		"inset 0.5px 1px 1.5px rgb(var(--bubble-wrap-ink) / calc(var(--bubble-wrap-inner-a) * 0.6))",
+		"inset 0 0 0 0.5px rgb(var(--bubble-wrap-line) / calc(var(--bubble-wrap-line-a) * 0.6))",
+		"inset 0.5px 1px 1.5px rgb(var(--bubble-wrap-ink) / calc(var(--bubble-wrap-crease-a) * 0.9))",
+		"0 0.5px 0 rgb(255 255 255 / calc(var(--bubble-wrap-flat-rim-a) * 0.5))",
 	].join(", "),
 };
 
-/** Fine folds in the flattened film, each a faint dark line with a lit edge. */
-function crease(angle: number, at: number, strength: number) {
-	return `linear-gradient(${angle}deg, transparent ${at - 2.5}%, rgb(var(--bubble-wrap-ink) / calc(var(--bubble-wrap-crease-a) * ${strength})) ${at - 0.5}%, rgb(255 255 255 / calc(var(--bubble-wrap-crease-light) * ${strength})) ${at + 1}%, transparent ${at + 2.5}%)`;
+/**
+ * The wrinkles of one popped bubble, in a 100 × 100 box: curved folds
+ * radiating from an off-center tear, with soft facets between them. Hashed
+ * by index, so each popped bubble creases its own way.
+ */
+function wrinkles(index: number) {
+	const cx = 50 + hashUnit(index, 3) * 7;
+	const cy = 48 + hashUnit(index, 4) * 7;
+	const at = (radius: number, degrees: number) => {
+		const radians = (degrees * Math.PI) / 180;
+		return `${(cx + Math.cos(radians) * radius).toFixed(1)} ${(cy + Math.sin(radians) * radius).toFixed(1)}`;
+	};
+	const count = 5 + Math.round(Math.abs(hashUnit(index, 5)) * 2);
+	const start = hashUnit(index, 2) * 180;
+	let folds = "";
+	let facets = "";
+	for (let fold = 0; fold < count; fold++) {
+		const angle =
+			start + (fold * 360) / count + hashUnit(index, 20 + fold) * 22;
+		const bend = hashUnit(index, 40 + fold) * 14;
+		const inner = 3 + Math.abs(hashUnit(index, 50 + fold)) * 8;
+		const reach = 22 + Math.abs(hashUnit(index, 30 + fold)) * 22;
+		folds += `M${at(inner, angle)}Q${at((inner + reach) / 2, angle + bend)} ${at(reach, angle + bend * 0.2)}`;
+		// Soft facets between folds: one side lit, the other shaded.
+		const shade =
+			fold % 2
+				? "255 255 255 / calc(var(--bubble-wrap-crease-light) * 0.55)"
+				: "var(--bubble-wrap-ink) / calc(var(--bubble-wrap-crease-a) * 0.7)";
+		facets += `, rgb(${shade}) ${(angle - start + 180 / count).toFixed(1)}deg`;
+	}
+	const facetStyle: CSSProperties = {
+		background: `conic-gradient(from ${start.toFixed(1)}deg at ${cx.toFixed(1)}% ${cy.toFixed(1)}%${facets}, rgb(255 255 255 / 0) 360deg)`,
+	};
+	return { folds, tear: { cx, cy }, facetStyle };
 }
 
-const creaseStyle: CSSProperties = {
-	background: [
-		crease(18, 47, 1),
-		crease(-61, 36, 0.8),
-		crease(104, 63, 0.6),
-		crease(-12, 71, 0.45),
-		// A soft pucker where the dome gave way.
-		"radial-gradient(28% 22% at 54% 46%, rgb(255 255 255 / calc(var(--bubble-wrap-crease-light) * 0.35)), transparent)",
-	].join(", "),
-};
+/** A slightly uneven outline for each popped bubble, so no two look stamped. */
+function slackOutline(index: number) {
+	const a = 50 + hashUnit(index, 8) * 5;
+	const b = 50 + hashUnit(index, 9) * 5;
+	const c = 50 + hashUnit(index, 10) * 5;
+	const d = 50 + hashUnit(index, 11) * 5;
+	return `${a}% ${100 - a}% ${b}% ${100 - b}% / ${c}% ${d}% ${100 - d}% ${100 - c}%`;
+}
 
 function clamp(value: number, min: number, max: number) {
 	return Math.min(Math.max(value, min), max);
@@ -376,7 +416,9 @@ const Bubble = memo(function Bubble({
 	onActivate,
 	onFocusCell,
 }: BubbleProps) {
-	const crease = hashUnit(index, 2) * 180;
+	// A bubble's wrinkles and outline never change, so build them once.
+	const [creases] = useState(() => wrinkles(index));
+	const [outline] = useState(() => slackOutline(index));
 
 	return (
 		<button
@@ -395,34 +437,79 @@ const Bubble = memo(function Bubble({
 			className="group/bubble relative aspect-square cursor-pointer rounded-full outline-none [-webkit-tap-highlight-color:transparent] focus-visible:z-10 data-[state=popped]:cursor-default"
 		>
 			<span
-				data-part="ring"
-				aria-hidden
-				className="pointer-events-none absolute inset-0 rounded-full border-[1.5px] border-[rgb(var(--bubble-wrap-rim)/0.35)] opacity-0"
-			/>
-			<span
 				data-part="flat"
 				aria-hidden
-				className="pointer-events-none absolute inset-[9%] overflow-hidden rounded-full opacity-0 group-data-[state=popped]/bubble:opacity-100"
-				style={flatStyle}
+				className="pointer-events-none absolute inset-[7%] overflow-hidden opacity-0 group-data-[state=popped]/bubble:opacity-100"
+				style={{ ...flatStyle, borderRadius: outline }}
 			>
 				<span
-					className="absolute inset-0"
-					style={{ ...creaseStyle, rotate: `${crease}deg` }}
+					className="absolute inset-0 bg-size-[72px_72px] opacity-(--bubble-wrap-grain-a) mix-blend-overlay"
+					style={{ backgroundImage: grain }}
 				/>
+				<span
+					className="absolute inset-0 blur-[1px]"
+					style={creases.facetStyle}
+				/>
+				<svg
+					viewBox="0 0 100 100"
+					className="absolute inset-0 size-full fill-none blur-[0.3px]"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				>
+					{/* Each fold is a lit ridge beside a shaded crease. */}
+					<g
+						transform="translate(-0.9 -0.9)"
+						strokeWidth={2.4}
+						style={{
+							stroke:
+								"rgb(255 255 255 / calc(var(--bubble-wrap-crease-light) * 0.6))",
+						}}
+					>
+						<path d={creases.folds} />
+					</g>
+					<g
+						strokeWidth={1}
+						style={{
+							stroke:
+								"rgb(var(--bubble-wrap-ink) / var(--bubble-wrap-crease-a))",
+						}}
+					>
+						<path d={creases.folds} />
+					</g>
+					<ellipse
+						cx={creases.tear.cx}
+						cy={creases.tear.cy}
+						rx={2.6}
+						ry={1.8}
+						style={{
+							fill: "rgb(var(--bubble-wrap-ink) / calc(var(--bubble-wrap-crease-a) * 0.8))",
+						}}
+					/>
+				</svg>
 			</span>
 			<span
 				data-part="dome"
 				aria-hidden
 				className="pointer-events-none absolute inset-0 rounded-full group-data-[state=popped]/bubble:opacity-0"
-				style={domeStyle}
 			>
-				{/* The tray's shadow, seen through the clear dome. */}
-				<span className="absolute inset-[14%] translate-x-[7%] translate-y-[10%] rounded-full bg-[rgb(var(--bubble-wrap-ink)/var(--bubble-wrap-inner-a))] blur-[3px]" />
-				{/* A window reflection on the top left, and a small glint opposite it. */}
-				<span className="absolute top-[15%] left-[20%] h-[20%] w-[34%] rotate-[-36deg] rounded-[50%] bg-[radial-gradient(closest-side,rgb(255_255_255/var(--bubble-wrap-light))_55%,rgb(255_255_255/0))]" />
-				<span className="absolute top-[39%] left-[16%] size-[8%] rounded-full bg-[rgb(255_255_255/calc(var(--bubble-wrap-light)*0.75))] blur-[0.3px]" />
-				<span className="absolute right-[21%] bottom-[18%] h-[7%] w-[16%] rotate-[-36deg] rounded-[50%] bg-[rgb(255_255_255/calc(var(--bubble-wrap-light)*0.6))] blur-[0.5px]" />
+				{/* The dome's shadow on the tray. The dome itself is clear, so only the
+				    crescent outside it shows, and light focused through the air pools
+				    on the tray inside it. */}
+				<span className="mask-[radial-gradient(closest-side_at_44%_41%,transparent_76%,#000_120%)] absolute inset-[2%] translate-x-[6%] translate-y-[9%] rounded-full bg-[rgb(var(--bubble-wrap-ink)/var(--bubble-wrap-shadow-a))] blur-[5px]" />
+				<span className="absolute top-[50%] left-[42%] h-[32%] w-[42%] -rotate-[38deg] rounded-[50%] bg-[radial-gradient(closest-side,rgb(255_255_255/var(--bubble-wrap-caustic-a)),rgb(255_255_255/0))] blur-[2px]" />
+				{/* Where the film lifts off the sheet, catching the light. */}
+				<span className="absolute -inset-[2%] rounded-full shadow-[-0.5px_-0.75px_1.5px_rgb(255_255_255/var(--bubble-wrap-foot-a))]" />
+				<span className="absolute inset-0 rounded-full" style={domeBodyStyle} />
+				{/* Light caught along the inside of the lower rim. */}
+				<span className="absolute inset-[6%] rounded-full shadow-[inset_-1.5px_-2px_2px_-1px_rgb(255_255_255/var(--bubble-wrap-caustic-a))]" />
+				{/* One crisp reflection of a window. */}
+				<span className="absolute top-[16%] left-[23%] h-[13%] w-[28%] -rotate-[34deg] rounded-[50%] bg-[radial-gradient(closest-side,rgb(255_255_255/var(--bubble-wrap-spec-a))_58%,rgb(255_255_255/0))]" />
 			</span>
+			<span
+				data-part="ring"
+				aria-hidden
+				className="pointer-events-none absolute -inset-[4%] rounded-full bg-[radial-gradient(closest-side,rgb(var(--bubble-wrap-ink)/0)_70%,rgb(var(--bubble-wrap-ink)/var(--bubble-wrap-wave-dark))_83%,rgb(255_255_255/var(--bubble-wrap-wave-light))_91%,rgb(255_255_255/0))] opacity-0"
+			/>
 			<span
 				aria-hidden
 				className="pointer-events-none absolute inset-0 rounded-full opacity-0 shadow-[0_0_0_2px_#fff,0_0_0_4px_#18181b] group-focus-visible/bubble:opacity-100"
@@ -584,32 +671,33 @@ export function BubbleWrap({
 			]);
 			return;
 		}
-		const jitter = hashUnit(index, 1) * 5;
+		const jitter = hashUnit(index, 1) * 4;
 		animationsRef.current.set(index, [
 			// A quick squash with a little twist, then the dome gives way.
 			animateHeld(
 				dome,
 				{
-					scale: [null, 0.86, 0.8],
-					rotate: [null, jitter, jitter],
+					scale: [null, 0.88, 0.8],
+					rotate: [null, jitter, jitter * 1.5],
 					// Explicit, since the popped state already hides the dome in CSS.
 					opacity: [1, 1, 0],
 				},
-				{ duration: 0.15, times: [0, 0.6, 1], ease: [squashEase, "easeIn"] },
+				{ duration: 0.12, times: [0, 0.55, 1], ease: [squashEase, giveEase] },
 				delay,
 			),
+			// The slack film spreads out flat and stops dead.
 			animateHeld(
 				flat,
-				{ opacity: [0, 0, 1], scale: [0.84, 0.84, 1] },
-				{ duration: 0.24, times: [0, 0.35, 1], ease: ["linear", settleEase] },
+				{ opacity: [0, 0, 1], scale: [0.86, 0.86, 1] },
+				{ duration: 0.2, times: [0, 0.3, 1], ease: ["linear", settleEase] },
 				delay,
 			),
-			// A thin ring flicks outward and fades.
+			// A pressure wave runs out through the film from the burst.
 			animateHeld(
 				ring,
-				{ opacity: [0, 0.7, 0], scale: [0.92, 1.02, 1.4] },
-				{ duration: 0.22, times: [0, 0.2, 1], ease: ["easeOut", "easeOut"] },
-				delay + 50,
+				{ opacity: [0, 1, 0], scale: [0.9, 1.08, 1.5] },
+				{ duration: 0.34, times: [0, 0.12, 1], ease: ["easeOut", waveEase] },
+				delay + 55,
 			),
 		]);
 	};
@@ -634,22 +722,22 @@ export function BubbleWrap({
 					animate(ring, { opacity: 0 }, { duration: 0 }),
 					animateHeld(
 						flat,
-						{ opacity: [1, 0], scale: [1, 1] },
-						{ duration: 0.12, times: [0, 1], ease: ["easeOut"] },
+						{ opacity: [1, 0], scale: [1, 0.94] },
+						{ duration: 0.14, times: [0, 1], ease: ["easeOut"] },
 						delay,
 					),
-					// Eases back up with a small overshoot.
+					// Blooms back up past full, then settles dead still.
 					animateHeld(
 						dome,
 						{
-							opacity: [0, 1, 1],
-							scale: [0.8, 1.08, 1],
-							rotate: [0, 0, 0],
+							opacity: [0, 1, 1, 1],
+							scale: [0.72, 1.07, 0.99, 1],
+							rotate: [0, 0, 0, 0],
 						},
 						{
-							duration: 0.38,
-							times: [0, 0.5, 1],
-							ease: [settleEase, "easeInOut"],
+							duration: 0.42,
+							times: [0, 0.45, 0.75, 1],
+							ease: [settleEase, "easeInOut", "easeOut"],
 						},
 						delay,
 					),
@@ -970,7 +1058,7 @@ export function BubbleWrap({
 				} as CSSProperties
 			}
 			className={cn(
-				"group/bubble-wrap relative isolate w-full max-w-(--bubble-wrap-width) select-none rounded-[22px] border border-black/[0.06] bg-[#e4e2de] p-3 shadow-[inset_0_1px_2px_rgb(0_0_0/0.05),0_1px_2px_rgb(0_0_0/0.04)] [-webkit-touch-callout:none] dark:border-white/[0.08] dark:bg-zinc-900 dark:shadow-[inset_0_1px_2px_rgb(0_0_0/0.4),0_1px_2px_rgb(0_0_0/0.3)]",
+				"group/bubble-wrap relative isolate w-full max-w-(--bubble-wrap-width) select-none rounded-[20px] bg-[linear-gradient(180deg,#ece9e4,#e1ded8)] p-3 shadow-[inset_0_0_0_1px_rgb(0_0_0/0.05),0_1px_1px_rgb(0_0_0/0.04),0_2px_4px_-1px_rgb(0_0_0/0.05),0_14px_28px_-14px_rgb(0_0_0/0.22)] [-webkit-touch-callout:none] dark:bg-[linear-gradient(180deg,#1c1c1f,#161618)] dark:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06),inset_0_1px_0_rgb(255_255_255/0.05),0_1px_1px_rgb(0_0_0/0.4),0_14px_28px_-12px_rgb(0_0_0/0.7)]",
 				surfaceVars,
 				tints[tint] ?? tints.clear,
 				className,
@@ -982,12 +1070,16 @@ export function BubbleWrap({
 			</span>
 
 			<div className="relative">
-				{/* The plastic film the bubbles are part of. */}
+				{/* The plastic film the bubbles are molded into, sealed to the tray at its lip. */}
 				<div
 					aria-hidden
-					className="pointer-events-none absolute -inset-1.5 rounded-[14px] bg-[linear-gradient(160deg,rgb(255_255_255/0.5),rgb(255_255_255/0.22)_50%,rgb(255_255_255/0.4))] shadow-[inset_0_0_0_1px_rgb(255_255_255/0.7),0_1px_2px_rgb(0_0_0/0.06)] dark:bg-[linear-gradient(160deg,rgb(255_255_255/0.07),rgb(255_255_255/0.025)_45%,rgb(255_255_255/0.05))] dark:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.07),0_1px_2px_rgb(0_0_0/0.3)]"
+					className="pointer-events-none absolute -inset-1.5 overflow-hidden rounded-[12px] bg-[linear-gradient(155deg,rgb(255_255_255/0.42),rgb(255_255_255/0.1)_38%,rgb(255_255_255/0.22)_56%,rgb(255_255_255/0.06))] shadow-[inset_0_0_0_1px_rgb(255_255_255/0.65),0_0_0_0.5px_rgb(0_0_0/0.06),0_1px_1.5px_rgb(0_0_0/0.05)] dark:bg-[linear-gradient(155deg,rgb(255_255_255/0.06),rgb(255_255_255/0.02)_38%,rgb(255_255_255/0.04)_56%,rgb(255_255_255/0.015))] dark:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06),0_0_0_0.5px_rgb(0_0_0/0.5),0_1px_2px_rgb(0_0_0/0.4)]"
 				>
-					<div className="absolute inset-0 rounded-[inherit] bg-[rgb(var(--bubble-wrap-tint)/calc(var(--bubble-wrap-tint-a)*0.5))]" />
+					<div className="absolute inset-0 bg-[rgb(var(--bubble-wrap-tint)/calc(var(--bubble-wrap-tint-a)*0.45))]" />
+					<div
+						className="absolute inset-0 bg-size-[72px_72px] opacity-[calc(var(--bubble-wrap-grain-a)*0.35)] mix-blend-overlay"
+						style={{ backgroundImage: grain }}
+					/>
 				</div>
 
 				<div
