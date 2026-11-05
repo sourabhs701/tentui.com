@@ -2,8 +2,11 @@
 
 import { BubbleWrap } from "@/registry/components/bubble-wrap/bubble-wrap";
 
+/** A sheet mid-sweep: one thumb-width arc of popped bubbles across the middle. */
+const sweep = [12, 7, 8, 9, 16, 23];
+
 function BubbleWrapPreview() {
-	return <BubbleWrap defaultPopped={[3, 8, 9, 14, 22, 27]} />;
+	return <BubbleWrap defaultPopped={sweep} />;
 }
 
 export default BubbleWrapPreview;
