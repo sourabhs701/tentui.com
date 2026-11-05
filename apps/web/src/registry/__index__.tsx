@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"bubble-wrap": {
+		name: "bubble-wrap",
+		title: "Bubble Wrap",
+		description: "A sheet of plastic air cells to press or sweep across. Each bubble squashes, pops with a short falling sound and a light haptic tick, and stays flat until the cleared sheet re-inflates in a ripple.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/bubble-wrap/bubble-wrap.tsx","type":"registry:component","target":"@components/bubble-wrap.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/bubble-wrap/bubble-wrap")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for bubble-wrap");
+			}
+			return { default: module.default };
+		}),
+		categories: [],
+		meta: {"createdAt":"2026-11-05"},
+	},
 	"scratch-card": {
 		name: "scratch-card",
 		title: "Scratch Card",
@@ -779,6 +797,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"bubble-wrap-preview": {
+		name: "bubble-wrap-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/bubble-wrap-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/bubble-wrap-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for bubble-wrap-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
 	"scratch-card-preview": {
 		name: "scratch-card-preview",
 		title: undefined,
@@ -1228,6 +1264,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"bubble-wrap-demo": {
+		name: "bubble-wrap-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/bubble-wrap-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/bubble-wrap-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for bubble-wrap-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
 	},
 	"scratch-card-demo": {
 		name: "scratch-card-demo",

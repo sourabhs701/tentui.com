@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "bubble-wrap",
+		type: "registry:component",
+		title: "Bubble Wrap",
+		description:
+			"A sheet of plastic air cells to press or sweep across. Each bubble squashes, pops with a short falling sound and a light haptic tick, and stays flat until the cleared sheet re-inflates in a ripple.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/bubble-wrap/bubble-wrap.tsx",
+				type: "registry:component",
+				target: "@components/bubble-wrap.tsx",
+			},
+		],
+		categories: [],
+		meta: {
+			createdAt: "2026-11-05",
+		},
+		docs: "https://tentui.com/components/bubble-wrap",
+	},
+	{
 		name: "scratch-card",
 		type: "registry:component",
 		title: "Scratch Card",

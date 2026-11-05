@@ -448,6 +448,29 @@
       "type": "registry:block"
     },
     {
+      "name": "bubble-wrap",
+      "title": "Bubble Wrap",
+      "description": "A sheet of plastic air cells to press or sweep across. Each bubble squashes, pops with a short falling sound and a light haptic tick, and stays flat until the cleared sheet re-inflates in a ripple.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/bubble-wrap/bubble-wrap.tsx",
+          "type": "registry:component",
+          "target": "@components/bubble-wrap.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-05"
+      },
+      "docs": "https://tentui.com/components/bubble-wrap",
+      "categories": [],
+      "type": "registry:component"
+    },
+    {
       "name": "scratch-card",
       "title": "Scratch Card",
       "description": "A foil scratch-off card. Rub the foil away with a finger or cursor to reveal what is underneath, with a scratch texture that follows your speed, foil flakes, and a soft chime when the rest lifts off.",

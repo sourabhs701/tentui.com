@@ -25,6 +25,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"elastic-slider": { zoom: 1.5 },
 	"email-dock": { zoom: 1.2 },
 	"brand-context-menu": { zoom: 2 },
+	"bubble-wrap": { zoom: 1.2 },
 	"hold-to-confirm": { zoom: 1.6 },
 	"number-stepper": { zoom: 1.6 },
 	"otp-field": { zoom: 1.2 },

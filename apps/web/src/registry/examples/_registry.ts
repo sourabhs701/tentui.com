@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "bubble-wrap-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("bubble-wrap")],
+		files: [
+			{
+				path: "examples/bubble-wrap-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "scratch-card-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("scratch-card")],
@@ -351,6 +365,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "bubble-wrap-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("bubble-wrap")],
+		files: [
+			{
+				path: "examples/bubble-wrap-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
 		},
 	},
 	{
