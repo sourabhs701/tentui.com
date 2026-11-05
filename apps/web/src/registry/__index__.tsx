@@ -885,7 +885,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: undefined,
-		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+		meta: {"previewClassName":"min-h-96 place-items-center content-center overflow-visible px-4 py-6"},
 	},
 	"dynamic-island-preview": {
 		name: "dynamic-island-preview",

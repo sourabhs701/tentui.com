@@ -48,11 +48,17 @@ const deepTheme = defineTheme({
 /** The dial is drawn on a 200 x 200 grid and scales to its container. */
 const VIEW = 200;
 const CENTER = VIEW / 2;
-const TRACK_WIDTH = 24;
-const TRACK_RADIUS = CENTER - TRACK_WIDTH / 2 - 1;
-const ARC_WIDTH = TRACK_WIDTH - 3;
-const HANDLE_SIZE = ARC_WIDTH - 3;
-const TICK_OUTER = TRACK_RADIUS - TRACK_WIDTH / 2 - 4;
+/**
+ * Clearance, in grid units, outside the track. It keeps the stroke, round
+ * caps, handles (including the press scale), and their shadows inside the
+ * square so a clipping preview cannot shave the top of the ring.
+ */
+const PAD = 13;
+const TRACK_WIDTH = 22;
+const TRACK_RADIUS = CENTER - PAD - TRACK_WIDTH / 2;
+const ARC_WIDTH = 18;
+const HANDLE_SIZE = 14;
+const TICK_OUTER = TRACK_RADIUS - TRACK_WIDTH / 2 - 5.5;
 const LABEL_RADIUS = TICK_OUTER - 18;
 /** Extra reach, in grid units, around the track and handles for presses. */
 const HIT_SLOP = 8;
@@ -566,7 +572,8 @@ export function TimeRing({
 	}, [disabled]);
 
 	// Handles hang off a point at the center, sized in the dial's container
-	// units, so turning them never grows the page's scroll area.
+	// units, so turning them never grows the page's scroll area. Min and max
+	// match that size so the icon's intrinsic box cannot push a knob outward.
 	const handleSize = `${(HANDLE_SIZE / VIEW) * 100}cqw`;
 	const handleOffset = `${(-TRACK_RADIUS / VIEW) * 100}cqw`;
 
@@ -597,16 +604,20 @@ export function TimeRing({
 					data-slot={`time-ring-${part}`}
 					data-state={dragging === part ? "dragging" : "idle"}
 					onKeyDown={handleKeyDown(part)}
-					className="-translate-1/2 pointer-events-auto absolute left-0 flex cursor-grab items-center justify-center rounded-full bg-background text-[var(--time-ring-accent)] shadow-[0_1px_2px_rgb(0_0_0/0.18),0_0_0_0.5px_rgb(0_0_0/0.04)] outline-none transition-transform duration-150 ease-out focus-visible:ring-3 focus-visible:ring-ring/50 data-[state=dragging]:scale-110 group-data-disabled/time-ring:pointer-events-none motion-reduce:transition-none dark:bg-zinc-950"
+					className="-translate-1/2 pointer-events-auto absolute left-0 flex min-h-0 min-w-0 cursor-grab items-center justify-center rounded-full bg-background text-[var(--time-ring-accent)] shadow-[0_1px_2px_rgb(0_0_0/0.16),0_0_0_1px_rgb(0_0_0/0.08)] outline-none transition-transform duration-150 ease-out focus-visible:ring-3 focus-visible:ring-ring/50 data-[state=dragging]:scale-110 group-data-disabled/time-ring:pointer-events-none motion-reduce:transition-none dark:bg-zinc-950 dark:shadow-[0_1px_3px_rgb(0_0_0/0.55),0_0_0_1px_rgb(255_255_255/0.14)]"
 					style={{
 						top: handleOffset,
 						width: handleSize,
 						height: handleSize,
+						minWidth: handleSize,
+						minHeight: handleSize,
+						maxWidth: handleSize,
+						maxHeight: handleSize,
 					}}
 				>
 					<motion.span
 						aria-hidden
-						className="flex size-[58%] items-center justify-center [&_svg]:size-full"
+						className="flex size-[56%] min-h-0 min-w-0 items-center justify-center [&_svg]:size-full [&_svg]:shrink-0"
 						style={{ rotate: part === "start" ? startCounter : endCounter }}
 					>
 						{icon}
@@ -626,7 +637,7 @@ export function TimeRing({
 			data-state={dragging ? "dragging" : "idle"}
 			data-disabled={disabled || undefined}
 			className={cn(
-				"group/time-ring w-full select-none [--time-ring-accent:var(--color-orange-500)] data-disabled:cursor-not-allowed data-disabled:opacity-50",
+				"group/time-ring w-full min-w-0 select-none [--time-ring-accent:var(--color-orange-500)] data-disabled:cursor-not-allowed data-disabled:opacity-50",
 				className,
 			)}
 			style={{ maxWidth: sizes[size] }}
@@ -654,7 +665,7 @@ export function TimeRing({
 						r={TRACK_RADIUS}
 						fill="none"
 						strokeWidth={TRACK_WIDTH}
-						className="stroke-zinc-100 dark:stroke-zinc-800/70"
+						className="stroke-zinc-300 dark:stroke-zinc-600"
 					/>
 					<g data-slot="time-ring-ticks">
 						{Array.from({ length: 24 }, (_, hour) => {
@@ -662,7 +673,7 @@ export function TimeRing({
 							const [x0, y0] = pointAt(hour * HOUR, TICK_OUTER);
 							const [x1, y1] = pointAt(
 								hour * HOUR,
-								TICK_OUTER - (major ? 4 : 2.5),
+								TICK_OUTER - (major ? 3.75 : 2.25),
 							);
 							return (
 								<line
@@ -671,10 +682,10 @@ export function TimeRing({
 									y1={y0}
 									x2={x1}
 									y2={y1}
-									strokeWidth={major ? 1.25 : 1}
+									strokeWidth={major ? 1.35 : 1}
 									strokeLinecap="round"
 									className={
-										major ? "stroke-foreground/35" : "stroke-foreground/15"
+										major ? "stroke-foreground/50" : "stroke-foreground/28"
 									}
 								/>
 							);
@@ -691,9 +702,10 @@ export function TimeRing({
 									y={y}
 									textAnchor="middle"
 									dominantBaseline="central"
+									fontSize={hour % 6 === 0 ? 6.5 : 5.75}
 									className={cn(
-										"fill-muted-foreground font-medium text-[8px] tabular-nums",
-										hour % 6 !== 0 && "fill-muted-foreground/70",
+										"fill-foreground/80 font-medium tabular-nums",
+										hour % 6 !== 0 && "fill-foreground/58 font-normal",
 									)}
 								>
 									{hourLabel(hour, format)}
@@ -717,12 +729,12 @@ export function TimeRing({
 				<div
 					aria-hidden
 					data-slot="time-ring-readout"
-					className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-[1.5cqw] text-center"
+					className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-[2.8cqw] text-center"
 				>
 					<NumberFlowGroup>
-						<div className="flex items-baseline gap-[1.2cqw] font-semibold text-[length:10cqw] text-foreground tabular-nums leading-none tracking-tight">
+						<div className="flex items-baseline justify-center gap-[0.22em] font-semibold text-[length:9cqw] text-foreground tabular-nums leading-none tracking-[-0.045em]">
 							{durationHours ? (
-								<span className="flex items-baseline gap-[0.8cqw]">
+								<span className="flex items-baseline gap-[0.14em]">
 									<NumberFlow
 										value={durationHours}
 										animated={!shouldReduceMotion}
@@ -730,13 +742,13 @@ export function TimeRing({
 										transformTiming={digitTiming}
 										spinTiming={digitTiming}
 									/>
-									<span className="font-medium text-[length:4.6cqw] text-muted-foreground tracking-normal">
+									<span className="font-medium text-[0.42em] text-foreground/55 tracking-[-0.02em]">
 										hr
 									</span>
 								</span>
 							) : null}
 							{durationMinutes || !durationHours ? (
-								<span className="flex items-baseline gap-[0.8cqw]">
+								<span className="flex items-baseline gap-[0.14em]">
 									<NumberFlow
 										value={durationMinutes}
 										animated={!shouldReduceMotion}
@@ -744,14 +756,14 @@ export function TimeRing({
 										transformTiming={digitTiming}
 										spinTiming={digitTiming}
 									/>
-									<span className="font-medium text-[length:4.6cqw] text-muted-foreground tracking-normal">
+									<span className="font-medium text-[0.42em] text-foreground/55 tracking-[-0.02em]">
 										min
 									</span>
 								</span>
 							) : null}
 						</div>
 					</NumberFlowGroup>
-					<p className="whitespace-nowrap font-medium text-[length:3.9cqw] text-muted-foreground tabular-nums leading-none">
+					<p className="whitespace-nowrap font-medium text-[length:3.5cqw] text-foreground/70 tabular-nums leading-none tracking-[-0.01em]">
 						{startText} – {endText}
 					</p>
 				</div>

@@ -70,7 +70,8 @@ export const examples: Registry["items"] = [
 			},
 		],
 		meta: {
-			previewClassName: "min-h-72 place-items-center content-center",
+			previewClassName:
+				"min-h-96 place-items-center content-center overflow-visible px-4 py-6",
 		},
 	},
 	{
