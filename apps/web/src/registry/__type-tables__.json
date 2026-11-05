@@ -166,6 +166,206 @@
 			]
 		}
 	],
+	"src/registry/components/bubble-wrap/bubble-wrap.tsx#BubbleWrapHandle#": [
+		{
+			"id": "bubble-wrap.tsx-BubbleWrapHandle",
+			"name": "BubbleWrapHandle",
+			"description": "",
+			"entries": [
+				{
+					"name": "reset",
+					"description": "Re-inflates every bubble with a ripple. Silent.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "() => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "popAll",
+					"description": "Pops every bubble with a ripple. Silent.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "() => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/bubble-wrap/bubble-wrap.tsx#BubbleWrapProps#": [
+		{
+			"id": "bubble-wrap.tsx-BubbleWrapProps",
+			"name": "BubbleWrapProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "rows",
+					"description": "Rows of bubbles.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "columns",
+					"description": "Columns of bubbles. On narrow sheets fewer columns fit, and the bubbles wrap onto more rows.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultPopped",
+					"description": "Indexes of bubbles that start out popped, for example `[2, 9, 15]`. Read on mount.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number[] | undefined",
+					"simplifiedType": "array",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "tint",
+					"description": "Subtle tint of the plastic film.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "TintName | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onPop",
+					"description": "Called once for each bubble that pops, with its index.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((index: number) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onClear",
+					"description": "Called once when the last bubble pops.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "autoReset",
+					"description": "Re-inflate the sheet shortly after every bubble is popped.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showCount",
+					"description": "Show how many bubbles are popped under the sheet.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a pop sound for each bubble and a soft flourish on a full clear.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptics on supported devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "ref",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Ref<BubbleWrapHandle> | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/component-sidebar/component-sidebar.tsx#ComponentSidebarContentProps#": [
 		{
 			"id": "component-sidebar.tsx-ComponentSidebarContentProps",

@@ -1,0 +1,191 @@
+---
+title: Bubble Wrap
+description: A sheet of plastic air cells to press or sweep across. Each bubble squashes, pops with a short falling sound and a light haptic tick, and stays flat until the cleared sheet re-inflates in a ripple.
+createdAt: 2026-11-05
+updatedAt: 2026-11-05
+---
+
+<ComponentPreview name="bubble-wrap-preview" />
+
+## Example
+
+<ComponentPreview name="bubble-wrap-demo" />
+
+## Features
+
+- A clear plastic film over a soft tray, with raised domes that catch the
+  light. Popped bubbles become flat, creased discs. Tint the film `blue` or
+  `pink`, or leave it `clear`.
+- Press a bubble to pop it, or hold and sweep across the sheet to pop every
+  bubble you cross. The path between pointer events is tested too, so fast
+  flicks skip nothing.
+- Each pop is a quick squash with a slight twist, then a thin ring flicks
+  outward. Once the sheet is clear it re-inflates after a short pause, in a
+  ripple from the last bubble popped.
+- Every pop is a short sound that drops in pitch, a little higher or lower
+  each time, with a light haptic tick. Clearing the sheet plays a soft, low
+  flourish with a firmer pulse.
+- At rest nothing animates, so the sheet is perfectly still.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/bubble-wrap
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="bubble-wrap" title="components/bubble-wrap.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { BubbleWrap } from "@/components/bubble-wrap";
+```
+
+```tsx
+<BubbleWrap />
+```
+
+The sheet fills the width of its container, up to the width at which each
+bubble is 42 px. On narrower containers fewer columns fit, so bubbles wrap
+onto more rows and never shrink below 36 px. Popped bubbles keep their state
+by index when the layout or size changes. Set a different width with
+`className`, for example `max-w-[400px]`.
+
+### Blue tint with a count
+
+`showCount` shows how many bubbles are popped under the sheet. The count also
+names the sheet for screen readers.
+
+```tsx
+<BubbleWrap tint="blue" rows={4} showCount />
+```
+
+### Sound off
+
+Turn the sound off and keep the haptics, or the other way round:
+
+```tsx
+<BubbleWrap sound={false} />
+```
+
+### Pops, clears and resets
+
+`onPop` fires once for each bubble that pops, and `onClear` once when the last
+one pops. With `autoReset={false}` the sheet stays flat until you call
+`reset()` on a ref. `popAll()` pops everything in a ripple.
+
+```tsx
+const sheet = useRef<BubbleWrapHandle>(null);
+
+<BubbleWrap
+  ref={sheet}
+  autoReset={false}
+  onPop={(index) => console.log("popped", index)}
+  onClear={() => console.log("clear")}
+/>
+<button onClick={() => sheet.current?.reset()}>Reset</button>
+```
+
+`defaultPopped` starts some bubbles flat, for example
+`defaultPopped={[3, 8, 14]}`.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Press a bubble | Pops it |
+| Hold and sweep | Pops every bubble crossed |
+| `Arrow` keys | Move between bubbles |
+| `Home` / `End` | First or last bubble |
+| `Space` / `Enter` | Pops the focused bubble |
+| **Pop all** button | Pops every bubble in a ripple |
+
+A popped bubble stays flat until the sheet resets, and pressing it again does
+nothing. Only one pointer sweeps at a time: a second finger and a right click
+are ignored. Lifting or losing the pointer, or moving it off the sheet, ends
+the sweep.
+
+On touch screens the sheet sets `touch-action: none`, so a swipe that starts
+on it pops bubbles rather than scrolling the page. Scroll by swiping outside
+the sheet.
+
+## Sound and haptics
+
+Each pop is a sine thump that falls from about 180 Hz to 70 Hz in 80 ms,
+under a few milliseconds of filtered noise, with the pitch varied by up to
+12% either way. Pops are spaced at least 16 ms apart, at most six ring at
+once, and a limiter sits on the mix, so even a fast sweep never clips or
+crackles. Each pop also triggers a `light` haptic, at most every 35 ms.
+Clearing the sheet plays a soft, low falling tick once, with a `medium`
+haptic.
+
+The audio context is created on the first press. Sound and haptics only
+follow user input. Mounting the sheet, re-inflating it, `reset()`, and
+`popAll()` are silent, and nothing plays while the tab is hidden. Turn each
+off with `sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+The sheet is a `group` named "Bubble wrap", followed by the count when
+`showCount` is on. Pass `aria-label` or `aria-labelledby` to name it
+yourself. Each bubble is a real toggle button labelled like "Bubble 3 of 30",
+with `aria-pressed` set once it's popped.
+
+The bubbles are a single tab stop with a roving `tabindex`, and the arrow
+keys move between them. Sweeping is a path-based gesture, so pressing each
+bubble on its own, the keyboard, and the **Pop all** button are its
+single-pointer equivalents
+([WCAG 2.5.1](https://www.w3.org/WAI/WCAG22/Understanding/pointer-gestures.html)).
+**Pop all** follows the bubbles in the tab order and only shows while it has
+keyboard focus.
+
+A polite live region announces how many bubbles are left each time the
+count passes a multiple of five,
+"All popped" when the sheet is clear, and "New sheet" when it refills. The
+focus ring, a dark ring with a white gap that reads on any surface, shows
+for keyboard focus only.
+
+With reduced motion enabled there is no squash, ring, or ripple: popped
+bubbles swap instantly and the sheet refills with a quick fade. Sound and
+haptics still follow their props, because they confirm the pop rather than
+decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/bubble-wrap/bubble-wrap.tsx"
+  name="BubbleWrapProps"
+/>
+
+<AutoTypeTable
+  path="src/registry/components/bubble-wrap/bubble-wrap.tsx"
+  name="BubbleWrapHandle"
+/>
