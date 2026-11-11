@@ -2,7 +2,7 @@
 title: Number Stepper
 description: A quantity field whose digits roll the way you count, with a click per step, hold-to-accelerate, and a soft wall at the limits.
 createdAt: 2026-10-24
-updatedAt: 2026-10-24
+updatedAt: 2026-11-11
 ---
 
 <ComponentPreview name="number-stepper-preview" />
@@ -137,3 +137,48 @@ rather than decorate movement; turn them off with `sound={false}` and
   path="src/registry/components/number-stepper/number-stepper.tsx"
   name="NumberStepperProps"
 />
+
+## FAQ
+
+### How do I install the Number Stepper with shadcn?
+
+Run `npx shadcn@latest add @tentui/number-stepper` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/number-stepper.json` without it. The
+CLI copies `number-stepper.tsx` into your project and installs
+`@number-flow/react`, `motion`, `lucide-react`, `web-haptics`, and
+`@rexa-developer/tiks`.
+
+### Can the Number Stepper format currency, percent, or units?
+
+Yes. Pass `Intl.NumberFormat` options to `format`, such as
+`format={{ style: "currency", currency: "EUR" }}`, and set `locale` to control
+formatting and how typed values are parsed. Percent values are fractions, so
+`0.15` displays as 15%.
+
+### Is the Number Stepper accessible?
+
+Yes. The input is a `spinbutton` named by `label`, with `aria-valuetext` built
+from `format`. Arrow keys step, `Shift` with an arrow or `PageUp`/`PageDown`
+moves `largeStep` steps, `Home` and `End` jump to the limits, and button changes
+are announced through a polite live region once the value settles.
+
+### How do I use it as a controlled input or in a form?
+
+Pass `value` and `onValueChange`; with React Hook Form, pass `field.value` and
+`field.onChange` from a `Controller`. Set `name` to submit the value with a
+native form through a hidden input, and use `onValueCommit` to save once a press
+is released or a typed value is committed.
+
+### What happens when I hold the increase button?
+
+The value keeps stepping while you hold it. With `accelerate` on (the default),
+after 10 repeats each step moves `largeStep` steps (10 by default), and the
+value stops at `min` and `max` with a pop, a haptic, and a small nudge.
+
+### Is the Number Stepper free to use?
+
+Yes. The Number Stepper is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

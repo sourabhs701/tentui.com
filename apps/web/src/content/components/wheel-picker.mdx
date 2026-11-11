@@ -2,7 +2,7 @@
 title: Wheel Picker
 description: An iOS-style scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.
 createdAt: 2026-10-31
-updatedAt: 2026-10-31
+updatedAt: 2026-11-11
 ---
 
 <ComponentPreview name="wheel-picker-preview" />
@@ -214,3 +214,45 @@ rather than decorate movement.
   path="src/registry/components/wheel-picker/wheel-picker.tsx"
   name="WheelPickerGroupProps"
 />
+
+## FAQ
+
+### How do I install the Wheel Picker with shadcn?
+
+Run `npx shadcn@latest add @tentui/wheel-picker` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/wheel-picker.json` without it. The
+CLI copies `wheel-picker.tsx` into your project and installs `motion`,
+`web-haptics`, and `@rexa-developer/tiks`.
+
+### Can I build an iOS-style time or date picker with it?
+
+Yes. Put one `WheelPicker` per column inside `WheelPickerGroup`, which lines the
+wheels up under one shared selection band, and set `loop` on columns such as
+hours and minutes so they wrap around.
+
+### Is the Wheel Picker keyboard accessible?
+
+Yes. Each wheel is a `listbox` with one tab stop: arrow keys move one row,
+`PageUp` and `PageDown` move a page, `Home` and `End` jump to the ends, and
+typing jumps to a matching label. Name each wheel with `aria-label` or
+`aria-labelledby` so screen readers announce it with the selected option.
+
+### Does it work as a controlled component or with React Hook Form?
+
+Yes. Pass `value` and `onValueChange`, which fires once when the wheel settles
+on a new value rather than for every row it passes. With React Hook Form, render
+it inside a `Controller` and pass `field.value` and `field.onChange` to those
+props.
+
+### Can I turn off the click sound and haptics?
+
+Yes. Set `sound={false}` and `haptics={false}`. Both only follow user input, so
+the first render and `value` changes from the parent are always silent.
+
+### Is the Wheel Picker free to use?
+
+Yes. The Wheel Picker is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

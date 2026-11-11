@@ -3,7 +3,7 @@ title: Stateful Button
 description: Communicate async loading, success, and error states without leaving the button.
 image: https://cdn.tentui.com/images/components/animated-save-button-light.webp
 createdAt: 2026-07-19
-updatedAt: 2026-07-26
+updatedAt: 2026-11-11
 ---
 
 <ComponentPreview name="stateful-button-preview" />
@@ -117,3 +117,44 @@ remove transforms and stop the loading icon's rotation.
   Publish
 </StatefulButton>
 ```
+
+## FAQ
+
+### How do I install the Stateful Button with shadcn?
+
+Run `npx shadcn@latest add @tentui/stateful-button` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/stateful-button.json` without it.
+The CLI copies `stateful-button.tsx` into your project and installs `motion` and
+`lucide-react`.
+
+### How does the Stateful Button know when loading is done?
+
+Return a promise from `onClick`. The button shows its loading state until the
+promise settles, then shows success if it resolves or error if it throws, and
+returns to idle after 2 seconds.
+
+### Does it prevent double submits?
+
+Yes. Clicks are ignored while an action is running, and the button stays
+disabled until it returns to idle.
+
+### Can I change the loading, success, and error labels?
+
+Yes. Pass `labels`, for example
+`labels={{ loading: "Saving", success: "Saved" }}`. The defaults are "Working",
+"Done", and "Try again", and `children` must be a string because the label
+animates character by character.
+
+### Is the Stateful Button accessible?
+
+Yes. It sets `aria-busy` while loading and announces the loading, success, and
+error labels through a polite live region. With reduced motion enabled, the
+transforms are removed and the loading icon stops spinning.
+
+### Is the Stateful Button free to use?
+
+Yes. The Stateful Button is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

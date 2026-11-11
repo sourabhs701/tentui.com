@@ -35,6 +35,11 @@ type RegistryIndexItem = {
 	files?: Array<string | { path: string }>;
 };
 
+// Used instead of SITE_INFO.description so the summary also states the
+// license model and how items are installed.
+export const LLMS_SUMMARY =
+	"TentUI is a free and source-available library of interactive React components and page blocks for shadcn/ui, styled with Tailwind CSS. Install any item into your own codebase with the shadcn CLI and edit its source directly.";
+
 const registryIndex = Index as unknown as Record<string, RegistryIndexItem>;
 const transparentWrapperNames = new Set(["CodeTabs", "Steps"]);
 

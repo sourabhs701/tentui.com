@@ -6,6 +6,7 @@ import {
 	getComponentLLMText,
 	getCreatedAt,
 	getISODate,
+	LLMS_SUMMARY,
 } from "@/lib/llms";
 
 export const revalidate = false;
@@ -57,7 +58,7 @@ export async function GET() {
 	});
 	const content = `# ${SITE_INFO.name} complete documentation
 
-> ${SITE_INFO.description}
+> ${LLMS_SUMMARY}
 
 This document contains the complete TentUI component documentation and block source intended for technical reference and LLM consumption.
 

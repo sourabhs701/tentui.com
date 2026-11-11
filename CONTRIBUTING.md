@@ -76,6 +76,11 @@ pnpm registry:build
 pnpm registry:validate
 ```
 
+Component docs pages follow the checklist in
+[`apps/web/AGENTS.md`](apps/web/AGENTS.md#component-docs-checklist): a
+keyword-friendly description, an optional `seoTitle`, and a `## FAQ` section in
+the documented format, which also generates the page's FAQPage schema.
+
 Registry outputs such as `apps/web/registry.json`,
 `apps/web/src/registry/__index__.tsx`, and `apps/web/public/r/*.json` are
 generated. Do not edit them manually; include the relevant generated changes

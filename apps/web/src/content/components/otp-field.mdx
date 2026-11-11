@@ -2,7 +2,7 @@
 title: OTP Field
 description: A one-time code input with a slot per digit, a tick per keystroke, a cascade on paste, and a shake when the code is wrong.
 createdAt: 2026-10-26
-updatedAt: 2026-10-26
+updatedAt: 2026-11-11
 ---
 
 <ComponentPreview name="otp-field-preview" />
@@ -166,3 +166,46 @@ decorate movement; turn them off with `sound={false}` and `haptics={false}`.
   path="src/registry/components/otp-field/otp-field.tsx"
   name="OTPFieldProps"
 />
+
+## FAQ
+
+### How do I install the OTP Field with shadcn?
+
+Run `npx shadcn@latest add @tentui/otp-field` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/otp-field.json` without it. The CLI
+copies `otp-field.tsx` into your project and installs `motion`, `lucide-react`,
+`web-haptics`, and `@rexa-developer/tiks`.
+
+### Does the OTP Field support SMS autofill and paste?
+
+Yes. It is a single input with `autocomplete="one-time-code"`, so iOS and
+Android can offer codes from incoming messages, and pasting a code fills the
+slots from the first one. Digit-only fields open the numeric keypad on mobile.
+
+### Is the OTP Field accessible to screen readers?
+
+Yes. Screen readers announce one labeled textbox, named "One-time code" by
+default, instead of one box per digit. The input sets `aria-invalid` while
+`status` is `error`, and a polite live region announces verifying, success, and
+error states.
+
+### How do I use it with React Hook Form or a native form?
+
+Control it with `value` and `onValueChange`; with React Hook Form, pass
+`field.value` and `field.onChange` from a `Controller`. For a native form or a
+server action, set `name` and the code is submitted through a hidden input. Use
+`onComplete` to verify the code as soon as every slot is filled.
+
+### Can I change the length or accept letters?
+
+Yes. Set `length` (6 by default) and optionally `groups` that add up to it, for example `length={8}` with `groups={[4, 4]}`,
+and set `pattern="alphanumeric"` or pass a RegExp that matches one allowed
+character. Add `mask` to show dots instead of the characters.
+
+### Is the OTP Field free to use?
+
+Yes. The OTP Field is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

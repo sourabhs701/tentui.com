@@ -2,7 +2,7 @@
 title: Hold to Confirm
 description: Guard destructive actions behind a press-and-hold fill with rising sound, haptic ticks, and a checkmark.
 createdAt: 2026-10-22
-updatedAt: 2026-10-22
+updatedAt: 2026-11-11
 ---
 
 <ComponentPreview name="hold-to-confirm-demo" />
@@ -125,3 +125,47 @@ checkmark remain because they communicate the state.
   path="src/registry/components/hold-to-confirm/hold-to-confirm.tsx"
   name="HoldToConfirmProps"
 />
+
+## FAQ
+
+### How do I install the Hold to Confirm button with shadcn?
+
+Run `npx shadcn@latest add @tentui/hold-to-confirm` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/hold-to-confirm.json` without it.
+The CLI copies `hold-to-confirm.tsx` and the `use-hold-to-confirm.ts` hook into
+your project and installs `motion`, `lucide-react`, and `web-haptics`.
+
+### How long does the user have to hold the button?
+
+1.5 seconds by default; set `holdDuration` in milliseconds to change it.
+Releasing early animates the fill back and calls `onCancel` with the progress
+reached, and after confirming the button resets after 2 seconds, or stays
+confirmed with `resetDelay={false}`.
+
+### Is the Hold to Confirm button keyboard accessible?
+
+Yes. It is a native button that is held with `Space` or `Enter`, and releasing
+the key or moving focus away cancels the hold. The `instructions` text is linked
+through `aria-describedby`, and the confirmed label is announced through a
+polite live region.
+
+### Can I change the label, icon, and color?
+
+Yes. Pass the idle label as `children`, and set `icon`, `confirmedLabel`,
+`confirmedIcon`, and `fillClassName`, for example
+`fillClassName="bg-amber-500 text-black"`. For a fully custom surface, use the
+`useHoldToConfirm` hook, which returns the hold state, a progress motion value,
+and the event handlers.
+
+### Can I turn off the sound and haptics?
+
+Yes. Set `sound={false}` and `haptics={false}`. Sound is also muted when the
+user prefers reduced motion.
+
+### Is the Hold to Confirm button free to use?
+
+Yes. The Hold to Confirm button is free and source-available: the shadcn CLI
+copies its source into your project, and you can use it in unlimited personal
+and client projects under the [TentUI License](/license). The license doesn't
+allow redistributing or reselling the component itself.
