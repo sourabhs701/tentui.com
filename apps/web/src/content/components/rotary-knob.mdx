@@ -2,7 +2,7 @@
 title: Rotary Knob
 description: A hardware-style dial you turn by dragging, scrolling, or with the keyboard, with a tick and a haptic notch on every detent and a thunk at the end stops.
 createdAt: 2026-10-28
-updatedAt: 2026-10-28
+updatedAt: 2026-11-11
 ---
 
 <ComponentPreview name="rotary-knob-preview" />
@@ -177,3 +177,47 @@ because they confirm each detent rather than decorate movement.
   path="src/registry/components/rotary-knob/rotary-knob.tsx"
   name="RotaryKnobProps"
 />
+
+## FAQ
+
+### How do I install the Rotary Knob with shadcn?
+
+Run `npx shadcn@latest add @tentui/rotary-knob` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/rotary-knob.json` without it. The
+CLI copies `rotary-knob.tsx` into your project and installs `motion`,
+`web-haptics`, and `@rexa-developer/tiks`.
+
+### Is the Rotary Knob keyboard accessible?
+
+Yes. The dial is a `slider` with `aria-valuenow`, `aria-valuemin`,
+`aria-valuemax`, and `aria-valuetext`. Arrow keys move one detent, `PageUp` and
+`PageDown` move ten, and `Home` and `End` jump to the limits; name it with
+`aria-label` or `aria-labelledby`.
+
+### How do I control the value or save it after a drag?
+
+Pass `value` and `onValueChange`, which fires on every detent, and use
+`onValueCommit` to save, because it fires once when a drag is released or a key,
+wheel step, or reset lands. Set `name` to submit the value with a native form
+through a hidden input.
+
+### Can the knob snap to labeled positions like Off, Low, and High?
+
+Yes. Pass `stops` with a `value` and `label` for each position. Stops replace
+`min`, `max`, and `step`, and their labels are used for the readout and for
+`aria-valuetext`.
+
+### Can I customize how the knob looks and turns?
+
+Yes. Choose `variant` (`default`, `minimal`, or `tactile`) and `size`, set the
+accent color with the `--rotary-knob-accent` CSS variable, change the travel
+with `angleRange` (270 degrees by default), and set `dragMode="circular"` to
+follow the pointer around the dial.
+
+### Is the Rotary Knob free to use?
+
+Yes. The Rotary Knob is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

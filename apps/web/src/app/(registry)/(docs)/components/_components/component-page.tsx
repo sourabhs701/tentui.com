@@ -26,6 +26,7 @@ import {
 import { SITE_INFO, SOURCE_CODE_GITHUB_URL } from "@/config/site";
 import type { Doc } from "@/lib/documents";
 import { findNeighbour, getComponentDocs } from "@/lib/documents";
+import { faqPageJsonLd, getFaqItems } from "@/lib/faq";
 import {
 	absoluteUrl,
 	breadcrumbJsonLd,
@@ -107,6 +108,7 @@ export function ComponentPage({ doc }: { doc: Doc }) {
 	const toc = getTableOfContents(doc.content);
 	const { previous, next } = findNeighbour(getComponentDocs(), doc.slug);
 	const url = getComponentHref(doc.slug);
+	const faq = getFaqItems(doc.content);
 
 	return (
 		<div className="mb-5 flex min-w-0 px-2">
@@ -121,6 +123,9 @@ export function ComponentPage({ doc }: { doc: Doc }) {
 							{ name: doc.metadata.title, href: url },
 						])}
 					/>
+					{faq.length > 0 ? (
+						<JsonLdScript data={faqPageJsonLd(faq, absoluteUrl(url))} />
+					) : null}
 					<DocKeyboardShortcuts
 						previous={previous ? getComponentHref(previous.slug) : null}
 						next={next ? getComponentHref(next.slug) : null}

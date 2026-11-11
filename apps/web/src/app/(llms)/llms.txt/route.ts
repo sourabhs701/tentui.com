@@ -1,6 +1,8 @@
 import { SITE_INFO } from "@/config/site";
 import { getAllBlocks } from "@/lib/blocks";
 import { getComponentDocs, getDocs } from "@/lib/documents";
+import { LLMS_SUMMARY } from "@/lib/llms";
+import { getRegistryItemNamespace } from "@/utils/registry";
 
 export const revalidate = false;
 export const dynamic = "force-static";
@@ -11,7 +13,9 @@ export async function GET() {
 	const blocks = await getAllBlocks();
 	const content = `# ${SITE_INFO.name}
 
-> ${SITE_INFO.description}
+> ${LLMS_SUMMARY}
+
+Add the registry to the \`registries\` field of \`components.json\` with \`"@tentui": "${SITE_INFO.url}/r/{name}.json"\`, then run \`npx shadcn@latest add @tentui/<name>\`. Without the registry entry, run \`npx shadcn@latest add ${SITE_INFO.url}/r/<name>.json\`. Every component page below is linked as Markdown; drop the \`.mdx\` suffix for the HTML page.
 
 - [Complete documentation](${SITE_INFO.url}/llms-full.txt): All TentUI component documentation and block source in one document.
 - [Getting started](${SITE_INFO.url}/docs): Installation, registry, and MCP setup guides.
@@ -25,7 +29,7 @@ ${docs.map((item) => `- [${item.metadata.title}](${SITE_INFO.url}/docs/${item.sl
 
 ## Components
 
-${components.map((item) => `- [${item.metadata.title}](${SITE_INFO.url}/components/${item.slug}.mdx): ${item.metadata.description}`).join("\n")}
+${components.map((item) => `- [${item.metadata.title}](${SITE_INFO.url}/components/${item.slug}.mdx): ${item.metadata.description} Install: \`npx shadcn@latest add ${getRegistryItemNamespace(item.slug)}\``).join("\n")}
 
 ## Blocks
 

@@ -2,7 +2,7 @@
 title: Scratch Card
 description: A foil scratch-off card. Rub the foil away with a finger or cursor to reveal what is underneath, with a scratch texture that follows your speed, foil flakes, and a soft chime when the rest lifts off.
 createdAt: 2026-11-04
-updatedAt: 2026-11-04
+updatedAt: 2026-11-11
 ---
 
 <ComponentPreview name="scratch-card-preview" />
@@ -184,3 +184,44 @@ they confirm the scratch rather than decorate movement.
   path="src/registry/components/scratch-card/scratch-card.tsx"
   name="ScratchCardHandle"
 />
+
+## FAQ
+
+### How do I install the Scratch Card with shadcn?
+
+Run `npx shadcn@latest add @tentui/scratch-card` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/scratch-card.json` without it. The
+CLI copies `scratch-card.tsx` into your project and installs `motion`,
+`web-haptics`, and `@rexa-developer/tiks`.
+
+### Can users reveal the Scratch Card without scratching?
+
+Yes. A **Reveal** button and `Enter` or `Space` on the focused card reveal the
+content at once, so the card works with a keyboard and a single pointer (WCAG
+2.5.1). Until it is revealed, the hidden content is `aria-hidden` and `inert`,
+so screen readers can't read it early.
+
+### How do I know when the card is revealed?
+
+`onReveal` fires once per reveal, whether by scratching, the button, a key, or
+the `reveal()` method. `onProgress` reports the cleared fraction from 0 to 1,
+and once it passes `threshold` (0.6 by default) the rest of the foil lifts off.
+
+### How do I reset the card for another round?
+
+Call `reset()` on a ref to put a fresh foil back, or remount the card by
+changing its `key`. `reset()` and `reveal()` are silent.
+
+### Can I customize the foil and what is underneath?
+
+Yes. Put any React content inside the card, pick `foil` (`silver`, `gold`, or
+`graphite`), engrave a `hint` into the foil, and set the width with `className`.
+The card keeps a 28:17 aspect ratio and is 320 px wide at most by default.
+
+### Is the Scratch Card free to use?
+
+Yes. The Scratch Card is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

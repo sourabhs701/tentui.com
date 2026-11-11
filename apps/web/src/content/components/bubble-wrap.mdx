@@ -2,7 +2,7 @@
 title: Bubble Wrap
 description: A sheet of plastic air cells to press or sweep across. Each bubble squashes, pops with a short falling sound and a light haptic tick, and stays flat until the cleared sheet re-inflates in a ripple.
 createdAt: 2026-11-05
-updatedAt: 2026-11-05
+updatedAt: 2026-11-11
 ---
 
 <ComponentPreview name="bubble-wrap-preview" />
@@ -191,3 +191,44 @@ decorate movement.
   path="src/registry/components/bubble-wrap/bubble-wrap.tsx"
   name="BubbleWrapHandle"
 />
+
+## FAQ
+
+### How do I install the Bubble Wrap with shadcn?
+
+Run `npx shadcn@latest add @tentui/bubble-wrap` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/bubble-wrap.json` without it. The
+CLI copies `bubble-wrap.tsx` into your project and installs `motion`,
+`web-haptics`, and `@rexa-developer/tiks`.
+
+### Can I change the number of bubbles or the color?
+
+Yes. Set `rows` (5 by default) and `columns` (6 by default), and `tint` to
+`clear`, `blue`, or `pink`. On narrow containers fewer columns fit, so the
+bubbles wrap onto more rows instead of shrinking below 36 px.
+
+### Is the Bubble Wrap accessible?
+
+Yes. Each bubble is a toggle button labeled like "Bubble 3 of 30", with
+`aria-pressed` once it pops. The sheet is one tab stop where arrow keys move
+between bubbles and `Space` or `Enter` pops one, and a polite live region
+announces how many are left.
+
+### How do I react to pops or reset the sheet?
+
+`onPop` fires with the index of each bubble that pops, and `onClear` fires once
+when the last one pops. The sheet re-inflates on its own unless you set
+`autoReset={false}`, and a ref exposes `reset()` and `popAll()`.
+
+### Does it block page scrolling on mobile?
+
+Only on the sheet itself. It sets `touch-action: none` so a swipe that starts on
+it pops bubbles, and swiping anywhere outside it scrolls the page as usual.
+
+### Is the Bubble Wrap free to use?
+
+Yes. The Bubble Wrap is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.
