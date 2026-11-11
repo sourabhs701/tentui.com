@@ -19,6 +19,7 @@ export const MOBILE_NAV = [{ title: "Home", href: "/" }, ...MAIN_NAV] as const;
 
 export const GITHUB_REPOSITORY = "sourabhs701/tentui.com";
 export const SOURCE_CODE_GITHUB_URL = `https://github.com/${GITHUB_REPOSITORY}`;
+export const X_PROFILE_URL = "https://x.com/srbcode";
 
 export const UTM_PARAMS = {
 	utm_source: "tentui.com",

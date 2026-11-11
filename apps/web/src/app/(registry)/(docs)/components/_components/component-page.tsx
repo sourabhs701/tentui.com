@@ -23,7 +23,11 @@ import {
 	ComponentContentCol,
 	ComponentRightCol,
 } from "@/components/sidebar/component-page-layout";
-import { SITE_INFO, SOURCE_CODE_GITHUB_URL } from "@/config/site";
+import {
+	getComponentKeywords,
+	getComponentSeoDescription,
+	getComponentSeoTitle,
+} from "@/lib/component-seo";
 import type { Doc } from "@/lib/documents";
 import { findNeighbour, getComponentDocs } from "@/lib/documents";
 import { faqPageJsonLd, getFaqItems } from "@/lib/faq";
@@ -32,6 +36,7 @@ import {
 	breadcrumbJsonLd,
 	JSON_LD_ID,
 	JsonLdScript,
+	sourceCodeJsonLdProperties,
 } from "@/lib/json-ld";
 import { TOOLBAR_HIT_AREA, TOOLBAR_PRESS } from "@/lib/toolbar-button";
 import { cn } from "@/lib/utils";
@@ -43,17 +48,19 @@ function getComponentHref(slug: string): Route {
 export function getComponentPageMetadata(doc: Doc): Metadata {
 	const { title, description, image, createdAt, updatedAt } = doc.metadata;
 	const url = getComponentHref(doc.slug);
+	const seoTitle = getComponentSeoTitle(doc);
+	const seoDescription = getComponentSeoDescription(doc);
 	const ogImage =
 		image ||
 		`/og/simple?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
 
 	return {
-		title,
-		description,
+		title: { absolute: seoTitle },
+		description: seoDescription,
 		alternates: { canonical: url },
 		openGraph: {
-			title,
-			description,
+			title: seoTitle,
+			description: seoDescription,
 			type: "article",
 			url,
 			publishedTime: new Date(createdAt).toISOString(),
@@ -62,8 +69,8 @@ export function getComponentPageMetadata(doc: Doc): Metadata {
 		},
 		twitter: {
 			card: "summary_large_image",
-			title,
-			description,
+			title: seoTitle,
+			description: seoDescription,
 			images: [ogImage],
 		},
 	};
@@ -80,20 +87,13 @@ function softwareSourceCodeJsonLd(doc: Doc) {
 		"@type": "SoftwareSourceCode",
 		"@id": absoluteUrl(url),
 		name: doc.metadata.title,
-		description: doc.metadata.description,
+		description: getComponentSeoDescription(doc),
 		image: absoluteUrl(ogImage),
 		url: absoluteUrl(url),
 		datePublished: new Date(doc.metadata.createdAt).toISOString(),
 		dateModified: new Date(doc.metadata.updatedAt).toISOString(),
-		codeRepository: SOURCE_CODE_GITHUB_URL,
-		programmingLanguage: "TypeScript",
-		runtimePlatform: "React",
-		keywords: ["react", "shadcn", "component"],
-		author: {
-			"@type": "Organization",
-			name: SITE_INFO.name,
-			url: SITE_INFO.url,
-		},
+		keywords: getComponentKeywords(doc).join(", "),
+		...sourceCodeJsonLdProperties(),
 		isPartOf: {
 			"@type": "CollectionPage",
 			"@id": absoluteUrl("/components"),
@@ -170,6 +170,9 @@ export function ComponentPage({ doc }: { doc: Doc }) {
 					</div>
 
 					<div className="py-4">
+						<p className="mb-3 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
+							React component for shadcn/ui
+						</p>
 						<h1
 							data-slot="doc-title"
 							className="text-balance font-medium text-4xl tracking-tight"

@@ -8,6 +8,10 @@ import { cache } from "react";
 export type DocMetadata = {
 	title: string;
 	description: string;
+	/** Search title override for names that read awkwardly in the generated pattern. */
+	seoTitle?: string;
+	/** Meta description override; falls back to a description derived from `description`. */
+	seoDescription?: string;
 	image?: string;
 	new?: boolean;
 	order?: number;

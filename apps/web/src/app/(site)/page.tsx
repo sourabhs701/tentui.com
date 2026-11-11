@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { JsonLdScript, libraryJsonLd } from "@/lib/json-ld";
 import { ComponentsShowcase } from "./_components/components-showcase";
 import { Hero } from "./_components/hero";
 import LandingFaq from "./_components/landing-faq";
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<div className="relative isolate min-h-svh overflow-hidden bg-background text-foreground">
+			<JsonLdScript data={libraryJsonLd()} />
 			<Hero />
 			<ComponentsShowcase />
 			<LandingTestimonials />
