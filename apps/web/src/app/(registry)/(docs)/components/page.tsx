@@ -14,7 +14,7 @@ import { ComponentsDirectory } from "./_components/components-directory";
 
 const title = "Interactive React Components for shadcn/ui";
 const description =
-	"Browse open-source interactive React components for shadcn/ui: buttons, sliders, pickers, menus, and sheets, each with a live demo and usage docs.";
+	"Browse free, source-available interactive React components for shadcn/ui: buttons, sliders, pickers, menus, and sheets, each with a live demo and usage docs.";
 const ogImage = `/og/simple?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
 
 export const metadata: Metadata = {
@@ -76,10 +76,10 @@ export default function ComponentsPage() {
 					{title}
 				</h1>
 				<p className="mt-4 max-w-2xl text-pretty text-muted-foreground leading-relaxed">
-					TentUI is an open-source collection of interactive React components
-					for shadcn/ui projects. Each component has a documentation page with a
-					live demo, and most include a shadcn CLI install command, usage
-					examples, and an API reference. New to TentUI? Start with the{" "}
+					TentUI is a free, source-available collection of interactive React
+					components for shadcn/ui projects. Each component has a documentation
+					page with a live demo, and most include a shadcn CLI install command,
+					usage examples, and an API reference. New to TentUI? Start with the{" "}
 					<Link
 						href="/docs/installation"
 						className="font-medium text-foreground underline underline-offset-4 transition-colors hover:text-primary"

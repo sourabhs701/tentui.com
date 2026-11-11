@@ -9,7 +9,7 @@ export function GET() {
 	return createRssResponse({
 		title: `Components | ${SITE_INFO.name}`,
 		description:
-			"Beautiful, open-source React components for modern web applications.",
+			"Beautiful, free and source-available React components for modern web applications.",
 		url: absoluteUrl("/components"),
 		selfUrl: absoluteUrl("/components/rss"),
 		items: getComponentRssItems(),

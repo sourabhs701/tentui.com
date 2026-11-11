@@ -7,7 +7,7 @@ export const SITE_INFO = {
 	name: "TentUI",
 	url: "https://tentui.com",
 	description:
-		"Beautiful, open-source interface blocks for modern web applications.",
+		"Beautiful, free and source-available interface blocks for modern web applications.",
 } as const;
 
 export const MAIN_NAV = [

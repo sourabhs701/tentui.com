@@ -37,7 +37,7 @@ export default function OgImage() {
 				<section className="absolute bottom-[126px] left-[128px] z-20 w-[1080px]">
 					<div className="mb-12 flex gap-3 text-[36px] leading-none tracking-[-0.04em]">
 						<span className="rounded-[9px] bg-white/25 px-3 py-2 font-medium">
-							Open-source
+							Source-available
 						</span>
 						<span className="rounded-[9px] bg-white/15 px-3 py-2 text-white/75">
 							Components

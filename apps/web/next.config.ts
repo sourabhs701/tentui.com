@@ -1,9 +1,18 @@
+import { readdirSync } from "node:fs";
 import path from "node:path";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import { loadEnvFiles } from "@tentui.com/env/load";
 import type { NextConfig } from "next";
 
 loadEnvFiles();
+
+// Legacy /docs/components/<slug> URLs only redirect to /components/<slug> when
+// that component page exists; anything else falls through to /components.
+const componentSlugs = readdirSync(
+	path.join(import.meta.dirname, "src/content/components"),
+)
+	.filter((file) => file.endsWith(".mdx"))
+	.map((file) => file.slice(0, -".mdx".length));
 
 const nextConfig: NextConfig = {
 	allowedDevOrigins: ["tentui.localhost", "*.tentui.localhost"],
@@ -26,6 +35,12 @@ const nextConfig: NextConfig = {
 	},
 	async redirects() {
 		return [
+			{
+				source: "/:path*",
+				has: [{ type: "host", value: "www\\.tentui\\.com" }],
+				destination: "https://tentui.com/:path*",
+				statusCode: 301,
+			},
 			{
 				source: "/about",
 				destination: "/",
@@ -62,19 +77,26 @@ const nextConfig: NextConfig = {
 				permanent: true,
 			},
 			{
-				source: "/docs/components/animated-tabs",
-				destination: "/components/animated-tabs",
-				permanent: true,
-			},
-			{
-				source: "/docs/components/animated-arrow",
-				destination: "/components/animated-arrow",
-				permanent: true,
-			},
-			{
 				source: "/docs/components/password-input",
 				destination: "/blog/accessible-password-input-shadcn",
 				permanent: true,
+			},
+			{
+				source: `/docs/components/:slug(${componentSlugs.join("|")})`,
+				destination: "/components/:slug",
+				statusCode: 301,
+			},
+			// Removed components (e.g. world-map) have no replacement page.
+			{
+				source: "/docs/components/:path+",
+				destination: "/components",
+				statusCode: 301,
+			},
+			// Indexed post that never shipped here; no chart content to point at.
+			{
+				source: "/blog/react-pie-chart-recharts-tailwind",
+				destination: "/blog",
+				statusCode: 301,
 			},
 			{
 				source: "/demo/email-dock",
