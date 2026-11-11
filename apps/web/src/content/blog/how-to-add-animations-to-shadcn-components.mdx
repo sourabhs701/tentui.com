@@ -22,10 +22,10 @@ shared-layout animation for tabs and state-driven feedback for an async button.
 Both keep the source in your application, so you can adapt the timing, styles,
 and behavior without adding a Tent UI runtime package.
 
-If you arrived looking for an open-source shadcn animation workflow, source
-visibility is only part of the answer. You should also know which code is copied
-into your application, which packages remain runtime dependencies, and what each
-license permits.
+If you are evaluating copy-paste shadcn animation code, source visibility is
+only part of the answer. You should also know which code is copied into your
+application, which packages remain runtime dependencies, and what each license
+permits.
 
 ## Choose the state change before the animation
 
@@ -81,9 +81,9 @@ Use the first three when motion needs to clarify interaction state. The last
 two are more decorative, so confirm that they support the page's purpose and
 remain still when reduced motion is requested.
 
-## Check the licenses in an open-source animation stack
+## Check the licenses in a shadcn animation stack
 
-An open-source shadcn animation stack can contain several separately licensed
+A shadcn animation stack can contain several separately licensed
 layers: the accessible primitive, the animation library, and the component code
 copied from a registry. A public repository or copy-paste install does not
 automatically give every layer the same license.
@@ -96,7 +96,8 @@ Before adopting a component:
    and redistribution terms.
 4. Record those licenses with the dependency review in your pull request.
 
-Tent UI keeps its site and component implementations visible in its
+Tent UI is free and source-available: its site and component implementations
+are visible in its
 [public source repository](https://github.com/sourabhs701/tentui.com), and the
 registry copies component source into your project. The
 [Tent UI license](/license) permits modification and use in end products but
