@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Sets up Dodo Payments for sponsor slots, so checkout works end to end.
 //
-//   pnpm --dir apps/web dodo:setup --mode test   # local dev
-//   pnpm --dir apps/web dodo:setup --mode live   # production
+//   pnpm --dir apps/web run dodo:setup --mode test   # local dev
+//   pnpm --dir apps/web run dodo:setup --mode live   # production
 //
 // Both modes find or create the two subscription products (tagged
 // `metadata.site = tentui.com`), so running it again changes nothing.
