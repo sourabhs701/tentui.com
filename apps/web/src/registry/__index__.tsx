@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"glass-toggle": {
+		name: "glass-toggle",
+		title: "Glass Toggle",
+		description: "An on/off switch with a thumb of thick frosted glass. Flip it and the thumb springs across, a pixel moon scatters and reassembles as a pixel sun, and a rim light runs round the glass from cool lilac to warm amber.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/glass-toggle/glass-toggle.tsx","type":"registry:component","target":"@components/glass-toggle.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/glass-toggle/glass-toggle")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for glass-toggle");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-11-11"},
+	},
 	"bubble-wrap": {
 		name: "bubble-wrap",
 		title: "Bubble Wrap",
@@ -797,6 +815,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"glass-toggle-preview": {
+		name: "glass-toggle-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/glass-toggle-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/glass-toggle-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for glass-toggle-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-56 place-items-center content-center"},
+	},
 	"bubble-wrap-preview": {
 		name: "bubble-wrap-preview",
 		title: undefined,
@@ -1300,6 +1336,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"glass-toggle-demo": {
+		name: "glass-toggle-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/glass-toggle-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/glass-toggle-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for glass-toggle-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-80 place-items-center content-center"},
 	},
 	"pull-cord-demo": {
 		name: "pull-cord-demo",

@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "glass-toggle",
+		type: "registry:component",
+		title: "Glass Toggle",
+		description:
+			"An on/off switch with a thumb of thick frosted glass. Flip it and the thumb springs across, a pixel moon scatters and reassembles as a pixel sun, and a rim light runs round the glass from cool lilac to warm amber.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/glass-toggle/glass-toggle.tsx",
+				type: "registry:component",
+				target: "@components/glass-toggle.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-11-11",
+		},
+		docs: "https://tentui.com/components/glass-toggle",
+	},
+	{
 		name: "bubble-wrap",
 		type: "registry:component",
 		title: "Bubble Wrap",

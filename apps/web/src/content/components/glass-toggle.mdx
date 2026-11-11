@@ -1,0 +1,170 @@
+---
+title: Glass Toggle
+description: An on/off switch with a thumb of thick frosted glass. Flip it and the thumb springs across, a pixel moon scatters and reassembles as a pixel sun, and a rim light runs round the glass from cool lilac to warm amber.
+createdAt: 2026-11-11
+updatedAt: 2026-11-11
+---
+
+<ComponentPreview name="glass-toggle-preview" />
+
+## Example
+
+<ComponentPreview name="glass-toggle-demo" />
+
+## Features
+
+- A recessed tray and a squircle thumb built from stacked CSS and SVG
+  layers: a milky or smoked glass body, a bevel band lit from the top-left
+  with a glint where the light leaves, a crisp top rim, a soft caustic on the
+  tray, and a translucent shadow. No WebGL and no canvas.
+- A neon rim light floats a hairline outside the glass, with a white-hot core
+  and a soft bloom that spills onto the page like a small lamp. Off it hugs the
+  bottom-left in cool lilac; on it hugs the top-right in warm amber, and it
+  tints the inside of the glass on the side it's on.
+- One progress value drives everything. The thumb springs across with a little
+  overshoot and squashes with speed, the moon's pixels fly apart and land as a
+  sun, and the light runs half a lap round the thumb, always the same way, a
+  beat behind it. The bloom warms up as the thumb lands.
+- Drag the glass to scrub the whole flip, both ways. Let go past the middle,
+  or flick it, to flip; let go on the starting side and nothing happens.
+- Hovering with a mouse turns the light up, and the top sheen leans toward the
+  pointer as if the pointer were the light.
+- Plays a glass tap with a faint ring and a light haptic on every flip.
+- At rest nothing moves and nothing renders per frame. While it moves, React
+  doesn't re-render: the thumb, light, and pixels are written directly.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/glass-toggle
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="glass-toggle" title="components/glass-toggle.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { GlassToggle } from "@/components/glass-toggle";
+```
+
+```tsx
+<GlassToggle label="Lamp" />
+```
+
+Use `checked` and `onCheckedChange` to control it. `onCheckedChange` fires
+once per flip, the moment the switch commits: on a click or key press, or when
+a drag is let go.
+
+```tsx
+const [enabled, setEnabled] = useState(false);
+
+<GlassToggle label="Night light" checked={enabled} onCheckedChange={setEnabled} />
+```
+
+The `sm` size is the same switch drawn smaller, for dense lists. Turn the
+sound off and keep the haptics, or the other way round:
+
+```tsx
+<GlassToggle label="Auto-dim" size="sm" sound={false} />
+```
+
+Give it a `name` to submit `"on"` or `"off"` with a native form. The two light
+colors are CSS variables, so you can retheme them without a prop:
+
+```tsx
+<GlassToggle
+  label="Lamp"
+  className="[--glass-toggle-off:#7dd3fc] [--glass-toggle-on:#fb7185]"
+/>
+```
+
+### Driving a theme (optional)
+
+The switch only reports `checked`; it knows nothing about themes. To use it as
+a light/dark switch, pass your theme setter to `onCheckedChange`. TentUI's own
+header control is [`theme-toggle`](/components/theme-toggle), a different
+component.
+
+```tsx
+const { resolvedTheme, setTheme } = useTheme();
+
+<GlassToggle
+  label="Light mode"
+  checked={resolvedTheme === "light"}
+  onCheckedChange={(light) => setTheme(light ? "light" : "dark")}
+/>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Click or tap | Flips the switch |
+| `Space` / `Enter` | Flips the switch |
+| Drag the glass | Scrubs the thumb, pixels, and light; letting go past the middle flips it |
+| Flick the glass | Flips it in the flick's direction, wherever it's let go |
+
+Past either end the thumb rubber-bands. A vertical swipe still scrolls the
+page. Losing the pointer, the window, or the tab mid-drag lets go without
+flipping, and a second finger is ignored while the first one drags.
+
+## Sound and haptics
+
+Each flip plays a short, bright glass tap with a faint pitched ring, a little
+higher and brighter for on than off, and a `light` haptic. They fire the
+moment the switch commits, not when the thumb lands. Dragging is silent, and a
+drag let go on its starting side plays nothing.
+
+Sound and haptics only follow user input. The first render and changes to the
+`checked` prop are silent, and nothing plays while the tab is hidden. Turn
+each off with `sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+The switch is a `button` with `role="switch"` and `aria-checked`, named by
+`label`, `aria-label`, or `aria-labelledby`, and described by
+`aria-describedby`. The tray, glass, glyphs, and light are hidden from
+assistive technology. The focus ring shows for keyboard focus only. The hit
+area is at least 44 px tall at both sizes. The state never relies on color
+alone: the thumb's side and the glyph's shape change too. A disabled switch is
+dimmed, loses its bloom, and can't be focused or flipped.
+
+With reduced motion enabled the thumb moves at once with no overshoot or
+squash, the glyph swaps without scattering, and the light jumps to its resting
+place and color. Hover and press still brighten the light. Sound and haptics
+stay on because they confirm the switch rather than decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/glass-toggle/glass-toggle.tsx"
+  name="GlassToggleProps"
+/>
