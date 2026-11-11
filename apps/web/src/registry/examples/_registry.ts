@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "glass-toggle-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("glass-toggle")],
+		files: [
+			{
+				path: "examples/glass-toggle-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-56 place-items-center content-center",
+		},
+	},
+	{
 		name: "bubble-wrap-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("bubble-wrap")],
@@ -393,6 +407,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "glass-toggle-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("glass-toggle")],
+		files: [
+			{
+				path: "examples/glass-toggle-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-80 place-items-center content-center",
 		},
 	},
 	{

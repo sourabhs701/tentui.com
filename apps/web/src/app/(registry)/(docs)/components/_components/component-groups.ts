@@ -22,6 +22,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		components: [
 			"animated-arrow",
 			"copy-button",
+			"glass-toggle",
 			"hold-to-confirm",
 			"peeping-button",
 			"pull-cord",

@@ -448,6 +448,31 @@
       "type": "registry:block"
     },
     {
+      "name": "glass-toggle",
+      "title": "Glass Toggle",
+      "description": "An on/off switch with a thumb of thick frosted glass. Flip it and the thumb springs across, a pixel moon scatters and reassembles as a pixel sun, and a rim light runs round the glass from cool lilac to warm amber.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/glass-toggle/glass-toggle.tsx",
+          "type": "registry:component",
+          "target": "@components/glass-toggle.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-11"
+      },
+      "docs": "https://tentui.com/components/glass-toggle",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "bubble-wrap",
       "title": "Bubble Wrap",
       "description": "A sheet of plastic air cells to press or sweep across. Each bubble squashes, pops with a short falling sound and a light haptic tick, and stays flat until the cleared sheet re-inflates in a ripple.",
