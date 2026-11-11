@@ -63,7 +63,7 @@ You can also select your preferred technologies, and copy the code manually.
 
 Tent UI is proudly supported by these amazing sponsors:
 
-**[Become a sponsor](https://tentui.com/sponsors)** — Get your brand in front of 1K+ developers monthly.
+**[Become a sponsor](https://tentui.com/sponsor)** — Get your brand in front of 1K+ developers monthly.
 
 ## 🤝 Contributing
 

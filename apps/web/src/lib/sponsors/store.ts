@@ -214,6 +214,14 @@ export async function getMedia(key: string) {
 	return getBucket().get(key);
 }
 
+export async function getOrderStatus(id: string) {
+	const row = await getDb()
+		.prepare("SELECT status FROM sponsor_orders WHERE id = ?1")
+		.bind(id)
+		.first<{ status: string }>();
+	return row?.status ?? null;
+}
+
 // ─── Webhooks ──────────────────────────────────────────────────────────────
 
 const statusByEvent: Record<string, OrderRow["status"]> = {
@@ -308,9 +316,23 @@ export async function applySubscriptionEvent(
 		return renewed ? { receipt: receipt("renewal", row.live_at) } : {};
 	}
 
-	// First event for a new order.
+	// First event for a new order. The webhook and the buyer's return to
+	// /sponsor/thanks can both land here at once; only the one that moves the
+	// row off `pending` acts, so the receipt goes out once.
+	const claim = (status: string, liveAt: number | null) =>
+		db
+			.prepare(
+				`UPDATE sponsor_orders
+				SET status = ?2, subscription_id = ?3, live_at = ?4, paid_through = ?5,
+					hold_expires_at = NULL, updated_at = ?6
+				WHERE id = ?1 AND status = 'pending'`,
+			)
+			.bind(row.id, status, subscriptionId, liveAt, paidThrough, now)
+			.run()
+			.then((result) => result.meta.changes === 1);
+
 	if (next !== "active") {
-		await update("ended");
+		await claim("ended", row.live_at);
 		return {};
 	}
 
@@ -323,10 +345,11 @@ export async function applySubscriptionEvent(
 		.bind(now, row.placement, row.id)
 		.first<{ count: number }>();
 	if ((paid?.count ?? 0) >= SPONSOR_PLACEMENTS[row.placement].slots) {
-		await update("conflict");
-		return { cancelSubscriptionId: subscriptionId };
+		return (await claim("conflict", row.live_at))
+			? { cancelSubscriptionId: subscriptionId }
+			: {};
 	}
 
-	await update("active", now + REVIEW_MS);
+	if (!(await claim("active", now + REVIEW_MS))) return {};
 	return { receipt: receipt("first", now + REVIEW_MS) };
 }

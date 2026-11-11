@@ -5,9 +5,11 @@ import type { SponsorPlacement } from "@/config/sponsor";
 // Dodo Payments over its REST API (no SDK, so it runs as-is in the Worker).
 // DOCS: https://docs.dodopayments.com/api-reference/introduction
 
-type DodoConfig = {
+export type DodoConfig = {
 	apiKey: string;
-	webhookKey: string;
+	/** Only the webhook route needs it; checkout works without one. */
+	webhookKey: string | undefined;
+	live: boolean;
 	baseUrl: string;
 	productIds: Record<SponsorPlacement, string>;
 };
@@ -24,12 +26,13 @@ export function getDodoConfig(): DodoConfig | null {
 	const webhookKey = readVar("DODO_PAYMENTS_WEBHOOK_KEY");
 	const header = readVar("DODO_PRODUCT_HEADER_ID");
 	const feed = readVar("DODO_PRODUCT_FEED_ID");
-	if (!apiKey || !webhookKey || !header || !feed) return null;
+	if (!apiKey || !header || !feed) return null;
 
 	const live = readVar("DODO_PAYMENTS_ENVIRONMENT") === "live_mode";
 	return {
 		apiKey,
 		webhookKey,
+		live,
 		baseUrl: live
 			? "https://live.dodopayments.com"
 			: "https://test.dodopayments.com",
@@ -40,7 +43,7 @@ export function getDodoConfig(): DodoConfig | null {
 async function dodoFetch<T>(
 	config: DodoConfig,
 	path: string,
-	init: { method: "POST" | "PATCH"; body: unknown },
+	init: { method: "GET" } | { method: "POST" | "PATCH"; body: unknown },
 ) {
 	const response = await fetch(`${config.baseUrl}${path}`, {
 		method: init.method,
@@ -48,7 +51,7 @@ async function dodoFetch<T>(
 			Authorization: `Bearer ${config.apiKey}`,
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify(init.body),
+		body: "body" in init ? JSON.stringify(init.body) : undefined,
 	});
 	if (!response.ok) {
 		const detail = await response.text().catch(() => "");
@@ -92,6 +95,21 @@ export function cancelSubscription(config: DodoConfig, subscriptionId: string) {
 		method: "PATCH",
 		body: { status: "cancelled" },
 	});
+}
+
+export type DodoSubscription = {
+	subscription_id: string;
+	status: string;
+	next_billing_date?: string;
+	metadata?: Record<string, unknown>;
+};
+
+export function getSubscription(config: DodoConfig, subscriptionId: string) {
+	return dodoFetch<DodoSubscription>(
+		config,
+		`/subscriptions/${encodeURIComponent(subscriptionId)}`,
+		{ method: "GET" },
+	);
 }
 
 // ─── Webhooks ──────────────────────────────────────────────────────────────
