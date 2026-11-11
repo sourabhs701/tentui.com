@@ -1,0 +1,233 @@
+---
+title: Ripple Reveal
+description: Hide or show a sensitive value with a ripple that starts exactly where you tap. A damped sine swell travels out across the surface and flips the content between its shown and hidden faces as the front passes, with a soft tap and a light haptic.
+createdAt: 2026-11-11
+updatedAt: 2026-11-11
+---
+
+<ComponentPreview name="ripple-reveal-preview" />
+
+## Example
+
+<ComponentPreview name="ripple-reveal-demo" />
+
+## Features
+
+- A show and hide control for a balance, a card number, or a salary. The
+  ripple starts at the exact point you tap, like a pebble dropped in a pond,
+  and the content flips between its two faces as the wave front passes.
+- One WebGL fragment shader paints the wave as light: a bright crest just
+  behind the front, a soft trough after it, and a faint second swell. Tap
+  again mid-ripple and a second wave crosses the first.
+- The content stays live DOM. The value is real text that keeps updating and
+  can be selected, and it is never copied into a bitmap.
+- Both faces share one grid cell, so the surface is as big as the larger of
+  the two and toggling never shifts the layout.
+- One soft tap and one light haptic per press, timed to the start of the
+  wave. At rest nothing runs, draws, or holds a GPU layer.
+- With reduced motion, or without WebGL, the faces cross-fade over 140 ms
+  instead, with the same state, sound, and accessibility.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/ripple-reveal
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="ripple-reveal" title="components/ripple-reveal.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  RippleReveal,
+  RippleRevealSurface,
+  RippleRevealTrigger,
+} from "@/components/ripple-reveal";
+```
+
+`RippleReveal` holds the state. `RippleRevealSurface` is the part that
+ripples: its children are the shown face. `RippleRevealTrigger` is the button.
+Arrange them however you like. For an inline value, the default hidden face is
+a row of five dots in the current text color:
+
+```tsx
+<RippleReveal className="flex items-center gap-1">
+  <RippleRevealSurface className="font-semibold tabular-nums">
+    $8,240.15
+  </RippleRevealSurface>
+  <RippleRevealTrigger label="Show available balance" />
+</RippleReveal>
+```
+
+For a card, give the surface a size and pass your own hidden face as
+`placeholder`. Put the background on each face, and pin the trigger on top of
+the surface:
+
+```tsx
+<RippleReveal className="relative w-full max-w-[340px]">
+  <RippleRevealSurface
+    className="grid h-52 rounded-3xl"
+    hiddenLabel="Balance hidden"
+    placeholder={<HiddenCard />}
+  >
+    <BalanceCard />
+  </RippleRevealSurface>
+  <RippleRevealTrigger
+    label="Show balance"
+    className="absolute top-3 right-3"
+  />
+</RippleReveal>
+```
+
+Use `revealed` and `onRevealedChange` to control it. `onRevealedChange` fires
+the moment the trigger is pressed, not when the wave has finished. A change
+that comes from the parent instead ripples silently from the center. Sound is
+one prop away, and turning it off is a reasonable choice in a banking UI:
+
+```tsx
+const [shown, setShown] = useState(false);
+
+<RippleReveal revealed={shown} onRevealedChange={setShown} sound={false}>
+  <RippleRevealSurface hiddenLabel="Salary hidden">$6,450.00</RippleRevealSurface>
+  <RippleRevealTrigger label="Show salary" />
+</RippleReveal>
+```
+
+The light is tuned for a surface's theme with two custom properties, read when
+each ripple starts: `--ripple-reveal-highlight` (white, 0.6 in light mode and
+0.4 in dark) and `--ripple-reveal-shade` (black, 0.12 and 0.25). A dark card
+on a light page can raise both.
+
+## How it works
+
+The wave is four lines of maths. For each front, `local` is how long ago the
+front reached a pixel, `swell` is a damped sine of that, several fronts add
+up, and every front that has passed a pixel flips it between the two faces:
+
+```glsl
+float local = max(0.0, age - distance / speed);
+float swell = sin(frequency * local) * exp(-decay * local);
+displacement += amplitude * swell * direction;
+passed = passed + inside - 2.0 * passed * inside;
+```
+
+On a phone, the card is a GPU texture and a shader can bend its pixels. On
+the web the content is live DOM, and there is no dependable way to get
+arbitrary DOM into a WebGL texture. Snapshots mis-render fonts, break on
+cross-origin images, are asynchronous, pop when swapped back, and would copy
+the sensitive value into a bitmap. So the component never rasterizes the DOM:
+
+- **The flip is CSS masks.** Each front is a `radial-gradient` circle centered
+  on its tap point, growing at the wave's speed. The circles are combined with
+  `mask-composite: exclude`, which is the XOR on the last line above.
+- **The wave is light.** A fragment shader on a transparent canvas evaluates
+  the same damped sine, takes its slope as a surface normal, and paints a
+  specular crest, a soft lift on the rising side, a shade in the trough, and a
+  hairline glint on the front. Flat water draws nothing.
+- **The text swells.** While a front crosses, the face inside it scales up by
+  up to 2 percent about the tap point and the face outside scales down a
+  little, so real text steps like a lens at the front and settles back to
+  exactly 1.
+
+One `requestAnimationFrame` clock sets the shader, the masks, and the scale
+together, so they never drift apart. Every surface on the page shares one
+WebGL context and copies its frame into its own canvas, so a list of a dozen
+values never runs out of contexts. The shader is compiled the first time a
+pointer or focus reaches any trigger, so the first ripple isn't late.
+
+The front crosses the surface in about 0.4 to 0.55 s, slower for a small
+inline value so it is still seen, and the surface is at rest by about 0.8 s.
+Hiding is the same wave at 85 percent strength.
+
+## Fallback
+
+With `prefers-reduced-motion: reduce`, when WebGL is unavailable, or after the
+context is lost, the two faces cross-fade over 140 ms instead: no canvas, no
+masks, no scale. Reduced motion is checked on every press, not once at mount.
+State, sound, haptics, and accessibility are the same either way. A ripple
+that is cut short, by hiding the tab, losing the context, or collapsing the
+surface, lands in its final state at once.
+
+## Sound and haptics
+
+Each press plays one very soft, low tap, like a fingertip on a taut surface,
+with a light haptic. Revealing is a shade higher than hiding. There is no
+water sound: this is a privacy gesture people make in public, and it
+shouldn't announce itself.
+
+Sound and haptics only follow a press of the trigger. Mounting, changes to
+the `revealed` prop, and a hidden tab are silent. Both stay on under reduced
+motion. Turn each off with `sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+The trigger is a `button` with `aria-pressed` set to the revealed state. Its
+name, from `label`, `aria-label`, or `aria-labelledby`, doesn't change with
+the state, so "Show balance" reads as pressed or not pressed. `Space` and
+`Enter` work, and start the wave from the center of the trigger. The focus
+ring shows for keyboard focus only, and the hit area is at least 44 by 44 px
+even when the visible button is smaller. A disabled root dims the trigger and
+ignores it.
+
+From the moment the value is hidden, it is `aria-hidden` and `inert`, and a
+visually hidden `hiddenLabel` takes its place. Once the wave settles it is
+also `visibility: hidden`, so find in page and select all can't reach it. The
+placeholder is always hidden from assistive technology. After each press, a
+polite status region announces `valueText` (or the value's own text) on
+reveal and `hiddenLabel` on hide. Nothing is announced on mount.
+
+This is a visual privacy control, not a security boundary. The value is still
+in the DOM, and anyone with the developer tools can read it. Don't render a
+value the user isn't allowed to see.
+
+## API reference
+
+### RippleReveal
+
+<AutoTypeTable
+  path="src/registry/components/ripple-reveal/ripple-reveal.tsx"
+  name="RippleRevealProps"
+/>
+
+### RippleRevealSurface
+
+<AutoTypeTable
+  path="src/registry/components/ripple-reveal/ripple-reveal.tsx"
+  name="RippleRevealSurfaceProps"
+/>
+
+### RippleRevealTrigger
+
+<AutoTypeTable
+  path="src/registry/components/ripple-reveal/ripple-reveal.tsx"
+  name="RippleRevealTriggerProps"
+/>

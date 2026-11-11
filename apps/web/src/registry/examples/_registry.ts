@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "ripple-reveal-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ripple-reveal")],
+		files: [
+			{
+				path: "examples/ripple-reveal-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "glass-toggle-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("glass-toggle")],
@@ -402,6 +416,20 @@ export const examples: Registry["items"] = [
 		files: [
 			{
 				path: "examples/scratch-card-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "ripple-reveal-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ripple-reveal")],
+		files: [
+			{
+				path: "examples/ripple-reveal-demo.tsx",
 				type: "registry:example",
 			},
 		],

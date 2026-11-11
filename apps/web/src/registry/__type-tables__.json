@@ -2475,6 +2475,201 @@
 			]
 		}
 	],
+	"src/registry/components/ripple-reveal/ripple-reveal.tsx#RippleRevealProps#": [
+		{
+			"id": "ripple-reveal.tsx-RippleRevealProps",
+			"name": "RippleRevealProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "revealed",
+					"description": "Controlled state: `true` shows the value, `false` hides it.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultRevealed",
+					"description": "Initial state when uncontrolled.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onRevealedChange",
+					"description": "Called the moment the trigger is pressed, before the wave has crossed.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((revealed: boolean) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a soft tap when the trigger is pressed.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger a light haptic on supported devices when the trigger is pressed.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/ripple-reveal/ripple-reveal.tsx#RippleRevealSurfaceProps#": [
+		{
+			"id": "ripple-reveal.tsx-RippleRevealSurfaceProps",
+			"name": "RippleRevealSurfaceProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "children",
+					"description": "The shown face: the value itself.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "placeholder",
+					"description": "The hidden face. Defaults to five dots in the current text color.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "hiddenLabel",
+					"description": "What assistive technology gets in place of the value while it's hidden.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "valueText",
+					"description": "Plain text announced on reveal. Defaults to the shown face's text.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/ripple-reveal/ripple-reveal.tsx#RippleRevealTriggerProps#": [
+		{
+			"id": "ripple-reveal.tsx-RippleRevealTriggerProps",
+			"name": "RippleRevealTriggerProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "label",
+					"description": "Accessible name. Ignored when `aria-label` or `aria-labelledby` is set.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "Replaces the default eye icon.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/rotary-knob/rotary-knob.tsx#RotaryKnobProps#": [
 		{
 			"id": "rotary-knob.tsx-RotaryKnobProps",

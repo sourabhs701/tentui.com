@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "ripple-reveal",
+		type: "registry:component",
+		title: "Ripple Reveal",
+		description:
+			"Hide or show a sensitive value with a ripple that starts exactly where you tap. A damped sine swell travels out across the surface and flips the content between its shown and hidden faces as the front passes, with a soft tap and a light haptic.",
+		dependencies: ["@rexa-developer/tiks", "web-haptics"],
+		files: [
+			{
+				path: "components/ripple-reveal/ripple-reveal.tsx",
+				type: "registry:component",
+				target: "@components/ripple-reveal.tsx",
+			},
+		],
+		categories: [],
+		meta: {
+			createdAt: "2026-11-11",
+		},
+		docs: "https://tentui.com/components/ripple-reveal",
+	},
+	{
 		name: "glass-toggle",
 		type: "registry:component",
 		title: "Glass Toggle",

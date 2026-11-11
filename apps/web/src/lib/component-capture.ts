@@ -32,6 +32,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"otp-field": { zoom: 1.2 },
 	"peeping-button": { zoom: 1.35 },
 	"pull-cord": { zoom: 1.1 },
+	"ripple-reveal": { zoom: 1.2 },
 	"rotary-knob": { zoom: 1.5 },
 	"scratch-card": { zoom: 1.3 },
 	"search-command": { zoom: 2 },
