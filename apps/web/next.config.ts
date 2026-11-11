@@ -37,6 +37,11 @@ const nextConfig: NextConfig = {
 				permanent: true,
 			},
 			{
+				source: "/sponsors",
+				destination: "/sponsor",
+				permanent: true,
+			},
+			{
 				source: "/pricing",
 				destination: "/blocks/pricing",
 				permanent: true,

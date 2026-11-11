@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 };
 
 // Dodo Payments sends buyers here after checkout, adding `status` and
-// `subscription_id`. The webhook, not this page, books the slot.
+// `subscription_id`. The page confirms the booking through
+// /api/sponsor/confirm; the webhook books it too if the buyer never returns.
 export default function SponsorThanksPage() {
 	return (
 		<section className="w-full px-4 pt-12 pb-24 sm:px-6 lg:px-8">
