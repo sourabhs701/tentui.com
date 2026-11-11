@@ -99,6 +99,15 @@ export default async function BlocksCategoryPage({
 				])}
 			/>
 
+			<header className="border-line border-b px-4 py-10 sm:px-6 sm:py-14">
+				<h1 className="max-w-3xl text-balance font-medium text-3xl tracking-tight sm:text-4xl">
+					{categoryItem.heading}
+				</h1>
+				<p className="mt-4 max-w-2xl text-pretty text-muted-foreground leading-relaxed">
+					{categoryItem.description}
+				</p>
+			</header>
+
 			{blocks.map((block) => (
 				<Fragment key={block.name}>
 					<BlockDisplay name={block.name} />
