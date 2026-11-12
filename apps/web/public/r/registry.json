@@ -448,6 +448,28 @@
       "type": "registry:block"
     },
     {
+      "name": "dust-delete",
+      "title": "Dust Delete",
+      "description": "A delete action that dissolves the item into fine grains of its own colours, closes the gap, and leaves a small Undo pill with a draining hairline. Press Undo and the same dust flies back and reassembles the item.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/dust-delete/dust-delete.tsx",
+          "type": "registry:component",
+          "target": "@components/dust-delete.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-12"
+      },
+      "docs": "https://tentui.com/components/dust-delete",
+      "categories": [],
+      "type": "registry:component"
+    },
+    {
       "name": "glass-toggle",
       "title": "Glass Toggle",
       "description": "An on/off switch with a thumb of thick frosted glass. Flip it and the thumb springs across, a pixel moon scatters and reassembles as a pixel sun, and a rim light runs round the glass from cool lilac to warm amber.",

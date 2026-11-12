@@ -1,0 +1,290 @@
+---
+title: Dust Delete
+description: A delete action that dissolves the item into fine grains of its own colours, closes the gap, and leaves a small Undo pill with a draining hairline. Press Undo and the same dust flies back and reassembles the item.
+seoDescription: Dust Delete is a React delete-with-undo component for shadcn/ui. Any row or card dissolves into dust in its own colours, then an Undo pill reassembles it.
+createdAt: 2026-11-12
+updatedAt: 2026-11-12
+---
+
+<ComponentPreview name="dust-delete-preview" />
+
+## Example
+
+<ComponentPreview name="dust-delete-demo" />
+
+## Features
+
+- Wraps any row or card. Press delete and the item breaks into grains from
+  one edge to the other, the dust drifts up against the sweep and thins out,
+  and the gap closes.
+- The item is never screenshotted. Live DOM erodes under a moving noise mask,
+  so text stays text until it is gone, and an image's real pixels colour its
+  own dust.
+- A small **Undo** pill takes the item's place, with a hairline that drains
+  over the undo window. Press it and the same dust flies back along its own
+  paths and the item reassembles exactly.
+- `onDelete` runs only when the window lapses. Delete three rows and you get
+  three pills, each with its own countdown, in the place each row was.
+- A soft granular hiss as long as the sweep and a `medium` haptic on delete; a
+  rising tick, the hiss in reverse, and a `light` haptic on undo.
+- At rest nothing runs: no canvas, no animation frame, no mask.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/dust-delete
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="dust-delete" title="components/dust-delete.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { DustDelete, DustDeleteTrigger } from "@/components/dust-delete";
+```
+
+Wrap each item in a `DustDelete` and put a `DustDeleteTrigger` inside it.
+Remove the item from your data in `onDelete`.
+
+```tsx
+<DustDelete label="Moodboard" onDelete={() => removeFile(file.id)}>
+  <div className="flex items-center gap-3 px-3 py-2">
+    <span className="flex-1 text-sm">Moodboard</span>
+    <DustDeleteTrigger className="size-8 rounded-lg text-muted-foreground hover:bg-muted" />
+  </div>
+</DustDelete>
+```
+
+`onDelete` is the commit, and the only moment to delete for real. It runs
+once, after the undo window lapses. It never runs for an item that was undone
+or unmounted. If your app must delete the moment the button is pressed, don't
+offer an undo window: set `undoDuration={0}`, or use a plain delete.
+
+### An image card with a glass trigger
+
+In a grid, keep the cell's size with `collapse={false}`. The pill sits in
+the middle of the empty cell, and the grid reflows when you remove the item
+in `onDelete`.
+
+```tsx
+<DustDelete label={photo.title} collapse={false} onDelete={() => remove(photo.id)}>
+  <div className="group relative aspect-[3/4] overflow-hidden rounded-2xl">
+    <img src={photo.src} alt={photo.title} className="size-full object-cover" />
+    <DustDeleteTrigger className="absolute end-2 top-2 size-7 rounded-full bg-white/25 text-white backdrop-blur-md" />
+  </div>
+</DustDelete>
+```
+
+### Controlled, sound off
+
+Pass `deleted` and `onDeletedChange` to own the state. When you change
+`deleted` yourself, the same animation runs both ways, without sound,
+haptics, announcements, or focus moves.
+
+```tsx
+const [deleted, setDeleted] = useState(false);
+
+<DustDelete
+  label="Weekly digest"
+  deleted={deleted}
+  onDeletedChange={setDeleted}
+  onDelete={() => unsubscribe()}
+  sound={false}
+>
+  <Row />
+</DustDelete>
+<button onClick={() => setDeleted(false)}>Reset</button>
+```
+
+### A custom trigger
+
+`useDustDelete()` works anywhere inside a `DustDelete`, for a menu item or a
+`Delete` key handler. `remove()` and `undo()` count as user input, so they
+play sound and haptics, move focus, and announce.
+
+```tsx
+function DeleteMenuItem() {
+  const { remove } = useDustDelete();
+  return <DropdownMenuItem onSelect={remove}>Delete</DropdownMenuItem>;
+}
+```
+
+## How it works
+
+There is no dependable way to turn arbitrary DOM into pixels: snapshots
+mis-render fonts, break on cross-origin images, are asynchronous, and pop when
+they are swapped with the real element. So the item is never rasterized.
+
+- **The item erodes under a mask.** Each pixel belongs to one of four classes
+  from a shared 64 x 64 noise tile, and each class fades out as its own front
+  passes. Behind the leading front there is a wide band where the item is
+  still readable but full of holes. The mask exists only while an item is
+  dissolving or reassembling.
+- **The dust is one canvas.** A single fixed, viewport-sized 2D canvas draws
+  every item's grains, so dust can drift past the item's box and any
+  `overflow: hidden` ancestor without adding scroll width. It is added on the
+  first delete and removed as soon as nothing is moving.
+- **Grain colours come from the item.** If an image, canvas, or video covers
+  at least a quarter of the item, grains over it take its pixels, read once
+  at a small size. Elsewhere, and when an image is cross-origin, grains use
+  up to six colours read from computed styles: surfaces, text, and borders.
+  `dustColors` replaces them. Colours that would vanish into the page behind
+  the item lean toward the text colour, so a white card on a white page sheds
+  soft grey ash.
+- **Undo runs the same functions backwards.** Every grain's position and
+  fade are a closed-form function of one clock, fixed at the moment of
+  delete. Undo turns the clock round, so the grains retrace their paths and
+  land exactly where they started, each one disappearing as the mask closes
+  its hole.
+
+The mask edge, the grains, the slot height, and the countdown all run on one
+`requestAnimationFrame` loop for the whole page, so they never drift apart.
+Hiding the tab or resizing the item mid-animation jumps straight to where it
+was going, and scrolling is fine because the dust follows the item.
+
+## Undo window
+
+The window is 5 seconds by default (`undoDuration`, in ms) and starts once
+the pill has appeared, so the dissolve doesn't eat into it. The hairline
+along the pill's bottom edge drains linearly. It pauses while a mouse hovers
+the pill, while it is pressed, while it has keyboard focus, and while the tab
+is hidden, then resumes where it stopped.
+
+When it lapses, the pill fades, the slot closes, and `onDelete` runs. The
+item stays collapsed and `hidden` until you remove it. Undo is available
+during the dissolve too: the dust simply turns round from where it is.
+
+## Fallback
+
+With reduced motion, without a 2D canvas, or without CSS mask support, there
+is no dust. The item fades out over 160 ms, the slot changes height without
+animating, and the pill appears. Undo fades it back in. The undo window,
+focus, announcements, sound, and haptics are the same. Reduced motion is read
+at each press, so changing the setting takes effect at once.
+
+## Sound and haptics
+
+A delete plays a soft hiss of filtered noise, like fine sand poured on paper,
+that lasts as long as the sweep, with a `medium` haptic. Undo plays a gentle
+rising tick with the hiss in reverse underneath, and a `light` haptic. At
+most three hisses play at once, and a delete that starts right after another
+is quieter.
+
+Sound and haptics only follow user input. Mounting, changing `deleted`
+yourself, and the lapse of the window are silent, and nothing plays while
+the tab is hidden. Both stay on with reduced motion; turn each off with
+`sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+The trigger is a `button` named "Delete {label}". The undo button shows
+`undoLabel` and is named "Undo delete {label}". Both have 44 px hit targets
+and show the focus ring for keyboard focus only.
+
+From the press, the item's content is `inert` and `aria-hidden`, so nothing
+in it can be focused, clicked, or read. If focus was inside the item, or the
+delete came from the keyboard, focus moves to the undo button at once. After
+undo it returns to the item's trigger when the item is whole again. If the
+window lapses with focus on the pill, focus moves to the next item's trigger,
+or its undo button if it is waiting too, before `onDelete` runs.
+
+A polite live region says "Deleted {label}. Undo available for 5 seconds"
+and "Restored {label}", once per user action, and nothing on mount, on
+commit, or for changes you make to `deleted`. With focus on the pill,
+`Escape` and `Ctrl+Z` or `Cmd+Z` undo. The countdown is decorative: the time
+limit is in the announcement, and keyboard focus on the pill stops the clock
+for as long as you need.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/dust-delete/dust-delete.tsx"
+  name="DustDeleteProps"
+/>
+
+### DustDeleteTrigger
+
+<AutoTypeTable
+  path="src/registry/components/dust-delete/dust-delete.tsx"
+  name="DustDeleteTriggerProps"
+/>
+
+### useDustDelete
+
+Returns `{ deleted, remove, undo }` for the closest `DustDelete`. `deleted` is
+`true` from the delete press until an undo press. `remove()` and `undo()`
+count as user input.
+
+## FAQ
+
+### How do I install Dust Delete with shadcn?
+
+Run `npx shadcn@latest add @tentui/dust-delete` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/dust-delete.json` without it. The
+CLI copies `dust-delete.tsx` into your project and installs `web-haptics` and
+`@rexa-developer/tiks`.
+
+### When should I actually delete the item?
+
+In `onDelete`. It runs once, after the undo window lapses, and never for an
+item that was undone or unmounted, so it is the only safe moment to delete
+for real. If your app must delete immediately, set `undoDuration={0}` or use
+a plain delete without an undo window.
+
+### Is Dust Delete accessible with a keyboard and screen readers?
+
+Yes. The trigger and the undo button are real buttons with descriptive names,
+focus moves to Undo after a keyboard delete and back to the trigger after
+undo, and a polite live region announces each delete and restore. `Escape` or
+`Ctrl+Z` on the pill undoes, and keyboard focus on the pill pauses the
+countdown.
+
+### Can I control the deleted state from my own code?
+
+Yes. Pass `deleted` and `onDeletedChange`. Changing `deleted` yourself runs
+the same dissolve or reassembly silently and without moving focus, and
+`useDustDelete()` gives a custom trigger, such as a menu item, `remove()` and
+`undo()`.
+
+### Does it work with images and any element?
+
+Yes. It wraps any row or card without screenshotting it. Grains over a
+same-origin image take its real pixels; everything else, including
+cross-origin images, uses colours read from the item's styles, or your own
+`dustColors`.
+
+### Is Dust Delete free to use?
+
+Yes. Dust Delete is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

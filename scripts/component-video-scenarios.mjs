@@ -43,6 +43,27 @@ export const scenarios = {
 		},
 	},
 
+	"dust-delete": {
+		rest: { x: 410, y: 300 },
+		async run(d) {
+			const trigger = '[aria-label="Delete Moodboard"]';
+			const undo = '[aria-label="Undo delete Moodboard"]';
+			await d.wait(400);
+			// Delete the middle row: it sweeps into dust, the gap closes, the pill comes in.
+			await d.move(trigger, 650, { x: 0.5, y: 0.55 });
+			await d.wait(150);
+			await d.click();
+			await d.wait(1100);
+			// Hovering the pill holds the countdown; Undo flies the dust back.
+			await d.move(undo, 600, { x: 0.5, y: 0.55 });
+			await d.wait(150);
+			await d.click();
+			await d.wait(1350);
+			await d.move(d.rest, 650);
+			await d.wait(250);
+		},
+	},
+
 	"swipe-actions": {
 		rest: { x: 455, y: 330 },
 		async run(d) {
