@@ -18,6 +18,8 @@ export const components: Registry["items"] = [
 		categories: ["overlays"],
 		meta: {
 			createdAt: "2026-11-12",
+			image: "https://cdn.tentui.com/images/components/morph-lightbox?v=1",
+			video: "https://cdn.tentui.com/videos/components/morph-lightbox?v=1",
 		},
 		docs: "https://tentui.com/components/morph-lightbox",
 	},
