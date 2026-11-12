@@ -1,8 +1,9 @@
 ---
 title: Ripple Reveal
-description: Hide or show a sensitive value with a ripple that starts exactly where you tap. A damped sine swell travels out across the surface and flips the content between its shown and hidden faces as the front passes, with a soft tap and a light haptic.
+description: A React show and hide control for shadcn/ui that hides a balance or other sensitive value behind a ripple starting exactly where you tap, drawn by a WebGL shader over live DOM, with a soft tap, a light haptic, and a reduced motion fallback.
+seoTitle: React Ripple Reveal Component for shadcn/ui
 createdAt: 2026-11-11
-updatedAt: 2026-11-11
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="ripple-reveal-preview" />
@@ -231,3 +232,47 @@ value the user isn't allowed to see.
   path="src/registry/components/ripple-reveal/ripple-reveal.tsx"
   name="RippleRevealTriggerProps"
 />
+
+## FAQ
+
+### How do I install the Ripple Reveal with shadcn?
+
+Run `npx shadcn@latest add @tentui/ripple-reveal` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/ripple-reveal.json` without it. The
+CLI copies `ripple-reveal.tsx` into your project and installs `web-haptics` and
+`@rexa-developer/tiks`.
+
+### Is the Ripple Reveal accessible to screen readers and keyboards?
+
+Yes. The trigger is a real `button` with `aria-pressed`, and `Space` or `Enter`
+start the wave from its center. While hidden, the value is `aria-hidden` and
+`inert` and a `hiddenLabel` takes its place, and a polite status region
+announces the value on reveal and the hidden label on hide.
+
+### How do I control whether the value is shown?
+
+Pass `revealed` and `onRevealedChange`, for example from a user preference you
+store. `onRevealedChange` fires the moment the trigger is pressed, and a change
+that comes from the `revealed` prop ripples silently from the center. Use
+`defaultRevealed` (true by default) when you don't need to control it.
+
+### Does it work without WebGL or with reduced motion?
+
+Yes. With `prefers-reduced-motion: reduce`, without WebGL, or after the WebGL
+context is lost, the two faces cross-fade over 140 ms instead. State, sound,
+haptics, and accessibility stay the same.
+
+### Can I customize the hidden face?
+
+Yes. Pass any React content as `placeholder` to replace the default row of five
+dots, style each face with your own classes, and tune the light with the
+`--ripple-reveal-highlight` and `--ripple-reveal-shade` custom properties. Turn
+off the cues with `sound={false}` and `haptics={false}`.
+
+### Is the Ripple Reveal free to use?
+
+Yes. The Ripple Reveal is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

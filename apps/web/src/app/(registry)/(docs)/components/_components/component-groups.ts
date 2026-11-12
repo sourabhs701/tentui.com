@@ -70,6 +70,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		components: [
 			"email-dock",
 			"interactive-sprite",
+			"ripple-reveal",
 			"scratch-card",
 			"scribbled-text",
 			"tile-field",

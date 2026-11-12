@@ -18,6 +18,8 @@ export const components: Registry["items"] = [
 		categories: [],
 		meta: {
 			createdAt: "2026-11-11",
+			image: "https://cdn.tentui.com/images/components/ripple-reveal?v=1",
+			video: "https://cdn.tentui.com/videos/components/ripple-reveal?v=1",
 		},
 		docs: "https://tentui.com/components/ripple-reveal",
 	},
