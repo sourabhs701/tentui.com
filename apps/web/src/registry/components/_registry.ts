@@ -2,6 +2,31 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "liquid-glass-menu",
+		type: "registry:component",
+		title: "Liquid Glass Menu",
+		description:
+			"A dropdown menu with a liquid-glass surface that stays fully keyboard and screen-reader accessible. The round trigger flows into the panel as one blob of glass, the items sharpen from a blur, and a small glass lens slides to the highlighted item.",
+		dependencies: [
+			"@base-ui/react",
+			"@rexa-developer/tiks",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/liquid-glass-menu/liquid-glass-menu.tsx",
+				type: "registry:component",
+				target: "@components/liquid-glass-menu.tsx",
+			},
+		],
+		categories: ["menus"],
+		meta: {
+			createdAt: "2026-11-12",
+		},
+		docs: "https://tentui.com/components/liquid-glass-menu",
+	},
+	{
 		name: "glass-toggle",
 		type: "registry:component",
 		title: "Glass Toggle",

@@ -57,6 +57,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"brand-context-menu",
 			"component-sidebar",
 			"dynamic-island",
+			"liquid-glass-menu",
 			"search-command",
 			"snap-sheet",
 			"swipe-actions",

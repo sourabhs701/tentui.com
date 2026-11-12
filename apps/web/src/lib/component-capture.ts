@@ -28,6 +28,8 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"brand-context-menu": { zoom: 2 },
 	"bubble-wrap": { zoom: 1.2 },
 	"hold-to-confirm": { zoom: 1.6 },
+	// The menu is portaled out of the zoomed stage, so it is framed at 1:1.
+	"liquid-glass-menu": {},
 	"number-stepper": { zoom: 1.6 },
 	"otp-field": { zoom: 1.2 },
 	"peeping-button": { zoom: 1.35 },

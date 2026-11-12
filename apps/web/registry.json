@@ -448,6 +448,32 @@
       "type": "registry:block"
     },
     {
+      "name": "liquid-glass-menu",
+      "title": "Liquid Glass Menu",
+      "description": "A dropdown menu with a liquid-glass surface that stays fully keyboard and screen-reader accessible. The round trigger flows into the panel as one blob of glass, the items sharpen from a blur, and a small glass lens slides to the highlighted item.",
+      "dependencies": [
+        "@base-ui/react",
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx",
+          "type": "registry:component",
+          "target": "@components/liquid-glass-menu.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-12"
+      },
+      "docs": "https://tentui.com/components/liquid-glass-menu",
+      "categories": [
+        "menus"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "glass-toggle",
       "title": "Glass Toggle",
       "description": "An on/off switch with a thumb of thick frosted glass. Flip it and the thumb springs across, a pixel moon scatters and reassembles as a pixel sun, and a rim light runs round the glass from cool lilac to warm amber.",
