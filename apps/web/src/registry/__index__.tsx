@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"dust-delete": {
+		name: "dust-delete",
+		title: "Dust Delete",
+		description: "A delete action that dissolves the item into fine grains of its own colours, closes the gap, and leaves a small Undo pill with a draining hairline. Press Undo and the same dust flies back and reassembles the item.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/dust-delete/dust-delete.tsx","type":"registry:component","target":"@components/dust-delete.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/dust-delete/dust-delete")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for dust-delete");
+			}
+			return { default: module.default };
+		}),
+		categories: [],
+		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/dust-delete?v=1","video":"https://cdn.tentui.com/videos/components/dust-delete?v=1"},
+	},
 	"glass-toggle": {
 		name: "glass-toggle",
 		title: "Glass Toggle",
@@ -815,6 +833,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"dust-delete-preview": {
+		name: "dust-delete-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/dust-delete-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/dust-delete-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for dust-delete-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-80 place-items-center content-center px-4 pt-16 pb-10"},
+	},
 	"glass-toggle-preview": {
 		name: "glass-toggle-preview",
 		title: undefined,
@@ -1336,6 +1372,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"dust-delete-demo": {
+		name: "dust-delete-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/dust-delete-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/dust-delete-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for dust-delete-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[640px] place-items-center content-center px-4 pt-16"},
 	},
 	"glass-toggle-demo": {
 		name: "glass-toggle-demo",

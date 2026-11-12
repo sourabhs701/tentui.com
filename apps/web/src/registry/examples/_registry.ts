@@ -4,6 +4,21 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "dust-delete-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("dust-delete")],
+		files: [
+			{
+				path: "examples/dust-delete-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName:
+				"min-h-80 place-items-center content-center px-4 pt-16 pb-10",
+		},
+	},
+	{
 		name: "glass-toggle-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("glass-toggle")],
@@ -407,6 +422,21 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "dust-delete-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("dust-delete")],
+		files: [
+			{
+				path: "examples/dust-delete-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName:
+				"min-h-[640px] place-items-center content-center px-4 pt-16",
 		},
 	},
 	{

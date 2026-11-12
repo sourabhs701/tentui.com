@@ -631,6 +631,234 @@
 			]
 		}
 	],
+	"src/registry/components/dust-delete/dust-delete.tsx#DustDeleteProps#": [
+		{
+			"id": "dust-delete.tsx-DustDeleteProps",
+			"name": "DustDeleteProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "children",
+					"description": "The row or card to delete.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "label",
+					"description": "The item's name, used for the buttons and the announcements.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "onDelete",
+					"description": "The real delete: called once, after the undo window lapses. Never called for an undone or unmounted item.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onUndo",
+					"description": "Called when Undo is pressed.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "deleted",
+					"description": "Controlled deleted state. Changing it runs the same animation, silently.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onDeletedChange",
+					"description": "Called with `true` on a delete press and `false` on an undo press.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((deleted: boolean) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "undoDuration",
+					"description": "How long Undo stays available, in ms, once the pill has appeared. `0` removes the pill.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "undoLabel",
+					"description": "Visible text of the undo button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "from",
+					"description": "The edge the dissolve starts at.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Edge | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "collapse",
+					"description": "Close the slot to the undo row, then to nothing. Turn off in grids, where neighbours fix the cell size.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "dustColors",
+					"description": "Grain colours, replacing the ones read from the item.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string[] | undefined",
+					"simplifiedType": "array",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a soft granular hiss on delete and a rising tick on undo.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptics on supported devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/dust-delete/dust-delete.tsx#DustDeleteTriggerProps#": [
+		{
+			"id": "dust-delete.tsx-DustDeleteTriggerProps",
+			"name": "DustDeleteTriggerProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "children",
+					"description": "Replaces the default trash icon.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "label",
+					"description": "Accessible name. Defaults to \"Delete {label}\"; ignored when `aria-label` or `aria-labelledby` is set.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/dynamic-island/dynamic-island.tsx#DynamicIslandProps#": [
 		{
 			"id": "dynamic-island.tsx-DynamicIslandProps",

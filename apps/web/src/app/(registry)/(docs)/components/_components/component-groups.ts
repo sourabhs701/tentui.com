@@ -69,6 +69,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"Annotate text, reveal content, and add pointer-reactive visuals.",
 		components: [
 			"bubble-wrap",
+			"dust-delete",
 			"email-dock",
 			"interactive-sprite",
 			"scratch-card",

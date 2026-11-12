@@ -21,6 +21,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"animated-arrow": { zoom: 1.6 },
 	"animated-tabs": { zoom: 1.6 },
 	"copy-button": { zoom: 1.8 },
+	"dust-delete": { zoom: 1.2 },
 	"dynamic-island": { zoom: 1.4 },
 	"elastic-slider": { zoom: 1.5 },
 	"email-dock": { zoom: 1.2 },

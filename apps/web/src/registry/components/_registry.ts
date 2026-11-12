@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "dust-delete",
+		type: "registry:component",
+		title: "Dust Delete",
+		description:
+			"A delete action that dissolves the item into fine grains of its own colours, closes the gap, and leaves a small Undo pill with a draining hairline. Press Undo and the same dust flies back and reassembles the item.",
+		dependencies: ["@rexa-developer/tiks", "web-haptics"],
+		files: [
+			{
+				path: "components/dust-delete/dust-delete.tsx",
+				type: "registry:component",
+				target: "@components/dust-delete.tsx",
+			},
+		],
+		categories: [],
+		meta: {
+			createdAt: "2026-11-12",
+			image: "https://cdn.tentui.com/images/components/dust-delete?v=1",
+			video: "https://cdn.tentui.com/videos/components/dust-delete?v=1",
+		},
+		docs: "https://tentui.com/components/dust-delete",
+	},
+	{
 		name: "glass-toggle",
 		type: "registry:component",
 		title: "Glass Toggle",
