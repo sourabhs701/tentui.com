@@ -7,6 +7,7 @@ export function SiteScripts() {
 	const pathname = usePathname();
 
 	// Keep previews and media captures free of analytics and the chat widget.
+	// Both load once the page is idle so they don't compete with first paint.
 	if (pathname.startsWith("/preview/") || pathname.startsWith("/capture/")) {
 		return null;
 	}
@@ -16,12 +17,12 @@ export function SiteScripts() {
 			<Script
 				data-website-id="3386bacf-e7d1-4a4e-8b1a-5e8da0d89194"
 				src="https://co.srb.codes/script.js"
-				strategy="afterInteractive"
+				strategy="lazyOnload"
 			/>
 			<Script
 				src="https://cdn.tkit.ai/widget.js"
 				data-widget-id="aVokg3U3"
-				strategy="afterInteractive"
+				strategy="lazyOnload"
 			/>
 		</>
 	);

@@ -1,7 +1,5 @@
 "use client";
 
-import "dialkit/styles.css";
-
 import { Button } from "@tentui.com/ui/components/button";
 import {
 	Tabs,
@@ -24,9 +22,7 @@ import { Index } from "@/registry/__index__";
 import { FullScreenIcon } from "../icons";
 import { CodeCollapsibleWrapper } from "./code-collapsible-wrapper";
 
-const DialRoot = React.lazy(() =>
-	import("dialkit").then((module) => ({ default: module.DialRoot })),
-);
+const DialRoot = React.lazy(() => import("./dial-root"));
 
 const registryIndex = Index as unknown as Record<
 	string,

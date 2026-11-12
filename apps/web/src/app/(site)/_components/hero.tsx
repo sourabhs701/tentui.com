@@ -88,13 +88,9 @@ export function Hero() {
 	return (
 		<section className="w-full overflow-hidden bg-background px-4 pt-12 pb-8 sm:px-6 lg:px-8">
 			<div className="mx-auto max-w-6xl">
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					whileInView={{ opacity: 1, y: 0 }}
-					viewport={{ once: true }}
-					transition={{ duration: 0.6 }}
-					className="max-w-4xl"
-				>
+				{/* A CSS entrance, not motion's initial state: the copy is the LCP
+				    element, and opacity 0 until hydration would delay it by seconds. */}
+				<div className="motion-safe:fade-in-25 motion-safe:slide-in-from-bottom-5 max-w-4xl motion-safe:animate-in motion-safe:duration-600 motion-safe:ease-out">
 					<h1 className="font-medium text-5xl text-foreground leading-[1.05] tracking-tight sm:text-[5rem]">
 						Landing pages that feel <br className="hidden sm:block" />
 						hand crafted.
@@ -109,7 +105,7 @@ export function Hero() {
 							Explore Blocks
 						</SoftButton>
 					</div>
-				</motion.div>
+				</div>
 			</div>
 
 			{/* Infinite carousel of live component previews */}
