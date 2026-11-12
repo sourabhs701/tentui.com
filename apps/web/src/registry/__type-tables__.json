@@ -1520,6 +1520,201 @@
 			]
 		}
 	],
+	"src/registry/components/ink-filter-bar/ink-filter-bar.tsx#InkFilterBarProps#": [
+		{
+			"id": "ink-filter-bar.tsx-InkFilterBarProps",
+			"name": "InkFilterBarProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "options",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "readonly InkFilterBarOption[]",
+					"simplifiedType": "array",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "value",
+					"description": "Controlled selection, in the order the chips joined the capsule.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string[] | undefined",
+					"simplifiedType": "array",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultValue",
+					"description": "Initial selection when uncontrolled.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string[] | undefined",
+					"simplifiedType": "array",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onValueChange",
+					"description": "Called with the new selection when a chip is toggled or cleared.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((value: string[]) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "type",
+					"description": "`single` swaps the selected chip for the new one in one motion.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"multiple\" | \"single\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "count",
+					"description": "The live result total shown in the pill.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "label",
+					"description": "Text after the number in the pill and the live region.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "formatCount",
+					"description": "Formats the count. Defaults to `en-US` grouping, such as `1,204`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((count: number) => string) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "wrap",
+					"description": "Wrap chips onto more lines instead of scrolling the row.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onClear",
+					"description": "Shows a clear button at the end of the capsule; called after it clears.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a soft drop when a chip is absorbed and a lighter one when it detaches.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptics on supported devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "aria-label",
+					"description": "Accessible name of the group of chips.",
+					"tags": [
+						{
+							"name": "see",
+							"text": "aria-labelledby."
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/interactive-sprite/interactive-sprite.tsx#InteractiveSpriteProps#": [
 		{
 			"id": "interactive-sprite.tsx-InteractiveSpriteProps",

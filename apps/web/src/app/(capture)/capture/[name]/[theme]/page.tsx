@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
 
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
+import { InkFilterBarCapture } from "@/components/capture/ink-filter-bar-capture";
 import {
 	COMPONENT_CAPTURE_FRAME,
 	COMPONENT_CAPTURE_FRAMING,
@@ -21,7 +22,9 @@ type CaptureIndexItem = {
 const captureIndex = Index as Record<string, CaptureIndexItem>;
 
 // Capture-only framings for demos that don't fit the 4:3 frame.
-const captureScenes: Record<string, ComponentType> = {};
+const captureScenes: Record<string, ComponentType> = {
+	"ink-filter-bar": InkFilterBarCapture,
+};
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
