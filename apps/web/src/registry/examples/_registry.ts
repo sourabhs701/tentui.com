@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "ink-filter-bar-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ink-filter-bar")],
+		files: [
+			{
+				path: "examples/ink-filter-bar-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-56 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "glass-toggle-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("glass-toggle")],
@@ -407,6 +421,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "ink-filter-bar-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ink-filter-bar")],
+		files: [
+			{
+				path: "examples/ink-filter-bar-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-80 place-items-center content-center px-4",
 		},
 	},
 	{

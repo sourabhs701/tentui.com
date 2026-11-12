@@ -28,6 +28,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"brand-context-menu": { zoom: 2 },
 	"bubble-wrap": { zoom: 1.2 },
 	"hold-to-confirm": { zoom: 1.6 },
+	"ink-filter-bar": { zoom: 1.3 },
 	"number-stepper": { zoom: 1.6 },
 	"otp-field": { zoom: 1.2 },
 	"peeping-button": { zoom: 1.35 },

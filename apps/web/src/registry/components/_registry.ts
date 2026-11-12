@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "ink-filter-bar",
+		type: "registry:component",
+		title: "Ink Filter Bar",
+		description:
+			"Filter chips beside a solid results pill. Pick a chip and ink buds out of the pill, pulls a liquid neck across the gap, and floods the chip until it docks into one capsule while the count rolls to the new number.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/ink-filter-bar/ink-filter-bar.tsx",
+				type: "registry:component",
+				target: "@components/ink-filter-bar.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-11-12",
+			image: "https://cdn.tentui.com/images/components/ink-filter-bar?v=1",
+			video: "https://cdn.tentui.com/videos/components/ink-filter-bar?v=1",
+		},
+		docs: "https://tentui.com/components/ink-filter-bar",
+	},
+	{
 		name: "glass-toggle",
 		type: "registry:component",
 		title: "Glass Toggle",

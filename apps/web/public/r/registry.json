@@ -448,6 +448,33 @@
       "type": "registry:block"
     },
     {
+      "name": "ink-filter-bar",
+      "title": "Ink Filter Bar",
+      "description": "Filter chips beside a solid results pill. Pick a chip and ink buds out of the pill, pulls a liquid neck across the gap, and floods the chip until it docks into one capsule while the count rolls to the new number.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/ink-filter-bar/ink-filter-bar.tsx",
+          "type": "registry:component",
+          "target": "@components/ink-filter-bar.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-12",
+        "image": "https://cdn.tentui.com/images/components/ink-filter-bar?v=1",
+        "video": "https://cdn.tentui.com/videos/components/ink-filter-bar?v=1"
+      },
+      "docs": "https://tentui.com/components/ink-filter-bar",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "glass-toggle",
       "title": "Glass Toggle",
       "description": "An on/off switch with a thumb of thick frosted glass. Flip it and the thumb springs across, a pixel moon scatters and reassembles as a pixel sun, and a rim light runs round the glass from cool lilac to warm amber.",

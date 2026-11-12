@@ -35,9 +35,10 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		id: "inputs-and-pickers",
 		title: "Inputs and pickers",
 		description:
-			"Enter a code or pick a number, rating, or time by dragging, scrolling, or typing.",
+			"Enter a code, filter a list, or pick a number, rating, or time by dragging, scrolling, or typing.",
 		components: [
 			"elastic-slider",
+			"ink-filter-bar",
 			"number-stepper",
 			"otp-field",
 			"rotary-knob",

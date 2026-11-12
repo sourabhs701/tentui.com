@@ -343,6 +343,36 @@ export const scenarios = {
 		},
 	},
 
+	"ink-filter-bar": {
+		rest: { x: 330, y: 300 },
+		async run(d) {
+			const chip = (label) =>
+				`[data-slot="ink-filter-bar-chip"]:has-text("${label}")`;
+			await d.wait(250);
+			// Ink buds from the pill, floods Cycling, and the count rolls to 17.
+			await d.move(chip("Cycling"), 500, { x: 0.5, y: 0.6 });
+			await d.wait(150);
+			await d.click();
+			await d.wait(700);
+			// Tennis joins the same capsule: 11 results.
+			await d.move(chip("Tennis"), 380, { x: 0.5, y: 0.6 });
+			await d.wait(120);
+			await d.click();
+			await d.wait(750);
+			// Cycling tears free and drains back, then Tennis, back to 24.
+			await d.move(chip("Cycling"), 380, { x: 0.5, y: 0.6 });
+			await d.wait(100);
+			await d.click();
+			await d.wait(700);
+			await d.move(chip("Tennis"), 320, { x: 0.5, y: 0.6 });
+			await d.wait(100);
+			await d.click();
+			await d.wait(650);
+			await d.move(d.rest, 500);
+			await d.wait(150);
+		},
+	},
+
 	"animated-tabs": {
 		rest: { x: 360, y: 320 },
 		async run(d) {

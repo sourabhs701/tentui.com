@@ -1,0 +1,239 @@
+---
+title: Ink Filter Bar
+description: An accessible React filter bar for shadcn/ui where picking a chip pulls ink out of the results pill, floods the chip from its near edge, and docks it into one capsule while the count rolls to the new number.
+seoTitle: React Ink Filter Bar Component for shadcn/ui
+seoDescription: Ink Filter Bar is a React filter chip bar for shadcn/ui. Picked chips are absorbed into the results pill through a liquid ink neck while the result count rolls digit by digit.
+createdAt: 2026-11-12
+updatedAt: 2026-11-12
+---
+
+<ComponentPreview name="ink-filter-bar-preview" />
+
+## Example
+
+<ComponentPreview name="ink-filter-bar-demo" />
+
+## Features
+
+- Filter chips beside a solid "24 results" pill. Pick a chip and a bead of
+  ink buds from the pill, joins the chip through a short liquid neck, and
+  floods it from the edge nearest the pill while the chip slides in and docks.
+  The pill and the picked chips end up as one capsule: "17 results | Cycling".
+- Deselect and the chip tears free: the neck stretches and snaps, a small bead
+  shrinks back into the chip's edge, and the chip drains back to an outline in
+  its own slot.
+- The label is drawn twice, outline color underneath and inverted on top,
+  clipped by the same edge as the ink. Text stays crisp and readable mid-flood,
+  on any background.
+- The count rolls one digit at a time, each a beat after the last, starting
+  with the flood.
+- Hovering a chip with a mouse makes its outline wobble very slightly, like a
+  wet edge.
+- `type="single"` swaps the picked chip for the new one in one motion, and an
+  optional clear button at the end of the capsule drains every chip back.
+- The row scrolls sideways with soft edge fades, or wraps with `wrap`.
+- Monochrome by design: the ink is your `foreground` color, so it's near-black
+  in light mode and near-white in dark mode.
+- At rest the capsule is plain CSS. The goo filter, the render loop, and the
+  wobble filter only exist while something moves.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/ink-filter-bar
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="ink-filter-bar" title="components/ink-filter-bar.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { InkFilterBar } from "@/components/ink-filter-bar";
+```
+
+The bar shows whatever `count` you pass, so compute it from the same data
+the filter narrows. `value` lists the picked chips in the order they joined
+the capsule.
+
+```tsx
+const [sports, setSports] = useState<string[]>([]);
+const count = clubs.filter((club) =>
+  sports.every((sport) => club.sports.includes(sport)),
+).length;
+
+<InkFilterBar
+  aria-label="Filter clubs by sport"
+  options={[
+    { value: "cycling", label: "Cycling" },
+    { value: "tennis", label: "Tennis" },
+    { value: "running", label: "Running" },
+  ]}
+  value={sports}
+  onValueChange={setSports}
+  count={count}
+/>
+```
+
+Use `type="single"` for a category picker. Picking another chip detaches the
+old one and absorbs the new one together, and picking the same chip again
+clears it. Give an option a `count` to show its own total after the label:
+
+```tsx
+<InkFilterBar
+  type="single"
+  aria-label="Template category"
+  options={[
+    { value: "landing", label: "Landing", count: 18 },
+    { value: "dashboard", label: "Dashboard", count: 9 },
+  ]}
+  value={category}
+  onValueChange={setCategory}
+  count={total}
+  label="templates"
+/>
+```
+
+Pass `onClear` to show a clear button at the end of the capsule. It clears
+the selection through `onValueChange`, then calls `onClear`. Use `wrap` when
+there are more chips than fit on one line, and `formatCount` for another
+locale or a capped number:
+
+```tsx
+<InkFilterBar
+  wrap
+  aria-label="Filter places by cuisine"
+  options={cuisines}
+  value={picked}
+  onValueChange={setPicked}
+  onClear={() => track("filters_cleared")}
+  count={places.length}
+  label="places"
+  formatCount={(count) => (count > 999 ? "999+" : String(count))}
+/>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Click or tap a chip | Absorbs it into the capsule, or detaches it |
+| `Tab` | Moves into the chips, then to the clear button |
+| `←` / `→` | Moves between chips in the order they're drawn |
+| `Home` / `End` | Moves to the first or last chip |
+| `Space` / `Enter` | Toggles the focused chip |
+| Clear button | Drains every chip back, one after another |
+
+A chip keeps focus as it moves between the capsule and the row. Picking a
+chip while the row is scrolled scrolls back to the start, so the capsule
+stays in view.
+
+## Sound and haptics
+
+Absorbing a chip plays a soft, wet drop and a `light` haptic. Detaching one,
+or clearing, plays a lighter unstick and a `selection` haptic. There is one
+sound and one haptic per toggle, and nothing on hover.
+
+Sound and haptics only follow user input. The first render and changes to the
+`value` or `count` props are silent, and nothing plays while the tab is
+hidden. Turn each off with `sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+The bar is a `group` named by the required `aria-label`, and each chip is a
+`button` with `aria-pressed`, so a screen reader hears "Cycling, toggle
+button, pressed". The chips share one tab stop with a roving `tabIndex`. The
+count is read from a polite live region, such as "17 results", after the
+selection settles, so a quick run of toggles is announced once. The ink,
+neck, and inverted label are hidden from assistive technology, and the
+visible label is never hidden.
+
+Chips are 36 px tall with a 44 px hit area. The focus ring shows for keyboard
+focus only and sits outside the ink, so it's visible on outlined and filled
+chips. The label keeps at least 4.5:1 contrast on the page and on the ink, in
+light and dark mode. In right-to-left layouts the capsule sits on the right
+and the ink floods from each chip's right edge.
+
+With reduced motion enabled there is no goo, neck, or wobble: chips move to
+their new place at once and fade in there, and the count swaps with a short
+fade. Sound and haptics stay on because they confirm the toggle rather than
+decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/ink-filter-bar/ink-filter-bar.tsx"
+  name="InkFilterBarProps"
+/>
+
+## FAQ
+
+### How do I install the Ink Filter Bar with shadcn?
+
+Run `npx shadcn@latest add @tentui/ink-filter-bar` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/ink-filter-bar.json` without it. The
+CLI copies `ink-filter-bar.tsx` into your project and installs `motion`,
+`web-haptics`, and `@rexa-developer/tiks`.
+
+### Can users pick more than one filter?
+
+Yes. The default `type="multiple"` lets any number of chips join the capsule,
+in the order they were picked. Set `type="single"` for a category or sort
+picker: picking a new chip detaches the old one and absorbs the new one in one
+motion.
+
+### How do I wire the count to real data?
+
+The bar only shows the `count` you pass. Keep the selection in state with
+`value` and `onValueChange`, and compute `count` from the same filtered list or
+from your API's total. The digits roll whenever the number changes, and the
+live region announces it once the selection settles.
+
+### Is the Ink Filter Bar accessible?
+
+Yes. It is a `group` named by `aria-label`, each chip is a toggle `button` with
+`aria-pressed`, arrow keys plus `Home` and `End` move between chips, and the
+result count is announced through a polite live region. Focus stays on a chip
+while it moves into or out of the capsule.
+
+### Does it respect reduced motion, and can I turn off sound and haptics?
+
+Yes. With `prefers-reduced-motion` the ink, neck, and wobble are skipped:
+chips fade in at their new place and the count swaps with a short fade. Sound
+and haptics only follow user input; turn them off with `sound={false}` and
+`haptics={false}`.
+
+### Is the Ink Filter Bar free to use?
+
+Yes. The Ink Filter Bar is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"ink-filter-bar": {
+		name: "ink-filter-bar",
+		title: "Ink Filter Bar",
+		description: "Filter chips beside a solid results pill. Pick a chip and ink buds out of the pill, pulls a liquid neck across the gap, and floods the chip until it docks into one capsule while the count rolls to the new number.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/ink-filter-bar/ink-filter-bar.tsx","type":"registry:component","target":"@components/ink-filter-bar.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/ink-filter-bar/ink-filter-bar")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ink-filter-bar");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/ink-filter-bar?v=1","video":"https://cdn.tentui.com/videos/components/ink-filter-bar?v=1"},
+	},
 	"glass-toggle": {
 		name: "glass-toggle",
 		title: "Glass Toggle",
@@ -815,6 +833,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"ink-filter-bar-preview": {
+		name: "ink-filter-bar-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ink-filter-bar-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ink-filter-bar-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ink-filter-bar-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-56 place-items-center content-center px-4"},
+	},
 	"glass-toggle-preview": {
 		name: "glass-toggle-preview",
 		title: undefined,
@@ -1336,6 +1372,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"ink-filter-bar-demo": {
+		name: "ink-filter-bar-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ink-filter-bar-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ink-filter-bar-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ink-filter-bar-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-80 place-items-center content-center px-4"},
 	},
 	"glass-toggle-demo": {
 		name: "glass-toggle-demo",
