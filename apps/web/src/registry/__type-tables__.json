@@ -1850,6 +1850,327 @@
 			]
 		}
 	],
+	"src/registry/components/morph-lightbox/morph-lightbox.tsx#MorphLightboxItem#": [
+		{
+			"id": "morph-lightbox.tsx-MorphLightboxItem",
+			"name": "MorphLightboxItem",
+			"description": "",
+			"entries": [
+				{
+					"name": "src",
+					"description": "Full-size image shown in the viewer.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "alt",
+					"description": "Describes the photo. It names the slide and the thumbnail button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "width",
+					"description": "Intrinsic width; with `height` it sets the slide's aspect ratio.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "height",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "caption",
+					"description": "Shown under the slide and read as the slide's description.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "thumbnailSrc",
+					"description": "Smaller image for thumbnails and the filmstrip. Defaults to `src`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/morph-lightbox/morph-lightbox.tsx#MorphLightboxProps#": [
+		{
+			"id": "morph-lightbox.tsx-MorphLightboxProps",
+			"name": "MorphLightboxProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "items",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "MorphLightboxItem[]",
+					"simplifiedType": "array",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "index",
+					"description": "Controlled slide index.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultIndex",
+					"description": "Slide shown first when uncontrolled.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onIndexChange",
+					"description": "Called when a swipe, key, or click lands on another slide.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((index: number) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "open",
+					"description": "Controlled open state.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultOpen",
+					"description": "Initial open state when uncontrolled. Opens without the morph.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onOpenChange",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((open: boolean) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "loop",
+					"description": "Wrap from the last slide to the first with keys and buttons.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "filmstrip",
+					"description": "Show a strip of thumbnails under the slide.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a soft lift on open and a settle when the photo lands on close.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptics on supported devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "className",
+					"description": "Classes for the viewer, the full-screen dialog.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "Your grid of `MorphLightboxTrigger`s, or any other content.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/morph-lightbox/morph-lightbox.tsx#MorphLightboxTriggerProps#": [
+		{
+			"id": "morph-lightbox.tsx-MorphLightboxTriggerProps",
+			"name": "MorphLightboxTriggerProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "index",
+					"description": "Which item this thumbnail opens.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "Custom thumbnail content. Defaults to the item's thumbnail, cropped to fill.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/number-stepper/number-stepper.tsx#NumberStepperProps#": [
 		{
 			"id": "number-stepper.tsx-NumberStepperProps",

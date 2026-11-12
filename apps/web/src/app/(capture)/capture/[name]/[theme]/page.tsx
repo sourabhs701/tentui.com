@@ -4,6 +4,7 @@ import type { ComponentType } from "react";
 
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
 import { InkFilterBarCapture } from "@/components/capture/ink-filter-bar-capture";
+import { MorphLightboxCapture } from "@/components/capture/morph-lightbox-capture";
 import {
 	COMPONENT_CAPTURE_FRAME,
 	COMPONENT_CAPTURE_FRAMING,
@@ -24,6 +25,7 @@ const captureIndex = Index as Record<string, CaptureIndexItem>;
 // Capture-only framings for demos that don't fit the 4:3 frame.
 const captureScenes: Record<string, ComponentType> = {
 	"ink-filter-bar": InkFilterBarCapture,
+	"morph-lightbox": MorphLightboxCapture,
 };
 
 export const dynamic = "force-static";
