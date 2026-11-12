@@ -3,7 +3,7 @@ title: Brand Context Menu
 description: Share copy-ready and downloadable brand assets from a contextual menu.
 seoDescription: Brand Context Menu is a React menu for shadcn/ui that copies your logo as SVG and downloads the full brand kit as a ZIP, with sound and haptic feedback.
 createdAt: 2026-07-21
-updatedAt: 2026-11-01
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="brand-context-menu-preview" />
@@ -107,3 +107,48 @@ const logotype = {
 ## Credits
 
 - [@ncdai](https://x.com/iamncdai)
+
+## FAQ
+
+### How do I install the Brand Context Menu with shadcn?
+
+Run `npx shadcn@latest add @tentui/brand-context-menu` after adding the
+`@tentui` registry to `components.json`
+([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/brand-context-menu.json` without
+it. The CLI copies `brand-context-menu.tsx` into your project, installs
+`lucide-react`, and adds the shadcn `context-menu` and TentUI
+[Copy Button](/components/copy-button) it builds on.
+
+### How do I use my own logo and brand kit?
+
+Pass `markAsset` and `logotypeAsset`, each with a `name`, a `path` to the SVG,
+and a `filename`, and set `brandAssetsZipPath` to your archive. Without them the
+menu serves TentUI's own assets from `cdn.tentui.com`.
+
+### Why does "Copy Mark as SVG" show "Copy failed"?
+
+The menu fetches the SVG and copies its markup, so the copy fails if that
+request fails. Host the SVG on the same origin or serve it with CORS headers
+that allow your site; clipboard access also needs a secure context such as
+HTTPS or `localhost`.
+
+### Does it work with Radix-based shadcn/ui components?
+
+It is written for shadcn/ui's Base UI components: the trigger uses the `render`
+prop and the copy rows use `closeOnClick={false}` to stay open after copying.
+With a Radix-based `context-menu`, use `asChild` on the trigger and call
+`event.preventDefault()` in the copy rows' `onSelect` instead.
+
+### What can I right-click to open the menu?
+
+Any single React element passed as `children`, such as the logo link in your
+header. The menu opens on that element's context menu event, so the rest of the
+page keeps the browser's default menu.
+
+### Is the Brand Context Menu free to use?
+
+Yes. The Brand Context Menu is free and source-available: the shadcn CLI copies
+its source into your project, and you can use it in unlimited personal and
+client projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

@@ -4,7 +4,7 @@ description: Search pages and run actions from a polished, keyboard-first comman
 seoTitle: React Search Command Menu for shadcn/ui
 seoDescription: Search Command is a keyboard-first React command menu for shadcn/ui. Open it with Cmd+K or / to search pages and run actions, styled with Tailwind CSS.
 createdAt: 2026-07-30
-updatedAt: 2026-07-30
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="search-command-preview" />
@@ -180,3 +180,47 @@ The trigger exposes its dialog state and `Meta+K`, `Control+K`, and `/` shortcut
   path="src/registry/components/search-command/search-command.tsx"
   name="SearchCommandProps"
 />
+
+## FAQ
+
+### How do I install the Search Command with shadcn?
+
+Run `npx shadcn@latest add @tentui/search-command` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/search-command.json` without it.
+The CLI copies `search-command.tsx` into your project, installs `lucide-react`
+and `react-hotkeys-hook`, and adds the shadcn `button`, `command`, and `kbd`
+components.
+
+### Why doesn't Cmd+K open the Search Command?
+
+The shortcuts are off by default, so pass `enabledHotkeys` to turn on `Mod+K`
+and `/`, and set `shortcutKey` to use another letter. To open it from your own
+code instead, control it with `open` and `onOpenChange`.
+
+### Why does the trigger show Ctrl instead of ⌘ on a Mac?
+
+With `shortcutModifier="auto"`, the ⌘ hint only shows when an ancestor such as
+`<html>` has the `os-macos` class, which TentUI's site adds with a small inline
+script. Add that class on macOS yourself, or set `shortcutModifier` to
+`"command"` or `"control"` to pick one.
+
+### How do I navigate with the Next.js router or React Router?
+
+Give each item a `value` such as its path and call your router in
+`onItemSelect`, for example `router.push(item.value)`. Items can also run their
+own `onSelect`, and both callbacks run after the dialog closes.
+
+### Is the Search Command keyboard accessible?
+
+Yes. It is built on the shadcn `command` component (cmdk) inside a dialog, so
+arrow keys move through results, `Enter` runs the highlighted one, and `Escape`
+closes it. The trigger exposes `aria-expanded` and `aria-keyshortcuts`, and the
+dialog's `title` and `description` are available to screen readers.
+
+### Is the Search Command free to use?
+
+Yes. The Search Command is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

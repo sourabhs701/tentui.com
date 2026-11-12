@@ -2,9 +2,9 @@
 title: Tailwind CSS Buttons
 description: Browse and copy a responsive gallery of polished Tailwind CSS button styles.
 seoTitle: Tailwind CSS Buttons for React and shadcn/ui
-seoDescription: Copy eight responsive Tailwind CSS button styles as React JSX for your shadcn/ui project, with one-click copy and animated success and error feedback.
+seoDescription: Copy four responsive Tailwind CSS button styles as React JSX for your shadcn/ui project, with one-click copy and animated success and error feedback.
 createdAt: 2026-07-26
-updatedAt: 2026-07-26
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="tailwindcss-buttons-preview" />
@@ -15,7 +15,7 @@ updatedAt: 2026-07-26
 
 ## Features
 
-- Includes eight responsive Tailwind CSS button styles.
+- Includes four responsive Tailwind CSS button styles.
 - Copies complete JSX snippets directly to the clipboard.
 - Provides animated success and error feedback with `CopyButton`.
 - Generates previews and copied JSX from the same button functions.
@@ -28,3 +28,46 @@ controls have visible labels and display distinct success and error states.
 
 Need behavior as well as styling? Build a
 [shadcn loading button with success and error feedback](/blog/shadcn-loading-button).
+
+## FAQ
+
+### How do I use these Tailwind CSS buttons in React?
+
+Click **Copy** on a card to copy that button's JSX, then paste it into any React
+component. Each button is a native `button` styled only with Tailwind utility
+classes and arbitrary values, so it needs no extra package or custom Tailwind
+config.
+
+### Which button styles are included?
+
+Four: Primary, a blue pill; Secondary, a translucent glass pill; 3D Button, a
+dark button with a raised edge; and 3D Destructive, its red counterpart. Each
+has hover, pressed, and `focus-visible` styles plus `dark:` variants.
+
+### Can I install the whole gallery with the shadcn CLI?
+
+Yes. Run `npx shadcn@latest add @tentui/tailwindcss-buttons` after adding the
+`@tentui` registry ([installation guide](/docs/installation)); it installs
+`react-element-to-jsx-string` and `react-is` and adds the TentUI
+[Copy Button](/components/copy-button). You only need this to show the gallery
+on your own site, not to use a single button.
+
+### Are the buttons accessible?
+
+Yes. Each one is a native `button` with `type="button"` and a visible focus
+outline for keyboard users, and the 3D buttons drop their press movement when
+the user prefers reduced motion. Give icon-only variations an `aria-label`.
+
+### How do I change a button's color or size?
+
+Edit the copied classes: swap the color utilities, such as `bg-blue-600` and
+`hover:bg-blue-700` on Primary, and adjust `h-12` and `px-6` for size. The
+colored shadows on the 3D buttons are arbitrary values, so update their hex
+colors to match.
+
+### Are the Tailwind CSS Buttons free to use?
+
+Yes. The Tailwind CSS Buttons are free and source-available, and you can use
+them in unlimited personal and client projects under the
+[TentUI License](/license). The license doesn't allow redistributing or
+reselling them as a template or button kit.

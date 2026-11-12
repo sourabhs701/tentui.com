@@ -4,7 +4,7 @@ description: A bottom sheet you drag between snap points, with detent haptics, a
 seoTitle: React Bottom Sheet with Snap Points for shadcn/ui
 seoDescription: Snap Sheet is a React bottom sheet for shadcn/ui you drag between snap points, with detent haptics, a rubber-band edge, and flick to close.
 createdAt: 2026-10-24
-updatedAt: 2026-10-24
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="snap-sheet-preview" />
@@ -223,3 +223,48 @@ with `sound={false}` and `haptics={false}`.
   path="src/registry/components/snap-sheet/snap-sheet.tsx"
   name="SnapSheetContentProps"
 />
+
+## FAQ
+
+### How do I install the Snap Sheet with shadcn?
+
+Run `npx shadcn@latest add @tentui/snap-sheet` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/snap-sheet.json` without it. The CLI
+copies `snap-sheet.tsx` into your project and installs `@base-ui/react`,
+`motion`, `lucide-react`, `web-haptics`, and `@rexa-developer/tiks`.
+
+### Is the Snap Sheet a replacement for Vaul?
+
+Yes. It covers Vaul's drawer API, including snap points, `modal`,
+`dismissible`, `handleOnly`, and background scaling, and most props map one to
+one; the main change is that `activeSnap` is an index rather than a value, as
+the "Migrating from Vaul" table on this page shows.
+
+### Is the bottom sheet accessible?
+
+Yes. It is a Base UI dialog, so it has `role="dialog"`, a focus trap, scroll
+lock, `Esc` to close, and returned focus, and `SnapSheet.Handle` is a
+focusable slider where `ArrowUp` and `ArrowDown` move between snap points.
+Always render a `SnapSheet.Title`, plus a `SnapSheet.Close` in modal sheets.
+
+### Can I control which snap point the sheet is at?
+
+Yes. Pass `open` and `onOpenChange` for visibility and `activeSnap` with
+`onSnapChange` for the snap point, as an index into `snapPoints`. Snap points
+are fractions of the viewport height, such as `0.5`, or fixed heights such as
+`"148px"`, listed lowest first.
+
+### Can it stay open while users interact with the page?
+
+Yes. Set `modal={false}` for map- or player-style sheets: the page stays
+interactive, focus isn't trapped, and clicking outside doesn't close it. On
+desktop, `desktop="dialog"` or `desktop="sheet"` renders a centered dialog or
+side sheet from the `md` breakpoint up.
+
+### Is the Snap Sheet free to use?
+
+Yes. The Snap Sheet is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

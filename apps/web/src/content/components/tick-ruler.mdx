@@ -3,7 +3,7 @@ title: Tick Ruler
 description: A ruler-style number picker you drag or flick, with a click and a haptic tick on every step.
 seoDescription: Tick Ruler is a ruler-style React number picker for shadcn/ui that you drag or flick, with a click and a haptic tick on every step. Styled with Tailwind CSS.
 createdAt: 2026-10-23
-updatedAt: 2026-10-23
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="tick-ruler-preview" />
@@ -132,3 +132,46 @@ confirm each step rather than decorate movement; turn them off with
   path="src/registry/components/tick-ruler/tick-ruler.tsx"
   name="TickRulerProps"
 />
+
+## FAQ
+
+### How do I install the Tick Ruler with shadcn?
+
+Run `npx shadcn@latest add @tentui/tick-ruler` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/tick-ruler.json` without it. The CLI
+copies `tick-ruler.tsx` into your project and installs `motion`, `web-haptics`,
+and `@rexa-developer/tiks`.
+
+### Can I use the Tick Ruler as a weight or height picker?
+
+Yes. Set `min`, `max`, and `step` (for example `step={0.5}` for half
+kilograms), `unit` for the label after the readout, and `labelEvery` for the
+numbered ticks. `orientation="vertical"` suits height pickers, with higher
+values above the needle.
+
+### Is the Tick Ruler keyboard accessible?
+
+Yes. It is a `slider` named by `label`, with an `aria-valuetext` built from
+`format` and `unit`. The arrow keys move one step, `Shift` with an arrow or
+`PageUp` and `PageDown` move ten, and `Home` and `End` jump to the bounds.
+
+### How do I use it with React Hook Form or a form?
+
+Pass `field.value` and `field.onChange` from a `Controller` to `value` and
+`onValueChange`, or save in `onValueCommit`, which fires once the ruler
+settles. It has no `name` prop, so render your own hidden input to submit it
+with a native form.
+
+### Can I turn off the click sound and haptics?
+
+Yes. Set `sound={false}` and `haptics={false}`. Changes from the `value` prop
+are always silent, and reduced motion removes the coast, rubber band, and digit
+roll but keeps sound and haptics until you turn them off.
+
+### Is the Tick Ruler free to use?
+
+Yes. The Tick Ruler is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

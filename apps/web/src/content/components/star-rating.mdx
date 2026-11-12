@@ -3,7 +3,7 @@ title: Star Rating
 description: A 1–5 star input you tap, sweep across, or arrow through, with a tick per star, half stars, and a pop when a pick lands.
 seoDescription: Star Rating is a React 1–5 star input for shadcn/ui you tap, sweep, or arrow through, with half stars, a tick per star, and a pop when a pick lands.
 createdAt: 2026-10-25
-updatedAt: 2026-10-25
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="star-rating-preview" />
@@ -126,3 +126,45 @@ rather than decorate movement; turn them off with `sound={false}` and
   path="src/registry/components/star-rating/star-rating.tsx"
   name="StarRatingProps"
 />
+
+## FAQ
+
+### How do I install the Star Rating with shadcn?
+
+Run `npx shadcn@latest add @tentui/star-rating` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/star-rating.json` without it. The
+CLI copies `star-rating.tsx` into your project and installs `motion`,
+`lucide-react`, `web-haptics`, and `@rexa-developer/tiks`.
+
+### Does the Star Rating support half stars?
+
+Yes. Set `allowHalf` and the left half of each star rates x.5, while the arrow
+keys move half a star at a time. Read-only ratings show any fraction, so a
+`value` of 4.3 fills 30% of the fifth star.
+
+### Is the Star Rating accessible and keyboard navigable?
+
+Yes. It is a `radiogroup`, named "Rating" unless you pass `aria-label`, with one
+radio per step such as "3 stars". The arrow keys move one step, `Home` and `End`
+jump to the ends, and `Backspace` or `Delete` clears the value when
+`clearable`.
+
+### How do I use it with React Hook Form or a native form?
+
+Pass `field.value` and `field.onChange` from a `Controller` to `value` and
+`onValueChange`; use `onValueCommit` if you only want the final pick rather than
+every step of a sweep. For a native form or server action, set `name` and the
+value is submitted through a hidden input.
+
+### How do I show a rating without letting users change it?
+
+Set `readOnly`, for example on review cards and product lists. It renders as a
+single image named like "Rated 4.5 out of 5", and `size="sm"` makes it compact.
+
+### Is the Star Rating free to use?
+
+Yes. The Star Rating is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

@@ -4,7 +4,7 @@ description: Navigate dense component libraries with tactile, proximity-reactive
 seoTitle: Component Sidebar for React and shadcn/ui
 seoDescription: Component Sidebar is a React navigation sidebar for shadcn/ui with proximity-reactive guide lines, a keyboard shortcut, and active-item scrolling.
 createdAt: 2026-07-26
-updatedAt: 2026-08-19
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="component-sidebar-preview" />
@@ -192,3 +192,53 @@ The toggle has an accessible name, exposes its expanded state, and points to the
   path="src/registry/components/component-sidebar/component-sidebar.tsx"
   name="ComponentSidebarContentProps"
 />
+
+## FAQ
+
+### How do I install the Component Sidebar with shadcn?
+
+Run `npx shadcn@latest add @tentui/component-sidebar` after adding the
+`@tentui` registry to `components.json`
+([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/component-sidebar.json` without
+it. The CLI copies the sidebar and its click sound into your project, adds the
+shadcn `badge`, `button`, `kbd`, and `tooltip` components, and installs
+`motion`, `web-haptics`, and `@rexa-developer/tiks`; wrap your app in
+`TooltipProvider` if it isn't already.
+
+### How do I use the Component Sidebar with Next.js Link?
+
+Pass `renderLink` and spread every prop it receives onto your router's link,
+for example `({ href, ...props }) => <Link href={href} {...props} />`. Those
+props carry the ref, `aria-current`, click feedback, and external-link
+attributes, and links default to a plain `a` element.
+
+### Can I control whether the sidebar is open?
+
+Yes. Pass `open` and `onOpenChange` to control it, or `defaultOpen`, which is
+`true`, to let it manage itself. The `S` key toggles it unless the user is
+typing in a field or holding a modifier key; change it with `shortcutKey` or
+pass `false` to remove it.
+
+### Is the Component Sidebar accessible?
+
+Yes. The toggle has an accessible name and exposes `aria-expanded` and
+`aria-controls`, the closed panel is `inert`, and the active link gets
+`aria-current="page"` and scrolls into view. New and updated markers include
+screen-reader text, and the proximity effect ignores touch and turns off with
+reduced motion.
+
+### How do I change the sidebar's width, height, or position?
+
+Override its CSS variables from `className`: for example,
+`[--component-sidebar-width:16rem]`, `[--component-sidebar-top:4rem]` for a
+sticky offset below a header, and
+`[--component-sidebar-height:calc(100svh-4rem)]`. Use `panelClassName` to
+restyle the bordered panel.
+
+### Is the Component Sidebar free to use?
+
+Yes. The Component Sidebar is free and source-available: the shadcn CLI copies
+its source into your project, and you can use it in unlimited personal and
+client projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.
