@@ -7,6 +7,11 @@ import { ComponentPreviewMedia } from "@/components/component-preview-media";
 
 export { ComponentPreviewImage } from "@/components/component-preview-media";
 
+// A CSS entrance that starts from the server-rendered HTML. motion's
+// `initial={{ opacity: 0 }}` kept every card invisible until hydration.
+export const CARD_ENTER_CLASS_NAME =
+	"motion-safe:fade-in-25 motion-safe:slide-in-from-bottom-2.5 motion-safe:animate-in motion-safe:fill-mode-backwards motion-safe:duration-300 motion-safe:ease-out";
+
 // ─── Component Card ────────────────────────────────────────────────────────
 export function ComponentCard({
 	component,
@@ -20,14 +25,9 @@ export function ComponentCard({
 	const stopPreview = () => setIsHovered(false);
 
 	return (
-		<motion.div
-			initial={{ opacity: 0, y: 10 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{
-				duration: 0.3,
-				delay: 0.02 * index,
-				ease: "easeOut",
-			}}
+		<div
+			className={CARD_ENTER_CLASS_NAME}
+			style={{ animationDelay: `${0.02 * index}s` }}
 		>
 			<Link
 				href={`/components/${component.name}` as Route}
@@ -92,6 +92,6 @@ export function ComponentCard({
 					</motion.div>
 				</div>
 			</Link>
-		</motion.div>
+		</div>
 	);
 }

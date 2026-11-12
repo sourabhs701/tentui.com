@@ -31,9 +31,12 @@ const geist = Geist({
 	subsets: ["latin"],
 });
 
+// Only code and small labels use the mono face, so don't preload it on every
+// page; it still swaps in once fetched.
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
 	subsets: ["latin"],
+	preload: false,
 });
 
 export const metadata: Metadata = {

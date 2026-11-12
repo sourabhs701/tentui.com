@@ -6,7 +6,7 @@ import { Toaster } from "@tentui.com/ui/components/sonner";
 import { TooltipProvider } from "@tentui.com/ui/components/tooltip";
 
 import "@/lib/openpanel";
-import { queryClient } from "@/utils/trpc";
+import { queryClient } from "@/utils/query-client";
 
 import { ThemeProvider } from "./theme-provider";
 

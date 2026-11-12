@@ -13,7 +13,7 @@ import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import { AutoTypeTable } from "./auto-type-table";
 import { Callout } from "./callout";
-import { mdxCodeBlockComponents } from "./code-block";
+import { mdxCodeBlockComponents, mdxCodeClassName } from "./code-block";
 import { CodeTabs, TabsListInstallType } from "./code-tabs";
 import { ComponentPreview } from "./component-preview";
 import { ComponentSource } from "./component-source";
@@ -91,12 +91,7 @@ const components: MDXRemoteProps["components"] = {
 	tr: (props) => <tr {...props} />,
 	th: (props) => <th className="px-3 py-2 font-medium" {...props} />,
 	td: (props) => <td className="px-3 py-2 text-muted-foreground" {...props} />,
-	code: (props) => (
-		<code
-			className="rounded bg-transparent px-1.5 py-0.5 font-mono text-[0.85em] text-foreground"
-			{...props}
-		/>
-	),
+	code: (props) => <code className={mdxCodeClassName} {...props} />,
 	...mdxCodeBlockComponents,
 	ComponentPreview,
 	ComponentSource,
