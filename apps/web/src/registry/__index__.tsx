@@ -291,7 +291,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: [],
-		meta: {"createdAt":"2026-11-12"},
+		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/dust-delete?v=1","video":"https://cdn.tentui.com/videos/components/dust-delete?v=1"},
 	},
 	"glass-toggle": {
 		name: "glass-toggle",
