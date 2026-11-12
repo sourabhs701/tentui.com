@@ -3,7 +3,7 @@ title: Time Ring
 description: A 24-hour dial for picking a time range, like a bedtime and wake-up schedule, with rolling digits, a tick per step, a deeper click per hour, and a thunk at the limits.
 seoDescription: Time Ring is a 24-hour React time range picker for shadcn/ui, like a bedtime and wake-up dial, with rolling digits, a tick per step, and a click per hour.
 createdAt: 2026-11-01
-updatedAt: 2026-11-01
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="time-ring-preview" />
@@ -174,3 +174,49 @@ confirm each step rather than decorate movement.
   path="src/registry/components/time-ring/time-ring.tsx"
   name="TimeRingValue"
 />
+
+## FAQ
+
+### How do I install the Time Ring with shadcn?
+
+Run `npx shadcn@latest add @tentui/time-ring` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/time-ring.json` without it. The CLI
+copies `time-ring.tsx` into your project and installs `motion`,
+`@number-flow/react`, `lucide-react`, `web-haptics`, and
+`@rexa-developer/tiks`.
+
+### Can the Time Ring pick a range that crosses midnight?
+
+Yes. Times are minutes from midnight, and an `end` earlier than `start` falls
+on the next day, so 11:00 PM to 7:00 AM is an 8-hour range. Use `minDuration`
+and `maxDuration` to keep the range within limits, such as 6 to 10 hours of
+sleep.
+
+### How do I read and control the selected times?
+
+Pass `value` and `onValueChange` with a `{ start, end }` object in minutes from
+midnight; with React Hook Form, pass `field.value` and `field.onChange` from a
+`Controller`. For a native form, set `name` and the range is submitted as
+`name[start]` and `name[end]`.
+
+### Is the Time Ring keyboard accessible?
+
+Yes. Each handle is a `slider` with an `aria-valuetext` such as "Bedtime 11:00
+PM", inside a `group` you name with `aria-label`. The arrow keys move the
+focused handle by one `step`, and `Shift` with an arrow or `PageUp` and
+`PageDown` move it by an hour.
+
+### Can I use it for something other than sleep, or with a 24-hour clock?
+
+Yes. Set `startLabel` and `endLabel` (by default "Bedtime" and "Wake up"),
+replace the moon and sun with `startIcon` and `endIcon`, and set `format="24h"`.
+`step` snaps to 5, 15, or 30 minutes, and the `--time-ring-accent` variable
+recolors the arc.
+
+### Is the Time Ring free to use?
+
+Yes. The Time Ring is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

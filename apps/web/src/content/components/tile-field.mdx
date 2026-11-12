@@ -3,7 +3,7 @@ title: Tile Field Wordmark
 description: Render a light and dark mode wordmark with moving cursor-reactive tiles, a customizable color wave, and a soft glow.
 seoDescription: Tile Field Wordmark is a React component for shadcn/ui that renders your wordmark as cursor-reactive canvas tiles with a customizable color wave and soft glow.
 createdAt: 2026-07-30
-updatedAt: 2026-07-30
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="tile-field-preview" />
@@ -104,3 +104,46 @@ light, and reduced-motion users receive a static tile wordmark.
   path="src/registry/components/tile-field/tile-field.tsx"
   name="TileFieldProps"
 />
+
+## FAQ
+
+### How do I install the Tile Field Wordmark with shadcn?
+
+Run `npx shadcn@latest add @tentui/tile-field` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/tile-field.json` without it. The CLI
+copies `tile-field.tsx` into your project; it draws on a canvas and needs no
+other packages.
+
+### How do I change the word and colors?
+
+Set `word` (it defaults to "Localhost") and `color`, which accepts any CSS
+color and drives the wave, pointer glow, and sparks. The resting tiles use the
+element's text color, `text-muted-foreground` by default, so pass another
+`text-*` class to change them.
+
+### How do I size the Tile Field?
+
+It fills the container's width with a 12rem minimum height, and the word scales
+to the width. Set a height, minimum height, or aspect ratio through `className`;
+the tile grid rebuilds whenever the element resizes.
+
+### Will it slow down my page?
+
+It is built to stay light: it pauses while off-screen or in a hidden tab, caps
+the canvas at 2x device pixel ratio, and draws the tiles in batches. With
+reduced motion enabled it draws a static wordmark, and touch input doesn't start
+the pointer light.
+
+### Is the wordmark readable by screen readers and search engines?
+
+Screen readers announce it as an image labeled with the word, or with your
+`aria-label`, and the canvas itself is hidden. Because the letters are pixels
+rather than text, keep a real heading on the page if the word is its title.
+
+### Is the Tile Field Wordmark free to use?
+
+Yes. The Tile Field Wordmark is free and source-available: the shadcn CLI
+copies its source into your project, and you can use it in unlimited personal
+and client projects under the [TentUI License](/license). The license doesn't
+allow redistributing or reselling the component itself.

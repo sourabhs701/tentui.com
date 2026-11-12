@@ -3,7 +3,7 @@ title: Dynamic Island
 description: An iPhone-style pill that morphs between an idle pill, a compact live activity, and an expanded card, with a liquid spring, a sound and a haptic per morph, and swipe up to dismiss.
 seoDescription: Dynamic Island is an iPhone-style React component for shadcn/ui that morphs between a pill, a live activity, and an expanded card with sound and haptics.
 createdAt: 2026-11-01
-updatedAt: 2026-11-01
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="dynamic-island-preview" />
@@ -262,3 +262,45 @@ they confirm each change rather than decorate movement.
   path="src/registry/components/dynamic-island/dynamic-island.tsx"
   name="DynamicIslandShowOptions"
 />
+
+## FAQ
+
+### How do I install the Dynamic Island with shadcn?
+
+Run `npx shadcn@latest add @tentui/dynamic-island` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/dynamic-island.json` without it.
+The CLI copies `dynamic-island.tsx` into your project and installs `motion`,
+`web-haptics`, and `@rexa-developer/tiks`.
+
+### How do I show toast-style notifications in the Dynamic Island?
+
+Use the `useDynamicIsland` hook and call `show(id, { duration })` to show a view
+for that many milliseconds before it returns to the resting view. Timed views
+that arrive while another is showing wait in line, first in, first out.
+
+### Does the Dynamic Island change views by itself?
+
+No. It is controlled: `view` picks the `DynamicIslandView` to show by `id`, and
+`null` shows the idle pill. `onExpand` and `onDismiss` report taps, `Escape`,
+clicks outside, and swipes up, and your state decides what comes next.
+
+### Is the Dynamic Island accessible to screen readers?
+
+Yes. A polite live region announces each view's `label` once when it opens, not
+on every tick of a timer inside it. With `onExpand`, compact views are buttons
+that `Enter` and `Space` expand, expanded views are named regions that `Escape`
+dismisses, and focus moves into a card the user opened.
+
+### Can I place it at the top of the screen like on an iPhone?
+
+Yes. Set `position="top"` to fix it to the top center of the viewport below the
+safe area, where only the island catches pointer events. By default it sits
+inline wherever you render it.
+
+### Is the Dynamic Island free to use?
+
+Yes. The Dynamic Island is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

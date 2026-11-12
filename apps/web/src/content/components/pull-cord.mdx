@@ -3,7 +3,7 @@ title: Pull Cord
 description: A ball-chain pull switch for a light. Drag the handle down and the chain feeds out bead by bead with a tick each, then flips with a click on release and swings back to rest.
 seoDescription: Pull Cord is a React light switch for shadcn/ui. Drag the ball chain down bead by bead, release to flip it with a click, and watch it swing back to rest.
 createdAt: 2026-11-03
-updatedAt: 2026-11-03
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="pull-cord-preview" />
@@ -136,3 +136,45 @@ decorate movement.
   path="src/registry/components/pull-cord/pull-cord.tsx"
   name="PullCordProps"
 />
+
+## FAQ
+
+### How do I install the Pull Cord with shadcn?
+
+Run `npx shadcn@latest add @tentui/pull-cord` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/pull-cord.json` without it. The CLI
+copies `pull-cord.tsx` into your project and installs `web-haptics` and
+`@rexa-developer/tiks`.
+
+### Does the Pull Cord need Motion or a physics library?
+
+No. The chain is a small rope simulation inside the component, run on a fixed
+timestep so it swings the same at 60 Hz and 120 Hz. At rest nothing renders per
+frame.
+
+### Can I flip the Pull Cord without dragging?
+
+Yes. Clicking the handle or pressing `Space` or `Enter` tugs the chain and flips
+the switch. A drag only flips it when it is let go past the threshold, so a
+short tug just wobbles.
+
+### Is the Pull Cord accessible?
+
+Yes. The handle is a `button` with `role="switch"` and `aria-checked`, named by
+`label`, `aria-label`, or `aria-labelledby`, and the fixture and chain are
+hidden from screen readers. With reduced motion the chain doesn't swing or
+overshoot, and a click or key press flips the light at once.
+
+### How do I control it from state or a form?
+
+Pass `checked` and `onCheckedChange`, which fires once per flip; with React
+Hook Form, pass `field.value` and `field.onChange` from a `Controller`. For a
+native form, set `name` and it submits `"on"` or `"off"`.
+
+### Is the Pull Cord free to use?
+
+Yes. The Pull Cord is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

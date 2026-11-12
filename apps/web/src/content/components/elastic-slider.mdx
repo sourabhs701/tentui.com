@@ -3,7 +3,7 @@ title: Elastic Slider
 description: A slider that thickens under your finger and stretches like rubber past either end, with a soft tick at every detent and a dull thunk at the limits.
 seoDescription: Elastic Slider is a React slider for shadcn/ui that thickens under your finger and stretches like rubber past either end, with detent ticks and haptics.
 createdAt: 2026-11-02
-updatedAt: 2026-11-02
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="elastic-slider-preview" />
@@ -191,3 +191,48 @@ because they confirm input rather than decorate movement.
   path="src/registry/components/elastic-slider/elastic-slider.tsx"
   name="ElasticSliderProps"
 />
+
+## FAQ
+
+### How do I install the Elastic Slider with shadcn?
+
+Run `npx shadcn@latest add @tentui/elastic-slider` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/elastic-slider.json` without it.
+The CLI copies `elastic-slider.tsx` into your project and installs `motion`,
+`@number-flow/react`, `web-haptics`, and `@rexa-developer/tiks`.
+
+### How is it different from the shadcn/ui Slider?
+
+It is a single-thumb slider built for feel: the track thickens while held,
+stretches like rubber past either end and springs back, and `marks` act as
+detents a drag sticks to. Each step ticks with sound and haptics, and the value
+rolls with NumberFlow.
+
+### Is the Elastic Slider keyboard accessible?
+
+Yes. The thumb is a `slider` named by its required `label`, with
+`aria-valuenow` and an `aria-valuetext` from `format`. The arrow keys move by
+`step`, `Shift` with an arrow or `PageUp` and `PageDown` move by `largeStep`,
+and `Home` and `End` jump to the limits.
+
+### How do I use it with React Hook Form or a native form?
+
+Pass `field.value` and `field.onChange` from a `Controller` to `value` and
+`onValueChange`, or use `onValueCommit` to save only when a drag is released.
+For a native form or server action, set `name` and the value is submitted
+through a hidden input.
+
+### Can I turn off the sounds, haptics, and stretch?
+
+Set `sound={false}` and `haptics={false}` to turn each off, and lower
+`maxStretch` (10 px by default) to limit the rubber-band. With reduced motion
+enabled the track doesn't stretch or spring, but sound and haptics stay on until
+you turn them off.
+
+### Is the Elastic Slider free to use?
+
+Yes. The Elastic Slider is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

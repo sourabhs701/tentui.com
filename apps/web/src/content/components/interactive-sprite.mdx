@@ -3,7 +3,7 @@ title: Interactive Sprite
 description: Turn a directional sprite sheet into a character that follows the pointer and returns to rest when movement stops.
 seoDescription: Interactive Sprite is a React component for shadcn/ui that turns a directional sprite sheet into a character that follows the pointer and rests when idle.
 createdAt: 2026-08-06
-updatedAt: 2026-08-06
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="interactive-sprite-preview" />
@@ -120,3 +120,47 @@ the centered resting frame.
   path="src/registry/components/interactive-sprite/interactive-sprite.tsx"
   name="InteractiveSpriteProps"
 />
+
+## FAQ
+
+### How do I install the Interactive Sprite with shadcn?
+
+Run `npx shadcn@latest add @tentui/interactive-sprite` after adding the
+`@tentui` registry to `components.json`
+([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/interactive-sprite.json` without
+it. The CLI copies `interactive-sprite.tsx` into your project; it has no
+package dependencies, not even an animation library.
+
+### What sprite sheet does it need?
+
+By default, a 3×3 grid of equally sized cells with one gaze direction each, from
+up-left in the top-left cell through straight ahead in the center to down-right
+in the bottom-right. For another layout, set `columns`, `rows`, and a `frames` map that
+points each direction to a cell.
+
+### Why is the sprite invisible or the wrong size?
+
+The sheet is drawn as a CSS background, so the element has no size of its own.
+Give it one with `className`, such as `size-40`, and keep its aspect ratio the
+same as one cell of the sheet.
+
+### Is the Interactive Sprite accessible?
+
+Yes. A non-empty `alt` makes it an image with that label, and `alt=""` hides it
+from screen readers when it is decorative. It stays on the center frame when the
+user prefers reduced motion, and it ignores touch, so phones show the center
+frame too.
+
+### How do I make it more or less sensitive?
+
+Set `deadZone`, the distance in pixels from the character's center where it
+keeps looking ahead (24 by default), and `idleDelay`, the milliseconds without
+pointer movement before it returns to center (300 by default).
+
+### Is the Interactive Sprite free to use?
+
+Yes. The Interactive Sprite is free and source-available: the shadcn CLI copies
+its source into your project, and you can use it in unlimited personal and
+client projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.
