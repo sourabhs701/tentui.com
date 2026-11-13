@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "prompt-chip-input-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("prompt-chip-input")],
+		files: [
+			{
+				path: "examples/prompt-chip-input-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "morph-lightbox-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("morph-lightbox")],
@@ -449,6 +463,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "prompt-chip-input-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("prompt-chip-input")],
+		files: [
+			{
+				path: "examples/prompt-chip-input-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[36rem] place-items-center content-start px-4",
 		},
 	},
 	{
