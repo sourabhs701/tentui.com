@@ -291,7 +291,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-11-13","image":"https://cdn.tentui.com/images/components/prompt-chip-input?v=1","video":"https://cdn.tentui.com/videos/components/prompt-chip-input?v=1"},
+		meta: {"createdAt":"2026-11-13","image":"https://cdn.tentui.com/images/components/prompt-chip-input?v=2","video":"https://cdn.tentui.com/videos/components/prompt-chip-input?v=2"},
 	},
 	"ink-filter-bar": {
 		name: "ink-filter-bar",

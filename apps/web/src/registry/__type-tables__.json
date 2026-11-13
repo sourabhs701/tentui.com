@@ -2947,7 +2947,7 @@
 				},
 				{
 					"name": "className",
-					"description": "Chip classes: a soft tint background and a text color. The live capsule draws its ring and fill in the text color.",
+					"description": "Chip classes: a soft tint background and a text color. The live capsule shows a lighter wash of the tint.",
 					"tags": [
 						{
 							"name": "component-prop",

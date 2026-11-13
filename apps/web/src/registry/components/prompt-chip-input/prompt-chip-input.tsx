@@ -33,8 +33,14 @@ import { cn } from "@/lib/utils";
 
 /** Rows the suggestion list shows at most. */
 const MAX_RESULTS = 6;
-/** Px the live capsule reaches past the typed text on each side. */
+/**
+ * Px the live capsule reaches past the typed text on each side, so the caret
+ * sits inside it. The overlay overhangs the text by as much, so a capsule at
+ * the start of a line isn't clipped.
+ */
 const CAPSULE_PAD = 3;
+/** Px between the capsule's edge and the loading spinner. */
+const SPINNER_GAP = 4;
 /** Chip height, in em of the field's font size. */
 const CHIP_HEIGHT = 1.45;
 /** Px between the capsule and the list, and between the list and the viewport edge. */
@@ -150,7 +156,7 @@ export interface PromptChipKind {
 	label?: string;
 	/** Announced after a commit, as in "Ana Lima mentioned". */
 	action?: string;
-	/** Chip classes: a soft tint background and a text color. The live capsule draws its ring and fill in the text color. */
+	/** Chip classes: a soft tint background and a text color. The live capsule shows a lighter wash of the tint. */
 	className?: string;
 	/** Show the trigger in the chip, as in "/summarize". */
 	showTrigger?: boolean;
@@ -1152,15 +1158,18 @@ export function PromptChipInput({
 		if (ghostRef.current) ghostRef.current.hidden = true;
 	};
 
-	/** The rest of the best match, after the caret, or a spinner while loading. */
-	const updateGhost = () => {
+	/**
+	 * The rest of the best match, flush with the caret, or a spinner while
+	 * loading. Returns the px the completion adds to the capsule.
+	 */
+	const updateGhost = (): number => {
 		const ghost = ghostRef.current;
 		const ghostText = ghostTextRef.current;
 		const spinner = spinnerRef.current;
 		const session = sessionRef.current;
 		const state = menuRef.current;
 		const metrics = layerMetrics();
-		if (!ghost || !ghostText || !spinner || !metrics) return;
+		if (!ghost || !ghostText || !spinner || !metrics) return 0;
 		if (
 			!session?.node.isConnected ||
 			!state ||
@@ -1168,7 +1177,7 @@ export function PromptChipInput({
 			composingRef.current
 		) {
 			hideGhost();
-			return;
+			return 0;
 		}
 		// Only when nothing follows on the line, so it never covers text.
 		const rest = session.node.data.slice(session.end);
@@ -1190,51 +1199,75 @@ export function PromptChipInput({
 		}
 		if (followed || (!text && !state.loading)) {
 			hideGhost();
-			return;
+			return 0;
 		}
 		const range = document.createRange();
 		range.setStart(session.node, session.start);
 		range.setEnd(session.node, session.end);
 		const rect = lastRect(range);
-		if (!rect) return;
+		if (!rect) {
+			hideGhost();
+			return 0;
+		}
 		const box = toLayer(rect, metrics);
 		// After bidi reordering, a completion only reads right when the label
 		// runs in the paragraph's direction.
 		const rtl = isRtl();
 		if (rtl !== RTL_TEXT.test(item?.label ?? query)) {
 			hideGhost();
-			return;
+			return 0;
 		}
 		ghostText.textContent = text;
 		ghostText.hidden = state.loading;
 		spinner.hidden = !state.loading;
 		ghost.hidden = false;
+		// The text's own box, so the completion shares the query's baseline.
 		ghost.style.lineHeight = `${box.h}px`;
 		ghost.style.top = `${box.y}px`;
-		// Starts just past the capsule's ring.
-		const gap = CAPSULE_PAD + 1;
-		ghost.style.left = `${rtl ? box.x - gap : box.x + box.w + gap}px`;
+		ghost.style.left = `${rtl ? box.x : box.x + box.w}px`;
 		ghost.style.transform = rtl ? "translateX(-100%)" : "";
+		const width = ghost.getBoundingClientRect().width / metrics.zoom;
+		// A completion that would run past the line's end is left out rather
+		// than clipped.
+		const end = rtl ? box.x - width : box.x + box.w + width;
+		const limit = metrics.rect.width / metrics.zoom - CAPSULE_PAD;
+		if (end < CAPSULE_PAD - 0.5 || end > limit + 0.5) {
+			hideGhost();
+			return 0;
+		}
+		return state.loading ? 0 : width;
 	};
 
 	/** Places the live capsule over the trigger and query. */
 	const measureCapsule = (mode: "appear" | "grow" | "jump") => {
 		const session = sessionRef.current;
 		const editable = editableRef.current;
+		if (!session?.node.isConnected || !editable) return;
+		// A running morph lands first, since it can move the text.
+		if (phaseRef.current !== "live") settleTransition();
 		const metrics = layerMetrics();
-		if (!session?.node.isConnected || !editable || !metrics) return;
+		if (!metrics) return;
 		const range = document.createRange();
 		range.setStart(session.node, session.start);
 		range.setEnd(session.node, session.end);
 		const rect = lastRect(range);
 		if (!rect) return;
 		const box = toLayer(rect, metrics);
+		const fresh = phaseRef.current !== "live";
+		if (fresh) {
+			stopGeometry();
+			resetOverlay();
+			phaseRef.current = "live";
+		}
+		// The capsule takes in the completion, so it reads as one word.
+		const ghost = updateGhost();
 		const height =
 			Number.parseFloat(getComputedStyle(editable).fontSize) * CHIP_HEIGHT;
+		const rtl = isRtl();
 		const target = {
-			x: box.x - CAPSULE_PAD,
+			x: box.x - CAPSULE_PAD - (rtl ? ghost : 0),
 			y: box.y + box.h / 2 - height / 2,
-			w: box.w + CAPSULE_PAD * 2,
+			w: box.w + ghost + CAPSULE_PAD * 2,
 			h: height,
 		};
 		const zoom = metrics.zoom;
@@ -1244,7 +1277,7 @@ export function PromptChipInput({
 			top: metrics.rect.top + target.y * zoom,
 			bottom: metrics.rect.top + (target.y + target.h) * zoom,
 		};
-		if (phaseRef.current === "live" && mode !== "appear") {
+		if (!fresh && mode !== "appear") {
 			const wrapped = Math.abs(boxY.get() - target.y) > 2;
 			if (mode === "jump" || wrapped || reducedMotion) {
 				stopGeometry();
@@ -1259,20 +1292,15 @@ export function PromptChipInput({
 			}
 			boxY.jump(target.y);
 			boxH.jump(target.h);
-			updateGhost();
 			return;
 		}
-		if (phaseRef.current !== "live") {
+		if (fresh) {
 			// A new capsule fades in, scaled from 0.9 at the trigger.
-			settleTransition();
-			stopGeometry();
-			resetOverlay();
-			phaseRef.current = "live";
 			boxX.jump(target.x);
 			boxY.jump(target.y);
 			boxW.jump(target.w);
 			boxH.jump(target.h);
-			boxOrigin.jump(isRtl() ? 1 : 0);
+			boxOrigin.jump(rtl ? 1 : 0);
 			stopFade();
 			setBoxOpacity(0);
 			boxScale.jump(reducedMotion ? 1 : 0.9);
@@ -1284,7 +1312,6 @@ export function PromptChipInput({
 					: [animate(boxScale, 1, { duration, ease: "easeOut" })]),
 			];
 		}
-		updateGhost();
 	};
 
 	const hideCapsule = () => {
@@ -2336,7 +2363,10 @@ export function PromptChipInput({
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: follows the menu
 	useLayoutEffect(() => {
-		updateGhost();
+		// A new best match changes the completion the capsule spans.
+		if (sessionRef.current && phaseRef.current === "live") {
+			measureCapsule("grow");
+		} else updateGhost();
 		if (!menu) {
 			highlightShownRef.current = false;
 			return;
@@ -2381,12 +2411,15 @@ export function PromptChipInput({
 					{STYLES}
 				</style>
 				<div data-slot="prompt-chip-input-field" className="relative">
-					{/* Capsule and ghost text sit behind the transparent text layer. */}
+					{/* Capsule and ghost text sit behind the transparent text layer. It
+					overhangs the text by the capsule's padding and clips lines
+					scrolled out of view. */}
 					<div
 						ref={layerRef}
 						aria-hidden
 						data-slot="prompt-chip-input-overlay"
-						className="pointer-events-none absolute inset-0 overflow-hidden"
+						className="pointer-events-none absolute inset-y-0 overflow-hidden"
+						style={{ left: -CAPSULE_PAD, right: -CAPSULE_PAD }}
 					>
 						<m.span
 							ref={boxRef}
@@ -2410,7 +2443,14 @@ export function PromptChipInput({
 									"absolute inset-0 rounded-[inherit] bg-transparent",
 								)}
 							>
-								<span className="absolute inset-0 rounded-[inherit] border border-current/35 bg-current/5" />
+								{/* A lighter wash of the chip's own tint, so committing
+								reads as the capsule settling in. */}
+								<span
+									className={cn(
+										kind.className,
+										"absolute inset-0 rounded-[inherit] opacity-80",
+									)}
+								/>
 							</span>
 							<span
 								ref={solidRef}
@@ -2435,7 +2475,8 @@ export function PromptChipInput({
 							<span
 								ref={spinnerRef}
 								hidden
-								className="ms-1 inline-block size-3 animate-spin rounded-full border-[1.5px] border-foreground/15 border-t-foreground/50 align-[-0.1em] motion-reduce:animate-none"
+								style={{ marginInlineStart: CAPSULE_PAD + SPINNER_GAP }}
+								className="inline-block size-3 animate-spin rounded-full border-[1.5px] border-foreground/15 border-t-foreground/50 align-[-0.1em] motion-reduce:animate-none"
 							/>
 						</span>
 					</div>
@@ -2446,7 +2487,9 @@ export function PromptChipInput({
 						tabIndex={disabled ? undefined : 0}
 						contentEditable={!disabled}
 						suppressContentEditableWarning
-						spellCheck
+						spellCheck={false}
+						autoCorrect="off"
+						autoCapitalize="off"
 						aria-multiline
 						aria-label={ariaLabelledBy ? ariaLabel : (ariaLabel ?? "Message")}
 						aria-labelledby={ariaLabelledBy}
