@@ -52,7 +52,14 @@ export function PromptChipInputCapture() {
 
 	if (motion === null) return null;
 	return (
-		<div ref={ref} className="w-full">
+		// The take keeps the field focused, so drop its focus ring: media shows
+		// no focus styling.
+		<div ref={ref} className="w-full" data-capture="prompt-chip-input">
+			<style>
+				{
+					'[data-capture="prompt-chip-input"] [data-slot="prompt-chip-input"]{border-color:var(--border)!important;box-shadow:none!important}'
+				}
+			</style>
 			<PromptChipInputPreview
 				defaultValue={motion ? [{ type: "text", text: "Ask " }] : undefined}
 			/>

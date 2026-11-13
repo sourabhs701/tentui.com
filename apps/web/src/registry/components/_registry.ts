@@ -18,6 +18,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-11-13",
+			image: "https://cdn.tentui.com/images/components/prompt-chip-input?v=1",
+			video: "https://cdn.tentui.com/videos/components/prompt-chip-input?v=1",
 		},
 		docs: "https://tentui.com/components/prompt-chip-input",
 	},
