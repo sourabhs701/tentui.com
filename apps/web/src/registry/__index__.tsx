@@ -291,7 +291,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["overlays"],
-		meta: {"createdAt":"2026-11-13"},
+		meta: {"createdAt":"2026-11-13","image":"https://cdn.tentui.com/images/components/fluid-tooltip?v=1","video":"https://cdn.tentui.com/videos/components/fluid-tooltip?v=1"},
 	},
 	"ink-filter-bar": {
 		name: "ink-filter-bar",
