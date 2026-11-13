@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"prompt-chip-input": {
+		name: "prompt-chip-input",
+		title: "Prompt Chip Input",
+		description: "An AI prompt field where the @mention, ~model, or /command you type is wrapped in a live capsule that solidifies into a chip on commit and melts back into editable text on Backspace.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/prompt-chip-input/prompt-chip-input.tsx","type":"registry:component","target":"@components/prompt-chip-input.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/prompt-chip-input/prompt-chip-input")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for prompt-chip-input");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-11-13","image":"https://cdn.tentui.com/images/components/prompt-chip-input?v=2","video":"https://cdn.tentui.com/videos/components/prompt-chip-input?v=2"},
+	},
 	"ink-filter-bar": {
 		name: "ink-filter-bar",
 		title: "Ink Filter Bar",
@@ -833,6 +851,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"prompt-chip-input-preview": {
+		name: "prompt-chip-input-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/prompt-chip-input-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/prompt-chip-input-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for prompt-chip-input-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
 	"ink-filter-bar-preview": {
 		name: "ink-filter-bar-preview",
 		title: undefined,
@@ -1372,6 +1408,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"prompt-chip-input-demo": {
+		name: "prompt-chip-input-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/prompt-chip-input-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/prompt-chip-input-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for prompt-chip-input-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[36rem] place-items-center content-start px-4"},
 	},
 	"ink-filter-bar-demo": {
 		name: "ink-filter-bar-demo",
