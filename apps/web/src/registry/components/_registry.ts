@@ -84,6 +84,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-11-11",
+			image: "https://cdn.tentui.com/images/components/glass-toggle?v=1",
+			video: "https://cdn.tentui.com/videos/components/glass-toggle?v=1",
 		},
 		docs: "https://tentui.com/components/glass-toggle",
 	},

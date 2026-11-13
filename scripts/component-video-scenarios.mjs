@@ -453,6 +453,42 @@ export const scenarios = {
 		},
 	},
 
+	"glass-toggle": {
+		rest: { x: 420, y: 310 },
+		async run(d) {
+			const thumb = '[data-slot="glass-toggle-thumb"]';
+			const track = '[data-slot="glass-toggle-track"]';
+			await d.wait(400);
+			// Starts on (sun, amber rim). Click: the moon reassembles, the rim runs to lilac.
+			await d.move(thumb, 700);
+			await d.wait(250);
+			await d.click();
+			await d.wait(1400);
+			// Click again: back to the sun, the light runs the same way round.
+			await d.move(thumb, 250);
+			await d.wait(200);
+			await d.click();
+			await d.wait(1400);
+			// Drag the glass slowly to scrub the flip both ways, then let go on the on side so the loop starts and ends the same.
+			await d.move(thumb, 250);
+			await d.wait(200);
+			await d.down();
+			await d.wait(120);
+			await d.move(track, 1200, { x: 0.5, y: 0.5 });
+			await d.wait(200);
+			await d.move(track, 700, { x: 0.68, y: 0.5 });
+			await d.wait(200);
+			await d.move(track, 900, { x: 0.22, y: 0.5 });
+			await d.wait(200);
+			await d.move(track, 900, { x: 0.85, y: 0.5 });
+			await d.wait(100);
+			await d.up();
+			await d.wait(1400);
+			await d.move(d.rest, 650);
+			await d.wait(300);
+		},
+	},
+
 	"theme-toggle": {
 		rest: { x: 360, y: 300 },
 		async run(d) {

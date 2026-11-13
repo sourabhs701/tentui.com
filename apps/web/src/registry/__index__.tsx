@@ -345,7 +345,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-11-11"},
+		meta: {"createdAt":"2026-11-11","image":"https://cdn.tentui.com/images/components/glass-toggle?v=1","video":"https://cdn.tentui.com/videos/components/glass-toggle?v=1"},
 	},
 	"bubble-wrap": {
 		name: "bubble-wrap",
