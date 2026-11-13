@@ -32,6 +32,8 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"number-stepper": { zoom: 1.6 },
 	"otp-field": { zoom: 1.2 },
 	"peeping-button": { zoom: 1.35 },
+	// Starts near the top so the suggestion list opens below the field.
+	"prompt-chip-input": { className: "items-start px-6 pt-10" },
 	"pull-cord": { zoom: 1.1 },
 	"rotary-knob": { zoom: 1.5 },
 	"scratch-card": { zoom: 1.3 },

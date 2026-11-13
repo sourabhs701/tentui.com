@@ -343,6 +343,38 @@ export const scenarios = {
 		},
 	},
 
+	"prompt-chip-input": {
+		rest: { x: 400, y: 320 },
+		async run(d) {
+			// The capture scene starts focused, with "Ask " typed.
+			await d.key("Control+End");
+			await d.wait(500);
+			// Grow: the live capsule follows each letter, the ghost and list appear.
+			await d.type("@an", 140);
+			await d.wait(450);
+			// Solidify: the capsule morphs into the Ana Lima chip.
+			await d.key("Tab");
+			await d.wait(550);
+			await d.type("to tidy the notes with ~op", 55);
+			await d.wait(350);
+			await d.key("Tab");
+			await d.wait(800);
+			// Melt: one Backspace turns the Opus chip back into "~Opus".
+			await d.key("Backspace");
+			await d.wait(650);
+			// It's plain text again: the next Backspace deletes a letter.
+			await d.key("Backspace");
+			await d.wait(450);
+			await d.type("s", 200);
+			await d.key("Tab");
+			await d.wait(900);
+			// Back to "Ask " for the loop.
+			await d.key("Control+a");
+			await d.page.keyboard.type("Ask ");
+			await d.wait(400);
+		},
+	},
+
 	"ink-filter-bar": {
 		rest: { x: 330, y: 300 },
 		async run(d) {
