@@ -18,6 +18,20 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "morph-lightbox-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("morph-lightbox")],
+		files: [
+			{
+				path: "examples/morph-lightbox-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-80 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "ink-filter-bar-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("ink-filter-bar")],
@@ -365,6 +379,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "morph-lightbox-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("morph-lightbox")],
+		files: [
+			{
+				path: "examples/morph-lightbox-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			demoClassName: "min-h-[40rem] place-items-center content-center px-4",
 		},
 	},
 	{

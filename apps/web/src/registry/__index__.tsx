@@ -293,6 +293,24 @@ export const Index = {
 		categories: ["inputs"],
 		meta: {"createdAt":"2026-11-13","image":"https://cdn.tentui.com/images/components/prompt-chip-input?v=2","video":"https://cdn.tentui.com/videos/components/prompt-chip-input?v=2"},
 	},
+	"morph-lightbox": {
+		name: "morph-lightbox",
+		title: "Morph Lightbox",
+		description: "An image lightbox that grows out of the thumbnail you clicked. The square crop opens up to the photo's true aspect ratio over a page-coloured scrim, slides ride native scroll snapping, and pulling the photo down shrinks it back into the cell of the photo you are on.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/morph-lightbox/morph-lightbox.tsx","type":"registry:component","target":"@components/morph-lightbox.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/morph-lightbox/morph-lightbox")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for morph-lightbox");
+			}
+			return { default: module.default };
+		}),
+		categories: ["overlays"],
+		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/morph-lightbox?v=1","video":"https://cdn.tentui.com/videos/components/morph-lightbox?v=1"},
+	},
 	"ink-filter-bar": {
 		name: "ink-filter-bar",
 		title: "Ink Filter Bar",
@@ -869,6 +887,24 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
 	},
+	"morph-lightbox-preview": {
+		name: "morph-lightbox-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/morph-lightbox-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/morph-lightbox-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for morph-lightbox-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-80 place-items-center content-center px-4"},
+	},
 	"ink-filter-bar-preview": {
 		name: "ink-filter-bar-preview",
 		title: undefined,
@@ -1318,6 +1354,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"morph-lightbox-demo": {
+		name: "morph-lightbox-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/morph-lightbox-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/morph-lightbox-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for morph-lightbox-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"demoClassName":"min-h-[40rem] place-items-center content-center px-4"},
 	},
 	"elastic-slider-demo": {
 		name: "elastic-slider-demo",

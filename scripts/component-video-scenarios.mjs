@@ -43,6 +43,37 @@ export const scenarios = {
 		},
 	},
 
+	"morph-lightbox": {
+		rest: { x: 440, y: 330 },
+		async run(d) {
+			const thumb = (index) =>
+				`[data-slot="morph-lightbox-trigger"] >> nth=${index}`;
+			const slide = (index) =>
+				`[data-slot="morph-lightbox-slide"][data-slide="${index}"]`;
+			await d.wait(400);
+			// The poppies lift out of their cell and uncrop to the whole photo.
+			await d.move(thumb(2), 650, { x: 0.5, y: 0.55 });
+			await d.wait(120);
+			await d.click();
+			await d.wait(750);
+			// A click on the peeking neighbour brings the next photo in.
+			await d.move(slide(3), 450, { x: 0.3, y: 0.5 });
+			await d.wait(100);
+			await d.click();
+			await d.wait(750);
+			// Pull it down: it shrinks under the cursor and lands in its own cell.
+			await d.move(slide(3), 350, { x: 0.5, y: 0.45 });
+			await d.wait(120);
+			const from = await d.point(slide(3), { x: 0.5, y: 0.45 });
+			await d.down();
+			await d.move({ x: from.x - 30, y: from.y + 150 }, 520);
+			await d.up();
+			await d.wait(750);
+			await d.move(d.rest, 600);
+			await d.wait(300);
+		},
+	},
+
 	"swipe-actions": {
 		rest: { x: 455, y: 330 },
 		async run(d) {
