@@ -343,6 +343,34 @@ export const scenarios = {
 		},
 	},
 
+	"fluid-tooltip": {
+		rest: { x: 410, y: 320 },
+		async run(d) {
+			const tool = (label) =>
+				`[data-slot="fluid-tooltip-trigger"][aria-label="${label}"]`;
+			await d.wait(300);
+			// Rest on Bold: after the delay the pill fades in above it.
+			await d.move(tool("Bold"), 700, { x: 0.5, y: 0.6 });
+			await d.wait(800);
+			// Slide along: each step the pill stretches ahead and the label rolls.
+			for (const label of ["Italic", "Link", "Comment"]) {
+				await d.move(tool(label), 380, { x: 0.5, y: 0.6 });
+				await d.wait(label === "Comment" ? 650 : 320);
+			}
+			// A quick sweep back heads straight to Bold.
+			await d.move(tool("Bold"), 260, { x: 0.5, y: 0.6 });
+			await d.wait(600);
+			// Leaving the toolbar straight down fades it out without crossing Italic.
+			const bold = await d.page.locator(tool("Bold")).first().boundingBox();
+			await d.move(
+				{ x: bold.x + bold.width / 2, y: bold.y + bold.height + 40 },
+				300,
+			);
+			await d.move(d.rest, 600);
+			await d.wait(450);
+		},
+	},
+
 	"ink-filter-bar": {
 		rest: { x: 330, y: 300 },
 		async run(d) {

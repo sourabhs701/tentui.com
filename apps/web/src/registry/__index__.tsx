@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"fluid-tooltip": {
+		name: "fluid-tooltip",
+		title: "Fluid Tooltip",
+		description: "One shared tooltip for a toolbar, rail, or dock. Slide between buttons and the same pill travels with you: its leading edge arrives first, it stretches like a drop of ink, contracts onto the new button, and the label rolls in from the direction you moved.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/fluid-tooltip/fluid-tooltip.tsx","type":"registry:component","target":"@components/fluid-tooltip.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/fluid-tooltip/fluid-tooltip")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for fluid-tooltip");
+			}
+			return { default: module.default };
+		}),
+		categories: ["overlays"],
+		meta: {"createdAt":"2026-11-13"},
+	},
 	"ink-filter-bar": {
 		name: "ink-filter-bar",
 		title: "Ink Filter Bar",
@@ -833,6 +851,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"fluid-tooltip-preview": {
+		name: "fluid-tooltip-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/fluid-tooltip-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/fluid-tooltip-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for fluid-tooltip-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-56 place-items-center content-center px-4"},
+	},
 	"ink-filter-bar-preview": {
 		name: "ink-filter-bar-preview",
 		title: undefined,
@@ -1372,6 +1408,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"fluid-tooltip-demo": {
+		name: "fluid-tooltip-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/fluid-tooltip-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/fluid-tooltip-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for fluid-tooltip-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"demoClassName":"min-h-80 place-items-center content-center px-4"},
 	},
 	"ink-filter-bar-demo": {
 		name: "ink-filter-bar-demo",

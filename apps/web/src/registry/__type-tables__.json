@@ -1292,6 +1292,220 @@
 			]
 		}
 	],
+	"src/registry/components/fluid-tooltip/fluid-tooltip.tsx#FluidTooltipGroupProps#": [
+		{
+			"id": "fluid-tooltip.tsx-FluidTooltipGroupProps",
+			"name": "FluidTooltipGroupProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "side",
+					"description": "Where the bubble sits relative to the trigger. Flips if there is no room.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Side | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "align",
+					"description": "Alignment along the trigger's edge. `start` and `end` follow text direction.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Align | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sideOffset",
+					"description": "Gap between the trigger and the bubble, in px.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "delay",
+					"description": "Ms a pointer rests on a trigger before the bubble opens.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "skipDelay",
+					"description": "Ms after the bubble closes during which it reopens without the delay.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "follow",
+					"description": "Lean the resting bubble a few px toward the pointer.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a soft tick each time the bubble lands on a new trigger.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "className",
+					"description": "Classes for the bubble.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/fluid-tooltip/fluid-tooltip.tsx#FluidTooltipProps#": [
+		{
+			"id": "fluid-tooltip.tsx-FluidTooltipProps",
+			"name": "FluidTooltipProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "content",
+					"description": "The label. Keep it short and plain; interactive content needs a popover.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "shortcut",
+					"description": "Keyboard shortcut shown dimmer after the label, such as `\"⌘K\"` or `[\"⌘\", \"K\"]`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Shortcut | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "side",
+					"description": "Overrides the group's `side` for this trigger.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Side | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "Never show the tooltip. A disabled child is treated the same way.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "Exactly one focusable element, usually a button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactElement<unknown, string | JSXElementConstructor<any>>",
+					"simplifiedType": "object",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/glass-toggle/glass-toggle.tsx#GlassToggleProps#": [
 		{
 			"id": "glass-toggle.tsx-GlassToggleProps",

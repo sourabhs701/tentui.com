@@ -4,6 +4,21 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "fluid-tooltip-preview",
+		type: "registry:example",
+		dependencies: ["lucide-react"],
+		registryDependencies: [getRegistryItemUrl("fluid-tooltip")],
+		files: [
+			{
+				path: "examples/fluid-tooltip-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-56 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "ink-filter-bar-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("ink-filter-bar")],
@@ -421,6 +436,21 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "fluid-tooltip-demo",
+		type: "registry:example",
+		dependencies: ["lucide-react"],
+		registryDependencies: [getRegistryItemUrl("fluid-tooltip")],
+		files: [
+			{
+				path: "examples/fluid-tooltip-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			demoClassName: "min-h-80 place-items-center content-center px-4",
 		},
 	},
 	{

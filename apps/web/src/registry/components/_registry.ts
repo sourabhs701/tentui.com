@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "fluid-tooltip",
+		type: "registry:component",
+		title: "Fluid Tooltip",
+		description:
+			"One shared tooltip for a toolbar, rail, or dock. Slide between buttons and the same pill travels with you: its leading edge arrives first, it stretches like a drop of ink, contracts onto the new button, and the label rolls in from the direction you moved.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/fluid-tooltip/fluid-tooltip.tsx",
+				type: "registry:component",
+				target: "@components/fluid-tooltip.tsx",
+			},
+		],
+		categories: ["overlays"],
+		meta: {
+			createdAt: "2026-11-13",
+		},
+		docs: "https://tentui.com/components/fluid-tooltip",
+	},
+	{
 		name: "ink-filter-bar",
 		type: "registry:component",
 		title: "Ink Filter Bar",
