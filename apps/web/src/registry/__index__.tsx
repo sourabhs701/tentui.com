@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"ascii-decode-text": {
+		name: "ascii-decode-text",
+		title: "ASCII Decode Text",
+		description: "A headline that first appears as ASCII art of its own letter shapes, then a decode front sweeps across and condenses the art into real, crisp, selectable type. After decoding, a pointer lens re-encodes the text under it and heals behind.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/ascii-decode-text/ascii-decode-text.tsx","type":"registry:component","target":"@components/ascii-decode-text.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/ascii-decode-text/ascii-decode-text")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ascii-decode-text");
+			}
+			return { default: module.default };
+		}),
+		categories: ["typography"],
+		meta: {"createdAt":"2026-11-14","image":"https://cdn.tentui.com/images/components/ascii-decode-text?v=1","video":"https://cdn.tentui.com/videos/components/ascii-decode-text?v=1"},
+	},
 	"prompt-chip-input": {
 		name: "prompt-chip-input",
 		title: "Prompt Chip Input",
@@ -869,6 +887,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"ascii-decode-text-preview": {
+		name: "ascii-decode-text-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ascii-decode-text-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ascii-decode-text-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ascii-decode-text-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"prompt-chip-input-preview": {
 		name: "prompt-chip-input-preview",
 		title: undefined,
@@ -1354,6 +1390,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
+	"ascii-decode-text-demo": {
+		name: "ascii-decode-text-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ascii-decode-text-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ascii-decode-text-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ascii-decode-text-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[36rem] place-items-center content-center"},
 	},
 	"morph-lightbox-demo": {
 		name: "morph-lightbox-demo",

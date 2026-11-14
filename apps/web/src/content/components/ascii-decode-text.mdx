@@ -1,0 +1,223 @@
+---
+title: ASCII Decode Text
+description: A React text animation for shadcn/ui where a headline first appears as ASCII art of its own letter shapes, then a decode front sweeps across and condenses the art into real, crisp, selectable type, with a pointer lens that re-encodes the text under it.
+seoTitle: "React ASCII Text Decode Animation for shadcn/ui"
+seoDescription: ASCII Decode Text is a React headline animation for shadcn/ui. The text starts as ASCII art of its real glyphs, decodes into crisp type behind a sweeping front, and re-encodes under a pointer lens.
+createdAt: 2026-11-14
+updatedAt: 2026-11-14
+---
+
+<ComponentPreview name="ascii-decode-text-preview" />
+
+## Example
+
+<ComponentPreview name="ascii-decode-text-demo" />
+
+## Features
+
+- The noise is the headline itself. The real text is drawn once at its
+  measured line boxes, and each small cell of a monospace grid takes the
+  character for how much ink falls in it, from ` .:-=+*#%@`. You can read the
+  word as ASCII art before it decodes.
+- A decode front sweeps from the start, the centre, or random points. Cells
+  flicker through neighbouring characters just before they resolve, and the
+  real text is revealed behind a soft-edged mask, so letters arrive crisp
+  rather than as a blurry cross-fade.
+- After decoding, a decoder lens follows the mouse, pen, or a sideways touch
+  drag and re-encodes the type under it. Cells behind it heal back to type
+  over 250 ms.
+- The art overlays the real text exactly, with the same line breaks, width,
+  and height, so nothing shifts when it finishes. Multi-line headlines, any
+  font, letter-spacing, and RTL text work, because the art is sampled from the
+  browser's own layout.
+- At rest only the real text is painted: the canvas is cleared and no frame
+  loop runs.
+- An optional, very soft type tick as the front crosses each letter, and a
+  light haptic when a touch lens starts.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/ascii-decode-text
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="ascii-decode-text"
+  title="components/ascii-decode-text.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { AsciiDecodeText } from "@/components/ascii-decode-text";
+```
+
+```tsx
+<AsciiDecodeText>Decode the signal</AsciiDecodeText>
+```
+
+`children` must be a plain string: the art is rasterised from it. The
+headline renders as an `h2` in the inherited font, `text-4xl font-semibold
+tracking-tight` by default. Change the element with `as`, the scale with
+`size` (`sm`, `md`, `lg`, `xl`), and anything else with `className`. The ASCII
+cells use your `font-mono` in the current text colour.
+
+### Triggers
+
+By default the headline shows as ASCII art and decodes once, when 40% of it
+is in view. `trigger="mount"` decodes right away, and `trigger="hover"`
+decodes on hover, focus, or tap, re-encoding first if it is already decoded.
+
+```tsx
+<AsciiDecodeText trigger="mount" direction="center">
+  Hello, world
+</AsciiDecodeText>
+```
+
+### Controlled and imperative
+
+With `trigger="manual"`, `decoded` controls the state: `true` decodes and
+`false` sweeps it back into art. A `ref` exposes `replay()`, `encode()`, and
+`decode()` in every mode, and `onDecoded` fires each time a decode finishes.
+
+```tsx
+const headline = useRef<AsciiDecodeTextHandle>(null);
+
+<AsciiDecodeText ref={headline} as="h1" size="xl">
+  Every interface starts as noise
+</AsciiDecodeText>
+<button onClick={() => headline.current?.replay()}>Replay</button>
+```
+
+### Look
+
+`density` sets the cells per cap height (4 to 12, 7 by default) and `ramp` the
+characters from empty to full ink. `tone="muted"` draws the art at about 60%
+of the text colour, and `dust` sprinkles faint characters around the letters
+while encoded.
+
+```tsx
+<AsciiDecodeText density={9} ramp=" .oO0@" tone="muted" dust>
+  Low signal
+</AsciiDecodeText>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Hover with a mouse or pen | Re-encodes the text under a soft lens that heals behind it |
+| Drag sideways on a touch screen | The same lens; vertical swipes still scroll the page |
+| Press and drag with a mouse | Selects the text; the lens steps aside |
+| Hover, focus, or tap (`trigger="hover"`) | Re-encodes, then decodes |
+
+The lens appears only once the text has decoded. Its radius is 0.6em,
+clamped to 24-64 px; set it with `lensRadius`, or turn it off with
+`lens={false}`. It is always off with `trigger="hover"` and under reduced
+motion. Keyboard focus does nothing special unless `trigger="hover"`, because
+the lens is decoration.
+
+## Sound and haptics
+
+With `sound`, a very soft tick plays as the front crosses each letter, at
+most every 35 ms and 24 times per decode. It never plays before the page has
+had a user gesture, for the lens, or in a hidden tab. Sound is off by default.
+
+A single `light` haptic plays when a touch lens starts, on devices that
+support it. Turn it off with `haptics={false}`.
+
+## Accessibility
+
+The real text is always in the DOM, from the first paint. While it shows as
+art, it is visually masked rather than removed, so screen readers read one
+heading with the real text and never any ASCII gibberish. The canvas is
+`aria-hidden`. The text stays selectable and copyable, even while encoded.
+
+With reduced motion, or `animated={false}`, there is no sweep and no flicker:
+the art cross-fades to the text over 200 ms once triggered, and the lens is
+off. The art's lightest cells are drawn at 55% of the text colour, which keeps
+3:1 contrast for large text on the default themes.
+
+In right-to-left text, `direction="ltr"` still means "from the start of the
+line", so the front starts at the right. The art is sampled from the real line
+boxes, so bidi text keeps its shaping and order.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/ascii-decode-text/ascii-decode-text.tsx"
+  name="AsciiDecodeTextProps"
+/>
+
+<AutoTypeTable
+  path="src/registry/components/ascii-decode-text/ascii-decode-text.tsx"
+  name="AsciiDecodeTextHandle"
+/>
+
+## FAQ
+
+### How do I install ASCII Decode Text with shadcn?
+
+Run `npx shadcn@latest add @tentui/ascii-decode-text` after adding the
+`@tentui` registry to `components.json` ([installation guide](/docs/installation)).
+The CLI copies `ascii-decode-text.tsx` into your project and installs
+`web-haptics` and `@rexa-developer/tiks`.
+
+### How is this different from a text scramble or decrypt effect?
+
+A scramble swaps each letter for one random glyph of the same size. Here the
+noise is an ASCII rendering of the actual headline: many small cells per
+letter, each picking its character from how much ink of the real glyph falls
+in it, so the word is readable as art before a front condenses it into type.
+
+### Can screen readers read the headline while it is animating?
+
+Yes. The real text is always in the DOM and only visually masked, so assistive
+technology reads one heading with the real text from the first paint. The
+ASCII canvas is `aria-hidden`, and the text stays selectable.
+
+### Does it hurt performance?
+
+The text is rasterised once per layout, and again on resize or when fonts
+load. A single frame loop runs only while decoding or while the lens is
+moving, the canvas is capped at 2x pixel density, and at rest nothing is
+painted or animated.
+
+### Does it respect reduced motion?
+
+Yes. With `prefers-reduced-motion` or `animated={false}`, the art simply
+cross-fades to the text over 200 ms, with no sweep, no flicker, and no lens.
+
+### Is ASCII Decode Text free to use?
+
+Yes. ASCII Decode Text is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license).
