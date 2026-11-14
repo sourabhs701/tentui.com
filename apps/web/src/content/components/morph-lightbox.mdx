@@ -1,0 +1,242 @@
+---
+title: Morph Lightbox
+description: A React image lightbox for shadcn/ui that grows out of the thumbnail you clicked, uncrops to the photo's true aspect ratio, scrolls natively between slides, and pulls down to dismiss back into the photo you are on.
+seoTitle: React Morph Lightbox Component for shadcn/ui
+seoDescription: Morph Lightbox is a React image lightbox for shadcn/ui. The photo morphs out of its thumbnail, slides snap natively, and a pull down shrinks it back into its cell.
+createdAt: 2026-11-12
+updatedAt: 2026-11-12
+---
+
+<ComponentPreview name="morph-lightbox-preview" />
+
+## Example
+
+<ComponentPreview name="morph-lightbox-demo" />
+
+## Features
+
+- The photo lifts out of the cell you clicked and grows to a centred slide.
+  Its square, rounded crop opens up to the photo's real aspect ratio while the
+  corners relax, so you never watch a cropped bitmap stretch.
+- A scrim in the page's own background colour fades in with a light blur, in
+  light and dark mode alike. There's no black backdrop.
+- Slides ride native scroll snapping, so touch swipes, trackpads, and
+  momentum feel like the platform. The neighbours peek at the edges, and the
+  current slide is always read back from the scroll position.
+- A filmstrip, a rolling "3 / 8" counter, and the caption follow along.
+- Pull the photo down to dismiss it. It shrinks under your finger and the scrim
+  thins with distance. Let go and it lands in the cell of the photo you are on
+  now, not the one you opened. A two-finger trackpad swipe does the same.
+- A soft lift on open, a settle when the photo lands, and a haptic tick when a
+  pull crosses the dismiss line. These play only for user input.
+- A modal dialog with a focus trap, `Esc` to close, arrow keys, and focus
+  returned to the current photo's thumbnail. Page scroll is locked without
+  layout shift.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/morph-lightbox
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="morph-lightbox" title="components/morph-lightbox.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  MorphLightbox,
+  MorphLightboxTrigger,
+} from "@/components/morph-lightbox";
+```
+
+```tsx
+const photos = [
+  {
+    src: "/photos/fog.jpg",
+    thumbnailSrc: "/photos/fog-480.jpg",
+    alt: "Pine forest fading into morning fog",
+    width: 1600,
+    height: 1067,
+    caption: "Morning fog over the pines",
+  },
+  // …
+];
+
+<MorphLightbox items={photos}>
+  <div className="grid grid-cols-3 gap-1.5">
+    {photos.map((photo, index) => (
+      <MorphLightboxTrigger key={photo.src} index={index} />
+    ))}
+  </div>
+</MorphLightbox>
+```
+
+`MorphLightbox` wraps your own layout. Each `MorphLightboxTrigger` is a button
+that opens one item and marks the cell the photo morphs out of and back into.
+Its default content is the item's thumbnail, cropped to fill a rounded square.
+Give it `className="aspect-auto h-full"` for tiles that span rows or columns,
+or pass `children` for custom content such as a "+3" overlay.
+
+`width` and `height` set each slide's aspect ratio before the image loads, and
+`alt` is required. `thumbnailSrc` is optional. It's used for the grid, the
+filmstrip, and as a placeholder while the full image loads.
+
+### Controlled
+
+```tsx
+const [open, setOpen] = useState(false);
+const [index, setIndex] = useState(0);
+
+<MorphLightbox
+  items={photos}
+  open={open}
+  onOpenChange={setOpen}
+  index={index}
+  onIndexChange={setIndex}
+>
+  {/* … */}
+</MorphLightbox>
+```
+
+Opening through props morphs from the thumbnail at `index` and stays silent.
+A new `index` while open glides to that slide. `defaultOpen` starts open
+without the morph.
+
+### Single image
+
+With one item there's no counter and no filmstrip. That suits an article image
+that opens on its own.
+
+```tsx
+<MorphLightbox items={[photo]}>
+  <MorphLightboxTrigger index={0} className="aspect-[16/9]" />
+</MorphLightbox>
+```
+
+## Interaction
+
+- **Open:** click or press `Enter` on a thumbnail. The morph is a spring
+  (stiffness 300, damping 32), with the scrim over 240 ms and the chrome 120 ms
+  behind it.
+- **Navigate:** swipe, scroll sideways on a trackpad, click a peeking
+  neighbour or a filmstrip thumbnail, or press `←` `→` `Home` `End`. Set `loop`
+  to wrap at the ends.
+- **Dismiss:** drag the photo down. A release past 120 px, or faster than
+  600 px/s, closes it. Anything less springs back. A vertical two-finger
+  trackpad swipe in either direction pulls it the same way and closes once it
+  passes 120 px. Sideways drags stay with native scrolling.
+- **Close:** `Esc`, the close button, or a click on the backdrop. The photo
+  flies back into its thumbnail in 320 ms. If that thumbnail has been scrolled
+  out of view, it scales down and fades instead.
+
+## Accessibility
+
+The open viewer is a modal dialog labelled "Image viewer". Focus moves into it
+on open and is trapped there, the rest of the page is made `inert`, and on close
+focus returns to the thumbnail of the slide you were on. The dialog is described
+by the current photo's `alt` and caption. A polite live region announces
+changes, such as "Image 3 of 8: Red poppies in a field".
+
+Thumbnails are buttons labelled "Open image: …". The close button and filmstrip
+thumbnails have 44 px hit targets on touch screens. Focus rings show for
+keyboard focus only and keep a background-coloured gap, so they stay visible
+on top of photos.
+
+With reduced motion, open and close become a 150 ms cross-fade, slide changes
+jump, and the counter fades instead of rolling. Pull to dismiss still works by
+the same thresholds but only fades. With `dir="rtl"`, slide order, arrow keys,
+and the filmstrip mirror. Pinch zoom and browser zoom keep working.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/morph-lightbox/morph-lightbox.tsx"
+  name="MorphLightboxProps"
+/>
+
+### MorphLightboxItem
+
+<AutoTypeTable
+  path="src/registry/components/morph-lightbox/morph-lightbox.tsx"
+  name="MorphLightboxItem"
+/>
+
+### MorphLightboxTrigger
+
+<AutoTypeTable
+  path="src/registry/components/morph-lightbox/morph-lightbox.tsx"
+  name="MorphLightboxTriggerProps"
+/>
+
+## FAQ
+
+### How does the Morph Lightbox animate from the thumbnail?
+
+On open it measures the thumbnail and the slide, then flies a copy of the photo
+between the two rects on a spring. Its frame animates size and corner radius
+while the image inside stays `object-fit: cover`, so the crop opens up to the
+true aspect ratio rather than a cropped bitmap being scaled. On close it does
+the same in reverse, into the thumbnail of the current slide.
+
+### Is the Morph Lightbox accessible with a keyboard and screen readers?
+
+Yes. Thumbnails are buttons, and the viewer is a modal dialog labelled "Image
+viewer" with a focus trap, an inert background, `Esc` to close, arrow keys,
+`Home`, and `End`. Focus returns to the current photo's thumbnail on close, and
+a polite live region announces each change, such as "Image 3 of 8".
+
+### How does pull to dismiss work on touch screens and trackpads?
+
+Drag the photo down. It follows your finger, shrinks to 75%, and thins the
+scrim, then closes past 120 px or on a fast flick and springs back otherwise.
+On a trackpad, a vertical two-finger swipe does the same, while sideways swipes
+stay with the native scroll snapping.
+
+### Can I use my own images or Next.js images?
+
+Yes. Items take plain URLs, so point `src` and `thumbnailSrc` at your CDN, or
+at the `src` that Next.js `getImageProps()` returns if you want the Next image
+optimizer. Set `width` and `height` to the image's intrinsic size and always
+give each item an `alt`.
+
+### Does it respect reduced motion, and can I turn off sound and haptics?
+
+Yes. With `prefers-reduced-motion` the morph becomes a 150 ms cross-fade, slide
+changes jump, and dismissing only fades. Sound and haptics play only for user
+input, never on mount or controlled changes, and turn off with `sound={false}`
+and `haptics={false}`.
+
+### Is the Morph Lightbox free to use?
+
+Yes. The Morph Lightbox is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license).

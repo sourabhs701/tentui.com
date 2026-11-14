@@ -24,6 +24,50 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/fluid-tooltip",
 	},
 	{
+		name: "prompt-chip-input",
+		type: "registry:component",
+		title: "Prompt Chip Input",
+		description:
+			"An AI prompt field where the @mention, ~model, or /command you type is wrapped in a live capsule that solidifies into a chip on commit and melts back into editable text on Backspace.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/prompt-chip-input/prompt-chip-input.tsx",
+				type: "registry:component",
+				target: "@components/prompt-chip-input.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-11-13",
+			image: "https://cdn.tentui.com/images/components/prompt-chip-input?v=2",
+			video: "https://cdn.tentui.com/videos/components/prompt-chip-input?v=2",
+		},
+		docs: "https://tentui.com/components/prompt-chip-input",
+	},
+	{
+		name: "morph-lightbox",
+		type: "registry:component",
+		title: "Morph Lightbox",
+		description:
+			"An image lightbox that grows out of the thumbnail you clicked. The square crop opens up to the photo's true aspect ratio over a page-coloured scrim, slides ride native scroll snapping, and pulling the photo down shrinks it back into the cell of the photo you are on.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/morph-lightbox/morph-lightbox.tsx",
+				type: "registry:component",
+				target: "@components/morph-lightbox.tsx",
+			},
+		],
+		categories: ["overlays"],
+		meta: {
+			createdAt: "2026-11-12",
+			image: "https://cdn.tentui.com/images/components/morph-lightbox?v=1",
+			video: "https://cdn.tentui.com/videos/components/morph-lightbox?v=1",
+		},
+		docs: "https://tentui.com/components/morph-lightbox",
+	},
+	{
 		name: "ink-filter-bar",
 		type: "registry:component",
 		title: "Ink Filter Bar",
@@ -62,6 +106,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-11-11",
+			image: "https://cdn.tentui.com/images/components/glass-toggle?v=1",
+			video: "https://cdn.tentui.com/videos/components/glass-toggle?v=1",
 		},
 		docs: "https://tentui.com/components/glass-toggle",
 	},

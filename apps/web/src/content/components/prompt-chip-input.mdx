@@ -1,0 +1,296 @@
+---
+title: Prompt Chip Input
+description: A React prompt input for shadcn/ui where the @mention, ~model, or /command you type is wrapped in a live capsule that solidifies into a chip on commit and melts back into editable text on Backspace, with no editor dependency.
+seoTitle: "React Prompt Input with Mention Chips for shadcn/ui"
+seoDescription: Prompt Chip Input is a React AI prompt field for shadcn/ui with @mentions, /commands, and model chips. Typed tokens become chips in place, with async search, copy and paste, and screen reader support.
+createdAt: 2026-11-13
+updatedAt: 2026-11-13
+---
+
+<ComponentPreview name="prompt-chip-input-preview" />
+
+## Example
+
+<ComponentPreview name="prompt-chip-input-demo" />
+
+## Features
+
+- Type `@`, `/`, or `~` and the trigger plus your query is wrapped, right in
+  the text, by a faint live capsule. Its width follows each letter on a
+  spring, and the rest of the best match shows as ghost text after the caret.
+- Press `Tab` or `Enter`, or click a suggestion, and the capsule solidifies:
+  it morphs into the chip's shape, the typed letters blur out as the label
+  fades in, and the icon or avatar slides in from the left. Text after the
+  chip glides along with its width instead of jumping.
+- Backspace right after a chip melts it back into its raw `@Ana Lima` text,
+  with the capsule and the menu reopened so you can retarget it. A second
+  Backspace deletes characters as usual.
+- Mentions, models, and commands each get their own soft tint. Add your own
+  kinds, triggers, and classes.
+- Async search: the latest request wins, earlier results stay up while the
+  next ones load, and a small spinner takes the ghost text's place.
+- Chips are atomic. The caret skips over them, a selection takes them whole,
+  and copy and paste between prompt fields keeps them as chips.
+- `onSubmit` gets model-ready text such as `@ana` and `/summarize`, the list of
+  chips, and the ordered segments.
+- One `contentEditable` element with no TipTap, Lexical, or ProseMirror. The
+  capsule and ghost text are overlays measured from text ranges, so typing,
+  the caret, and IME input stay native.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/prompt-chip-input
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="prompt-chip-input"
+  title="components/prompt-chip-input.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { PromptChipInput } from "@/components/prompt-chip-input";
+```
+
+Each trigger names a character, the kind of chip it makes, and the items it
+offers. `mention`, `model`, and `command` come preset with a tint, an icon,
+and a screen reader name.
+
+```tsx
+<PromptChipInput
+  triggers={[
+    { char: "@", kind: "mention", items: people },
+    { char: "/", kind: "command", items: commands },
+    { char: "~", kind: "model", items: models },
+  ]}
+  placeholder="Ask anything. @ to mention, / for commands, ~ to pick a model"
+  onSubmit={(value) => send(value.text)}
+/>
+```
+
+An item is `{ id, label, value?, description?, icon?, avatar? }`. `value` is
+what the chip stands for in `value.text` and defaults to the label, so a
+model chip labelled "Opus" can send `~claude-opus-5-5`.
+
+Pass a function to `items` to search a server. It gets the query and returns
+items or a promise of them:
+
+```tsx
+<PromptChipInput
+  triggers={[
+    {
+      char: "@",
+      kind: "mention",
+      items: (query) =>
+        fetch(`/api/people?q=${encodeURIComponent(query)}`).then((res) =>
+          res.json(),
+        ),
+    },
+  ]}
+/>
+```
+
+`onSubmit` and `onValueChange` receive the same value:
+
+```ts
+{
+  text: "Ask @ana to /summarize the notes with ~claude-opus-5-5",
+  chips: [{ kind: "mention", id: "ana", label: "Ana Lima", value: "ana" }, …],
+  segments: [{ type: "text", text: "Ask " }, { type: "chip", … }, …],
+}
+```
+
+Pass `segments` back as `value` or `defaultValue` to restore a draft, and
+render sent messages with the exported `PromptChip`, which uses the same
+styles. Children render inside the card under the text, for a toolbar with
+a send button. The imperative handle has `focus()`, `clear()`,
+`insertChip(kind, item)`, and `getValue()`:
+
+```tsx
+const ref = useRef<PromptChipInputHandle>(null);
+
+<PromptChipInput ref={ref} triggers={triggers} onSubmit={send}>
+  <button type="button" onClick={() => ref.current?.insertChip("model", opus)}>
+    Use Opus
+  </button>
+</PromptChipInput>
+```
+
+### Custom kinds
+
+`kinds` overrides a preset or adds a new kind. `className` styles the chip,
+and the live capsule shows a lighter wash of its tint:
+
+```tsx
+<PromptChipInput
+  triggers={[{ char: "#", kind: "tag", items: tags }]}
+  kinds={{
+    tag: {
+      label: "Tag",
+      action: "added",
+      className: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+    },
+  }}
+/>
+```
+
+Set `showTrigger` to keep the trigger in the chip, as commands do, and `icon`
+to `"initials"`, `"sparkle"`, or any element for items without their own.
+Chips carry `data-slot="prompt-chip"` and `data-kind` for styling.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| `@`, `~` after a space or at the start | Opens suggestions in a live capsule |
+| `/` at the start of a line | Opens commands |
+| `↑` / `↓`, `Ctrl+P` / `Ctrl+N` | Moves through suggestions, wrapping |
+| `Tab` / `Enter` / click | Commits the active suggestion as a chip |
+| `Space` | Commits an exact match, otherwise closes the list |
+| `Esc` | Closes the list and keeps the text; that trigger stays closed |
+| `Backspace` after a chip | Melts it back into editable text |
+| `Delete` before a chip | Removes it |
+| `Enter` / `Shift+Enter` | Submits / inserts a newline |
+| `Ctrl+Z` / `Ctrl+Shift+Z` | Undoes and redoes, chips included |
+
+A trigger needs a word boundary before it, so `a@b.com` never opens the list.
+Set `position: "any"` on a command trigger to open it mid-line, and
+`allowSpaces` for queries with spaces. Pasting `@Ana` from elsewhere stays
+plain text.
+
+## Sound and haptics
+
+With `sound`, committing a chip plays one soft, short tick and melting one a
+lower, softer tick. Typing and moving through suggestions are silent. Sound
+is off by default.
+
+A chip committed from touch plays one `light` haptic tick on supported
+devices. Nothing else vibrates, and nothing plays on mount or in a hidden
+tab. Turn it off with `haptics={false}`.
+
+## Accessibility
+
+The field is a `textbox` with `aria-multiline` and `aria-autocomplete="list"`,
+named "Message" unless you pass `aria-label` or `aria-labelledby`. While the
+list is open it also has `aria-expanded`, `aria-controls`, and
+`aria-activedescendant` pointing at the active `option`, so focus never
+leaves the text. Each chip reads with its kind first, such as "Mention: Ana
+Lima" or "Command: /summarize".
+
+A polite live region announces the number of suggestions when the list opens,
+"Ana Lima mentioned" on commit, and "Mention removed, editing Ana Lima" on
+melt. Chip text keeps at least 4.5:1 contrast on its tint in light and dark
+mode.
+
+Enter never submits while an IME is composing. Text is 16 px on touch screens
+so iOS doesn't zoom, suggestion rows are at least 40 px tall there, and
+tapping a row keeps the keyboard open. In right-to-left layouts the capsule
+follows the text and icons slide in from the right.
+
+With reduced motion there is no growth spring, morph, blur, or sliding
+highlight: capsules and chips switch with a 100 ms cross-fade and the list
+appears at once.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/prompt-chip-input/prompt-chip-input.tsx"
+  name="PromptChipInputProps"
+/>
+
+### PromptChipTrigger
+
+<AutoTypeTable
+  path="src/registry/components/prompt-chip-input/prompt-chip-input.tsx"
+  name="PromptChipTrigger"
+/>
+
+### PromptChipItem
+
+<AutoTypeTable
+  path="src/registry/components/prompt-chip-input/prompt-chip-input.tsx"
+  name="PromptChipItem"
+/>
+
+### PromptChipKind
+
+<AutoTypeTable
+  path="src/registry/components/prompt-chip-input/prompt-chip-input.tsx"
+  name="PromptChipKind"
+/>
+
+## FAQ
+
+### How do I install the Prompt Chip Input with shadcn?
+
+Run `npx shadcn@latest add @tentui/prompt-chip-input` after adding the
+`@tentui` registry to `components.json` ([installation guide](/docs/installation)),
+or run `npx shadcn@latest add https://tentui.com/r/prompt-chip-input.json`
+without it. The CLI copies `prompt-chip-input.tsx` into your project and
+installs `motion`, `web-haptics`, and `@rexa-developer/tiks`. It needs no
+editor library such as TipTap or Lexical.
+
+### How are mentions, commands, and model chips configured?
+
+Pass a `triggers` array: each entry has a trigger `char`, the `kind` of chip
+it makes, and `items`, either an array that the field filters or a function
+that gets the query and returns items or a promise of them. The latest async
+request wins and earlier results stay visible while it loads. `kinds` sets
+each kind's tint, icon, and screen reader name.
+
+### What does onSubmit receive?
+
+An object with `text`, a model-ready string where each chip is its trigger
+plus its value (such as `@ana` or `/summarize`), `chips`, the list of chips
+with their kind, id, label, and value, and `segments`, the ordered text and
+chip parts you can pass back as `value` or `defaultValue`.
+
+### Does it work with the keyboard and screen readers?
+
+Yes. Focus stays in the `textbox` while `aria-activedescendant` follows the
+active option, arrow keys and `Tab` or `Enter` pick a suggestion, and the
+caret skips over chips. Chips read with their kind, such as "Mention: Ana
+Lima", and a live region announces suggestion counts, commits, and melts.
+
+### Does it support IME input and mobile keyboards?
+
+Yes. Typing and composition stay native in one `contentEditable` element, and
+Enter never submits while an IME is composing. Text is 16 px on touch screens
+so iOS doesn't zoom, and tapping a suggestion keeps the keyboard open.
+
+### Is the Prompt Chip Input free to use?
+
+Yes. The Prompt Chip Input is free and source-available: the shadcn CLI
+copies its source into your project, and you can use it in unlimited personal
+and client projects under the [TentUI License](/license). The license doesn't
+allow redistributing or reselling the component itself.
