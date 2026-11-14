@@ -1,10 +1,10 @@
 ---
 title: Fluid Tooltip
-description: An accessible React tooltip for shadcn/ui that one toolbar, rail, or dock shares, so the same pill travels between buttons, stretches toward the next one like a drop of ink, and rolls its label in from the direction you moved.
+description: An accessible React tooltip for shadcn/ui that one toolbar, rail, or dock shares, so a single quiet bubble glides between buttons and softly crossfades its label instead of closing and reopening.
 seoTitle: React Fluid Tooltip Component for shadcn/ui
-seoDescription: Fluid Tooltip is a shared React tooltip for shadcn/ui toolbars and sidebars. One pill glides between buttons, stretches toward the next target, and rolls in the new label.
+seoDescription: Fluid Tooltip is a shared React tooltip for shadcn/ui toolbars and sidebars. One calm bubble glides between buttons and crossfades to the new label, with no flicker.
 createdAt: 2026-11-13
-updatedAt: 2026-11-13
+updatedAt: 2026-11-14
 ---
 
 <ComponentPreview name="fluid-tooltip-preview" />
@@ -15,29 +15,32 @@ updatedAt: 2026-11-13
 
 ## Features
 
-- One tooltip for a whole group of buttons. Hover the first and a small dark
-  pill fades in beside it; slide to the next and the same pill travels with
-  you instead of one tooltip closing and another opening.
-- The pill is drawn between four edges on their own springs. The edge facing
-  the new button leads and the far edge trails, so for a moment the pill is a
-  little longer than it should be, like a drop of ink being pulled, then it
-  contracts onto the new button with no overshoot. It gets slightly thinner
-  across while it's stretched.
-- The width morphs to the new label, and the old label rolls out while the
-  new one rolls in from the direction you moved, with a faint blur.
+- One tooltip for a whole group of buttons. Hover the first and a small
+  bubble fades in beside it; slide to the next and the same bubble glides
+  with you instead of one tooltip closing and another opening.
+- The glide uses critically damped springs, so the bubble settles onto the
+  new button without overshoot or wobble. Its width eases to the new label
+  at the same time, and it stretches by at most 10% along the way.
+- The label swap is a soft crossfade: the old label fades out in 80 ms, and
+  the new one fades in just after it with a 2 px drift in the direction you
+  moved. There is no blur and no double exposure.
 - A fast sweep across a toolbar never queues animations: every spring retargets
   from where it is, at the speed it has.
 - Once a group is open, moving between its buttons is instant. Leave the group
-  and the pill fades out; come back within `skipDelay` and it reappears with
+  and the bubble fades out; come back within `skipDelay` and it reappears with
   no delay.
 - Any `side`, with collision handling: the bubble flips to the opposite side
   when there is no room and shifts along the edge to stay on screen.
-- The resting pill leans a few pixels toward the pointer. Turn it off with
-  `follow={false}`.
-- Monochrome by design: the pill is your `foreground` color, so it's
-  near-black in light mode and near-white in dark mode.
-- At rest there is no render loop, no `will-change`, and no window listener.
-  The bubble only exists in the DOM while it's showing.
+- At rest the bubble stays still and sits on whole device pixels, so its
+  text is crisp. `follow` leans it a couple of pixels toward the pointer if
+  you want that; it's off by default.
+- A quiet neutral surface in both themes: near-black in light mode, and a
+  raised dark gray with a faint hairline in dark mode, never a bright white
+  block. A small soft shadow lifts it off the page.
+- Only `transform` and `opacity` animate on the compositor. The width is set
+  on a fixed, layout-contained box, so the page never reflows. At rest there
+  is no render loop, no `will-change`, and no window listener, and the
+  bubble only exists in the DOM while it's showing.
 
 ## Installation
 
@@ -105,7 +108,7 @@ stays the real button.
 ```
 
 For a vertical sidebar rail, put the bubble beside the icons with
-`side="right"`. The stretch then runs vertically. Pass the shortcut as an
+`side="right"`, and it glides up and down the rail. Pass the shortcut as an
 array to keep each key separate:
 
 ```tsx
@@ -168,17 +171,18 @@ It follows WCAG 1.4.13. `Esc` dismisses it without moving focus, the pointer
 can move from a button onto the bubble without closing it, and it stays until
 the pointer leaves, focus moves, or `Esc` is pressed. Keyboard focus opens it
 at once, and only focus from the keyboard, so clicking a button doesn't. The
-pill is `bg-foreground text-background`, and the shortcut sits at 60% of the
-label color, which stays above 4.5:1 in light and dark mode.
+bubble is `neutral-900` in light mode and `neutral-800` in dark mode, with
+near-white text, and the shortcut keys are `neutral-400`, which stays above
+4.5:1 on both.
 
-The bubble ignores the pointer while it moves or closes, so it never blocks
+The bubble ignores the pointer while it fades out, so it never blocks
 clicks on the buttons around it. In right-to-left layouts, `align="start"`
-and `"end"` follow the text direction, and the label rolls with the actual
+and `"end"` follow the text direction, and the label drifts with the actual
 direction of travel.
 
-With reduced motion enabled there is no stretch, lean, roll, or blur: the
-bubble jumps to the new button, the label cross-fades over 100 ms, and it
-opens and closes with a plain 100 ms fade.
+With reduced motion enabled nothing moves or scales: the bubble jumps to the
+new button, the label crossfades without drifting, and it opens and closes
+with a plain 100 ms fade.
 
 ## API reference
 
@@ -211,7 +215,7 @@ The CLI copies `fluid-tooltip.tsx` into your project and installs `motion`,
 Every `FluidTooltip` inside a `FluidTooltipGroup` reports to the group, which
 renders a single bubble in a portal on `document.body`. Moving between buttons
 retargets that bubble's springs instead of closing one tooltip and opening
-another, so it never flickers and there are never two pills.
+another, so it never flickers and there are never two bubbles.
 
 ### Is the Fluid Tooltip accessible to keyboard and screen reader users?
 
@@ -222,8 +226,8 @@ onto the bubble without it closing, as WCAG 1.4.13 asks.
 
 ### Does it respect reduced motion?
 
-Yes. With `prefers-reduced-motion` the bubble skips the stretch, the lean, and
-the label roll: it jumps to the new button, the label cross-fades over 100 ms,
+Yes. With `prefers-reduced-motion` the bubble skips the glide, the open scale,
+and the label drift: it jumps to the new button, the label crossfades in place,
 and opening and closing are a plain 100 ms fade.
 
 ### How does it handle touch screens and the edges of the viewport?

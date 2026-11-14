@@ -412,10 +412,10 @@ export const scenarios = {
 			const tool = (label) =>
 				`[data-slot="fluid-tooltip-trigger"][aria-label="${label}"]`;
 			await d.wait(300);
-			// Rest on Bold: after the delay the pill fades in above it.
+			// Rest on Bold: after the delay the bubble fades in above it.
 			await d.move(tool("Bold"), 700, { x: 0.5, y: 0.6 });
 			await d.wait(800);
-			// Slide along: each step the pill stretches ahead and the label rolls.
+			// Slide along: each step the bubble glides over and the label crossfades.
 			for (const label of ["Italic", "Link", "Comment"]) {
 				await d.move(tool(label), 380, { x: 0.5, y: 0.6 });
 				await d.wait(label === "Comment" ? 650 : 320);

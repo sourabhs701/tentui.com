@@ -36,27 +36,25 @@ import { createPortal } from "react-dom";
 import { useWebHaptics } from "web-haptics/react";
 import { cn } from "@/lib/utils";
 
-// Layout, in px. The bubble is one pill, sized to its label.
-const HEIGHT = 26;
-const PAD_X = 10;
+// Layout, in px. The bubble is one small rounded box, sized to its label.
+const HEIGHT = 24;
+const PAD_X = 8;
 /** Room kept between the bubble and the viewport edges. */
 const VIEWPORT_PADDING = 8;
 
-// The bubble is drawn between four edges, each on its own spring. On a move
-// the edge facing the new target leads and the far edge trails, so the pill
-// stretches toward the target and contracts as the trailing edge catches up.
-const leadSpring = { stiffness: 580, damping: 41 } as const;
-const trailSpring = { stiffness: 230, damping: 30 } as const;
+// The bubble is drawn between four edges, each on its own critically damped
+// spring, so it glides onto a new target without overshoot. The edge facing
+// the target is a touch quicker than the far one, which stretches the box very
+// slightly along the way; the far edge then settles in behind it.
+const leadSpring = { stiffness: 400, damping: 40 } as const;
+const trailSpring = { stiffness: 340, damping: 37 } as const;
 /** Edges across the direction of travel, such as a width change. */
-const crossSpring = { stiffness: 420, damping: 36 } as const;
-const leanSpring = { stiffness: 260, damping: 30 } as const;
-/** The stretched pill is at most this many times its resting length. */
-const MAX_STRETCH = 1.7;
-/** And up to 8% thinner across, capped in px, as if its volume were kept. */
-const THIN = 0.08;
-const MAX_THIN = 4;
-/** How far, in px, the resting bubble leans toward the pointer. */
-const LEAN = 3;
+const crossSpring = { stiffness: 380, damping: 39 } as const;
+const leanSpring = { stiffness: 300, damping: 35 } as const;
+/** The box is at most this many times its resting length mid-move. */
+const MAX_STRETCH = 1.1;
+/** How far, in px, the resting bubble leans toward the pointer with `follow`. */
+const LEAN = 2;
 
 // Timing, in ms.
 /** A pointer that leaves a trigger has this long to reach another or the bubble. */
@@ -70,19 +68,18 @@ const TICK_THROTTLE = 90;
 
 // Motion, in seconds.
 const OPEN_DURATION = 0.14;
+const OPEN_SCALE = 0.97;
 const CLOSE_DURATION = 0.1;
-/** Reduced motion swaps labels and opens with a plain fade. */
+/** Reduced motion opens and closes with a plain fade. */
 const FADE_DURATION = 0.1;
-const ROLL_DISTANCE = 8;
-const ROLL_OUT = 0.14;
-const ROLL_IN = 0.2;
-const ROLL_BLUR = "blur(2px)";
+// The label swap is a short crossfade. The old label is nearly gone before the
+// new one starts, so the two never read as one smeared label.
+const SWAP_OUT = 0.08;
+const SWAP_IN = 0.12;
+const SWAP_IN_DELAY = 0.05;
+/** Px the labels drift in the direction of travel as they swap. */
+const SWAP_NUDGE = 2;
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
-/**
- * A soft ease-out for the roll; the outgoing label fades with an ease-in, so
- * both labels share the pill for a beat mid-move.
- */
-const ROLL_EASE = [0.2, 0.6, 0.35, 1] as const;
 
 // A very soft, short tick of bright noise as the bubble lands on a new target.
 const TICK_SOUND = {
@@ -120,7 +117,7 @@ export interface FluidTooltipGroupProps {
 	delay?: number;
 	/** Ms after the bubble closes during which it reopens without the delay. */
 	skipDelay?: number;
-	/** Lean the resting bubble a few px toward the pointer. */
+	/** Lean the resting bubble a couple of px toward the pointer. Off by default, so it stays still. */
 	follow?: boolean;
 	/** Play a soft tick each time the bubble lands on a new trigger. */
 	sound?: boolean;
@@ -154,9 +151,9 @@ interface View {
 	key: string;
 	content: ReactNode;
 	shortcut?: Shortcut;
-	/** Bumps on every new target, so the label rolls. */
+	/** Bumps on every new target, so the label swaps. */
 	seq: number;
-	/** The direction of travel from the last target, for the roll. */
+	/** The direction of travel from the last target, for the swap. */
 	axis: Axis;
 	dir: number;
 	appear: boolean;
@@ -306,6 +303,9 @@ function mergeRefs<T>(...refs: Array<Ref<T> | undefined>) {
 	};
 }
 
+/** Shared by the visible label and its unseen measure, so both lay out alike. */
+const LABEL = "flex items-center gap-2 whitespace-nowrap";
+
 function Label({
 	content,
 	shortcut,
@@ -318,7 +318,10 @@ function Label({
 		<>
 			<span>{content}</span>
 			{keys.length > 0 ? (
-				<span className="flex gap-px text-background/60 tabular-nums">
+				<span
+					data-slot="fluid-tooltip-shortcut"
+					className="flex gap-px text-neutral-400 tabular-nums"
+				>
 					{keys.map((key, index) => (
 						<span key={index}>{key}</span>
 					))}
@@ -328,53 +331,39 @@ function Label({
 	);
 }
 
-interface Roll {
+interface Swap {
 	axis: Axis;
 	dir: number;
 	appear: boolean;
 	reduced: boolean;
 }
 
-function rollOffset(axis: Axis, dir: number) {
-	const offset = dir * ROLL_DISTANCE;
-	return axis === "x" ? { x: offset, y: 0 } : { x: 0, y: offset };
+function nudge(axis: Axis, distance: number) {
+	return axis === "x" ? { x: distance, y: 0 } : { x: 0, y: distance };
 }
 
-// The outgoing label slides against the direction of travel and blurs away;
-// the new one comes in from the side the bubble is heading to.
+// A quick crossfade: the old label fades out fast while drifting a couple of
+// px in the direction of travel, and the new one follows it in. Reduced motion
+// keeps the fade and drops the drift.
 const labelVariants: Variants = {
-	enter: ({ axis, dir, reduced }: Roll) =>
+	enter: ({ axis, dir, reduced }: Swap) =>
 		reduced
 			? { opacity: 0 }
-			: { opacity: 0, ...rollOffset(axis, dir), filter: ROLL_BLUR },
-	center: ({ reduced }: Roll) => ({
+			: { opacity: 0, ...nudge(axis, -dir * SWAP_NUDGE) },
+	center: {
 		opacity: 1,
 		x: 0,
 		y: 0,
-		filter: "blur(0px)",
-		transition: reduced
-			? { duration: FADE_DURATION, ease: "linear" as const }
-			: { duration: ROLL_IN, ease: ROLL_EASE },
-		transitionEnd: { filter: "none" },
-	}),
-	exit: ({ axis, dir, appear, reduced }: Roll) =>
+		transition: { duration: SWAP_IN, delay: SWAP_IN_DELAY, ease: EASE_OUT },
+	},
+	exit: ({ axis, dir, appear, reduced }: Swap) =>
 		appear
 			? { opacity: 0, transition: { duration: 0 } }
-			: reduced
-				? {
-						opacity: 0,
-						transition: { duration: FADE_DURATION, ease: "linear" as const },
-					}
-				: {
-						opacity: 0,
-						...rollOffset(axis, -dir),
-						filter: ROLL_BLUR,
-						transition: {
-							duration: ROLL_OUT,
-							ease: ROLL_EASE,
-							opacity: { duration: ROLL_OUT, ease: "easeIn" as const },
-						},
-					},
+			: {
+					opacity: 0,
+					...(reduced ? {} : nudge(axis, dir * SWAP_NUDGE)),
+					transition: { duration: SWAP_OUT, ease: EASE_OUT },
+				},
 };
 
 function keepOnFrameLoop() {}
@@ -440,21 +429,6 @@ function FluidTooltipBubble({
 			const restH = edges.restH.get() || 1;
 			if (axis === "x") [left, right] = limitSpan(left, right, restW, dir);
 			else [top, bottom] = limitSpan(top, bottom, restH, dir);
-			// Thinner across while stretched along the direction of travel.
-			const stretch =
-				axis === "x" ? (right - left) / restW : (bottom - top) / restH;
-			const amount = clamp((stretch - 1) / (MAX_STRETCH - 1));
-			if (amount > 0) {
-				if (axis === "x") {
-					const cut = (Math.min((bottom - top) * THIN, MAX_THIN) * amount) / 2;
-					top += cut;
-					bottom -= cut;
-				} else {
-					const cut = (Math.min((right - left) * THIN, MAX_THIN) * amount) / 2;
-					left += cut;
-					right -= cut;
-				}
-			}
 			const pixel = edges.pixel.get() || 1;
 			const snap = (value: number) => Math.round(value * pixel) / pixel;
 			x.set(snap(left));
@@ -482,7 +456,7 @@ function FluidTooltipBubble({
 		};
 	}, [edges, x, y, width, height]);
 
-	const roll: Roll = {
+	const swap: Swap = {
 		axis: view.axis,
 		dir: view.dir,
 		appear: view.appear,
@@ -509,7 +483,9 @@ function FluidTooltipBubble({
 				transformOrigin: edges.origin,
 			}}
 			className={cn(
-				"group/fluid-tooltip pointer-events-none fixed top-0 left-0 z-50 select-none rounded-full bg-foreground font-medium text-background text-xs leading-4 data-[state=open]:pointer-events-auto",
+				// Only transform and opacity animate on the compositor; width is written
+				// on a fixed, layout-contained box, so nothing else on the page reflows.
+				"group/fluid-tooltip pointer-events-none fixed top-0 left-0 z-50 select-none rounded-md bg-neutral-900 font-medium text-neutral-50 text-xs leading-4 shadow-[0_1px_2px_rgb(0_0_0/0.08),0_4px_12px_rgb(0_0_0/0.08)] [contain:layout] data-[state=open]:pointer-events-auto dark:bg-neutral-800 dark:text-neutral-100 dark:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08),0_1px_2px_rgb(0_0_0/0.3),0_4px_12px_rgb(0_0_0/0.25)]",
 				className,
 			)}
 		>
@@ -527,28 +503,28 @@ function FluidTooltipBubble({
 				aria-hidden="true"
 				className="absolute inset-0 overflow-hidden rounded-[inherit]"
 			>
-				<AnimatePresence initial={false} custom={roll}>
+				<AnimatePresence initial={false} custom={swap}>
 					<m.span
 						key={view.seq}
-						custom={roll}
+						custom={swap}
 						variants={labelVariants}
 						initial={view.appear ? false : "enter"}
 						animate="center"
 						exit="exit"
-						// Keeps the roll on motion's frame loop, in step with the edge
-						// springs, instead of handing opacity and blur to WAAPI.
+						// Keeps the swap on motion's frame loop, in step with the edge
+						// springs, instead of handing it to WAAPI.
 						onUpdate={keepOnFrameLoop}
-						className="absolute inset-0 flex items-center justify-center gap-1.5 whitespace-nowrap"
+						className={cn("absolute inset-0 justify-center", LABEL)}
 					>
 						<Label content={view.content} shortcut={view.shortcut} />
 					</m.span>
 				</AnimatePresence>
 			</span>
-			{/* The new label, laid out unseen so the bubble can size itself before it rolls in. */}
+			{/* The new label, laid out unseen so the bubble can size itself before it fades in. */}
 			<span
 				ref={measureRef}
 				aria-hidden="true"
-				className="invisible absolute top-0 left-0 flex gap-1.5 whitespace-nowrap"
+				className={cn("invisible absolute top-0 left-0", LABEL)}
 			>
 				<Label content={view.content} shortcut={view.shortcut} />
 			</span>
@@ -566,7 +542,7 @@ export function FluidTooltipGroup({
 	sideOffset = 8,
 	delay = 500,
 	skipDelay = 400,
-	follow = true,
+	follow = false,
 	sound = false,
 	className,
 	children,
@@ -800,7 +776,7 @@ export function FluidTooltipGroup({
 			const reduced = latest.current.reducedMotion;
 			if (appear) {
 				edges.opacity.jump(0);
-				edges.scale.jump(reduced ? 1 : 0.96);
+				edges.scale.jump(reduced ? 1 : OPEN_SCALE);
 			}
 			const duration = reduced ? FADE_DURATION : OPEN_DURATION;
 			animate(edges.opacity, 1, { duration, ease: EASE_OUT });
@@ -906,7 +882,7 @@ export function FluidTooltipGroup({
 					(previous.content !== entry.content ||
 						!sameShortcut(previous.shortcut, entry.shortcut))
 				) {
-					// The label changed in place: swap it without a roll.
+					// The label changed in place: replace it without a swap.
 					setView((current) =>
 						current && current.key === key
 							? { ...current, content: entry.content, shortcut: entry.shortcut }

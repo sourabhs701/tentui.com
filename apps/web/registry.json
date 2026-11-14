@@ -450,7 +450,7 @@
     {
       "name": "fluid-tooltip",
       "title": "Fluid Tooltip",
-      "description": "One shared tooltip for a toolbar, rail, or dock. Slide between buttons and the same pill travels with you: its leading edge arrives first, it stretches like a drop of ink, contracts onto the new button, and the label rolls in from the direction you moved.",
+      "description": "One shared tooltip for a toolbar, rail, or dock. Slide between buttons and a single quiet bubble glides with you on soft springs, settles without overshoot, and crossfades to the new label.",
       "dependencies": [
         "@rexa-developer/tiks",
         "motion",
