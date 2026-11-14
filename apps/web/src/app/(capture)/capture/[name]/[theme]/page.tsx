@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
 
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
+import { FluidTooltipCapture } from "@/components/capture/fluid-tooltip-capture";
 import { InkFilterBarCapture } from "@/components/capture/ink-filter-bar-capture";
 import { MorphLightboxCapture } from "@/components/capture/morph-lightbox-capture";
 import { PromptChipInputCapture } from "@/components/capture/prompt-chip-input-capture";
@@ -25,6 +26,7 @@ const captureIndex = Index as Record<string, CaptureIndexItem>;
 
 // Capture-only framings for demos that don't fit the 4:3 frame.
 const captureScenes: Record<string, ComponentType> = {
+	"fluid-tooltip": FluidTooltipCapture,
 	"ink-filter-bar": InkFilterBarCapture,
 	"morph-lightbox": MorphLightboxCapture,
 	"prompt-chip-input": PromptChipInputCapture,

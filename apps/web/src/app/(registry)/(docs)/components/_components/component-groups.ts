@@ -53,12 +53,13 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		id: "navigation-menus-and-overlays",
 		title: "Navigation, menus, and overlays",
 		description:
-			"Move between views, search, open menus, view images, and show sheets or live activity.",
+			"Move between views, search, open menus, view images, and show sheets, tooltips, or live activity.",
 		components: [
 			"animated-tabs",
 			"brand-context-menu",
 			"component-sidebar",
 			"dynamic-island",
+			"fluid-tooltip",
 			"morph-lightbox",
 			"search-command",
 			"snap-sheet",

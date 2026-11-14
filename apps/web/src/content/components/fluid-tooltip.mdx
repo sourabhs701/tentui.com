@@ -1,0 +1,245 @@
+---
+title: Fluid Tooltip
+description: An accessible React tooltip for shadcn/ui that one toolbar, rail, or dock shares, so a single quiet bubble glides between buttons and softly crossfades its label instead of closing and reopening.
+seoTitle: React Fluid Tooltip Component for shadcn/ui
+seoDescription: Fluid Tooltip is a shared React tooltip for shadcn/ui toolbars and sidebars. One calm bubble glides between buttons and crossfades to the new label, with no flicker.
+createdAt: 2026-11-13
+updatedAt: 2026-11-14
+---
+
+<ComponentPreview name="fluid-tooltip-preview" />
+
+## Example
+
+<ComponentPreview name="fluid-tooltip-demo" />
+
+## Features
+
+- One tooltip for a whole group of buttons. Hover the first and a small
+  bubble fades in beside it; slide to the next and the same bubble glides
+  with you instead of one tooltip closing and another opening.
+- The glide uses critically damped springs, so the bubble settles onto the
+  new button without overshoot or wobble. Its width eases to the new label
+  at the same time, and it stretches by at most 10% along the way.
+- The label swap is a soft crossfade: the old label fades out in 80 ms, and
+  the new one fades in just after it with a 2 px drift in the direction you
+  moved. There is no blur and no double exposure.
+- A fast sweep across a toolbar never queues animations: every spring retargets
+  from where it is, at the speed it has.
+- Once a group is open, moving between its buttons is instant. Leave the group
+  and the bubble fades out; come back within `skipDelay` and it reappears with
+  no delay.
+- Any `side`, with collision handling: the bubble flips to the opposite side
+  when there is no room and shifts along the edge to stay on screen.
+- At rest the bubble stays still and sits on whole device pixels, so its
+  text is crisp. `follow` leans it a couple of pixels toward the pointer if
+  you want that; it's off by default.
+- A quiet neutral surface in both themes: near-black in light mode, and a
+  raised dark gray with a faint hairline in dark mode, never a bright white
+  block. A small soft shadow lifts it off the page.
+- Only `transform` and `opacity` animate on the compositor. The width is set
+  on a fixed, layout-contained box, so the page never reflows. At rest there
+  is no render loop, no `will-change`, and no window listener, and the
+  bubble only exists in the DOM while it's showing.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/fluid-tooltip
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="fluid-tooltip" title="components/fluid-tooltip.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { FluidTooltip, FluidTooltipGroup } from "@/components/fluid-tooltip";
+```
+
+Wrap the buttons that should share a tooltip in a `FluidTooltipGroup`, and
+each button in a `FluidTooltip`. The group renders no element of its own, so
+it works around any toolbar markup. `FluidTooltip` takes exactly one
+focusable child and adds its handlers to the child's own, so your button
+stays the real button.
+
+```tsx
+<FluidTooltipGroup side="top">
+  <div role="toolbar" aria-label="Formatting" className="flex gap-0.5">
+    <FluidTooltip content="Bold" shortcut="⌘B">
+      <button type="button" aria-label="Bold">
+        <BoldIcon />
+      </button>
+    </FluidTooltip>
+    <FluidTooltip content="Italic" shortcut="⌘I">
+      <button type="button" aria-label="Italic">
+        <ItalicIcon />
+      </button>
+    </FluidTooltip>
+  </div>
+</FluidTooltipGroup>
+```
+
+For a vertical sidebar rail, put the bubble beside the icons with
+`side="right"`, and it glides up and down the rail. Pass the shortcut as an
+array to keep each key separate:
+
+```tsx
+<FluidTooltipGroup side="right">
+  <nav aria-label="Workspace" className="flex flex-col gap-1">
+    <FluidTooltip content="Inbox" shortcut={["⌘", "2"]}>
+      <button type="button" aria-label="Inbox">
+        <InboxIcon />
+      </button>
+    </FluidTooltip>
+  </nav>
+</FluidTooltipGroup>
+```
+
+A `FluidTooltip` outside a group works as a normal tooltip with the same
+look. `disabled`, or a disabled child, never shows it:
+
+```tsx
+<FluidTooltip content="Copy link" shortcut="⌘C">
+  <button type="button" aria-label="Copy link">
+    <CopyIcon />
+  </button>
+</FluidTooltip>
+```
+
+Style the bubble with `className` on the group, or with its data attributes:
+`data-slot="fluid-tooltip"`, `data-side`, and `data-state="open"` or
+`"closed"`. Triggers get `data-slot="fluid-tooltip-trigger"`.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Rest the pointer on a button | Opens after `delay` (500 ms) |
+| Move to another button in the group | Moves the open bubble there at once |
+| Move onto the bubble | Keeps it open |
+| Leave the group | Fades it out; returning within `skipDelay` (400 ms) skips the delay |
+| `Tab` to a button | Opens at once, and moves with focus along the group |
+| `Esc` | Hides it; focus stays where it is |
+| Tap | Nothing: a tap is a press |
+| Long press (450 ms) | Shows it with a light haptic; it hides 1.2 s after you lift |
+
+## Sound and haptics
+
+Sound is off by default, because tooltips should be quiet. With `sound`, the
+bubble plays a very soft tick when it lands on a new button after a pointer
+move, at most once every 90 ms, and never on the first open or on focus
+moves. A long press that reveals the tooltip on a touch screen triggers one
+`light` haptic. Nothing plays while the tab is hidden.
+
+## Accessibility
+
+The bubble is one element with `role="tooltip"`. While it shows, the active
+button gets `aria-describedby` pointing at it, so a screen reader hears the
+button's name followed by the label and shortcut. Give icon-only buttons an
+`aria-label` for their name. Keep the content short and plain: a tooltip
+can't hold links or buttons, so use a popover for those.
+
+It follows WCAG 1.4.13. `Esc` dismisses it without moving focus, the pointer
+can move from a button onto the bubble without closing it, and it stays until
+the pointer leaves, focus moves, or `Esc` is pressed. Keyboard focus opens it
+at once, and only focus from the keyboard, so clicking a button doesn't. The
+bubble is `neutral-900` in light mode and `neutral-800` in dark mode, with
+near-white text, and the shortcut keys are `neutral-400`, which stays above
+4.5:1 on both.
+
+The bubble ignores the pointer while it fades out, so it never blocks
+clicks on the buttons around it. In right-to-left layouts, `align="start"`
+and `"end"` follow the text direction, and the label drifts with the actual
+direction of travel.
+
+With reduced motion enabled nothing moves or scales: the bubble jumps to the
+new button, the label crossfades without drifting, and it opens and closes
+with a plain 100 ms fade.
+
+## API reference
+
+### FluidTooltipGroup
+
+<AutoTypeTable
+  path="src/registry/components/fluid-tooltip/fluid-tooltip.tsx"
+  name="FluidTooltipGroupProps"
+/>
+
+### FluidTooltip
+
+<AutoTypeTable
+  path="src/registry/components/fluid-tooltip/fluid-tooltip.tsx"
+  name="FluidTooltipProps"
+/>
+
+## FAQ
+
+### How do I install the Fluid Tooltip with shadcn?
+
+Run `npx shadcn@latest add @tentui/fluid-tooltip` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or
+run `npx shadcn@latest add https://tentui.com/r/fluid-tooltip.json` without it.
+The CLI copies `fluid-tooltip.tsx` into your project and installs `motion`,
+`web-haptics`, and `@rexa-developer/tiks`.
+
+### How does one tooltip get shared across a toolbar?
+
+Every `FluidTooltip` inside a `FluidTooltipGroup` reports to the group, which
+renders a single bubble in a portal on `document.body`. Moving between buttons
+retargets that bubble's springs instead of closing one tooltip and opening
+another, so it never flickers and there are never two bubbles.
+
+### Is the Fluid Tooltip accessible to keyboard and screen reader users?
+
+Yes. Tabbing to a button opens the tooltip at once and moves it with focus,
+`Esc` hides it without moving focus, and the focused button is linked to the
+`role="tooltip"` bubble with `aria-describedby`. The pointer can also move
+onto the bubble without it closing, as WCAG 1.4.13 asks.
+
+### Does it respect reduced motion?
+
+Yes. With `prefers-reduced-motion` the bubble skips the glide, the open scale,
+and the label drift: it jumps to the new button, the label crossfades in place,
+and opening and closing are a plain 100 ms fade.
+
+### How does it handle touch screens and the edges of the viewport?
+
+A tap never shows it, so taps stay presses. A long press of about 450 ms shows
+it with one light haptic, and it hides 1.2 s after you lift your finger. If
+the chosen `side` has no room, the bubble flips to the opposite side and then
+shifts along the edge to stay 8 px inside the viewport.
+
+### Is the Fluid Tooltip free to use?
+
+Yes. The Fluid Tooltip is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

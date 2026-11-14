@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "fluid-tooltip",
+		type: "registry:component",
+		title: "Fluid Tooltip",
+		description:
+			"One shared tooltip for a toolbar, rail, or dock. Slide between buttons and a single quiet bubble glides with you on soft springs, settles without overshoot, and crossfades to the new label.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/fluid-tooltip/fluid-tooltip.tsx",
+				type: "registry:component",
+				target: "@components/fluid-tooltip.tsx",
+			},
+		],
+		categories: ["overlays"],
+		meta: {
+			createdAt: "2026-11-13",
+			image: "https://cdn.tentui.com/images/components/fluid-tooltip?v=2",
+			video: "https://cdn.tentui.com/videos/components/fluid-tooltip?v=2",
+		},
+		docs: "https://tentui.com/components/fluid-tooltip",
+	},
+	{
 		name: "prompt-chip-input",
 		type: "registry:component",
 		title: "Prompt Chip Input",

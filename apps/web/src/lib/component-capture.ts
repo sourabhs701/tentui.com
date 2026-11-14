@@ -25,6 +25,8 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"elastic-slider": { zoom: 1.5 },
 	"email-dock": { zoom: 1.2 },
 	"glass-toggle": { zoom: 3 },
+	// The bubble is portaled outside the stage, so it takes the trigger's zoom.
+	"fluid-tooltip": { zoom: 1.7, className: "pt-[58px]" },
 	"brand-context-menu": { zoom: 2 },
 	"bubble-wrap": { zoom: 1.2 },
 	"hold-to-confirm": { zoom: 1.6 },
