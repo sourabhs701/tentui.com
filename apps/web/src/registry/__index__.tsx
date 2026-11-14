@@ -291,7 +291,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["typography"],
-		meta: {"createdAt":"2026-11-14"},
+		meta: {"createdAt":"2026-11-14","image":"https://cdn.tentui.com/images/components/ascii-decode-text?v=1","video":"https://cdn.tentui.com/videos/components/ascii-decode-text?v=1"},
 	},
 	"prompt-chip-input": {
 		name: "prompt-chip-input",

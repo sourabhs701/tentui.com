@@ -18,6 +18,8 @@ export const components: Registry["items"] = [
 		categories: ["typography"],
 		meta: {
 			createdAt: "2026-11-14",
+			image: "https://cdn.tentui.com/images/components/ascii-decode-text?v=1",
+			video: "https://cdn.tentui.com/videos/components/ascii-decode-text?v=1",
 		},
 		docs: "https://tentui.com/components/ascii-decode-text",
 	},
