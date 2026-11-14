@@ -1850,6 +1850,252 @@
 			]
 		}
 	],
+	"src/registry/components/liquid-glass-carousel/liquid-glass-carousel.tsx#LiquidGlassCarouselProps#": [
+		{
+			"id": "liquid-glass-carousel.tsx-LiquidGlassCarouselProps",
+			"name": "LiquidGlassCarouselProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "children",
+					"description": "`LiquidGlassCarouselSlide` elements, and optionally `LiquidGlassCarouselControls`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "aria-label",
+					"description": "Names the carousel region, such as \"Featured artists\".",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "orientation",
+					"description": "Axis the slides travel along.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Orientation | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "index",
+					"description": "Controlled index of the centred slide.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultIndex",
+					"description": "Slide centred on mount when uncontrolled.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onIndexChange",
+					"description": "Called when a drag, key, click, wheel, or autoplay step picks a new slide.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((index: number) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "loop",
+					"description": "Wrap from the last slide back to the first, with no seam.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "autoplay",
+					"description": "Ms between automatic steps, or `false`. Starts paused under reduced motion.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | false | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "meltZone",
+					"description": "Depth of the melt at each end, as a share of the viewport length, from 0 to 0.5.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "melt",
+					"description": "`\"off\"` keeps the soft edge fade but never distorts the slides.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"auto\" | \"off\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "slideSize",
+					"description": "Slide size, in px or CSS lengths. Px sizes scale down to fit narrow\ncontainers. The viewport is 2.6 slides long; set `--lgc-length` on the\nroot to change it.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "{ width: LiquidGlassCarouselLength; height: LiquidGlassCarouselLength; } | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "gap",
+					"description": "Space between slides, in px or a CSS length.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "LiquidGlassCarouselLength | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a soft glass tick when a slide you moved to settles.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger a haptic tick on touch devices when a swiped slide settles.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "ref",
+					"description": "Exposes `next()`, `prev()`, and `goTo()`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Ref<LiquidGlassCarouselHandle> | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/liquid-glass-carousel/liquid-glass-carousel.tsx#LiquidGlassCarouselSlideProps#": [
+		{
+			"id": "liquid-glass-carousel.tsx-LiquidGlassCarouselSlideProps",
+			"name": "LiquidGlassCarouselSlideProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "aria-label",
+					"description": "Defaults to \"n of N\".",
+					"tags": [
+						{
+							"name": "see",
+							"text": "aria-labelledby."
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/morph-lightbox/morph-lightbox.tsx#MorphLightboxItem#": [
 		{
 			"id": "morph-lightbox.tsx-MorphLightboxItem",

@@ -448,6 +448,32 @@
       "type": "registry:block"
     },
     {
+      "name": "liquid-glass-carousel",
+      "title": "Liquid Glass Carousel",
+      "description": "A snap carousel of capsule cards that melt into liquid glass at the edges of the frame. Cards stretch into a flared, smeared drip with a thin rainbow fringe as they leave, re-form as they come back, and the centred card stays crisp.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "lucide-react",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/liquid-glass-carousel/liquid-glass-carousel.tsx",
+          "type": "registry:component",
+          "target": "@components/liquid-glass-carousel.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-14"
+      },
+      "docs": "https://tentui.com/components/liquid-glass-carousel",
+      "categories": [
+        "lists"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "prompt-chip-input",
       "title": "Prompt Chip Input",
       "description": "An AI prompt field where the @mention, ~model, or /command you type is wrapped in a live capsule that solidifies into a chip on commit and melts back into editable text on Backspace.",

@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "liquid-glass-carousel-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("liquid-glass-carousel")],
+		files: [
+			{
+				path: "examples/liquid-glass-carousel-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[30rem] place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "prompt-chip-input-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("prompt-chip-input")],
@@ -379,6 +393,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
+		name: "liquid-glass-carousel-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("liquid-glass-carousel")],
+		files: [
+			{
+				path: "examples/liquid-glass-carousel-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "place-items-center content-center px-4",
 		},
 	},
 	{

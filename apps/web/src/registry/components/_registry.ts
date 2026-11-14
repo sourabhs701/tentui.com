@@ -2,6 +2,31 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "liquid-glass-carousel",
+		type: "registry:component",
+		title: "Liquid Glass Carousel",
+		description:
+			"A snap carousel of capsule cards that melt into liquid glass at the edges of the frame. Cards stretch into a flared, smeared drip with a thin rainbow fringe as they leave, re-form as they come back, and the centred card stays crisp.",
+		dependencies: [
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/liquid-glass-carousel/liquid-glass-carousel.tsx",
+				type: "registry:component",
+				target: "@components/liquid-glass-carousel.tsx",
+			},
+		],
+		categories: ["lists"],
+		meta: {
+			createdAt: "2026-11-14",
+		},
+		docs: "https://tentui.com/components/liquid-glass-carousel",
+	},
+	{
 		name: "prompt-chip-input",
 		type: "registry:component",
 		title: "Prompt Chip Input",
