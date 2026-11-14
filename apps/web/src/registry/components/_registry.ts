@@ -2,6 +2,26 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "ascii-decode-text",
+		type: "registry:component",
+		title: "ASCII Decode Text",
+		description:
+			"A headline that first appears as ASCII art of its own letter shapes, then a decode front sweeps across and condenses the art into real, crisp, selectable type. After decoding, a pointer lens re-encodes the text under it and heals behind.",
+		dependencies: ["@rexa-developer/tiks", "web-haptics"],
+		files: [
+			{
+				path: "components/ascii-decode-text/ascii-decode-text.tsx",
+				type: "registry:component",
+				target: "@components/ascii-decode-text.tsx",
+			},
+		],
+		categories: ["typography"],
+		meta: {
+			createdAt: "2026-11-14",
+		},
+		docs: "https://tentui.com/components/ascii-decode-text",
+	},
+	{
 		name: "prompt-chip-input",
 		type: "registry:component",
 		title: "Prompt Chip Input",

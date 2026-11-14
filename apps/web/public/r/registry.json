@@ -448,6 +448,30 @@
       "type": "registry:block"
     },
     {
+      "name": "ascii-decode-text",
+      "title": "ASCII Decode Text",
+      "description": "A headline that first appears as ASCII art of its own letter shapes, then a decode front sweeps across and condenses the art into real, crisp, selectable type. After decoding, a pointer lens re-encodes the text under it and heals behind.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/ascii-decode-text/ascii-decode-text.tsx",
+          "type": "registry:component",
+          "target": "@components/ascii-decode-text.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-14"
+      },
+      "docs": "https://tentui.com/components/ascii-decode-text",
+      "categories": [
+        "typography"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "prompt-chip-input",
       "title": "Prompt Chip Input",
       "description": "An AI prompt field where the @mention, ~model, or /command you type is wrapped in a live capsule that solidifies into a chip on commit and melts back into editable text on Backspace.",

@@ -69,8 +69,9 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		id: "text-and-visual-effects",
 		title: "Text and visual effects",
 		description:
-			"Annotate text, reveal content, and add pointer-reactive visuals.",
+			"Annotate and decode text, reveal content, and add pointer-reactive visuals.",
 		components: [
+			"ascii-decode-text",
 			"bubble-wrap",
 			"email-dock",
 			"interactive-sprite",
