@@ -275,6 +275,60 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"prompt-chip-input": {
+		name: "prompt-chip-input",
+		title: "Prompt Chip Input",
+		description: "An AI prompt field where the @mention, ~model, or /command you type is wrapped in a live capsule that solidifies into a chip on commit and melts back into editable text on Backspace.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/prompt-chip-input/prompt-chip-input.tsx","type":"registry:component","target":"@components/prompt-chip-input.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/prompt-chip-input/prompt-chip-input")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for prompt-chip-input");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-11-13","image":"https://cdn.tentui.com/images/components/prompt-chip-input?v=2","video":"https://cdn.tentui.com/videos/components/prompt-chip-input?v=2"},
+	},
+	"morph-lightbox": {
+		name: "morph-lightbox",
+		title: "Morph Lightbox",
+		description: "An image lightbox that grows out of the thumbnail you clicked. The square crop opens up to the photo's true aspect ratio over a page-coloured scrim, slides ride native scroll snapping, and pulling the photo down shrinks it back into the cell of the photo you are on.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/morph-lightbox/morph-lightbox.tsx","type":"registry:component","target":"@components/morph-lightbox.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/morph-lightbox/morph-lightbox")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for morph-lightbox");
+			}
+			return { default: module.default };
+		}),
+		categories: ["overlays"],
+		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/morph-lightbox?v=1","video":"https://cdn.tentui.com/videos/components/morph-lightbox?v=1"},
+	},
+	"ink-filter-bar": {
+		name: "ink-filter-bar",
+		title: "Ink Filter Bar",
+		description: "Filter chips beside a solid results pill. Pick a chip and ink buds out of the pill, pulls a liquid neck across the gap, and floods the chip until it docks into one capsule while the count rolls to the new number.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/ink-filter-bar/ink-filter-bar.tsx","type":"registry:component","target":"@components/ink-filter-bar.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/ink-filter-bar/ink-filter-bar")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ink-filter-bar");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/ink-filter-bar?v=1","video":"https://cdn.tentui.com/videos/components/ink-filter-bar?v=1"},
+	},
 	"liquid-glass-menu": {
 		name: "liquid-glass-menu",
 		title: "Liquid Glass Menu",
@@ -309,7 +363,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-11-11"},
+		meta: {"createdAt":"2026-11-11","image":"https://cdn.tentui.com/images/components/glass-toggle?v=1","video":"https://cdn.tentui.com/videos/components/glass-toggle?v=1"},
 	},
 	"bubble-wrap": {
 		name: "bubble-wrap",
@@ -833,6 +887,60 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"prompt-chip-input-preview": {
+		name: "prompt-chip-input-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/prompt-chip-input-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/prompt-chip-input-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for prompt-chip-input-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"morph-lightbox-preview": {
+		name: "morph-lightbox-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/morph-lightbox-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/morph-lightbox-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for morph-lightbox-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-80 place-items-center content-center px-4"},
+	},
+	"ink-filter-bar-preview": {
+		name: "ink-filter-bar-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ink-filter-bar-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ink-filter-bar-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ink-filter-bar-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-56 place-items-center content-center px-4"},
+	},
 	"liquid-glass-menu-preview": {
 		name: "liquid-glass-menu-preview",
 		title: undefined,
@@ -1283,6 +1391,24 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
+	"morph-lightbox-demo": {
+		name: "morph-lightbox-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/morph-lightbox-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/morph-lightbox-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for morph-lightbox-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"demoClassName":"min-h-[40rem] place-items-center content-center px-4"},
+	},
 	"elastic-slider-demo": {
 		name: "elastic-slider-demo",
 		title: undefined,
@@ -1372,6 +1498,42 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"prompt-chip-input-demo": {
+		name: "prompt-chip-input-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/prompt-chip-input-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/prompt-chip-input-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for prompt-chip-input-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[36rem] place-items-center content-start px-4"},
+	},
+	"ink-filter-bar-demo": {
+		name: "ink-filter-bar-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ink-filter-bar-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ink-filter-bar-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ink-filter-bar-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-80 place-items-center content-center px-4"},
 	},
 	"liquid-glass-menu-demo": {
 		name: "liquid-glass-menu-demo",

@@ -35,11 +35,13 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		id: "inputs-and-pickers",
 		title: "Inputs and pickers",
 		description:
-			"Enter a code or pick a number, rating, or time by dragging, scrolling, or typing.",
+			"Write a prompt with chips, enter a code, filter a list, or pick a number, rating, or time by dragging, scrolling, or typing.",
 		components: [
 			"elastic-slider",
+			"ink-filter-bar",
 			"number-stepper",
 			"otp-field",
+			"prompt-chip-input",
 			"rotary-knob",
 			"star-rating",
 			"tick-ruler",
@@ -51,12 +53,13 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		id: "navigation-menus-and-overlays",
 		title: "Navigation, menus, and overlays",
 		description:
-			"Move between views, search, open menus, and show sheets or live activity.",
+			"Move between views, search, open menus, view images, and show sheets or live activity.",
 		components: [
 			"animated-tabs",
 			"brand-context-menu",
 			"component-sidebar",
 			"dynamic-island",
+			"morph-lightbox",
 			"liquid-glass-menu",
 			"search-command",
 			"snap-sheet",

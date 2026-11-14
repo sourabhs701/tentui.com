@@ -43,6 +43,37 @@ export const scenarios = {
 		},
 	},
 
+	"morph-lightbox": {
+		rest: { x: 440, y: 330 },
+		async run(d) {
+			const thumb = (index) =>
+				`[data-slot="morph-lightbox-trigger"] >> nth=${index}`;
+			const slide = (index) =>
+				`[data-slot="morph-lightbox-slide"][data-slide="${index}"]`;
+			await d.wait(400);
+			// The poppies lift out of their cell and uncrop to the whole photo.
+			await d.move(thumb(2), 650, { x: 0.5, y: 0.55 });
+			await d.wait(120);
+			await d.click();
+			await d.wait(750);
+			// A click on the peeking neighbour brings the next photo in.
+			await d.move(slide(3), 450, { x: 0.3, y: 0.5 });
+			await d.wait(100);
+			await d.click();
+			await d.wait(750);
+			// Pull it down: it shrinks under the cursor and lands in its own cell.
+			await d.move(slide(3), 350, { x: 0.5, y: 0.45 });
+			await d.wait(120);
+			const from = await d.point(slide(3), { x: 0.5, y: 0.45 });
+			await d.down();
+			await d.move({ x: from.x - 30, y: from.y + 150 }, 520);
+			await d.up();
+			await d.wait(750);
+			await d.move(d.rest, 600);
+			await d.wait(300);
+		},
+	},
+
 	"swipe-actions": {
 		rest: { x: 455, y: 330 },
 		async run(d) {
@@ -343,6 +374,68 @@ export const scenarios = {
 		},
 	},
 
+	"prompt-chip-input": {
+		rest: { x: 400, y: 320 },
+		async run(d) {
+			// The capture scene starts focused, with "Ask " typed.
+			await d.key("Control+End");
+			await d.wait(500);
+			// Grow: the live capsule follows each letter, the ghost and list appear.
+			await d.type("@an", 140);
+			await d.wait(450);
+			// Solidify: the capsule morphs into the Ana Lima chip.
+			await d.key("Tab");
+			await d.wait(550);
+			await d.type("to tidy the notes with ~op", 55);
+			await d.wait(350);
+			await d.key("Tab");
+			await d.wait(800);
+			// Melt: one Backspace turns the Opus chip back into "~Opus".
+			await d.key("Backspace");
+			await d.wait(650);
+			// It's plain text again: the next Backspace deletes a letter.
+			await d.key("Backspace");
+			await d.wait(450);
+			await d.type("s", 200);
+			await d.key("Tab");
+			await d.wait(900);
+			// Back to "Ask " for the loop.
+			await d.key("Control+a");
+			await d.page.keyboard.type("Ask ");
+			await d.wait(400);
+		},
+	},
+
+	"ink-filter-bar": {
+		rest: { x: 330, y: 300 },
+		async run(d) {
+			const chip = (label) =>
+				`[data-slot="ink-filter-bar-chip"]:has-text("${label}")`;
+			await d.wait(250);
+			// Ink buds from the pill, floods Cycling, and the count rolls to 17.
+			await d.move(chip("Cycling"), 500, { x: 0.5, y: 0.6 });
+			await d.wait(150);
+			await d.click();
+			await d.wait(700);
+			// Tennis joins the same capsule: 11 results.
+			await d.move(chip("Tennis"), 380, { x: 0.5, y: 0.6 });
+			await d.wait(120);
+			await d.click();
+			await d.wait(750);
+			// Cycling tears free and drains back, then Tennis, back to 24.
+			await d.move(chip("Cycling"), 380, { x: 0.5, y: 0.6 });
+			await d.wait(100);
+			await d.click();
+			await d.wait(700);
+			await d.move(chip("Tennis"), 320, { x: 0.5, y: 0.6 });
+			await d.wait(100);
+			await d.click();
+			await d.wait(650);
+			await d.move(d.rest, 500);
+			await d.wait(150);
+		},
+	},
+
 	"liquid-glass-menu": {
 		rest: { x: 300, y: 330 },
 		async run(d) {
@@ -385,6 +478,42 @@ export const scenarios = {
 			}
 			await d.move(d.rest, 800);
 			await d.wait(600);
+		},
+	},
+
+	"glass-toggle": {
+		rest: { x: 420, y: 310 },
+		async run(d) {
+			const thumb = '[data-slot="glass-toggle-thumb"]';
+			const track = '[data-slot="glass-toggle-track"]';
+			await d.wait(400);
+			// Starts on (sun, amber rim). Click: the moon reassembles, the rim runs to lilac.
+			await d.move(thumb, 700);
+			await d.wait(250);
+			await d.click();
+			await d.wait(1400);
+			// Click again: back to the sun, the light runs the same way round.
+			await d.move(thumb, 250);
+			await d.wait(200);
+			await d.click();
+			await d.wait(1400);
+			// Drag the glass slowly to scrub the flip both ways, then let go on the on side so the loop starts and ends the same.
+			await d.move(thumb, 250);
+			await d.wait(200);
+			await d.down();
+			await d.wait(120);
+			await d.move(track, 1200, { x: 0.5, y: 0.5 });
+			await d.wait(200);
+			await d.move(track, 700, { x: 0.68, y: 0.5 });
+			await d.wait(200);
+			await d.move(track, 900, { x: 0.22, y: 0.5 });
+			await d.wait(200);
+			await d.move(track, 900, { x: 0.85, y: 0.5 });
+			await d.wait(100);
+			await d.up();
+			await d.wait(1400);
+			await d.move(d.rest, 650);
+			await d.wait(300);
 		},
 	},
 
