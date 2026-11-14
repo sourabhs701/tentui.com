@@ -38,6 +38,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"prompt-chip-input": { className: "items-start px-6 pt-10" },
 	"pull-cord": { zoom: 1.1 },
 	"rotary-knob": { zoom: 1.5 },
+	"rolling-stat": { zoom: 1.3 },
 	"scratch-card": { zoom: 1.3 },
 	"search-command": { zoom: 2 },
 	"snap-sheet": {},

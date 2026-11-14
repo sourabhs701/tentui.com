@@ -1,0 +1,232 @@
+---
+title: Rolling Stat
+description: An accessible React KPI stat for shadcn/ui whose digits roll like an odometer with a carry cascade, over a sparkline you can scrub to roll the figure and its change back through history.
+seoTitle: React Animated Stat (KPI) Component for shadcn/ui
+seoDescription: Rolling Stat is a React animated KPI component for shadcn/ui. Digits roll with a mechanical carry, and scrubbing the sparkline rolls the figure and delta through history.
+createdAt: 2026-11-13
+updatedAt: 2026-11-13
+---
+
+<ComponentPreview name="rolling-stat-preview" />
+
+## Example
+
+<ComponentPreview name="rolling-stat-demo" />
+
+## Features
+
+- The figure and its history are one object. Hover or drag across the
+  sparkline and the big number rolls back to each day, the change chip rolls
+  with it, and the label swaps to the point's date. Let go and everything
+  glides back to the live value.
+- Digits roll like a precise counter. Each place takes the shortest path in
+  the direction the value moved, so 9 rolling up passes straight into 0. When
+  1,099 becomes 1,100 the changed places start one after another from the
+  right, and the carry ripples left.
+- An update that lands mid-roll picks up from where each digit is, with its
+  speed, instead of starting over.
+- Separators, the currency symbol, the decimal point, and units never roll.
+  When the number gains or loses a digit, the new place opens from the left
+  and the rest slide over, with no layout jump.
+- Digits that spin far and fast get a faint vertical motion blur. At rest the
+  figure is plain text: no transforms, filters, or masks.
+- Formats with `Intl.NumberFormat`: currency, percent, compact ("12.4K"),
+  decimals, negatives, and locale separators such as `de-DE`.
+- The change chip turns emerald or rose and its arrow flips when the trend
+  changes sign. `invertTrend` swaps the colours for metrics where down is good.
+- New history points draw in at the right edge as the line eases one step
+  left.
+- At rest there are no animation frames, no `will-change`, and no window
+  listeners.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/rolling-stat
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="rolling-stat" title="components/rolling-stat.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { RollingStat } from "@/components/rolling-stat";
+```
+
+Pass the history oldest first. Without `value`, the last point is the live
+value, and the change chip compares it with the first point as a percent.
+
+```tsx
+<RollingStat
+  label="Monthly revenue"
+  format={{ style: "currency", currency: "USD", maximumFractionDigits: 0 }}
+  history={[
+    { value: 42963, label: "Wed, 14 Oct" },
+    // ...
+    { value: 48290, label: "Fri, 13 Nov" },
+  ]}
+/>
+```
+
+For streaming data, keep a window of recent points in state and append each
+new one. The figure rolls on the slow, settling timing, and the line eases
+the new point in.
+
+```tsx
+const [history, setHistory] = useState<number[]>(initial);
+
+useEffect(() => {
+  return subscribe((value) =>
+    setHistory((points) => [...points.slice(1), value]),
+  );
+}, []);
+
+<RollingStat live label="Revenue today" history={history} />
+```
+
+Use `format`, `locale`, `prefix`, and `suffix` for the figure. `prefix` and
+`suffix` are drawn as small, muted units. Pass `delta` as a number to show
+your own change, with `deltaFormat` to format it:
+
+```tsx
+<RollingStat
+  label="p95 latency"
+  suffix=" ms"
+  invertTrend
+  delta={-12}
+  history={latency}
+/>
+
+<RollingStat
+  label="Umsatz"
+  locale="de-DE"
+  format={{ style: "currency", currency: "EUR" }}
+  history={revenue}
+/>
+```
+
+`variant="plain"` drops the card, `size` sets the figure size, and the figure
+steps down a size in narrow containers. `onScrub` reports the point under the
+scrub, or `null` back at live.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Hover or drag across the line | Rolls the figure and change to the nearest point |
+| Touch drag sideways | Scrubs; a vertical swipe still scrolls the page |
+| Pointer leaves or touch lifts | Glides back to the live value |
+| `Tab` | Focuses the sparkline |
+| `←` / `→` | Steps one point back or forward |
+| `Home` / `End` | Jumps to the first or last point |
+| `Esc` or blur | Returns to the live value |
+
+Scrubbing rolls fast, about 140 ms with no stagger, so dragging feels direct.
+Data updates use a slower spring of about 650 ms with a slight settle and the
+carry cascade, and so does the glide back to live.
+
+## Sound and haptics
+
+Sound is off by default. With `sound`, a data update plays a very soft click
+as digits land, at most one every 30 ms and six per update, and scrubbing
+plays a tick per point. With `haptics` (on by default), scrubbing by touch
+ticks once per point on supported devices. Nothing plays on mount, while the
+tab is hidden, or when the glide back to live lands.
+
+## Accessibility
+
+The root is a `group` named with the label, live value, and change, such as
+"Visitors: 1,240 visitors, up 26.5%". The figure is read once as plain text;
+the rolling columns are hidden from assistive technology, so screen readers
+never hear a strip of ten digits. The change chip carries an arrow and a
+visually hidden "up" or "down", so it never relies on colour alone, and its
+text keeps at least 4.5:1 contrast in light and dark mode.
+
+The sparkline is a focusable `slider` whose `aria-valuetext` reads the point,
+such as "Tue, 11 Nov: 1,240 visitors". Set `announce` to read value changes in
+a polite live region, at most once a second, so a stream doesn't flood it.
+
+With reduced motion, or `animated={false}`, digits cross-fade instead of
+rolling, with no blur, cascade, line drawing, or pulse on the Live pill.
+Scrubbing still works and updates at once. In right-to-left layouts the label,
+chip, and Live pill mirror, while the number and the time axis stay left to
+right.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/rolling-stat/rolling-stat.tsx"
+  name="RollingStatProps"
+/>
+
+## FAQ
+
+### How do I install the Rolling Stat with shadcn?
+
+Run `npx shadcn@latest add @tentui/rolling-stat` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/rolling-stat.json` without it. The
+CLI copies `rolling-stat.tsx` into your project and installs `motion`,
+`lucide-react`, `web-haptics`, and `@rexa-developer/tiks`.
+
+### Can it show currency, percentages, compact numbers, and other locales?
+
+Yes. `format` takes any `Intl.NumberFormat` options and `locale` sets the
+digits and separators, so currency, percent, compact ("12.4K"), fixed
+decimals, negatives, and `de-DE` style separators all work. Only the digits
+roll; symbols and separators stay put and slide when the length changes.
+
+### How does scrubbing the history work with a keyboard or screen reader?
+
+The sparkline is a focusable slider: arrow keys step through the points,
+`Home` and `End` jump to the ends, and `Esc` or moving focus away returns to
+the live value. Its `aria-valuetext` reads each point's label and formatted
+value, and the figure itself is read once as plain text.
+
+### How do I feed it live data, and will screen readers hear every update?
+
+Update `history` (or `value`) from your data source; each change rolls the
+digits with a carry cascade and the sparkline eases the new point in.
+Updates are silent for screen readers unless you set `announce`, which reads
+the new value in a polite live region at most once a second.
+
+### Does it respect reduced motion?
+
+Yes. With `prefers-reduced-motion` or `animated={false}`, digits cross-fade
+in 100 ms instead of rolling, and there is no motion blur, cascade, line
+drawing, or pulse. Scrubbing keeps working and updates the figure at once.
+
+### Is the Rolling Stat free to use?
+
+Yes. The Rolling Stat is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

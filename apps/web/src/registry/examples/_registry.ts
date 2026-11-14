@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "rolling-stat-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("rolling-stat")],
+		files: [
+			{
+				path: "examples/rolling-stat-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "prompt-chip-input-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("prompt-chip-input")],
@@ -463,6 +477,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "rolling-stat-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("rolling-stat")],
+		files: [
+			{
+				path: "examples/rolling-stat-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[40rem] place-items-center content-center px-4",
 		},
 	},
 	{

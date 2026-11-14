@@ -66,6 +66,13 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		],
 	},
 	{
+		id: "data-display",
+		title: "Data display",
+		description:
+			"Show live figures and their history, with numbers that move as the data does.",
+		components: ["rolling-stat"],
+	},
+	{
 		id: "text-and-visual-effects",
 		title: "Text and visual effects",
 		description:

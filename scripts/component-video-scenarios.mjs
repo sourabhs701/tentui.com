@@ -406,6 +406,48 @@ export const scenarios = {
 		},
 	},
 
+	"rolling-stat": {
+		rest: { x: 420, y: 320 },
+		async run(d) {
+			const line = '[data-slot="rolling-stat-sparkline"]';
+			// The capture scene takes each new live value from this event.
+			const push = (value) =>
+				d.page.evaluate((detail) => {
+					window.dispatchEvent(
+						new CustomEvent("rolling-stat-capture", { detail }),
+					);
+				}, value);
+			await d.wait(500);
+			// A data tick: the tens and hundreds roll up to $48,310.
+			await push(48310);
+			await d.wait(900);
+			await push(48999);
+			await d.wait(750);
+			// The carry: 9s hand over to the next place, right to left.
+			await push(49012);
+			await d.wait(750);
+			// Scrub back through the month; the chip flips red across the dip.
+			await d.move(line, 500, { x: 0.97, y: 0.5 });
+			await d.wait(120);
+			await d.down();
+			await d.move(line, 800, { x: 0.45, y: 0.75 });
+			// Hold on the dip, where the month is down and the chip turns rose.
+			await d.wait(450);
+			await d.move(line, 450, { x: 0.12, y: 0.55 });
+			await d.wait(120);
+			await d.up();
+			// Leaving the line glides the figure back to live. Straight down first,
+			// so the way out doesn't scrub across the line again.
+			const off = await d.point(line, { x: 0.12, y: 1 });
+			await d.move({ x: off.x, y: off.y + 40 }, 220);
+			await d.move(d.rest, 450);
+			await d.wait(650);
+			// Back to the start for the loop.
+			await push(48290);
+			await d.wait(700);
+		},
+	},
+
 	"ink-filter-bar": {
 		rest: { x: 330, y: 300 },
 		async run(d) {

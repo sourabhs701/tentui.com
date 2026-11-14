@@ -2,6 +2,31 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "rolling-stat",
+		type: "registry:component",
+		title: "Rolling Stat",
+		description:
+			"A KPI figure whose digits roll like a precise odometer, carrying from column to column, over a sparkline you can scrub: drag across the line and the figure and its change roll back through history, then glide back to live on release.",
+		dependencies: [
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/rolling-stat/rolling-stat.tsx",
+				type: "registry:component",
+				target: "@components/rolling-stat.tsx",
+			},
+		],
+		categories: ["data-display"],
+		meta: {
+			createdAt: "2026-11-13",
+		},
+		docs: "https://tentui.com/components/rolling-stat",
+	},
+	{
 		name: "prompt-chip-input",
 		type: "registry:component",
 		title: "Prompt Chip Input",

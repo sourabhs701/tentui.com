@@ -3511,6 +3511,281 @@
 			]
 		}
 	],
+	"src/registry/components/rolling-stat/rolling-stat.tsx#RollingStatProps#": [
+		{
+			"id": "rolling-stat.tsx-RollingStatProps",
+			"name": "RollingStatProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "value",
+					"description": "The live value. Defaults to the last `history` point.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "history",
+					"description": "Past values, oldest first. Labels show while scrubbing, e.g. \"Tue, 11 Nov\".",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "RollingStatPoint[] | undefined",
+					"simplifiedType": "array",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "label",
+					"description": "Names the figure, e.g. \"Monthly revenue\".",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "format",
+					"description": "`Intl.NumberFormat` options, e.g. currency, percent, or compact.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Intl.NumberFormatOptions | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "locale",
+					"description": "Locale for digits and separators.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "prefix",
+					"description": "Text before the number that never rolls.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "suffix",
+					"description": "Text after the number that never rolls, e.g. \" ms\".",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "delta",
+					"description": "The change chip. `\"auto\"` compares the value with the first `history`\npoint as a percent. A number is shown as is, and while scrubbing the chip\nshows the change from the first point in the same units. Defaults to\n`\"auto\"` when `history` has 2 or more points.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | \"auto\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "deltaFormat",
+					"description": "`Intl.NumberFormat` options for the chip. Defaults to a percent with one decimal for `\"auto\"`, else `format`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Intl.NumberFormatOptions | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "invertTrend",
+					"description": "For metrics where down is good, such as latency or churn. Swaps the tints only.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"sm\" | \"md\" | \"lg\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"card\" | \"plain\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "live",
+					"description": "Show a \"Live\" pill while the figure shows the live value.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "scrubbable",
+					"description": "Let pointer, touch, and keys scrub the sparkline. Defaults to `true` with 2 or more points.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onScrub",
+					"description": "Called with the point under the scrub, and `null` back at the live value.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((point: RollingStatScrubPoint | null) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a soft click as digits land on data updates, and a tick per scrubbed point.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Tick per point while scrubbing by touch, on supported devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "announce",
+					"description": "Read value changes in a polite live region, at most once a second.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "animated",
+					"description": "Set `false` to swap digits with a cross-fade, as with reduced motion.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/rotary-knob/rotary-knob.tsx#RotaryKnobProps#": [
 		{
 			"id": "rotary-knob.tsx-RotaryKnobProps",

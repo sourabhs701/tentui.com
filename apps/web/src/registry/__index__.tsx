@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"rolling-stat": {
+		name: "rolling-stat",
+		title: "Rolling Stat",
+		description: "A KPI figure whose digits roll like a precise odometer, carrying from column to column, over a sparkline you can scrub: drag across the line and the figure and its change roll back through history, then glide back to live on release.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/rolling-stat/rolling-stat.tsx","type":"registry:component","target":"@components/rolling-stat.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/rolling-stat/rolling-stat")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for rolling-stat");
+			}
+			return { default: module.default };
+		}),
+		categories: ["data-display"],
+		meta: {"createdAt":"2026-11-13"},
+	},
 	"prompt-chip-input": {
 		name: "prompt-chip-input",
 		title: "Prompt Chip Input",
@@ -869,6 +887,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
 	},
+	"rolling-stat-preview": {
+		name: "rolling-stat-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/rolling-stat-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/rolling-stat-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for rolling-stat-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
 	"prompt-chip-input-preview": {
 		name: "prompt-chip-input-preview",
 		title: undefined,
@@ -1462,6 +1498,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"rolling-stat-demo": {
+		name: "rolling-stat-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/rolling-stat-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/rolling-stat-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for rolling-stat-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[40rem] place-items-center content-center px-4"},
 	},
 	"prompt-chip-input-demo": {
 		name: "prompt-chip-input-demo",
