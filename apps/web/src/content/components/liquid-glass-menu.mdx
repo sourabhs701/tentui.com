@@ -1,0 +1,256 @@
+---
+title: Liquid Glass Menu
+description: A React dropdown menu for shadcn/ui with a liquid-glass surface that stays fully keyboard and screen-reader accessible. The round trigger flows into the panel as one blob of glass, the items sharpen from a blur, and a glass lens slides to the highlighted item.
+seoTitle: React Liquid Glass Menu Component for shadcn/ui
+createdAt: 2026-11-12
+updatedAt: 2026-11-14
+---
+
+<ComponentPreview name="liquid-glass-menu-preview" />
+
+## Example
+
+<ComponentPreview name="liquid-glass-menu-demo" />
+
+## Features
+
+- A real [Base UI](https://base-ui.com/react/components/menu) menu underneath:
+  roles, focus management, typeahead, `Esc`, outside clicks, radio and
+  checkbox items all come from Base UI, not from this component.
+- Press the round glass button and it flows into the menu. The glass grows
+  out of the button on a critically damped spring, with no overshoot, and the
+  rows sharpen from a slight blur one after another. Close it and the rows
+  fade at once while the glass drains back into the button as one shape.
+- Clear glass, tuned separately for light and dark: the page behind is blurred
+  and gently saturated through a translucent fill, under a 0.5 px specular
+  hairline that is brightest along the top and a small, soft shadow. In
+  Chromium the backdrop also bends slightly at the rim, like it would through a
+  lens.
+- The highlight is a faint glass lens that glides between rows on a spring,
+  following the pointer and the arrow keys, and dips a little while pressed.
+  The highlighted row's label also turns full strength, so the lens is never
+  the only cue. Icons and labels stay in one column; nothing shifts.
+- A glass pop on open, a lower one on close, a tick on select, and matching
+  haptics on supported phones.
+- At rest nothing animates: no animation frame and no `will-change`. During
+  the morph only the glass's shape and the rows' opacity change, and the
+  panel itself never moves, so it lands exactly where it rests.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/liquid-glass-menu
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @base-ui/react @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="liquid-glass-menu"
+  title="components/liquid-glass-menu.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  LiquidGlassMenu,
+  LiquidGlassMenuContent,
+  LiquidGlassMenuItem,
+  LiquidGlassMenuTrigger,
+} from "@/components/liquid-glass-menu";
+```
+
+```tsx
+<LiquidGlassMenu>
+  <LiquidGlassMenuTrigger aria-label="Add" />
+  <LiquidGlassMenuContent side="top" align="end">
+    <LiquidGlassMenuItem icon={<CameraIcon />} onClick={openCamera}>
+      Camera
+    </LiquidGlassMenuItem>
+    <LiquidGlassMenuItem icon={<MicIcon />}>Audio</LiquidGlassMenuItem>
+  </LiquidGlassMenuContent>
+</LiquidGlassMenu>
+```
+
+The default trigger is a 44 px round glass button with a plus and no text, so
+it needs an `aria-label`. With it, the panel opens over the button and grows
+out of it. To use your own trigger, pass an element to `render` and the label
+as children. The panel then sits `sideOffset` away from it and still grows out
+of it.
+
+```tsx
+<LiquidGlassMenuTrigger render={<Button variant="outline" />}>
+  Sort
+</LiquidGlassMenuTrigger>
+```
+
+Groups, labels, separators, radio items, and checkbox items work like their
+Base UI counterparts. `shortcut` shows a hint at the end of a row; it doesn't
+bind the key.
+
+```tsx
+<LiquidGlassMenuContent align="end">
+  <LiquidGlassMenuGroup>
+    <LiquidGlassMenuLabel>Sort by</LiquidGlassMenuLabel>
+    <LiquidGlassMenuRadioGroup value={sort} onValueChange={setSort}>
+      <LiquidGlassMenuRadioItem value="newest" shortcut="⌘1">
+        Newest
+      </LiquidGlassMenuRadioItem>
+      <LiquidGlassMenuRadioItem value="name" shortcut="⌘2">
+        Name
+      </LiquidGlassMenuRadioItem>
+    </LiquidGlassMenuRadioGroup>
+  </LiquidGlassMenuGroup>
+  <LiquidGlassMenuSeparator />
+  <LiquidGlassMenuCheckboxItem checked={hidden} onCheckedChange={setHidden}>
+    Show hidden
+  </LiquidGlassMenuCheckboxItem>
+</LiquidGlassMenuContent>
+```
+
+`open`, `defaultOpen`, `onOpenChange`, and `modal` are Base UI's root props.
+`morph={false}` swaps the blob for a plain scale-and-fade popover, and
+`refraction="off"` keeps the glass a clean blur everywhere.
+
+```tsx
+<LiquidGlassMenu morph={false} sound={false}>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Click or tap the trigger | Opens the menu |
+| `Enter`, `Space`, or `ArrowDown` on the trigger | Opens it and highlights the first item |
+| `ArrowUp` / `ArrowDown` | Moves the lens to the previous or next item |
+| `Home` / `End` | Moves the lens to the first or last item |
+| Type a letter | Jumps to the next item starting with it |
+| `Enter` / `Space`, click, or tap an item | Chooses it |
+| `Esc` or a click outside | Closes the menu and returns focus to the trigger |
+
+A press on the trigger can be dragged onto an item and released to choose it,
+as in native menus. A long press released where the trigger was doesn't
+choose the row that grew over it.
+
+## Sound and haptics
+
+Opening plays a short glass pop and a `light` haptic, closing plays a lower,
+shorter pop and a `soft` haptic, and choosing an item plays a tick and a
+`selection` haptic. Choosing an item that closes the menu plays only the tick.
+
+Sound and haptics only follow user input. Mounting, `defaultOpen`, and changes
+to the `open` prop are silent, and nothing plays while the tab is hidden. Turn
+each off with `sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+Base UI provides the semantics: the trigger is a button with
+`aria-haspopup="menu"` and `aria-expanded`, the panel has `role="menu"`, and
+rows are `menuitem`, `menuitemradio`, or `menuitemcheckbox`. The glass and
+lens layers are hidden from assistive technology. The trigger's focus ring
+shows for keyboard focus only. The trigger is 44 px, and rows are 40 px tall
+with a mouse and 44 px on touch screens.
+
+The glass fill is opaque enough for text to keep a 4.5:1 contrast ratio over
+any backdrop, light or dark, and secondary text such as shortcuts and labels
+is drawn darker than the usual muted color for the same reason.
+
+With reduced motion enabled there is no morph or blur: the panel fades in and
+out over 150 ms and the lens jumps straight to each item. With reduced
+transparency, or in browsers without `backdrop-filter`, the glass becomes an
+opaque frosted surface with the same hairline, radii, and shadow. Sound and haptics stay
+on under reduced motion because they confirm actions rather than decorate
+movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx"
+  name="LiquidGlassMenuProps"
+/>
+
+### LiquidGlassMenuContent
+
+<AutoTypeTable
+  path="src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx"
+  name="LiquidGlassMenuContentProps"
+/>
+
+### LiquidGlassMenuItem
+
+<AutoTypeTable
+  path="src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx"
+  name="LiquidGlassMenuItemProps"
+/>
+
+## FAQ
+
+### How do I install the Liquid Glass Menu with shadcn?
+
+Run `npx shadcn@latest add @tentui/liquid-glass-menu` after adding the
+`@tentui` registry to `components.json` ([installation guide](/docs/installation)),
+or run `npx shadcn@latest add https://tentui.com/r/liquid-glass-menu.json`
+without it. The CLI copies `liquid-glass-menu.tsx` into your project and
+installs `@base-ui/react`, `motion`, `web-haptics`, and `@rexa-developer/tiks`.
+
+### Is the Liquid Glass Menu accessible?
+
+Yes. It is a Base UI menu, so the trigger has `aria-haspopup` and
+`aria-expanded`, the panel is a `role="menu"`, and arrow keys, `Home`, `End`,
+typeahead, `Enter`, `Space`, and `Esc` all work, with focus returned to the
+trigger on close. The highlight is never shown by the lens alone, and the
+default trigger requires an `aria-label` in its types.
+
+### Does the glass work in Safari and Firefox?
+
+Yes. The frosted blur, rim, and shadow use `backdrop-filter`, which every
+current browser supports. Only the refraction at the rim of the panel needs
+Chromium, so Safari and Firefox get a clean blur instead, and browsers without
+`backdrop-filter` get an opaque frosted surface.
+
+### What happens with reduced motion or reduced transparency?
+
+With `prefers-reduced-motion`, the morph and item blur are skipped: the panel
+fades in over 150 ms and the lens moves instantly. With
+`prefers-reduced-transparency`, the glass becomes an opaque frosted surface
+with the same hairline and shadow.
+
+### Can I use my own trigger button?
+
+Yes. Pass your element to `render` on `LiquidGlassMenuTrigger` and the label as
+children, for example `render={<Button variant="outline" />}`. Your button
+keeps its own styling and gets the menu behaviour, and the panel opens beside
+it rather than over it.
+
+### Is the Liquid Glass Menu free to use?
+
+Yes. The Liquid Glass Menu is free and source-available: the shadcn CLI copies
+its source into your project, and you can use it in unlimited personal and
+client projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

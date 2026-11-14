@@ -46,6 +46,20 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "liquid-glass-menu-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("liquid-glass-menu")],
+		files: [
+			{
+				path: "examples/liquid-glass-menu-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "glass-toggle-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("glass-toggle")],
@@ -491,6 +505,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-80 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "liquid-glass-menu-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("liquid-glass-menu")],
+		files: [
+			{
+				path: "examples/liquid-glass-menu-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[40rem] place-items-center content-center px-4",
 		},
 	},
 	{

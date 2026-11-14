@@ -329,6 +329,24 @@ export const Index = {
 		categories: ["inputs"],
 		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/ink-filter-bar?v=1","video":"https://cdn.tentui.com/videos/components/ink-filter-bar?v=1"},
 	},
+	"liquid-glass-menu": {
+		name: "liquid-glass-menu",
+		title: "Liquid Glass Menu",
+		description: "A dropdown menu with a liquid-glass surface that stays fully keyboard and screen-reader accessible. The round trigger flows into the panel as one blob of glass, the items sharpen from a blur, and a small glass lens slides to the highlighted item.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx","type":"registry:component","target":"@components/liquid-glass-menu.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/liquid-glass-menu/liquid-glass-menu")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-menu");
+			}
+			return { default: module.default };
+		}),
+		categories: ["menus"],
+		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/liquid-glass-menu?v=2","video":"https://cdn.tentui.com/videos/components/liquid-glass-menu?v=2"},
+	},
 	"glass-toggle": {
 		name: "glass-toggle",
 		title: "Glass Toggle",
@@ -923,6 +941,24 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-56 place-items-center content-center px-4"},
 	},
+	"liquid-glass-menu-preview": {
+		name: "liquid-glass-menu-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/liquid-glass-menu-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/liquid-glass-menu-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-menu-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 place-items-center content-center px-4"},
+	},
 	"glass-toggle-preview": {
 		name: "glass-toggle-preview",
 		title: undefined,
@@ -1498,6 +1534,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-80 place-items-center content-center px-4"},
+	},
+	"liquid-glass-menu-demo": {
+		name: "liquid-glass-menu-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/liquid-glass-menu-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/liquid-glass-menu-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-menu-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[40rem] place-items-center content-center px-4"},
 	},
 	"glass-toggle-demo": {
 		name: "glass-toggle-demo",

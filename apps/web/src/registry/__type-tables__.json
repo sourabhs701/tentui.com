@@ -1850,6 +1850,201 @@
 			]
 		}
 	],
+	"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx#LiquidGlassMenuContentProps#": [
+		{
+			"id": "liquid-glass-menu.tsx-LiquidGlassMenuContentProps",
+			"name": "LiquidGlassMenuContentProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "side",
+					"description": "Which side of the trigger the panel opens on. Defaults to `\"bottom\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Side | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "align",
+					"description": "How the panel lines up with the trigger along that side. Defaults to `\"start\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Align | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sideOffset",
+					"description": "Gap to the trigger, in px. Defaults to covering the round trigger, so the\npanel grows out of it, or 8 px from any other trigger.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | OffsetFunction | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "alignOffset",
+					"description": "Shift along the aligned edge, in px.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | OffsetFunction | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "collisionPadding",
+					"description": "Space kept from the edge of the viewport, in px. Defaults to 8.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Padding | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx#LiquidGlassMenuItemProps#": [
+		{
+			"id": "liquid-glass-menu.tsx-LiquidGlassMenuItemProps",
+			"name": "LiquidGlassMenuItemProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "icon",
+					"description": "Leading icon, such as a lucide icon or a colored badge. Plain icons are drawn at 16 px.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "shortcut",
+					"description": "Trailing hint, such as a keyboard shortcut. Shown, not bound.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "The label.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx#LiquidGlassMenuProps#": [
+		{
+			"id": "liquid-glass-menu.tsx-LiquidGlassMenuProps",
+			"name": "LiquidGlassMenuProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "morph",
+					"description": "Flow the trigger into the panel as one blob of glass, and back on close.\n`false` gives a plain scale-and-fade popover.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "refraction",
+					"description": "Bend the backdrop at the rim of the glass and the lens where the browser\ncan (Chromium). Elsewhere, and with `\"off\"`, the glass is a clean blur.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"auto\" | \"off\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a glass pop on open and close, and a tick on select.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptics on supported devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/morph-lightbox/morph-lightbox.tsx#MorphLightboxItem#": [
 		{
 			"id": "morph-lightbox.tsx-MorphLightboxItem",

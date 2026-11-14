@@ -60,6 +60,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"component-sidebar",
 			"dynamic-island",
 			"morph-lightbox",
+			"liquid-glass-menu",
 			"search-command",
 			"snap-sheet",
 			"swipe-actions",
