@@ -529,6 +529,30 @@
       "type": "registry:component"
     },
     {
+      "name": "ripple-reveal",
+      "title": "Ripple Reveal",
+      "description": "Hide or show a sensitive value with a ripple that starts exactly where you tap. A damped sine swell travels out across the surface and flips the content between its shown and hidden faces as the front passes, with a soft tap and a light haptic.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/ripple-reveal/ripple-reveal.tsx",
+          "type": "registry:component",
+          "target": "@components/ripple-reveal.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-11",
+        "image": "https://cdn.tentui.com/images/components/ripple-reveal?v=1",
+        "video": "https://cdn.tentui.com/videos/components/ripple-reveal?v=1"
+      },
+      "docs": "https://tentui.com/components/ripple-reveal",
+      "categories": [],
+      "type": "registry:component"
+    },
+    {
       "name": "glass-toggle",
       "title": "Glass Toggle",
       "description": "An on/off switch with a thumb of thick frosted glass. Flip it and the thumb springs across, a pixel moon scatters and reassembles as a pixel sun, and a rim light runs round the glass from cool lilac to warm amber.",

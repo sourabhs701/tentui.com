@@ -37,6 +37,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	// Starts near the top so the suggestion list opens below the field.
 	"prompt-chip-input": { className: "items-start px-6 pt-10" },
 	"pull-cord": { zoom: 1.1 },
+	"ripple-reveal": { zoom: 1.2 },
 	"rotary-knob": { zoom: 1.5 },
 	"scratch-card": { zoom: 1.3 },
 	"search-command": { zoom: 2 },

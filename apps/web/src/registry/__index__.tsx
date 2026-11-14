@@ -329,6 +329,24 @@ export const Index = {
 		categories: ["inputs"],
 		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/ink-filter-bar?v=1","video":"https://cdn.tentui.com/videos/components/ink-filter-bar?v=1"},
 	},
+	"ripple-reveal": {
+		name: "ripple-reveal",
+		title: "Ripple Reveal",
+		description: "Hide or show a sensitive value with a ripple that starts exactly where you tap. A damped sine swell travels out across the surface and flips the content between its shown and hidden faces as the front passes, with a soft tap and a light haptic.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/ripple-reveal/ripple-reveal.tsx","type":"registry:component","target":"@components/ripple-reveal.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/ripple-reveal/ripple-reveal")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ripple-reveal");
+			}
+			return { default: module.default };
+		}),
+		categories: [],
+		meta: {"createdAt":"2026-11-11","image":"https://cdn.tentui.com/images/components/ripple-reveal?v=1","video":"https://cdn.tentui.com/videos/components/ripple-reveal?v=1"},
+	},
 	"glass-toggle": {
 		name: "glass-toggle",
 		title: "Glass Toggle",
@@ -923,6 +941,24 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-56 place-items-center content-center px-4"},
 	},
+	"ripple-reveal-preview": {
+		name: "ripple-reveal-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ripple-reveal-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ripple-reveal-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ripple-reveal-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
 	"glass-toggle-preview": {
 		name: "glass-toggle-preview",
 		title: undefined,
@@ -1498,6 +1534,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-80 place-items-center content-center px-4"},
+	},
+	"ripple-reveal-demo": {
+		name: "ripple-reveal-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ripple-reveal-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ripple-reveal-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ripple-reveal-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
 	},
 	"glass-toggle-demo": {
 		name: "glass-toggle-demo",

@@ -74,6 +74,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"bubble-wrap",
 			"email-dock",
 			"interactive-sprite",
+			"ripple-reveal",
 			"scratch-card",
 			"scribbled-text",
 			"tile-field",
