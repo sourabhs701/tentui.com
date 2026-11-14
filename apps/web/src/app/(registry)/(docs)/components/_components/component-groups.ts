@@ -66,6 +66,12 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		],
 	},
 	{
+		id: "feedback-and-status",
+		title: "Feedback and status",
+		description: "Show that something is working, and how much has been done.",
+		components: ["agent-thinking"],
+	},
+	{
 		id: "text-and-visual-effects",
 		title: "Text and visual effects",
 		description:

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
 
+import { AgentThinkingCapture } from "@/components/capture/agent-thinking-capture";
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
 import { InkFilterBarCapture } from "@/components/capture/ink-filter-bar-capture";
 import { MorphLightboxCapture } from "@/components/capture/morph-lightbox-capture";
@@ -25,6 +26,7 @@ const captureIndex = Index as Record<string, CaptureIndexItem>;
 
 // Capture-only framings for demos that don't fit the 4:3 frame.
 const captureScenes: Record<string, ComponentType> = {
+	"agent-thinking": AgentThinkingCapture,
 	"ink-filter-bar": InkFilterBarCapture,
 	"morph-lightbox": MorphLightboxCapture,
 	"prompt-chip-input": PromptChipInputCapture,

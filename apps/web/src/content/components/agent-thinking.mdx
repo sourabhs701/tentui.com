@@ -1,0 +1,266 @@
+---
+title: Agent Thinking
+description: A React AI thinking indicator for shadcn/ui where every finished agent step becomes a dot that lands in a growing cluster, a seeking dot circles the current step, and a quiet timer appears only once the wait matters. Open it and the dots fly out to become the bullets of the step log.
+seoTitle: "React AI Thinking Indicator Component for shadcn/ui"
+seoDescription: Agent Thinking is a React AI thinking indicator for shadcn/ui. Finished agent steps land as dots in a growing cluster, a quiet timer appears after 1.5 s, and the dots become the bullets of the step log.
+createdAt: 2026-11-14
+updatedAt: 2026-11-14
+---
+
+<ComponentPreview name="agent-thinking-preview" />
+
+## Example
+
+<ComponentPreview name="agent-thinking-demo" />
+
+## Features
+
+- The mark is built from finished work. Each step the agent finishes becomes
+  a dot in a sunflower (golden-angle) cluster, so a two-step answer looks
+  small and a fourteen-step run looks dense. Older dots are dimmer, and each
+  one drifts a fraction of a pixel, so the cluster breathes without spinning.
+- One brighter seeking dot with a short fading tail wanders around the edge
+  for the step in progress. When the step finishes it springs into its slot,
+  its neighbours make room, and a new seeking dot fades in for the next one.
+- A quiet elapsed timer shows up only after 1.5 seconds, so most answers
+  never show a clock. It ticks once a second, on the second.
+- When the agent is done the cluster tightens and stops, and the label
+  cross-fades to "Thought for 14s · 6 steps" without the row shifting.
+- Open the row and each dot leaves the cluster, in order, to become the bullet
+  of its step in the log. Close it and they fly back. It works mid-run too:
+  new steps land straight on their bullet.
+- Steps are keyed by id. Removed steps fade out, reordered ones move, and the
+  cluster never resets. Ten steps in 300 ms queue up to six flights and fade
+  the rest in.
+- Everything moves in one `requestAnimationFrame` loop that only runs while
+  the agent is thinking on screen in a visible tab, and stops once the settle
+  comes to rest.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/agent-thinking
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="agent-thinking"
+  title="components/agent-thinking.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { AgentThinking } from "@/components/agent-thinking";
+```
+
+Without steps it's an indicator: three seed dots, the seeking dot, the label,
+and the timer.
+
+```tsx
+<AgentThinking status={isStreaming ? "thinking" : "done"} />
+```
+
+Pass `steps` in log order to grow the cluster and make the row a button that
+opens the log. A step is `{ id, label, status?, durationMs? }`. Steps that are
+`"done"` or `"error"` are dots in the cluster, and the first `"active"` step
+is the seeking dot. `status` defaults to `"done"`, so a list of past steps
+renders as a settled cluster with no landings.
+
+```tsx
+<AgentThinking
+  status="thinking"
+  steps={[
+    { id: "read", label: "Reading the question", durationMs: 1000 },
+    { id: "search", label: "Searching the docs", durationMs: 1200 },
+    { id: "compare", label: "Comparing 3 sources", status: "active" },
+  ]}
+/>
+```
+
+### With the AI SDK
+
+Map the tool calls of the assistant message to steps, and its stream status
+to `status`:
+
+```tsx
+import { getToolName, isToolUIPart } from "ai";
+
+const steps = message.parts.filter(isToolUIPart).map((part) => ({
+  id: part.toolCallId,
+  label: toolLabels[getToolName(part)],
+  status:
+    part.state === "output-available"
+      ? "done"
+      : part.state === "output-error"
+        ? "error"
+        : "active",
+}));
+
+<AgentThinking
+  status={status === "error" ? "error" : isLastMessageStreaming ? "thinking" : "done"}
+  steps={steps}
+/>;
+```
+
+### Timer and labels
+
+The timer counts from `startedAt`, or from mount, and fades in after
+`timerDelay` (1500 ms). When `status` leaves `"thinking"` the run ends at
+`endedAt`, or at that moment, and the label becomes "Thought for 6s · 5
+steps". Without a start time, such as a run that was done at mount, the
+step durations are added up instead. Times read "4s", "59s", "1m 05s", and
+"1h 02m".
+
+```tsx
+<AgentThinking
+  status={status}
+  steps={steps}
+  startedAt={run.startedAt}
+  endedAt={run.endedAt}
+  label="Researching"
+  doneLabel={({ steps }) => `Read ${steps} sources`}
+  errorLabel="Stopped"
+/>
+```
+
+Set `status="thinking"` again for a follow-up: the cluster wakes up and the
+timer continues, or starts over from a new `startedAt`.
+
+### Open state and styling
+
+The log is uncontrolled with `defaultOpen`, or controlled with `open` and
+`onOpenChange`. `size="sm"` makes a smaller mark for dense layouts, and
+`variant="pill"` puts the row on a soft rounded background. Dots use
+`currentColor`, so a text color class on the component colors the mark too.
+Past `maxDots` (24) finished steps, the dots thicken instead of adding more,
+so the mark keeps its size. The root has `data-status` and `data-open` for
+styling.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Click / tap the row | Opens or closes the step log |
+| `Tab` | Focuses the row |
+| `Enter` / `Space` | Opens or closes the step log |
+| `Esc` | Closes the log when focus is inside it |
+
+The whole row is the hit target, at least 32 px tall, and 44 px on touch
+screens. Without steps the row is a plain status element, not a button.
+
+## Sound and haptics
+
+With `sound`, a step landing in the cluster plays a very soft tick, at most
+one every 60 ms, and finishing plays a slightly brighter one. Sound is off by
+default, and nothing plays on mount, for steps that were already done, or in
+a hidden tab.
+
+On touch devices a landing plays a `light` haptic tick and finishing plays a
+`success` pattern, never on mount. Turn it off with `haptics={false}`.
+
+## Accessibility
+
+A polite live region announces the label once when thinking starts, finished
+steps such as "Searching the docs, done" (grouped within a second), and the
+done message, such as "Thought for 14 seconds, 5 steps". The dots and the
+ticking timer are hidden from screen readers.
+
+With steps, the row is a `button` with `aria-expanded` and `aria-controls`
+pointing at the log, an ordered list where each step reads its state: done,
+in progress, pending, or failed. Failed steps are tinted red as well as read
+out. The focus ring shows for keyboard focus only. The label and timer keep
+at least 4.5:1 contrast in light and dark mode, and long step labels truncate
+with the full text in a tooltip.
+
+With reduced motion, or `animated={false}`, the cluster is still, the seeking
+dot rests at the edge and gently pulses, the label has no sweep, and steps,
+the log, and bullets fade in place instead of flying. The timer still ticks.
+In right-to-left layouts the row mirrors and the seeking dot turns the other
+way, while the timer digits stay left to right.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/agent-thinking/agent-thinking.tsx"
+  name="AgentThinkingProps"
+/>
+
+### AgentThinkingStep
+
+<AutoTypeTable
+  path="src/registry/components/agent-thinking/agent-thinking.tsx"
+  name="AgentThinkingStep"
+/>
+
+## FAQ
+
+### How do I install Agent Thinking with shadcn?
+
+Run `npx shadcn@latest add @tentui/agent-thinking` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or
+run `npx shadcn@latest add https://tentui.com/r/agent-thinking.json` without
+it. The CLI copies `agent-thinking.tsx` into your project and installs
+`motion`, `web-haptics`, and `@rexa-developer/tiks`.
+
+### How do I connect it to the AI SDK or a streaming agent?
+
+Pass `status="thinking"` while the response streams and `"done"` or `"error"`
+when it ends, and map each tool call or agent step to `{ id, label, status }`
+in `steps`. Each step that turns `"done"` lands in the cluster, and the first
+`"active"` one is the seeking dot.
+
+### How do the timer and the done label work?
+
+The timer counts from `startedAt`, or from mount, and only appears after
+`timerDelay`, 1500 ms by default. When `status` leaves `"thinking"`, the label
+becomes "Thought for 6s · 5 steps" using `endedAt` or the moment it changed;
+pass a string or a function to `doneLabel` to change it.
+
+### Can I use it without steps?
+
+Yes. Without `steps` it's an indicator only: three seed dots, the seeking dot,
+the label, and the timer, as a status element rather than a button. Set
+`status="done"` and it settles and shows how long it took, such as "Thought
+for 2s".
+
+### Does it work with screen readers and reduced motion?
+
+Yes. A polite live region announces the label, finished steps, and the done
+message while the dots and timer stay hidden, and the row is a real button
+with `aria-expanded` when there are steps. With reduced motion the cluster is
+still and everything fades in place instead of flying.
+
+### Is Agent Thinking free to use?
+
+Yes. Agent Thinking is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

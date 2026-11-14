@@ -4,6 +4,20 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "agent-thinking-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "prompt-chip-input-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("prompt-chip-input")],
@@ -463,6 +477,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "agent-thinking-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[36rem] place-items-center content-start px-4",
 		},
 	},
 	{

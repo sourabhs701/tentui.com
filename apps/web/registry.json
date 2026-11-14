@@ -448,6 +448,31 @@
       "type": "registry:block"
     },
     {
+      "name": "agent-thinking",
+      "title": "Agent Thinking",
+      "description": "An AI thinking state where every finished agent step becomes a dot that lands in a growing sunflower cluster, a seeking dot circles the edge for the step in progress, and a quiet timer shows up only once the wait matters. Open it and the dots fly out to become the bullets of the step log.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/agent-thinking/agent-thinking.tsx",
+          "type": "registry:component",
+          "target": "@components/agent-thinking.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-14"
+      },
+      "docs": "https://tentui.com/components/agent-thinking",
+      "categories": [
+        "feedback"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "prompt-chip-input",
       "title": "Prompt Chip Input",
       "description": "An AI prompt field where the @mention, ~model, or /command you type is wrapped in a live capsule that solidifies into a chip on commit and melts back into editable text on Backspace.",
