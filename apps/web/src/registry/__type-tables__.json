@@ -1937,7 +1937,7 @@
 			"entries": [
 				{
 					"name": "icon",
-					"description": "Leading icon, such as a lucide icon or a colored badge. It grows when highlighted.",
+					"description": "Leading icon, such as a lucide icon or a colored badge. Plain icons are drawn at 16 px.",
 					"tags": [
 						{
 							"name": "component-prop",

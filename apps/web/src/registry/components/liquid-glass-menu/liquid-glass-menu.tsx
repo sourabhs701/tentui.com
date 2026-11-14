@@ -5,7 +5,6 @@ import { useTiks } from "@rexa-developer/tiks/react";
 import {
 	type AnimationPlaybackControls,
 	animate,
-	motion,
 	useMotionValue,
 	useReducedMotion,
 } from "motion/react";
@@ -26,57 +25,74 @@ import {
 import { useWebHaptics } from "web-haptics/react";
 import { cn } from "@/lib/utils";
 
-// Layout, in px.
+// Layout, in px, on a 4 px grid. Item corners are concentric with the
+// panel's: item radius = panel radius - panel padding.
 const PANEL_RADIUS = 24;
-/** Panel padding; item corners are concentric with the panel's. */
-const PANEL_PADDING = 6;
+const PANEL_PADDING = 8;
 const ITEM_RADIUS = PANEL_RADIUS - PANEL_PADDING;
 /** How far the panel reaches past a trigger it swallows, all round. */
-const ABSORB_INSET = 6;
+const ABSORB_INSET = 4;
 /** Gap to a trigger the panel doesn't swallow. */
 const SIDE_OFFSET = 8;
 
-// Motion. Progress runs from 0 (a blob over the trigger) to 1 (the panel).
-/** About 280 ms to settle, with a 3% overshoot: a few px on a 200 px panel. */
+// Motion. Progress runs from 0 (glass the shape of the trigger) to 1 (the
+// panel). Only the glass changes shape; the popup itself never moves, so it
+// lands exactly where Base UI placed it.
+/** Critically damped: settles in about 300 ms with no overshoot. */
 const openSpring = {
 	type: "spring",
 	stiffness: 520,
-	damping: 34,
-	restDelta: 0.0005,
-	restSpeed: 0.01,
+	damping: 46,
+	restDelta: 0.002,
+	restSpeed: 0.02,
 } as const;
-/** The drain: no overshoot, easing into the trigger so the merge reads. */
-const CLOSE_MS = 220;
-const CLOSE_EASE = [0.4, 0, 0.5, 1] as const;
-/** About 160 ms between neighbouring items, with no visible overshoot. */
-const lensSpring = { type: "spring", stiffness: 700, damping: 48 } as const;
-/** Progress at which the goo hands over to the real glass. */
-const HANDOFF_AT = 0.99;
-/** How long the goo and the glass cross-fade, in ms. */
-const HANDOFF_MS = 140;
-/** Items start sharpening 40 ms into the morph, 20 ms apart, over 180 ms. */
-const ITEM_DELAY_MS = 40;
-const ITEM_STAGGER_MS = 20;
-const ITEM_SHARPEN_MS = 180;
+/** The drain: a smooth shrink that eases into the trigger without lingering. */
+const CLOSE_MS = 240;
+const CLOSE_EASE = [0.4, 0, 0.2, 1] as const;
+/** Progress from which the lens may show on the growing panel. */
+const SETTLED_AT = 0.96;
+/** Critically damped, about 150 ms between neighbouring items. */
+const lensSpring = { type: "spring", stiffness: 600, damping: 49 } as const;
 
-/** The frost behind the glass. */
-const GLASS_BLUR = "blur(20px) saturate(180%)";
+/** The frost behind the glass: a calm blur and a little saturation. */
+const GLASS_BLUR = "blur(24px) saturate(150%)";
 
-// The goo: both shapes are blurred together, then the alpha is cut back to a
-// hard edge, so where they meet the edge flows round in a concave neck.
-const GOO_BLUR = 7;
-const GOO_MATRIX = "1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 22 -10";
-
-// Refraction: displacement maps that bend what's behind the glass.
+// Refraction: a displacement map that bends the backdrop at the panel's rim.
 /** Width of the bent band at the panel's rim, in px. */
-const PANEL_BEZEL = 24;
+const PANEL_BEZEL = 16;
 /** Furthest the backdrop is pulled in at the very rim, in px. */
-const PANEL_BEND = 16;
+const PANEL_BEND = 6;
+/** The bend swells in once the panel is at rest, in s. */
+const REFRACT_SWELL = 0.24;
+
+// The glass. The trigger and the panel share it, so one can become the other
+// without a seam. Light and dark are tuned separately, not inverted.
+/** Clear enough to show the backdrop, opaque enough for AA text over it. */
+const GLASS_FILL = "bg-[rgb(255_255_255/0.6)] dark:bg-[rgb(36_36_42/0.76)]";
+/** No `backdrop-filter`, or reduced transparency: frosted, but solid. */
+const SOLID_FILL =
+	"bg-[linear-gradient(to_bottom,#fdfdfd,#f4f4f6)] dark:bg-[linear-gradient(to_bottom,#2c2c31,#232327)]";
 /**
- * The lens magnifies what's under it a little, like a drop of water. It has
- * no bent rim: that would chip the edge of an icon sitting near it.
+ * A 0.5 px specular hairline that is brightest along the top and fades down
+ * the sides, a faint contour to hold the edge on light pages, and a small,
+ * soft lift.
  */
-const LENS_ZOOM = 1.05;
+const GLASS_EDGE =
+	"shadow-[inset_0_0.5px_0_rgb(255_255_255/0.9),inset_0_0_0_0.5px_rgb(255_255_255/0.3),0_0_0_0.5px_rgb(0_0_0/0.08),0_1px_2px_rgb(0_0_0/0.04),0_4px_12px_-4px_rgb(0_0_0/0.1)] dark:shadow-[inset_0_0.5px_0_rgb(255_255_255/0.24),inset_0_0_0_0.5px_rgb(255_255_255/0.07),0_0_0_0.5px_rgb(0_0_0/0.5),0_1px_2px_rgb(0_0_0/0.3),0_4px_12px_-4px_rgb(0_0_0/0.4)]";
+/** The panel's wider ambient shadow, which grows in with it. */
+const PANEL_SHADOW =
+	"shadow-[0_12px_32px_-12px_rgb(0_0_0/0.14)] dark:shadow-[0_16px_40px_-12px_rgb(0_0_0/0.55)]";
+/** The lens: a faint, clear tint with the same top-weighted hairline. */
+const LENS_GLASS =
+	"bg-[rgb(118_118_128/0.08)] shadow-[inset_0_0.5px_0_rgb(255_255_255/0.9),inset_0_0_0_0.5px_rgb(0_0_0/0.03)] dark:bg-[rgb(255_255_255/0.07)] dark:shadow-[inset_0_0.5px_0_rgb(255_255_255/0.16),inset_0_0_0_0.5px_rgb(255_255_255/0.025)]";
+const LENS_SOLID =
+	"bg-[rgb(0_0_0/0.045)] shadow-[inset_0_0.5px_0_rgb(255_255_255/0.9),inset_0_0_0_0.5px_rgb(0_0_0/0.04)] dark:bg-[rgb(255_255_255/0.07)] dark:shadow-[inset_0_0.5px_0_rgb(255_255_255/0.16),inset_0_0_0_0.5px_rgb(255_255_255/0.025)]";
+/** Pressed: the lens dips a touch, like a soft key. */
+const LENS_PRESSED = "group-has-[[data-highlighted]:active]/lgm:scale-[0.985]";
+const LENS_PRESSED_GLASS =
+	"group-has-[[data-highlighted]:active]/lgm:bg-[rgb(118_118_128/0.13)] dark:group-has-[[data-highlighted]:active]/lgm:bg-[rgb(255_255_255/0.1)]";
+const LENS_PRESSED_SOLID =
+	"group-has-[[data-highlighted]:active]/lgm:bg-[rgb(0_0_0/0.07)] dark:group-has-[[data-highlighted]:active]/lgm:bg-[rgb(255_255_255/0.1)]";
 
 // A clear glass pop on open, a lower and shorter one on close, and a tiny
 // tick on select.
@@ -109,9 +125,9 @@ type Feedback = "open" | "close" | "select";
 
 /**
  * - `pending`: mounted, waiting a frame for Base UI to place it.
- * - `morph`: the blob flows out of the trigger and the items sharpen.
- * - `open`: at rest. No goo, no blur on the items, nothing animating.
- * - `drain`: flowing back into the trigger.
+ * - `morph`: the glass grows out of the trigger and the items sharpen.
+ * - `open`: at rest. No clip, no blur on the items, nothing animating.
+ * - `drain`: shrinking back into the trigger.
  * - `static`: `morph={false}` or reduced motion; CSS transitions only.
  */
 type Phase = "idle" | "pending" | "morph" | "open" | "drain" | "static";
@@ -219,25 +235,20 @@ function useGlassSupport(refraction: "auto" | "off"): GlassSupport {
 
 /**
  * A displacement map for a rounded rect, and the filter `scale` that goes with
- * it. Within `bezel` of the rim it points inward by up to `bend` px, harder
+ * it. Within `bezel` of the rim it points inward by up to `bend` px, easing in
  * toward the edge, so the glass samples from further in and the backdrop bends
- * like it does at the edge of a lens. `zoom` above 1 magnifies toward the center.
+ * like it does at the edge of a lens. Flat everywhere else.
  */
 function displacementMap(
 	width: number,
 	height: number,
 	radius: number,
-	{
-		bezel = 1,
-		bend = 0,
-		zoom = 1,
-	}: { bezel?: number; bend?: number; zoom?: number },
+	bezel: number,
+	bend: number,
 ) {
 	const halfWidth = width / 2;
 	const halfHeight = height / 2;
-	const shrink = 1 - 1 / zoom;
-	const reach = bend + Math.max(halfWidth, halfHeight) * shrink;
-	const scale = Math.ceil(reach * 2);
+	const scale = Math.ceil(bend * 2);
 	const canvas = document.createElement("canvas");
 	canvas.width = width;
 	canvas.height = height;
@@ -262,13 +273,14 @@ function displacementMap(
 				ny = oy / corner;
 			} else if (qx > qy) nx = 1;
 			else ny = 1;
+			// Smoothstep, so the bend has no crease where the bezel starts.
 			const t = clamp(1 - depth / bezel, 0, 1);
-			const rim = bend * t * t;
-			const dx = -rim * nx * Math.sign(px) - px * shrink;
-			const dy = -rim * ny * Math.sign(py) - py * shrink;
+			const rim = bend * t * t * (3 - 2 * t);
+			const dx = -rim * nx * Math.sign(px);
+			const dy = -rim * ny * Math.sign(py);
 			const i = (y * width + x) * 4;
-			image.data[i] = 128 + (127 * dx) / reach;
-			image.data[i + 1] = 128 + (127 * dy) / reach;
+			image.data[i] = 128 + (127 * dx) / bend;
+			image.data[i + 1] = 128 + (127 * dy) / bend;
 			image.data[i + 2] = 128;
 			image.data[i + 3] = 255;
 		}
@@ -412,11 +424,11 @@ function PlusIcon() {
 			viewBox="0 0 20 20"
 			fill="none"
 			stroke="currentColor"
-			strokeWidth={1.8}
+			strokeWidth={1.75}
 			strokeLinecap="round"
 			className="size-5"
 		>
-			<path d="M10 4v12M4 10h12" />
+			<path d="M10 4.5v11M4.5 10h11" />
 		</svg>
 	);
 }
@@ -456,9 +468,12 @@ export function LiquidGlassMenuTrigger({
 	render,
 	ref,
 	onPointerDown,
+	onKeyDown,
+	onBlur,
 	...props
 }: LiquidGlassMenuTriggerProps) {
 	const context = useLiquidGlassMenu();
+	const reducedMotion = useReducedMotion() ?? false;
 	const round = render === undefined;
 	useLayoutEffect(() => {
 		context.roundTriggerRef.current = round;
@@ -468,12 +483,15 @@ export function LiquidGlassMenuTrigger({
 		<MenuPrimitive.Trigger
 			data-slot="liquid-glass-menu-trigger"
 			data-solid={!context.support.glass || undefined}
+			data-lgm-morph={(context.morph && !reducedMotion) || undefined}
 			ref={(element: HTMLButtonElement | null) => {
 				context.triggerRef.current = element;
 				setRefs(element, ref as Ref<HTMLButtonElement> | undefined);
 			}}
 			render={render}
 			onPointerDown={(event) => {
+				// Pointer use: no focus ring, even when focus comes back from the menu.
+				event.currentTarget.dataset.lgmPointer = "";
 				if (event.pointerType === "mouse" && event.button === 0) {
 					// Cleared after the mouseup has reached the items.
 					context.triggerPressRef.current = true;
@@ -488,18 +506,24 @@ export function LiquidGlassMenuTrigger({
 				}
 				onPointerDown?.(event);
 			}}
+			onKeyDown={(event) => {
+				delete event.currentTarget.dataset.lgmPointer;
+				onKeyDown?.(event);
+			}}
+			onBlur={(event) => {
+				// Focus leaving for good, not into the open menu.
+				if (!event.currentTarget.hasAttribute("data-popup-open")) {
+					delete event.currentTarget.dataset.lgmPointer;
+				}
+				onBlur?.(event);
+			}}
 			className={
 				round
 					? withClasses(
 							cn(
-								"relative inline-grid size-11 shrink-0 cursor-pointer select-none place-items-center rounded-full text-foreground outline-none [-webkit-tap-highlight-color:transparent]",
-								"bg-white/72 backdrop-blur-xl backdrop-saturate-[1.8] hover:bg-white/90 dark:bg-white/12 dark:hover:bg-white/18",
-								"shadow-[inset_0_1px_0_rgb(255_255_255/0.95),inset_0_0_0_0.5px_rgb(0_0_0/0.07),0_1px_2px_rgb(0_0_0/0.08),0_6px_16px_-4px_rgb(0_0_0/0.18)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.16),inset_0_0_0_0.5px_rgb(255_255_255/0.12),0_1px_2px_rgb(0_0_0/0.5),0_8px_20px_-4px_rgb(0_0_0/0.6)]",
-								"data-solid:bg-popover data-solid:backdrop-filter-none",
-								"transition-[scale,opacity,background-color] duration-150 ease-out active:scale-[0.94] motion-reduce:transition-none",
-								// Swallowed by the open panel; it fades back in under the drain.
-								"[&[data-popup-open][data-lgm-absorbed]]:opacity-0",
-								"focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+								"group/lgm-trigger relative inline-grid size-11 shrink-0 cursor-pointer select-none place-items-center rounded-full text-foreground outline-none [-webkit-tap-highlight-color:transparent]",
+								"transition-[scale] duration-150 ease-out active:scale-[0.97] motion-reduce:transition-none",
+								"focus-visible:not-data-lgm-pointer:ring-2 focus-visible:not-data-lgm-pointer:ring-ring focus-visible:not-data-lgm-pointer:ring-offset-2 focus-visible:not-data-lgm-pointer:ring-offset-background",
 								"disabled:pointer-events-none disabled:opacity-50",
 							),
 							className,
@@ -508,7 +532,47 @@ export function LiquidGlassMenuTrigger({
 			}
 			{...props}
 		>
-			{children ?? (round ? <PlusIcon /> : null)}
+			{round ? (
+				<>
+					{/* The same glass as the panel. While the panel has swallowed the
+					    button it hides, at once when the panel is its exact double;
+					    the icon dissolves under the growing glass. */}
+					<span
+						aria-hidden
+						data-slot="liquid-glass-menu-trigger-glass"
+						className={cn(
+							"pointer-events-none absolute inset-0 rounded-[inherit] transition-[opacity,background-color] duration-150 ease-out motion-reduce:transition-none",
+							context.support.glass
+								? cn(
+										GLASS_FILL,
+										"group-hover/lgm-trigger:bg-[rgb(255_255_255/0.7)] dark:group-hover/lgm-trigger:bg-[rgb(46_46_52/0.78)]",
+									)
+								: cn(
+										SOLID_FILL,
+										"group-hover/lgm-trigger:bg-[linear-gradient(to_bottom,#fff,#f8f8fa)] dark:group-hover/lgm-trigger:bg-[linear-gradient(to_bottom,#323237,#29292d)]",
+									),
+							GLASS_EDGE,
+							"group-data-lgm-hidden/lgm-trigger:opacity-0 group-data-lgm-morph/lgm-trigger:transition-[background-color]",
+						)}
+						style={
+							context.support.glass
+								? {
+										backdropFilter: GLASS_BLUR,
+										WebkitBackdropFilter: GLASS_BLUR,
+									}
+								: undefined
+						}
+					/>
+					<span
+						data-slot="liquid-glass-menu-trigger-icon"
+						className="relative grid place-items-center transition-opacity duration-150 ease-out group-data-lgm-hidden/lgm-trigger:opacity-0 group-data-lgm-hidden/lgm-trigger:duration-[60ms] motion-reduce:transition-none"
+					>
+						{children ?? <PlusIcon />}
+					</span>
+				</>
+			) : (
+				children
+			)}
 		</MenuPrimitive.Trigger>
 	);
 }
@@ -529,6 +593,20 @@ export interface LiquidGlassMenuContentProps extends MenuPrimitive.Popup.Props {
 	alignOffset?: PositionerProps["alignOffset"];
 	/** Space kept from the edge of the viewport, in px. Defaults to 8. */
 	collisionPadding?: PositionerProps["collisionPadding"];
+}
+
+/** Where the glass starts, relative to the popup, in px. */
+interface Shape {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+	radius: number;
+}
+
+/** Half-px steps: crisp at 2x, and no shimmer from tiny fractions. */
+function snap(value: number) {
+	return Math.round(value * 2) / 2;
 }
 
 /**
@@ -554,22 +632,16 @@ export function LiquidGlassMenuContent({
 	const mode = !morph ? "pop" : reducedMotion ? "fade" : "morph";
 
 	const ids = useId().replace(/[^\w-]/g, "");
-	const gooId = `liquid-glass-menu-${ids}-goo`;
 	const panelFilterId = `liquid-glass-menu-${ids}-panel`;
-	const lensFilterId = `liquid-glass-menu-${ids}-lens`;
 
 	const popupRef = useRef<HTMLDivElement | null>(null);
 	const viewportRef = useRef<HTMLDivElement | null>(null);
-	const backdropRef = useRef<HTMLSpanElement | null>(null);
-	const gooRef = useRef<SVGSVGElement | null>(null);
-	const gooFilterRef = useRef<SVGFilterElement | null>(null);
-	const gooPanelRef = useRef<SVGRectElement | null>(null);
-	const gooTriggerRef = useRef<SVGRectElement | null>(null);
+	const shellRef = useRef<HTMLSpanElement | null>(null);
+	const ambientRef = useRef<HTMLSpanElement | null>(null);
+	const lensRef = useRef<HTMLSpanElement | null>(null);
 	const panelMapRef = useRef<SVGFEImageElement | null>(null);
 	const panelFilterRef = useRef<SVGFilterElement | null>(null);
-	const lensMapRef = useRef<SVGFEImageElement | null>(null);
-	const lensFilterRef = useRef<SVGFilterElement | null>(null);
-	const lensRefs = useRef<Array<HTMLSpanElement | null>>([]);
+	const panelDisplaceRef = useRef<SVGFEDisplacementMapElement | null>(null);
 	const [popup, setPopup] = useState<HTMLDivElement | null>(null);
 
 	const progress = useMotionValue(0);
@@ -577,31 +649,23 @@ export function LiquidGlassMenuContent({
 	const lensY = useMotionValue(0);
 	const lensWidth = useMotionValue(0);
 	const lensHeight = useMotionValue(0);
-	/** How far the magnifier has swelled in, from 0 to 1. */
-	const lensZoom = useMotionValue(0);
-	const lensZoomRef = useRef<AnimationPlaybackControls | null>(null);
-	const lensScaleRef = useRef(0);
 
 	const phaseRef = useRef<Phase>("idle");
 	const animationRef = useRef<AnimationPlaybackControls | null>(null);
 	const lensAnimationRef = useRef<AnimationPlaybackControls[]>([]);
+	const swellRef = useRef<AnimationPlaybackControls | null>(null);
 	const holdRef = useRef<Animation | null>(null);
-	const timersRef = useRef<Array<ReturnType<typeof setTimeout>>>([]);
 	const frameRef = useRef(0);
 	const lensShownRef = useRef(false);
 	const lensHideRef = useRef<ReturnType<typeof setTimeout> | undefined>(
 		undefined,
 	);
-	const lensFocusRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-		undefined,
-	);
-	const lensMapSizeRef = useRef("");
+	const lensItemRef = useRef<HTMLElement | null>(null);
 	/** Whether the panel covers the trigger; measured when it opens. */
 	const absorbedRef = useRef(false);
-	const triggerRadiusRef = useRef(0);
-	/** The open started from the trigger, not from a drain it interrupted. */
-	const leadRef = useRef(false);
-	const lensItemRef = useRef<HTMLElement | null>(null);
+	/** The trigger's shape inside the panel, where the glass grows from. */
+	const fromRef = useRef<Shape | null>(null);
+	const panelScaleRef = useRef(0);
 
 	const latest = useRef({ morphing, refract: support.refract, reducedMotion });
 	useLayoutEffect(() => {
@@ -609,15 +673,33 @@ export function LiquidGlassMenuContent({
 	});
 
 	const clearTimers = () => {
-		for (const timer of timersRef.current) clearTimeout(timer);
-		timersRef.current = [];
 		cancelAnimationFrame(frameRef.current);
 		clearTimeout(lensHideRef.current);
-		clearTimeout(lensFocusRef.current);
 	};
 
-	const later = (ms: number, run: () => void) => {
-		timersRef.current.push(setTimeout(run, ms));
+	/** The rim only bends at rest: Chromium feeds `url()` filters a stale
+	 * backdrop while their element changes. It swells in from no bend. */
+	const refract = (on: boolean) => {
+		const shell = shellRef.current;
+		const displace = panelDisplaceRef.current;
+		if (!shell || !displace || !latest.current.refract) return;
+		swellRef.current?.stop();
+		if (!on) {
+			shell.style.backdropFilter = GLASS_BLUR;
+			return;
+		}
+		const target = panelScaleRef.current;
+		displace.setAttribute("scale", "0");
+		shell.style.backdropFilter = `${GLASS_BLUR} url(#${panelFilterId})`;
+		if (latest.current.reducedMotion) {
+			displace.setAttribute("scale", String(target));
+			return;
+		}
+		swellRef.current = animate(0, target, {
+			duration: REFRACT_SWELL,
+			ease: "easeOut",
+			onUpdate: (value) => displace.setAttribute("scale", String(round(value))),
+		});
 	};
 
 	const setPhase = (phase: Phase) => {
@@ -626,130 +708,67 @@ export function LiquidGlassMenuContent({
 		if (!element) return;
 		element.dataset.lgmPhase = phase;
 		const resting = phase === "open" || phase === "static";
-		if (resting) element.dataset.lgmSurface = "";
-		// The rim only bends at rest: Chromium feeds `url()` filters a stale
-		// backdrop while their element moves.
-		const backdrop = backdropRef.current;
-		if (backdrop && latest.current.refract) {
-			backdrop.style.backdropFilter = resting
-				? `${GLASS_BLUR} url(#${panelFilterId})`
-				: GLASS_BLUR;
-		}
+		if (resting) element.dataset.lgmRest = "";
+		else if (phase !== "morph") delete element.dataset.lgmRest;
+		refract(resting);
 	};
 
-	const showGoo = (visible: boolean) => {
-		const goo = gooRef.current;
-		if (!goo) return;
-		goo.style.transition = "";
-		goo.style.display = visible ? "block" : "none";
-		if (!visible) goo.style.opacity = "0";
+	const hideTrigger = (hidden: boolean) => {
+		const trigger = triggerRef.current;
+		if (!trigger) return;
+		if (hidden && absorbedRef.current) trigger.dataset.lgmHidden = "";
+		else delete trigger.dataset.lgmHidden;
 	};
 
-	/** Writes the frame for the current progress: the popup and the goo. */
+	/** Writes the glass's shape for the current progress. */
 	const paint = () => {
 		const element = popupRef.current;
-		const trigger = triggerRef.current;
-		const positioner = element?.parentElement;
-		if (!element || !trigger || !positioner) return;
+		const shell = shellRef.current;
+		const viewport = viewportRef.current;
+		const from = fromRef.current;
+		if (!element || !shell || !viewport || !from) return;
 		const width = element.offsetWidth;
 		const height = element.offsetHeight;
 		if (!width || !height) return;
-		const value = progress.get();
-		const lit = clamp(value, 0, 1);
-		const anchor = trigger.getBoundingClientRect();
-		const place = positioner.getBoundingClientRect();
-
-		// Starts as a circle the size of the trigger, centered on it.
-		const triggerSize = Math.min(anchor.width, anchor.height);
-		const from = clamp(triggerSize / Math.min(width, height), 0.05, 1);
-		const scale = from + (1 - from) * value;
-		const anchorX = anchor.left + anchor.width / 2;
-		const anchorY = anchor.top + anchor.height / 2;
-		const restX = place.left + width / 2;
-		const restY = place.top + height / 2;
-		// The panel's center runs ahead of its growth, so early on the trigger
-		// still bulges out of its corner and the goo pulls a neck between them.
-		const travel =
-			phaseRef.current === "morph" && value < 1 ? value * (2 - value) : value;
-		const dx = (anchorX - restX) * (1 - travel);
-		const dy = (anchorY - restY) * (1 - travel);
-		const radius =
-			PANEL_RADIUS + (Math.min(width, height) / 2 - PANEL_RADIUS) * (1 - lit);
-		element.style.transform = `translate(${round(dx)}px, ${round(dy)}px) scale(${round(scale)})`;
-		element.style.borderRadius = `${round(radius)}px`;
-
-		const goo = gooRef.current;
-		const panelShape = gooPanelRef.current;
-		const triggerShape = gooTriggerRef.current;
-		const filter = gooFilterRef.current;
-		if (!goo || goo.style.display === "none") return;
-		if (!panelShape || !triggerShape || !filter) return;
-		const panelWidth = width * scale;
-		const panelHeight = height * scale;
-		const panelX = restX + dx - panelWidth / 2;
-		const panelY = restY + dy - panelHeight / 2;
-		panelShape.setAttribute("x", String(round(panelX)));
-		panelShape.setAttribute("y", String(round(panelY)));
-		panelShape.setAttribute("width", String(round(panelWidth)));
-		panelShape.setAttribute("height", String(round(panelHeight)));
-		panelShape.setAttribute("rx", String(round(radius * scale)));
-
-		// A swallowed trigger is a blob of its own; one the panel sits beside
-		// gets a short nub on its facing edge, so the neck doesn't cover it.
-		let shape = {
-			x: anchor.left,
-			y: anchor.top,
-			width: anchor.width,
-			height: anchor.height,
-			rx: triggerRadiusRef.current,
-		};
-		if (!absorbedRef.current) {
-			const nub = Math.min(anchor.width, anchor.height, 36) * 0.8;
-			const vertical =
-				Math.abs(restY - anchorY) / (height + anchor.height) >
-				Math.abs(restX - anchorX) / (width + anchor.width);
-			shape = vertical
-				? {
-						x: anchorX - nub / 2,
-						y: restY < anchorY ? anchor.top - 6 : anchor.bottom - 6,
-						width: nub,
-						height: 12,
-						rx: 6,
-					}
-				: {
-						x: restX < anchorX ? anchor.left - 6 : anchor.right - 6,
-						y: anchorY - nub / 2,
-						width: 12,
-						height: nub,
-						rx: 6,
-					};
+		const value = clamp(progress.get(), 0, 1);
+		const rest = 1 - value;
+		const w = from.width + (width - from.width) * value;
+		const h = from.height + (height - from.height) * value;
+		const left = snap(from.x * rest);
+		const top = snap(from.y * rest);
+		const right = snap(width - from.x * rest - w);
+		const bottom = snap(height - from.y * rest - h);
+		const radius = round(
+			Math.min(
+				from.radius + (PANEL_RADIUS - from.radius) * value,
+				w / 2,
+				h / 2,
+			),
+		);
+		const inset = `${top}px ${right}px ${bottom}px ${left}px`;
+		shell.style.inset = inset;
+		shell.style.borderRadius = `${radius}px`;
+		// The rows only show inside the glass, never as ghosts around it.
+		viewport.style.clipPath = `inset(${inset} round ${radius}px)`;
+		if (ambientRef.current) {
+			ambientRef.current.style.opacity = String(round(value));
 		}
-		triggerShape.setAttribute("x", String(round(shape.x)));
-		triggerShape.setAttribute("y", String(round(shape.y)));
-		triggerShape.setAttribute("width", String(round(shape.width)));
-		triggerShape.setAttribute("height", String(round(shape.height)));
-		triggerShape.setAttribute("rx", String(round(shape.rx)));
+		// A swallowed trigger is replaced by its double; beside one, the glass
+		// fades in as it leaves it.
+		shell.style.opacity = absorbedRef.current
+			? ""
+			: String(round(clamp(value / 0.25, 0, 1)));
+	};
 
-		const left = Math.min(panelX, shape.x) - 48;
-		const top = Math.min(panelY, shape.y) - 48;
-		const right = Math.max(panelX + panelWidth, shape.x + shape.width) + 48;
-		const bottom = Math.max(panelY + panelHeight, shape.y + shape.height) + 48;
-		filter.setAttribute("x", String(round(left)));
-		filter.setAttribute("y", String(round(top)));
-		filter.setAttribute("width", String(round(right - left)));
-		filter.setAttribute("height", String(round(bottom - top)));
-
-		// Fades in over the trigger as it starts, and out as it lands back. The
-		// blur goes with it, or a tiny saturated smudge is left on its own.
-		const phase = phaseRef.current;
-		let opacity = 1;
-		if (phase === "morph") opacity = clamp(value / 0.12, 0, 1);
-		else if (phase === "drain") opacity = clamp(value / 0.3, 0, 1);
-		if (goo.style.transition === "") goo.style.opacity = String(round(opacity));
-		if (backdropRef.current) {
-			backdropRef.current.style.opacity =
-				opacity < 1 ? String(round(opacity)) : "";
+	const clearPaint = () => {
+		const shell = shellRef.current;
+		if (shell) {
+			shell.style.inset = "";
+			shell.style.borderRadius = "";
+			shell.style.opacity = "";
 		}
+		if (viewportRef.current) viewportRef.current.style.clipPath = "";
+		if (ambientRef.current) ambientRef.current.style.opacity = "";
 	};
 
 	const paintRef = useRef(paint);
@@ -759,6 +778,25 @@ export function LiquidGlassMenuContent({
 
 	useEffect(() => progress.on("change", () => paintRef.current()), [progress]);
 
+	// The lens is written by hand rather than through `motion.*`, which would
+	// add window listeners for layout projection.
+	useLayoutEffect(() => {
+		const paintLens = () => {
+			const lens = lensRef.current;
+			if (!lens) return;
+			lens.style.transform = `translate(${round(lensX.get())}px, ${round(lensY.get())}px)`;
+			lens.style.width = `${round(lensWidth.get())}px`;
+			lens.style.height = `${round(lensHeight.get())}px`;
+		};
+		const stops = [lensX, lensY, lensWidth, lensHeight].map((value) =>
+			value.on("change", paintLens),
+		);
+		paintLens();
+		return () => {
+			for (const stop of stops) stop();
+		};
+	}, [lensX, lensY, lensWidth, lensHeight]);
+
 	const updatePanelMap = () => {
 		const element = popupRef.current;
 		const map = panelMapRef.current;
@@ -767,128 +805,70 @@ export function LiquidGlassMenuContent({
 		const width = element.offsetWidth;
 		const height = element.offsetHeight;
 		if (!width || !height) return;
-		const { href, scale } = displacementMap(width, height, PANEL_RADIUS, {
-			bezel: PANEL_BEZEL,
-			bend: PANEL_BEND,
-		});
+		const { href, scale } = displacementMap(
+			width,
+			height,
+			PANEL_RADIUS,
+			PANEL_BEZEL,
+			PANEL_BEND,
+		);
 		for (const node of [filter, map]) {
 			node.setAttribute("width", String(width));
 			node.setAttribute("height", String(height));
 		}
 		map.setAttribute("href", href);
-		map.nextElementSibling?.setAttribute("scale", String(scale));
+		panelScaleRef.current = scale;
 	};
-
-	const paintZoom = () => {
-		lensMapRef.current?.nextElementSibling?.setAttribute(
-			"scale",
-			String(round(lensScaleRef.current * lensZoom.get())),
-		);
-	};
-	const paintZoomRef = useRef(paintZoom);
-	useLayoutEffect(() => {
-		paintZoomRef.current = paintZoom;
-	});
-	useEffect(
-		() => lensZoom.on("change", () => paintZoomRef.current()),
-		[lensZoom],
-	);
 
 	/** Moves the lens onto the highlighted item, or hides it. */
-	const updateLens = (instant = false) => {
+	const updateLens = () => {
 		const viewport = viewportRef.current;
 		const element = popupRef.current;
-		if (!viewport || !element) return;
+		const lens = lensRef.current;
+		if (!viewport || !element || !lens) return;
 		const item = viewport.querySelector<HTMLElement>("[data-highlighted]");
-		const visible = Boolean(item) && "lgmSurface" in element.dataset;
+		const visible = Boolean(item) && "lgmRest" in element.dataset;
 		clearTimeout(lensHideRef.current);
-		clearTimeout(lensFocusRef.current);
 		if (!item || !visible) {
 			// The highlight clears for a moment between rows; only hide for real
-			// if nothing takes it, so the lens slides rather than jumps.
+			// if nothing takes it, so the lens glides rather than blinks.
 			const hide = () => {
-				for (const lens of lensRefs.current) {
-					if (lens) lens.dataset.visible = "false";
-				}
+				lens.dataset.visible = "false";
 				lensShownRef.current = false;
+				lensItemRef.current = null;
 			};
 			if (item || !lensShownRef.current) hide();
 			else lensHideRef.current = setTimeout(hide, 80);
 			return;
 		}
-		const [body, refraction, rim] = lensRefs.current;
-		if (body) body.dataset.visible = "true";
-		if (item === lensItemRef.current && lensShownRef.current && !instant)
-			return;
+		lens.dataset.visible = "true";
+		if (item === lensItemRef.current && lensShownRef.current) return;
 		lensItemRef.current = item;
-		// Chromium serves `backdrop-filter: url()` a stale backdrop while its
-		// element moves, so the magnifier only comes in once the lens has landed.
-		// It swells in from no displacement rather than fading, which would
-		// show the plain and the magnified items at once.
-		const focus = (on: boolean) => {
-			for (const lens of [refraction, rim]) {
-				if (lens) lens.dataset.visible = on ? "true" : "false";
-			}
-			lensZoomRef.current?.stop();
-			lensZoom.jump(0);
-			if (on && !latest.current.reducedMotion) {
-				lensZoomRef.current = animate(lensZoom, 1, {
-					duration: 0.18,
-					ease: "easeOut",
-				});
-			} else if (on) lensZoom.jump(1);
-		};
 		const box = viewport.getBoundingClientRect();
 		const rect = item.getBoundingClientRect();
 		const scale = box.width / (viewport.offsetWidth || box.width) || 1;
-		const x = (rect.left - box.left) / scale + viewport.scrollLeft;
-		const y = (rect.top - box.top) / scale + viewport.scrollTop;
-		const width = rect.width / scale;
-		const height = rect.height / scale;
+		const x = Math.round((rect.left - box.left) / scale + viewport.scrollLeft);
+		const y = Math.round((rect.top - box.top) / scale + viewport.scrollTop);
+		const width = Math.round(rect.width / scale);
+		const height = Math.round(rect.height / scale);
 
 		for (const animation of lensAnimationRef.current) animation.stop();
-		const shown = lensShownRef.current;
-		const jump = instant || !shown || latest.current.reducedMotion;
+		// A lens that is just appearing fades in where it is needed.
+		const jump = !lensShownRef.current || latest.current.reducedMotion;
 		lensShownRef.current = true;
 		if (jump) {
 			lensX.jump(x);
 			lensY.jump(y);
 			lensWidth.jump(width);
 			lensHeight.jump(height);
-			// A lens that is just appearing fades in first.
-			if (shown || latest.current.reducedMotion) focus(true);
-			else {
-				focus(false);
-				lensFocusRef.current = setTimeout(() => focus(true), 150);
-			}
-		} else {
-			focus(false);
-			lensAnimationRef.current = [
-				animate(lensX, x, lensSpring),
-				animate(lensY, y, { ...lensSpring, onComplete: () => focus(true) }),
-				animate(lensWidth, width, lensSpring),
-				animate(lensHeight, height, lensSpring),
-			];
+			return;
 		}
-
-		const map = lensMapRef.current;
-		const filter = lensFilterRef.current;
-		const size = `${Math.round(width)}x${Math.round(height)}`;
-		if (map && filter && lensMapSizeRef.current !== size) {
-			lensMapSizeRef.current = size;
-			const w = Math.round(width);
-			const h = Math.round(height);
-			for (const node of [filter, map]) {
-				node.setAttribute("width", String(w));
-				node.setAttribute("height", String(h));
-			}
-			const { href, scale } = displacementMap(w, h, ITEM_RADIUS, {
-				zoom: LENS_ZOOM,
-			});
-			map.setAttribute("href", href);
-			lensScaleRef.current = scale;
-			paintZoom();
-		}
+		lensAnimationRef.current = [
+			animate(lensX, x, lensSpring),
+			animate(lensY, y, lensSpring),
+			animate(lensWidth, width, lensSpring),
+			animate(lensHeight, height, lensSpring),
+		];
 	};
 
 	const updateLensRef = useRef(updateLens);
@@ -896,47 +876,72 @@ export function LiquidGlassMenuContent({
 		updateLensRef.current = updateLens;
 	});
 
-	/** The goo has done its job: show the glass and let the goo fade away. */
-	const handOff = () => {
-		const element = popupRef.current;
-		if (!element || "lgmSurface" in element.dataset) return;
-		element.dataset.lgmSurface = "";
-		const goo = gooRef.current;
-		if (goo) {
-			goo.style.transition = `opacity ${HANDOFF_MS}ms ease-out`;
-			goo.style.opacity = "0";
+	/** Whether the placed panel covers the trigger, and where the glass starts. */
+	const measure = (element: HTMLElement, trigger: HTMLElement) => {
+		const anchor = trigger.getBoundingClientRect();
+		const place = element.getBoundingClientRect();
+		const width = element.offsetWidth;
+		const height = element.offsetHeight;
+		absorbedRef.current =
+			anchor.left >= place.left - 1 &&
+			anchor.right <= place.right + 1 &&
+			anchor.top >= place.top - 1 &&
+			anchor.bottom <= place.bottom + 1;
+		const x = anchor.left - place.left;
+		const y = anchor.top - place.top;
+		if (absorbedRef.current) {
+			const radius = Math.min(
+				Number.parseFloat(getComputedStyle(trigger).borderTopLeftRadius) || 0,
+				Math.min(anchor.width, anchor.height) / 2,
+			);
+			fromRef.current = {
+				x,
+				y,
+				width: anchor.width,
+				height: anchor.height,
+				radius,
+			};
+			return;
 		}
-		later(HANDOFF_MS + 20, () => {
-			if (phaseRef.current === "morph" || phaseRef.current === "open") {
-				showGoo(false);
-			}
+		// Beside the trigger: a pill as wide as it, on the panel's near edge.
+		const placed = element.dataset.side ?? side;
+		const vertical = placed === "top" || placed === "bottom";
+		const w = Math.min(anchor.width, width);
+		const h = Math.min(anchor.height, height);
+		const before = placed === "top" || placed === "left";
+		fromRef.current = vertical
+			? {
+					x: clamp(x, 0, width - w),
+					y: before ? height - h : 0,
+					width: w,
+					height: h,
+					radius: Math.min(h / 2, PANEL_RADIUS),
+				}
+			: {
+					x: placed === "right" || placed === "inline-end" ? 0 : width - w,
+					y: clamp(y, 0, height - h),
+					width: w,
+					height: h,
+					radius: Math.min(w / 2, PANEL_RADIUS),
+				};
+	};
+
+	/** Rows sharpen in order of distance from the trigger. */
+	const orderItems = (element: HTMLElement) => {
+		const items = element.querySelectorAll<HTMLElement>("[data-lgm-item]");
+		const from = fromRef.current;
+		const fromBottom = from
+			? from.y + from.height / 2 > element.offsetHeight / 2
+			: false;
+		items.forEach((item, index) => {
+			const order = fromBottom ? items.length - 1 - index : index;
+			item.style.setProperty("--lgm-i", String(order));
 		});
-		updateLensRef.current(true);
 	};
 
 	const settle = () => {
-		const element = popupRef.current;
-		if (!element) return;
-		handOff();
-		element.style.transform = "";
-		element.style.borderRadius = "";
+		clearPaint();
 		setPhase("open");
-	};
-
-	/** Whether the placed panel covers the trigger, which then hides under it. */
-	const measureAbsorbed = (element: HTMLElement, trigger: HTMLElement) => {
-		const anchor = trigger.getBoundingClientRect();
-		const place = element.parentElement?.getBoundingClientRect();
-		absorbedRef.current = Boolean(
-			place &&
-				anchor.left >= place.left - 1 &&
-				anchor.right <= place.right + 1 &&
-				anchor.top >= place.top - 1 &&
-				anchor.bottom <= place.bottom + 1,
-		);
-		if (absorbedRef.current) trigger.dataset.lgmAbsorbed = "";
-		else delete trigger.dataset.lgmAbsorbed;
-		return anchor;
 	};
 
 	const startOpen = () => {
@@ -945,71 +950,55 @@ export function LiquidGlassMenuContent({
 		if (!element) return;
 		const phase = phaseRef.current;
 		if (phase === "pending" || phase === "morph" || phase === "open") return;
+		if (phase === "static" && !holdRef.current) return;
 		holdRef.current?.cancel();
 		holdRef.current = null;
 		clearTimers();
-		// A drain this interrupts holds still until the morph picks it up.
+		// A drain this interrupts holds still until the open picks it up.
 		animationRef.current?.stop();
 		element.style.opacity = "";
+		if (phase !== "drain") {
+			// Whole px, so the glass's edges and its refraction map land on pixels.
+			element.style.width = "";
+			const width = Number.parseFloat(getComputedStyle(element).width);
+			if (width) element.style.width = `${Math.ceil(width - 0.01)}px`;
+		}
 		if (latest.current.refract) updatePanelMap();
 
 		const atRest = !latest.current.morphing || openAtMountRef.current;
 		if (atRest || !trigger) {
 			progress.jump(1);
+			clearPaint();
 			setPhase(latest.current.morphing ? "open" : "static");
-			element.style.transform = "";
-			element.style.borderRadius = "";
 			// Base UI places the popup during the first frame; measure after it.
 			frameRef.current = requestAnimationFrame(() => {
-				if (trigger) measureAbsorbed(element, trigger);
+				if (!trigger) return;
+				measure(element, trigger);
+				hideTrigger(true);
 			});
 			return;
 		}
 
 		const resuming = phase === "drain";
-		leadRef.current = !resuming;
 		if (!resuming) {
 			progress.jump(0);
 			setPhase("pending");
 		}
-		// Base UI places the popup during the first frame; measure after it.
 		frameRef.current = requestAnimationFrame(() => {
-			const anchor = measureAbsorbed(element, trigger);
-			triggerRadiusRef.current = Math.min(
-				Number.parseFloat(getComputedStyle(trigger).borderTopLeftRadius) || 0,
-				Math.min(anchor.width, anchor.height) / 2,
-			);
-			element
-				.querySelectorAll<HTMLElement>("[data-lgm-item]")
-				.forEach((item, index) => {
-					item.style.setProperty("--lgm-i", String(index));
-				});
-			delete element.dataset.lgmSurface;
+			if (!resuming) measure(element, trigger);
+			orderItems(element);
+			hideTrigger(true);
 			setPhase("morph");
-			showGoo(true);
 			paintRef.current();
 			animationRef.current?.stop();
-			const startedAt = performance.now();
 			animationRef.current = animate(progress, 1, {
 				...openSpring,
 				onUpdate: (value) => {
-					if (value >= HANDOFF_AT) handOff();
+					if (value >= SETTLED_AT && !("lgmRest" in element.dataset)) {
+						element.dataset.lgmRest = "";
+					}
 				},
-				onComplete: () => {
-					// Items further down the list may still be sharpening.
-					const items = element.querySelectorAll("[data-lgm-item]").length;
-					const sharpened =
-						ITEM_DELAY_MS +
-						ITEM_STAGGER_MS * Math.max(items - 1, 0) +
-						ITEM_SHARPEN_MS;
-					const elapsed = performance.now() - startedAt;
-					later(Math.max(0, sharpened - elapsed), () => {
-						if (phaseRef.current === "morph") settle();
-					});
-					handOff();
-					element.style.transform = "";
-					element.style.borderRadius = "";
-				},
+				onComplete: settle,
 			});
 		});
 	};
@@ -1020,36 +1009,40 @@ export function LiquidGlassMenuContent({
 		const phase = phaseRef.current;
 		clearTimers();
 		for (const animation of lensAnimationRef.current) animation.stop();
-		if (phase === "static" || phase === "idle" || !latest.current.morphing) {
-			return;
-		}
+		if (phase === "idle") return;
 		animationRef.current?.stop();
-		if (phase === "pending") {
-			progress.jump(0);
+		if (phase === "static" || !latest.current.morphing || phase === "pending") {
+			// The panel fades out over the trigger as it fades back in. Base UI
+			// unmounts once the popup's own animations finish; this one keeps it
+			// mounted for as long as the children's fade runs.
+			hideTrigger(false);
+			if (phase === "static") {
+				holdRef.current = element.animate(
+					[{ outlineColor: "transparent" }, { outlineColor: "transparent" }],
+					{ duration: 150 },
+				);
+			}
 			return;
 		}
+		const trigger = triggerRef.current;
 		const from = clamp(progress.get(), 0, 1);
-		const duration = CLOSE_MS * Math.max(from, 0.3);
-		// Base UI unmounts once the popup's own animations finish; this one
-		// keeps it mounted for exactly as long as the drain runs.
+		// Opened at rest: measure where to drain to now.
+		if (phase === "open" && trigger) measure(element, trigger);
+		const duration = CLOSE_MS * Math.max(from, 0.4);
 		holdRef.current = element.animate(
 			[{ outlineColor: "transparent" }, { outlineColor: "transparent" }],
 			{ duration },
 		);
-		delete element.dataset.lgmSurface;
-		updateLensRef.current();
-		leadRef.current = false;
 		setPhase("drain");
-		showGoo(true);
-		if (gooRef.current) gooRef.current.style.opacity = "1";
+		updateLensRef.current();
 		paintRef.current();
 		animationRef.current = animate(progress, 0, {
 			duration: duration / 1000,
 			ease: CLOSE_EASE,
 			onComplete: () => {
-				showGoo(false);
-				// Back inside the trigger; Base UI unmounts it next.
+				// Back in the trigger's shape: swap to the trigger in one frame.
 				element.style.opacity = "0";
+				hideTrigger(false);
 			},
 		});
 	};
@@ -1058,15 +1051,14 @@ export function LiquidGlassMenuContent({
 	const release = () => {
 		clearTimers();
 		animationRef.current?.stop();
-		lensZoomRef.current?.stop();
+		swellRef.current?.stop();
 		for (const animation of lensAnimationRef.current) animation.stop();
 		holdRef.current = null;
 		phaseRef.current = "idle";
 		lensShownRef.current = false;
 		lensItemRef.current = null;
-		lensMapSizeRef.current = "";
-		const trigger = triggerRef.current;
-		if (trigger) delete trigger.dataset.lgmAbsorbed;
+		fromRef.current = null;
+		hideTrigger(false);
 	};
 
 	const startOpenRef = useRef(startOpen);
@@ -1104,11 +1096,29 @@ export function LiquidGlassMenuContent({
 		const observer = new MutationObserver(() => updateLensRef.current());
 		observer.observe(popup, {
 			attributes: true,
-			attributeFilter: ["data-highlighted", "data-lgm-surface"],
+			attributeFilter: ["data-highlighted", "data-lgm-rest"],
 			subtree: true,
 		});
 		return () => observer.disconnect();
 	}, [popup]);
+
+	// Focus returns to the trigger on close. After pointer use it shouldn't
+	// show a ring there; after keys it should.
+	useEffect(() => {
+		if (!popup) return;
+		const pointer = () => {
+			if (triggerRef.current) triggerRef.current.dataset.lgmPointer = "";
+		};
+		const key = () => {
+			if (triggerRef.current) delete triggerRef.current.dataset.lgmPointer;
+		};
+		document.addEventListener("pointerdown", pointer, true);
+		document.addEventListener("keydown", key, true);
+		return () => {
+			document.removeEventListener("pointerdown", pointer, true);
+			document.removeEventListener("keydown", key, true);
+		};
+	}, [popup, triggerRef]);
 
 	useEffect(() => () => releaseRef.current(), []);
 
@@ -1117,63 +1127,14 @@ export function LiquidGlassMenuContent({
 	const glassStyle = support.glass
 		? { backdropFilter: GLASS_BLUR, WebkitBackdropFilter: GLASS_BLUR }
 		: undefined;
+	// Without the morph, the children fade rather than the popup: opacity on
+	// the popup would cut the glass off from the page behind it.
+	const fade =
+		mode !== "morph" &&
+		"transition-opacity duration-150 ease-out group-data-ending-style/lgm:opacity-0 group-data-starting-style/lgm:opacity-0";
 
 	return (
 		<MenuPrimitive.Portal>
-			{morphing ? (
-				<svg
-					ref={gooRef}
-					aria-hidden
-					data-slot="liquid-glass-menu-goo"
-					className={cn(
-						"pointer-events-none fixed inset-0 z-50 size-full overflow-visible [--lgm-goo-shadow:rgb(0_0_0/0.2)] dark:[--lgm-goo-shadow:rgb(0_0_0/0.7)]",
-						// The same fill as the surface, so the hand-off doesn't show.
-						support.glass
-							? "[--lgm-goo-alpha:0.76] [--lgm-goo-fill:#fff] dark:[--lgm-goo-alpha:0.8] dark:[--lgm-goo-fill:rgb(30_30_34)]"
-							: "[--lgm-goo-alpha:1] [--lgm-goo-fill:var(--popover)]",
-					)}
-					style={{ display: "none", opacity: 0 }}
-				>
-					<defs>
-						<filter
-							ref={gooFilterRef}
-							id={gooId}
-							filterUnits="userSpaceOnUse"
-							colorInterpolationFilters="sRGB"
-						>
-							<feGaussianBlur
-								in="SourceGraphic"
-								stdDeviation={GOO_BLUR}
-								result="blur"
-							/>
-							<feColorMatrix
-								in="blur"
-								type="matrix"
-								values={GOO_MATRIX}
-								result="goo"
-							/>
-							<feGaussianBlur in="goo" stdDeviation={12} result="spread" />
-							<feOffset in="spread" dy={8} result="drop" />
-							<feFlood
-								className="[flood-color:var(--lgm-goo-shadow)]"
-								result="tint"
-							/>
-							<feComposite in="tint" in2="drop" operator="in" result="shadow" />
-							<feComposite in="shadow" in2="goo" operator="out" result="cast" />
-							<feMerge>
-								<feMergeNode in="cast" />
-								<feMergeNode in="goo" />
-							</feMerge>
-						</filter>
-					</defs>
-					<g className="opacity-(--lgm-goo-alpha)">
-						<g filter={`url(#${gooId})`} className="fill-(--lgm-goo-fill)">
-							<rect ref={gooTriggerRef} />
-							<rect ref={gooPanelRef} />
-						</g>
-					</g>
-				</svg>
-			) : null}
 			{support.refract ? (
 				<svg aria-hidden width={0} height={0} className="absolute">
 					<defs>
@@ -1194,31 +1155,10 @@ export function LiquidGlassMenuContent({
 								result="map"
 							/>
 							<feDisplacementMap
+								ref={panelDisplaceRef}
 								in="SourceGraphic"
 								in2="map"
-								xChannelSelector="R"
-								yChannelSelector="G"
-							/>
-						</filter>
-						<filter
-							ref={lensFilterRef}
-							id={lensFilterId}
-							x={0}
-							y={0}
-							filterUnits="userSpaceOnUse"
-							primitiveUnits="userSpaceOnUse"
-							colorInterpolationFilters="sRGB"
-						>
-							<feImage
-								ref={lensMapRef}
-								x={0}
-								y={0}
-								preserveAspectRatio="none"
-								result="map"
-							/>
-							<feDisplacementMap
-								in="SourceGraphic"
-								in2="map"
+								scale={0}
 								xChannelSelector="R"
 								yChannelSelector="G"
 							/>
@@ -1248,121 +1188,65 @@ export function LiquidGlassMenuContent({
 					ref={popupCallback}
 					data-slot="liquid-glass-menu-content"
 					data-mode={mode}
+					data-solid={!support.glass || undefined}
 					className={withClasses(
 						cn(
 							"group/lgm relative flex max-h-(--available-height) min-w-48 flex-col rounded-[24px] text-foreground outline-none",
-							mode === "morph" && "origin-center",
 							mode === "pop" &&
-								"origin-(--transform-origin) transition-[opacity,scale] duration-150 ease-out data-ending-style:scale-95 data-starting-style:scale-95 data-ending-style:opacity-0 data-starting-style:opacity-0",
-							mode === "fade" &&
-								"transition-opacity duration-[120ms] ease-out data-ending-style:opacity-0 data-starting-style:opacity-0",
+								"origin-(--transform-origin) transition-[scale] duration-150 ease-out data-ending-style:scale-[0.96] data-starting-style:scale-[0.96]",
 							"data-[lgm-phase=pending]:opacity-0",
-							// The items' blur, fade, and shrink per phase; see `ITEM_MORPH`.
-							"data-[lgm-phase=pending]:[--lgm-fade:0.4] data-[lgm-phase=pending]:[--lgm-filter:blur(6px)] data-[lgm-phase=pending]:[--lgm-shrink:0.96]",
-							// Keep in step with ITEM_DELAY_MS, ITEM_SHARPEN_MS, and ITEM_STAGGER_MS.
-							"data-[lgm-phase=morph]:[--lgm-delay:40ms] data-[lgm-phase=morph]:[--lgm-duration:180ms] data-[lgm-phase=morph]:[--lgm-filter:blur(0px)] data-[lgm-phase=morph]:[--lgm-stagger:20ms]",
-							"data-[lgm-phase=drain]:[--lgm-duration:150ms] data-[lgm-phase=drain]:[--lgm-fade:0.3] data-[lgm-phase=drain]:[--lgm-filter:blur(6px)] data-[lgm-phase=drain]:[--lgm-shrink:0.96]",
+							// The items' blur and fade per phase; see `ITEM_MORPH`.
+							"data-[lgm-phase=pending]:[--lgm-fade:0] data-[lgm-phase=pending]:[--lgm-filter:blur(4px)]",
+							"data-[lgm-phase=morph]:[--lgm-delay:80ms] data-[lgm-phase=morph]:[--lgm-duration:160ms] data-[lgm-phase=morph]:[--lgm-filter:blur(0px)] data-[lgm-phase=morph]:[--lgm-stagger:16ms]",
+							"data-[lgm-phase=drain]:[--lgm-duration:70ms] data-[lgm-phase=drain]:[--lgm-fade:0]",
 						),
 						className,
 					)}
 					{...props}
 				>
-					{/* The blur stays on while the goo draws the blob, so the blob is glass too. */}
-					{support.glass ? (
-						<span
-							ref={backdropRef}
-							aria-hidden
-							data-slot="liquid-glass-menu-backdrop"
-							className="pointer-events-none absolute inset-0 rounded-[inherit]"
-							style={glassStyle}
-						/>
-					) : null}
-					{/* Fill, rim, and shadow. The goo stands in for them during the morph. */}
+					{/* The glass: blur, fill, hairline, and shadow. During the morph it
+					    changes shape, from the trigger's to the panel's. */}
 					<span
+						ref={shellRef}
 						aria-hidden
 						data-slot="liquid-glass-menu-surface"
 						className={cn(
 							"pointer-events-none absolute inset-0 rounded-[inherit]",
-							"shadow-[inset_0_1px_0_rgb(255_255_255/0.95),inset_0_0_0_0.5px_rgb(0_0_0/0.07),0_1px_2px_rgb(0_0_0/0.06),0_12px_32px_-8px_rgb(0_0_0/0.2),0_28px_56px_-24px_rgb(0_0_0/0.16)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.12),inset_0_0_0_0.5px_rgb(255_255_255/0.1),0_1px_2px_rgb(0_0_0/0.5),0_16px_40px_-8px_rgb(0_0_0/0.7)]",
-							support.glass
-								? "bg-white/76 dark:bg-[rgb(30_30_34/0.8)]"
-								: "bg-popover",
-							mode === "morph" &&
-								"opacity-0 transition-opacity duration-[140ms] ease-out group-data-lgm-surface/lgm:opacity-100",
+							support.glass ? GLASS_FILL : SOLID_FILL,
+							GLASS_EDGE,
+							fade,
 						)}
-					/>
+						style={glassStyle}
+					>
+						<span
+							ref={ambientRef}
+							className={cn("absolute inset-0 rounded-[inherit]", PANEL_SHADOW)}
+						/>
+					</span>
 					<div
 						ref={viewportRef}
 						data-slot="liquid-glass-menu-viewport"
-						className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-[inherit]"
+						className={cn(
+							"relative min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-[inherit] [scrollbar-width:thin]",
+							fade,
+						)}
 						style={{ padding: PANEL_PADDING }}
 					>
-						{/* The lens: a pill of glass under the highlighted item. All three
-						    layers move by top and left, not transform: Chromium reuses the
-						    last frame's backdrop for a filter that only moved on the
-						    compositor, which smears the refraction mid-slide. */}
-						<motion.span
-							ref={(element) => {
-								lensRefs.current[0] = element;
-							}}
+						{/* The lens: a clear pill of glass under the highlighted item. */}
+						<span
+							ref={lensRef}
 							aria-hidden
 							data-slot="liquid-glass-menu-lens"
 							data-visible="false"
 							className={cn(
-								"pointer-events-none absolute opacity-0 transition-opacity duration-150 data-[visible=true]:opacity-100 motion-reduce:transition-none",
-								// A raised bead of clearer glass: brighter at the top, a crisp
-								// rim, a faint inner shade at the bottom, and a soft drop.
-								"bg-[linear-gradient(to_bottom,rgb(255_255_255/0.95),rgb(246_246_250/0.7))] shadow-[inset_0_0_0_0.5px_rgb(0_0_0/0.08),inset_0_1px_0_#fff,inset_0_-3px_6px_-3px_rgb(0_0_0/0.07),0_1px_2px_rgb(0_0_0/0.08),0_6px_14px_-4px_rgb(0_0_0/0.18)]",
-								"dark:bg-[linear-gradient(to_bottom,rgb(255_255_255/0.16),rgb(255_255_255/0.07))] dark:shadow-[inset_0_0_0_0.5px_rgb(255_255_255/0.14),inset_0_1px_0_rgb(255_255_255/0.22),inset_0_-3px_6px_-3px_rgb(0_0_0/0.3),0_6px_14px_-4px_rgb(0_0_0/0.6)]",
+								"pointer-events-none absolute top-0 left-0 opacity-0 transition-[opacity,scale,background-color] duration-150 ease-out data-[visible=true]:opacity-100 motion-reduce:transition-none",
+								support.glass ? LENS_GLASS : LENS_SOLID,
+								LENS_PRESSED,
+								support.glass ? LENS_PRESSED_GLASS : LENS_PRESSED_SOLID,
 							)}
-							style={{
-								left: lensX,
-								top: lensY,
-								width: lensWidth,
-								height: lensHeight,
-								borderRadius: ITEM_RADIUS,
-							}}
+							style={{ borderRadius: ITEM_RADIUS }}
 						/>
 						<div className="relative flex flex-col">{children}</div>
-						{/* Over the items, so it magnifies the label and bends it at the rim. */}
-						{support.refract ? (
-							<motion.span
-								ref={(element) => {
-									lensRefs.current[1] = element;
-								}}
-								aria-hidden
-								data-slot="liquid-glass-menu-lens-refraction"
-								data-visible="false"
-								className="pointer-events-none absolute opacity-0 data-[visible=true]:opacity-100"
-								style={{
-									left: lensX,
-									top: lensY,
-									width: lensWidth,
-									height: lensHeight,
-									borderRadius: ITEM_RADIUS,
-									backdropFilter: `url(#${lensFilterId})`,
-								}}
-							/>
-						) : null}
-						{/* The rim again, crisp over the magnified items. */}
-						{support.refract ? (
-							<motion.span
-								ref={(element) => {
-									lensRefs.current[2] = element;
-								}}
-								aria-hidden
-								data-slot="liquid-glass-menu-lens-rim"
-								data-visible="false"
-								className="pointer-events-none absolute opacity-0 shadow-[inset_0_0_0_0.5px_rgb(0_0_0/0.08),inset_0_1px_0_#fff,inset_0_-3px_6px_-3px_rgb(0_0_0/0.07)] data-[visible=true]:opacity-100 dark:shadow-[inset_0_0_0_0.5px_rgb(255_255_255/0.14),inset_0_1px_0_rgb(255_255_255/0.22),inset_0_-3px_6px_-3px_rgb(0_0_0/0.3)]"
-								style={{
-									left: lensX,
-									top: lensY,
-									width: lensWidth,
-									height: lensHeight,
-									borderRadius: ITEM_RADIUS,
-								}}
-							/>
-						) : null}
 					</div>
 				</MenuPrimitive.Popup>
 			</MenuPrimitive.Positioner>
@@ -1371,31 +1255,46 @@ export function LiquidGlassMenuContent({
 }
 
 /**
- * Every row blurs, fades, and shrinks a little while the blob forms, then
- * sharpens 20 ms after the row above it. The values come from the popup's
- * phase; at rest they resolve to no filter at all.
+ * Every row starts blurred and clear, then sharpens 16 ms after the row
+ * nearer the trigger. The values come from the popup's phase; at rest they
+ * resolve to no filter at all.
  */
 const ITEM_MORPH =
-	"[filter:var(--lgm-filter,none)] [opacity:calc(var(--lgm-fade,1)*var(--lgm-dim,1))] [scale:var(--lgm-shrink,1)] [transition-delay:calc(var(--lgm-delay,0ms)+var(--lgm-i,0)*var(--lgm-stagger,0ms))] [transition-duration:var(--lgm-duration,0ms)] [transition-property:filter,opacity,scale] [transition-timing-function:cubic-bezier(0.2,0.8,0.2,1)]";
+	"[filter:var(--lgm-filter,none)] [opacity:calc(var(--lgm-fade,1)*var(--lgm-dim,1))] [transition-delay:calc(var(--lgm-delay,0ms)+var(--lgm-i,0)*var(--lgm-stagger,0ms))] [transition-duration:var(--lgm-duration,0ms)] [transition-property:filter,opacity] [transition-timing-function:cubic-bezier(0.2,0.8,0.2,1)]";
 
-/** The highlight is the lens plus a brighter label and a larger icon. */
+/**
+ * 40 px rows (44 px on touch), 12 px in from the lens, with a 16 px icon
+ * column and a 12 px gap, so labels line up whatever the row type. The lens
+ * and a stronger label mark the highlight; nothing moves.
+ */
 const ITEM_CLASS = cn(
-	"group/lgm-item relative flex min-h-11 cursor-default select-none items-center gap-3 px-3 py-1.5 text-[15px] text-foreground/85 outline-none [-webkit-tap-highlight-color:transparent]",
+	"group/lgm-item relative flex min-h-10 pointer-coarse:min-h-11 cursor-default select-none items-center gap-3 px-3 py-2 text-foreground/85 text-sm leading-5 outline-none [-webkit-tap-highlight-color:transparent] dark:text-foreground/90",
 	"data-disabled:pointer-events-none data-highlighted:text-foreground data-disabled:[--lgm-dim:0.45]",
 	ITEM_MORPH,
 );
 
 const ICON_CLASS =
-	"grid shrink-0 place-items-center transition-transform duration-200 ease-out group-data-highlighted/lgm-item:scale-110 motion-reduce:transition-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0";
+	"grid min-w-4 shrink-0 place-items-center [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0";
 
-function ItemShortcut({ children }: { children?: ReactNode }) {
-	if (children === undefined || children === null) return null;
+/** The label and the shortcut share a baseline. */
+function ItemText({
+	children,
+	shortcut,
+}: {
+	children?: ReactNode;
+	shortcut?: ReactNode;
+}) {
 	return (
-		<span
-			data-slot="liquid-glass-menu-shortcut"
-			className="ml-auto pl-4 text-foreground/65 text-xs tracking-widest"
-		>
-			{children}
+		<span className="flex min-w-0 flex-1 items-baseline gap-4">
+			<span className="min-w-0 flex-1 truncate">{children}</span>
+			{shortcut === undefined || shortcut === null ? null : (
+				<span
+					data-slot="liquid-glass-menu-shortcut"
+					className="shrink-0 text-foreground/75 text-xs tabular-nums dark:text-foreground/80"
+				>
+					{shortcut}
+				</span>
+			)}
 		</span>
 	);
 }
@@ -1407,7 +1306,7 @@ function CheckIcon() {
 			viewBox="0 0 16 16"
 			fill="none"
 			stroke="currentColor"
-			strokeWidth={1.8}
+			strokeWidth={1.75}
 			strokeLinecap="round"
 			strokeLinejoin="round"
 			className="size-4"
@@ -1445,7 +1344,7 @@ function useReleaseGuard() {
 
 export interface LiquidGlassMenuItemProps
 	extends Omit<MenuPrimitive.Item.Props, "children"> {
-	/** Leading icon, such as a lucide icon or a colored badge. It grows when highlighted. */
+	/** Leading icon, such as a lucide icon or a colored badge. Plain icons are drawn at 16 px. */
 	icon?: ReactNode;
 	/** Trailing hint, such as a keyboard shortcut. Shown, not bound. */
 	shortcut?: ReactNode;
@@ -1484,8 +1383,7 @@ export function LiquidGlassMenuItem({
 					{icon}
 				</span>
 			) : null}
-			<span className="min-w-0 flex-1 truncate">{children}</span>
-			<ItemShortcut>{shortcut}</ItemShortcut>
+			<ItemText shortcut={shortcut}>{children}</ItemText>
 		</MenuPrimitive.Item>
 	);
 }
@@ -1524,13 +1422,12 @@ export function LiquidGlassMenuCheckboxItem({
 			}}
 			{...props}
 		>
-			<span className={cn(ICON_CLASS, "size-4")}>
+			<span className="grid size-4 shrink-0 place-items-center">
 				<MenuPrimitive.CheckboxItemIndicator>
 					<CheckIcon />
 				</MenuPrimitive.CheckboxItemIndicator>
 			</span>
-			<span className="min-w-0 flex-1 truncate">{children}</span>
-			<ItemShortcut>{shortcut}</ItemShortcut>
+			<ItemText shortcut={shortcut}>{children}</ItemText>
 		</MenuPrimitive.CheckboxItem>
 	);
 }
@@ -1580,13 +1477,12 @@ export function LiquidGlassMenuRadioItem({
 			}}
 			{...props}
 		>
-			<span className={cn(ICON_CLASS, "size-4")}>
+			<span className="grid size-4 shrink-0 place-items-center">
 				<MenuPrimitive.RadioItemIndicator>
-					<span className="block size-2 rounded-full bg-current" />
+					<span className="block size-1.5 rounded-full bg-current" />
 				</MenuPrimitive.RadioItemIndicator>
 			</span>
-			<span className="min-w-0 flex-1 truncate">{children}</span>
-			<ItemShortcut>{shortcut}</ItemShortcut>
+			<ItemText shortcut={shortcut}>{children}</ItemText>
 		</MenuPrimitive.RadioItem>
 	);
 }
@@ -1605,7 +1501,11 @@ export function LiquidGlassMenuLabel({
 			data-slot="liquid-glass-menu-label"
 			data-lgm-item=""
 			className={withClasses(
-				cn("px-3 pt-2 pb-1 font-medium text-foreground/65 text-xs", ITEM_MORPH),
+				// Lines up with the item labels, past the 16 px icon column.
+				cn(
+					"flex h-7 items-end pr-3 pb-1 pl-10 font-medium text-foreground/75 text-xs leading-4 dark:text-foreground/80",
+					ITEM_MORPH,
+				),
 				className,
 			)}
 			{...props}
@@ -1622,7 +1522,12 @@ export function LiquidGlassMenuSeparator({
 			data-slot="liquid-glass-menu-separator"
 			data-lgm-item=""
 			className={withClasses(
-				cn("mx-3 my-1 h-px shrink-0 bg-foreground/10", ITEM_MORPH),
+				// An 8 px band with a hairline in it, inset like the item padding:
+				// one device pixel at 2x, centred.
+				cn(
+					"relative mx-3 h-2 shrink-0 before:absolute before:inset-x-0 before:top-[3.25px] before:h-px before:scale-y-50 before:bg-foreground/15",
+					ITEM_MORPH,
+				),
 				className,
 			)}
 			{...props}

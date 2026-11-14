@@ -3,7 +3,7 @@ title: Liquid Glass Menu
 description: A React dropdown menu for shadcn/ui with a liquid-glass surface that stays fully keyboard and screen-reader accessible. The round trigger flows into the panel as one blob of glass, the items sharpen from a blur, and a glass lens slides to the highlighted item.
 seoTitle: React Liquid Glass Menu Component for shadcn/ui
 createdAt: 2026-11-12
-updatedAt: 2026-11-12
+updatedAt: 2026-11-14
 ---
 
 <ComponentPreview name="liquid-glass-menu-preview" />
@@ -17,20 +17,24 @@ updatedAt: 2026-11-12
 - A real [Base UI](https://base-ui.com/react/components/menu) menu underneath:
   roles, focus management, typeahead, `Esc`, outside clicks, radio and
   checkbox items all come from Base UI, not from this component.
-- Press the round glass button and it flows into the menu. The panel springs
-  out of the button with a little overshoot, joined to it by a gooey neck for
-  the first few frames, and the rows sharpen from a soft blur one after
-  another. Close it and the panel drains back into the button.
-- Frosted glass in light and dark: the page behind is blurred and saturated
-  through a translucent fill, under a bright rim and a soft shadow. In
-  Chromium the backdrop also bends at the rim, like it would through a lens.
-- The highlight is a small glass lens that slides between rows on a spring,
-  following the pointer and the arrow keys. The highlighted row's icon also
-  grows and its label darkens, so the lens is never the only cue.
+- Press the round glass button and it flows into the menu. The glass grows
+  out of the button on a critically damped spring, with no overshoot, and the
+  rows sharpen from a slight blur one after another. Close it and the rows
+  fade at once while the glass drains back into the button as one shape.
+- Clear glass, tuned separately for light and dark: the page behind is blurred
+  and gently saturated through a translucent fill, under a 0.5 px specular
+  hairline that is brightest along the top and a small, soft shadow. In
+  Chromium the backdrop also bends slightly at the rim, like it would through a
+  lens.
+- The highlight is a faint glass lens that glides between rows on a spring,
+  following the pointer and the arrow keys, and dips a little while pressed.
+  The highlighted row's label also turns full strength, so the lens is never
+  the only cue. Icons and labels stay in one column; nothing shifts.
 - A glass pop on open, a lower one on close, a tick on select, and matching
   haptics on supported phones.
-- At rest nothing runs: no SVG filter, no animation frame, and no
-  `will-change`. The goo filter only exists while the menu opens or closes.
+- At rest nothing animates: no animation frame and no `will-change`. During
+  the morph only the glass's shape and the rows' opacity change, and the
+  panel itself never moves, so it lands exactly where it rests.
 
 ## Installation
 
@@ -168,19 +172,19 @@ each off with `sound={false}` and `haptics={false}`.
 
 Base UI provides the semantics: the trigger is a button with
 `aria-haspopup="menu"` and `aria-expanded`, the panel has `role="menu"`, and
-rows are `menuitem`, `menuitemradio`, or `menuitemcheckbox`. The goo, glass,
-and lens layers are hidden from assistive technology. The trigger's focus ring
-shows for keyboard focus only, and the trigger and every row are at least
-44 px tall.
+rows are `menuitem`, `menuitemradio`, or `menuitemcheckbox`. The glass and
+lens layers are hidden from assistive technology. The trigger's focus ring
+shows for keyboard focus only. The trigger is 44 px, and rows are 40 px tall
+with a mouse and 44 px on touch screens.
 
 The glass fill is opaque enough for text to keep a 4.5:1 contrast ratio over
 any backdrop, light or dark, and secondary text such as shortcuts and labels
 is drawn darker than the usual muted color for the same reason.
 
-With reduced motion enabled there is no blob, neck, or blur: the panel fades
-in and out over 120 ms and the lens jumps straight to each item. With reduced
-transparency, or in browsers without `backdrop-filter`, the glass becomes a
-solid `popover` surface with the same rim and shadow. Sound and haptics stay
+With reduced motion enabled there is no morph or blur: the panel fades in and
+out over 150 ms and the lens jumps straight to each item. With reduced
+transparency, or in browsers without `backdrop-filter`, the glass becomes an
+opaque frosted surface with the same hairline, radii, and shadow. Sound and haptics stay
 on under reduced motion because they confirm actions rather than decorate
 movement.
 
@@ -226,16 +230,16 @@ default trigger requires an `aria-label` in its types.
 ### Does the glass work in Safari and Firefox?
 
 Yes. The frosted blur, rim, and shadow use `backdrop-filter`, which every
-current browser supports. Only the refraction at the rim of the panel and the
-lens needs Chromium, so Safari and Firefox get a clean blur instead, and
-browsers without `backdrop-filter` get a solid surface.
+current browser supports. Only the refraction at the rim of the panel needs
+Chromium, so Safari and Firefox get a clean blur instead, and browsers without
+`backdrop-filter` get an opaque frosted surface.
 
 ### What happens with reduced motion or reduced transparency?
 
-With `prefers-reduced-motion`, the morph, neck, and item blur are skipped:
-the panel fades in over 120 ms and the lens moves instantly. With
-`prefers-reduced-transparency`, the glass becomes a solid `popover` surface
-with the same rim and shadow.
+With `prefers-reduced-motion`, the morph and item blur are skipped: the panel
+fades in over 150 ms and the lens moves instantly. With
+`prefers-reduced-transparency`, the glass becomes an opaque frosted surface
+with the same hairline and shadow.
 
 ### Can I use my own trigger button?
 

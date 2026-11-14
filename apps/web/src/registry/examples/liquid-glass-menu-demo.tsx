@@ -34,49 +34,57 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 	);
 }
 
-/** Bold color and hard edges, so the blur and the bend show through the glass. */
+/**
+ * A calm dusk over hills: soft color for the blur to pick up, and a few clean
+ * ridges for the rim of the glass to bend.
+ */
 function Artwork() {
+	const id = "liquid-glass-menu-demo";
 	return (
 		<svg
 			aria-hidden
-			viewBox="0 0 320 200"
+			viewBox="0 0 320 256"
 			preserveAspectRatio="xMidYMid slice"
 			className="absolute inset-0 size-full"
 		>
 			<defs>
-				<linearGradient
-					id="liquid-glass-menu-demo-sky"
-					x1="0"
-					y1="0"
-					x2="1"
-					y2="1"
-				>
-					<stop offset="0" stopColor="#ff8a5b" />
-					<stop offset="0.5" stopColor="#ff4f8b" />
-					<stop offset="1" stopColor="#6c4dff" />
+				<linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1">
+					<stop offset="0" stopColor="#b9cfe6" />
+					<stop offset="0.55" stopColor="#e8dcd8" />
+					<stop offset="1" stopColor="#f5d3bf" />
+				</linearGradient>
+				<radialGradient id={`${id}-sun`} cx="0.5" cy="0.5" r="0.5">
+					<stop offset="0" stopColor="#fff7ec" stopOpacity="0.95" />
+					<stop offset="0.25" stopColor="#ffe9d4" stopOpacity="0.7" />
+					<stop offset="1" stopColor="#ffe9d4" stopOpacity="0" />
+				</radialGradient>
+				<linearGradient id={`${id}-near`} x1="0" y1="0" x2="0" y2="1">
+					<stop offset="0" stopColor="#5d7f80" />
+					<stop offset="1" stopColor="#3d5a5e" />
 				</linearGradient>
 			</defs>
-			<rect width="320" height="200" fill="url(#liquid-glass-menu-demo-sky)" />
-			<circle cx="236" cy="58" r="34" fill="#ffe27a" />
-			{[0, 1, 2, 3, 4, 5, 6, 7].map((index) => (
-				<rect
-					key={index}
-					x={-20 + index * 46}
-					y={118}
-					width={22}
-					height={120}
-					rx={4}
-					fill={index % 2 ? "#1b1464" : "#00c2a8"}
-					transform={`rotate(-14 ${index * 46} 118)`}
-				/>
-			))}
+			<rect width="320" height="256" fill={`url(#${id}-sky)`} />
+			<circle cx="226" cy="118" r="78" fill={`url(#${id}-sun)`} />
+			<circle cx="226" cy="118" r="15" fill="#fff6ea" />
+			<path
+				d="M0 150 C 40 128 76 122 112 136 S 180 116 222 128 S 290 120 320 132 V256 H0 Z"
+				fill="#a8bccd"
+			/>
+			<path
+				d="M0 176 C 48 156 92 158 138 170 S 222 150 262 160 S 306 156 320 162 V256 H0 Z"
+				fill="#87a3ab"
+			/>
+			<path
+				d="M0 206 C 56 186 118 190 168 200 S 262 184 320 192 V256 H0 Z"
+				fill={`url(#${id}-near)`}
+			/>
 		</svg>
 	);
 }
 
 function OverAnImage() {
 	return (
-		<div className="relative h-52 w-full max-w-[320px] overflow-hidden rounded-3xl">
+		<div className="relative h-64 w-full max-w-[320px] overflow-hidden rounded-3xl">
 			<Artwork />
 			<div className="absolute right-3 bottom-3">
 				<LiquidGlassMenu>
