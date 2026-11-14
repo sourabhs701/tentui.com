@@ -345,7 +345,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["menus"],
-		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/liquid-glass-menu?v=1","video":"https://cdn.tentui.com/videos/components/liquid-glass-menu?v=1"},
+		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/liquid-glass-menu?v=2","video":"https://cdn.tentui.com/videos/components/liquid-glass-menu?v=2"},
 	},
 	"glass-toggle": {
 		name: "glass-toggle",

@@ -4,9 +4,9 @@ import type { ComponentType } from "react";
 
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
 import { InkFilterBarCapture } from "@/components/capture/ink-filter-bar-capture";
+import { LiquidGlassMenuCapture } from "@/components/capture/liquid-glass-menu-capture";
 import { MorphLightboxCapture } from "@/components/capture/morph-lightbox-capture";
 import { PromptChipInputCapture } from "@/components/capture/prompt-chip-input-capture";
-import { LiquidGlassMenuCapture } from "@/components/capture/liquid-glass-menu-capture";
 import {
 	COMPONENT_CAPTURE_FRAME,
 	COMPONENT_CAPTURE_FRAMING,

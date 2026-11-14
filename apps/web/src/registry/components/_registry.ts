@@ -89,8 +89,8 @@ export const components: Registry["items"] = [
 		categories: ["menus"],
 		meta: {
 			createdAt: "2026-11-12",
-			image: "https://cdn.tentui.com/images/components/liquid-glass-menu?v=1",
-			video: "https://cdn.tentui.com/videos/components/liquid-glass-menu?v=1",
+			image: "https://cdn.tentui.com/images/components/liquid-glass-menu?v=2",
+			video: "https://cdn.tentui.com/videos/components/liquid-glass-menu?v=2",
 		},
 		docs: "https://tentui.com/components/liquid-glass-menu",
 	},
