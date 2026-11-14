@@ -3,7 +3,7 @@ title: Peeping Button
 description: Add a shy, cursor-tracking surprise behind a familiar button face.
 seoDescription: Peeping Button is a playful React button for shadcn/ui with shy, cursor-tracking eyes that peek out from behind it and stay still when reduced motion is on.
 createdAt: 2026-07-22
-updatedAt: 2026-07-22
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="peeping-button-preview" canReload />
@@ -96,3 +96,45 @@ movement.
   path="src/registry/components/peeping-button/peeping-button.tsx"
   name="PeepingButtonProps"
 />
+
+## FAQ
+
+### How do I install the Peeping Button with shadcn?
+
+Run `npx shadcn@latest add @tentui/peeping-button` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/peeping-button.json` without it.
+The CLI copies `peeping-button.tsx` into your project and installs `motion`.
+
+### Can I use the Peeping Button as a form submit button?
+
+Yes. It renders a native `button` and passes through every button prop and a
+`ref`, but `type` defaults to `"button"`, so set `type="submit"` to submit a
+form.
+
+### How do I change how often the eyes peek?
+
+Set `peekDelay` to a fixed delay or a `[min, max]` range in milliseconds (2800
+to 5200 by default), and `peekDuration` for how long they stay out (2200 ms by
+default). Set `autoPeek={false}` to turn the peeking off and keep a plain
+button.
+
+### Is the Peeping Button accessible?
+
+Yes. It is a native button whose visible label is its accessible name, and the
+eyes are hidden from screen readers. The cover closes when the button is hovered
+or focused, and peeking stops while it is disabled, in a hidden tab, or when the
+user prefers reduced motion.
+
+### How do I style the button face?
+
+Use `className` for the button itself and `coverClassName` for the visible face
+that swings open, which is a card-colored surface with a border by default. Both
+accept Tailwind classes merged with the defaults.
+
+### Is the Peeping Button free to use?
+
+Yes. The Peeping Button is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

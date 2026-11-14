@@ -3,7 +3,7 @@ title: Email Dock
 description: An accessible Email Dock component for React and shadcn/ui that highlights and links the username, domain, or complete email address.
 seoDescription: Email Dock is an accessible React component for shadcn/ui that turns an email address into linked username, domain, and full-address actions.
 createdAt: 2026-07-20
-updatedAt: 2026-07-29
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="email-dock-demo" />
@@ -107,3 +107,43 @@ a single contact link needs directional hover and keyboard-focus feedback.
   path="src/registry/components/email-dock/email-dock.tsx"
   name="EmailDockProps"
 />
+
+## FAQ
+
+### How do I install the Email Dock with shadcn?
+
+Run `npx shadcn@latest add @tentui/email-dock` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/email-dock.json` without it. The CLI
+copies `email-dock.tsx` into your project and installs `lucide-react`.
+
+### How do I make the dock icons open a mail app or website?
+
+Give a highlight an `href`, such as `mailto:` for the full address or a URL for
+the domain, and set `external` to open it in a new tab. Highlights without an
+`href` render as buttons that only highlight their part of the address.
+
+### Can the Email Dock copy the address to the clipboard?
+
+Not on its own. It highlights and links parts of the address; pair it with the
+[Copy Button](/components/copy-button) when visitors need to copy it.
+
+### Does it hide my email address from spam bots?
+
+No. The full address is in the page as plain, screen-reader-visible text, so
+use another approach if you need to obscure it from scrapers.
+
+### Is the Email Dock keyboard accessible?
+
+Yes. Each dock action is a native button or link with an accessible label, and
+focusing one activates the same highlight as hovering it. Screen readers read
+the address once as a whole; set `label` on a highlight when the default
+"Highlight username", "Highlight domain", or "Highlight full email" doesn't
+describe its action.
+
+### Is the Email Dock free to use?
+
+Yes. The Email Dock is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

@@ -3,7 +3,7 @@ title: Swipe Actions
 description: iOS-style list rows you swipe to reveal actions, with threshold haptics, a full-swipe snap, and keyboard support.
 seoDescription: Swipe Actions is a React component for shadcn/ui with iOS-style list rows you swipe to reveal actions, threshold haptics, a full-swipe snap, and keyboard access.
 createdAt: 2026-10-24
-updatedAt: 2026-10-24
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="swipe-actions-preview" />
@@ -162,3 +162,46 @@ them off with `sound={false}` and `haptics={false}`.
   path="src/registry/components/swipe-actions/swipe-actions.tsx"
   name="SwipeListProps"
 />
+
+## FAQ
+
+### How do I install the Swipe Actions with shadcn?
+
+Run `npx shadcn@latest add @tentui/swipe-actions` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/swipe-actions.json` without it. The
+CLI copies `swipe-actions.tsx` into your project and installs `motion`,
+`lucide-react`, `web-haptics`, and `@rexa-developer/tiks`.
+
+### How do I build swipe to delete in React?
+
+Add a `trailing` action with `destructive: true` and remove the item from your
+state in its `onAction`. The row collapses before `onAction` runs, so the list
+doesn't jump, and a full swipe past `fullSwipeThreshold` (60% of the row by
+default) fires the outermost action.
+
+### Can Swipe Actions be used without a touch screen?
+
+Yes. On devices that hover, a ⋯ button reveals the actions, and with a row
+focused the arrow keys reveal a side, `Tab` moves through its actions, `Escape`
+closes it, and `Delete` or `Backspace` fires its destructive action. Hidden
+actions are `inert`, and a polite live region announces each action that fires.
+
+### Does swiping a row block vertical scrolling?
+
+No. A row waits for 8 px of travel before it picks an axis, so vertical swipes
+scroll the page and taps on the row's content still work. Inside a `SwipeList`,
+scrolling or tapping elsewhere closes the open row.
+
+### Can I ask for confirmation or handle a failed action?
+
+Yes. Set `confirm: true` on an action and the first press shows "Confirm?"
+before a second press fires it. `onAction` can return a promise, and if it
+rejects the row springs back, plays an error cue, and announces the failure.
+
+### Is the Swipe Actions component free to use?
+
+Yes. Swipe Actions is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

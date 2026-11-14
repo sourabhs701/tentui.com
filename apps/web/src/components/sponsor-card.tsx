@@ -5,8 +5,9 @@ import { motion } from "motion/react";
 import type { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
+import { CARD_ENTER_CLASS_NAME } from "@/components/component-card";
 import { type FeedSponsor, sponsorHref } from "@/config/sponsor";
 import { useShownSponsors } from "@/hooks/use-sponsor-slots";
 import { cn } from "@/lib/utils";
@@ -31,10 +32,9 @@ export function SponsorCard({ slot, index }: { slot: number; index: number }) {
 	};
 
 	return (
-		<motion.div
-			initial={{ opacity: 0, y: 10 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ duration: 0.3, delay: 0.02 * index, ease: "easeOut" }}
+		<div
+			className={CARD_ENTER_CLASS_NAME}
+			style={{ animationDelay: `${0.02 * index}s` }}
 		>
 			{shown === undefined ? (
 				<div aria-hidden className={hoverProps.className}>
@@ -83,7 +83,7 @@ export function SponsorCard({ slot, index }: { slot: number; index: number }) {
 					</CardChrome>
 				</Link>
 			)}
-		</motion.div>
+		</div>
 	);
 }
 
@@ -165,10 +165,12 @@ function SponsorMedia({
 	sponsor: FeedSponsor;
 	playing: boolean;
 }) {
-	const videoRef = useRef<HTMLVideoElement>(null);
+	const [video, setVideo] = useState<HTMLVideoElement | null>(null);
+	// Attach the video on the first hover, so idle cards download nothing.
+	const [activated, setActivated] = useState(false);
+	if (playing && !activated) setActivated(true);
 
 	useEffect(() => {
-		const video = videoRef.current;
 		if (!video) return;
 		if (playing) {
 			void video.play().catch(() => {});
@@ -176,7 +178,7 @@ function SponsorMedia({
 			video.pause();
 			video.currentTime = 0;
 		}
-	}, [playing]);
+	}, [video, playing]);
 
 	return (
 		<div className="pointer-events-none absolute inset-0">
@@ -198,14 +200,17 @@ function SponsorMedia({
 					className="hidden object-cover dark:block"
 				/>
 			) : null}
-			{sponsor.videoSrc ? (
+			{sponsor.videoSrc && activated ? (
 				<video
-					ref={videoRef}
+					ref={setVideo}
 					src={sponsor.videoSrc}
+					aria-hidden
+					tabIndex={-1}
 					muted
 					loop
 					playsInline
-					preload="metadata"
+					disablePictureInPicture
+					preload="none"
 					className={cn(
 						"absolute inset-0 size-full object-cover transition-opacity duration-300 ease-out motion-reduce:hidden",
 						playing ? "opacity-100" : "opacity-0",

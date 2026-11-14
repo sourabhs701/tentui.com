@@ -4,7 +4,7 @@ description: Switch between light and dark themes with animated, sound, and hapt
 seoTitle: React Dark Mode Theme Toggle for shadcn/ui
 seoDescription: Theme Toggle is a React dark mode switch for shadcn/ui and next-themes that flips light and dark themes with an animated icon, a click sound, and haptics.
 createdAt: 2026-08-19
-updatedAt: 2026-08-19
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="theme-toggle-demo" />
@@ -145,3 +145,46 @@ are additive; the icon and document theme provide the visual state.
   path="src/registry/components/theme-toggle/theme-toggle.tsx"
   name="ThemeToggleProps"
 />
+
+## FAQ
+
+### How do I install the Theme Toggle with shadcn?
+
+Run `npx shadcn@latest add @tentui/theme-toggle` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/theme-toggle.json` without it. The
+CLI copies the toggle with its theme hook and click sound into your project,
+adds the shadcn `button`, and installs `next-themes`, `motion`, `lucide-react`,
+and `web-haptics`.
+
+### How do I add a dark mode toggle to the Next.js App Router?
+
+Wrap your app in `ThemeProvider` from `next-themes` with `attribute="class"`,
+then render `<ThemeToggle />` anywhere inside it. The component is already a
+client component, so you can import it from a server layout or page.
+
+### Does the Theme Toggle cause a hydration mismatch or icon flash?
+
+No. Until it mounts on the client it renders an empty placeholder with the
+label "Toggle theme", then shows the sun or moon for the resolved theme, so the
+server and client markup always match.
+
+### Does it support a system theme option?
+
+It switches between light and dark only. When the theme you switch to matches
+the operating system, it stores `"system"` so the site keeps following the OS;
+add a menu with `setTheme("system")` if users need to pick it explicitly.
+
+### Can I use custom icons or sync the theme-color meta tag?
+
+Yes. Pass `lightIcon` and `darkIcon` to replace the sun and moon, and use
+`onThemeChange`, which receives `"light"` or `"dark"`, to update related browser
+UI. It also accepts every shadcn `Button` prop, such as `variant` and
+`className`.
+
+### Is the Theme Toggle free to use?
+
+Yes. The Theme Toggle is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

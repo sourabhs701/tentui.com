@@ -4,7 +4,7 @@ description: Copy text to the clipboard with visual, sound, and haptic feedback.
 seoTitle: React Copy to Clipboard Button for shadcn/ui
 seoDescription: Copy Button is a React copy-to-clipboard button for shadcn/ui with animated success and error icons, UI sounds, and haptic feedback, styled with Tailwind CSS.
 createdAt: 2026-07-20
-updatedAt: 2026-08-19
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="copy-button-demo" />
@@ -107,3 +107,47 @@ confirmation needs to be available to assistive technology.
   path="src/registry/components/copy-button/copy-button.tsx"
   name="CopyButtonProps"
 />
+
+## FAQ
+
+### How do I install the Copy Button with shadcn?
+
+Run `npx shadcn@latest add @tentui/copy-button` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/copy-button.json` without it. The
+CLI copies `copy-button.tsx`, its `icon-swap` helper, and the
+`use-copy-to-clipboard` hook into your project, adds the shadcn `button`, and
+installs `motion`, `lucide-react`, `web-haptics`, and `@rexa-developer/tiks`.
+
+### Can I copy a value that's only known at click time?
+
+Yes. Pass a function to `text`, such as `() => window.location.href`, and it
+runs on click; it can also return a promise. Async text is written through a
+`ClipboardItem` promise so Safari still treats the copy as part of the click.
+
+### Why does the Copy Button show an error instead of copying?
+
+Browsers only expose the Clipboard API in secure contexts, so copying fails on
+plain HTTP pages other than `localhost`, and it also fails if a `text` function
+throws. The button then shows the error icon and calls `onCopyError` with the
+error.
+
+### Is the Copy Button accessible?
+
+It is a native button with keyboard and focus behavior intact, and its default
+accessible name is "Copy". Set `aria-label` when the button has its own visible
+text or copies something specific, and announce the result yourself if
+screen-reader users need it, because the success and error states are visual.
+
+### How do I change the icons and style?
+
+Pass `idleIcon`, `doneIcon`, and `errorIcon` to replace the Lucide icons, and
+any shadcn `Button` prop such as `variant`, `size` (`"icon"` by default), or
+`className`. The icon returns to idle 1.5 seconds after each copy.
+
+### Is the Copy Button free to use?
+
+Yes. The Copy Button is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

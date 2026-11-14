@@ -3,7 +3,7 @@ title: Glass Toggle
 description: An on/off switch with a thumb of thick frosted glass. Flip it and the thumb springs across, a pixel moon scatters and reassembles as a pixel sun, and a rim light runs round the glass from cool lilac to warm amber.
 seoDescription: Glass Toggle is a React switch for shadcn/ui with a frosted glass thumb that springs across as a pixel moon reassembles into a pixel sun under a warm rim light.
 createdAt: 2026-11-11
-updatedAt: 2026-11-11
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="glass-toggle-preview" />
@@ -169,3 +169,49 @@ stay on because they confirm the switch rather than decorate movement.
   path="src/registry/components/glass-toggle/glass-toggle.tsx"
   name="GlassToggleProps"
 />
+
+## FAQ
+
+### How do I install the Glass Toggle with shadcn?
+
+Run `npx shadcn@latest add @tentui/glass-toggle` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/glass-toggle.json` without it. The
+CLI copies `glass-toggle.tsx` into your project and installs `motion`,
+`web-haptics`, and `@rexa-developer/tiks`.
+
+### Is the Glass Toggle accessible?
+
+Yes. It is a `button` with `role="switch"` and `aria-checked`, named by `label`,
+`aria-label`, or `aria-labelledby`, and `Space` or `Enter` flips it. The state
+doesn't rely on color alone, since the thumb's side and the glyph change too,
+and with reduced motion the thumb and glyph switch without the spring or
+scatter.
+
+### How do I control it from state or React Hook Form?
+
+Pass `checked` and `onCheckedChange`, which fires once per flip from a click,
+key press, or drag; with React Hook Form, pass `field.value` and
+`field.onChange` from a `Controller`. For a native form, set `name` and it
+submits `"on"` or `"off"`.
+
+### Can I use the Glass Toggle as a dark mode switch?
+
+Yes, though it knows nothing about themes on its own. Pass
+`checked={resolvedTheme === "light"}` and set the theme in `onCheckedChange`
+with `next-themes`; for a ready-made button, use the
+[Theme Toggle](/components/theme-toggle).
+
+### Does it use WebGL, and can I change the light colors?
+
+No WebGL or canvas: the glass is stacked CSS and SVG layers, and nothing renders
+per frame at rest. Set the `--glass-toggle-off` and `--glass-toggle-on` CSS
+variables through `className` to retheme the rim light, and `size="sm"` for
+dense lists.
+
+### Is the Glass Toggle free to use?
+
+Yes. The Glass Toggle is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

@@ -3,7 +3,7 @@ title: Animated Arrow
 description: A copy-paste React animated arrow for buttons and links with a CSS slide transition, keyboard focus feedback, and reduced-motion support.
 seoDescription: Animated Arrow is a copy-paste React arrow for shadcn/ui buttons and links, with a Tailwind CSS slide transition, focus feedback, and reduced-motion support.
 createdAt: 2026-07-19
-updatedAt: 2026-07-29
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="animated-arrow-demo" />
@@ -108,3 +108,45 @@ For more patterns that respect motion preferences, read
   path="src/registry/components/animated-arrow/animated-arrow.tsx"
   name="AnimatedArrowProps"
 />
+
+## FAQ
+
+### How do I install the Animated Arrow with shadcn?
+
+Run `npx shadcn@latest add @tentui/animated-arrow` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/animated-arrow.json` without it. The
+CLI copies `animated-arrow.tsx` into your project and installs `lucide-react`.
+
+### Why doesn't the arrow move when I hover the button?
+
+Add `group/animated-arrow` to the parent link or button. The arrow listens for
+hover and keyboard focus on that named Tailwind group, so a plain `group` class
+doesn't trigger it.
+
+### Does the Animated Arrow need "use client" in the Next.js App Router?
+
+No. It has no state, effects, or animation library: the slide is a Tailwind CSS
+transition, so it renders in React Server Components as well as client
+components.
+
+### Is the Animated Arrow accessible?
+
+Yes, as long as the parent has a label. The arrow is decorative and marked
+`aria-hidden`, so give the link or button visible text or an `aria-label`;
+keyboard focus slides it the same way hover does, and it stays still when the
+user prefers reduced motion.
+
+### How do I change the arrow's color or direction?
+
+Pass Tailwind classes through `className`, its only prop. The icons use the
+current text color, so a class such as `text-primary` recolors them and
+`rotate-180` points the arrow the other way; change `duration-500` in the source
+to retime the slide.
+
+### Is the Animated Arrow free to use?
+
+Yes. The Animated Arrow is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

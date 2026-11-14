@@ -419,6 +419,9 @@ async function recordFrames(browser, name, theme, manifest, options) {
 			`/capture/${encodeURIComponent(name)}/${theme}`,
 			options.baseUrl,
 		);
+		// Lets a capture scene start differently from its still (see
+		// ink-filter-bar-capture.tsx).
+		url.searchParams.set("motion", "");
 		const response = await page.goto(url.toString());
 		if (!response?.ok()) {
 			throw new Error(

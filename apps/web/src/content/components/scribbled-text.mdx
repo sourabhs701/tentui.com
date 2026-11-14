@@ -3,7 +3,7 @@ title: Scribbled Text
 description: Mark inline text with colorful hand-drawn annotations.
 seoDescription: Scribbled Text is a React component for shadcn/ui that marks inline text with twelve hand-drawn underlines, highlights, and enclosures that draw in on scroll.
 createdAt: 2026-07-20
-updatedAt: 2026-07-21
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="scribbled-text-preview" />
@@ -160,3 +160,45 @@ Use the `variant` prop to choose a hand-drawn mark.
 ### Box
 
 <ComponentPreview name="scribbled-text-box-demo" canReload />
+
+## FAQ
+
+### How do I install the Scribbled Text with shadcn?
+
+Run `npx shadcn@latest add @tentui/scribbled-text` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/scribbled-text.json` without it.
+The CLI copies `scribbled-text.tsx` into your project and installs `motion`.
+
+### Which hand-drawn annotations are included, and can I change their color?
+
+Twelve `variant` values: `wavyUnderline` (the default), `underline`,
+`straightUnderline`, `dottedUnderline`, `doubleUnderline`, `arrowUnderline`,
+`highlight`, `circle`, `box`, `bracket`, `strikethrough`, and `crossOut`. Each
+has its own default color; pass a text color class to `scribbleClassName`, such
+as `text-rose-400`, to recolor only the mark.
+
+### When does the scribble animation play?
+
+Once, when the text scrolls into view, and it doesn't replay after that. Set
+`animated={false}` to render the mark already drawn; it also renders complete
+when the user prefers reduced motion.
+
+### Why doesn't the annotated phrase wrap onto a second line?
+
+The component keeps the phrase on one line so the mark stays aligned with it.
+Wrap a short phrase rather than a whole sentence, and it inherits the
+surrounding font size, weight, and color.
+
+### Is Scribbled Text accessible?
+
+The marks are decorative SVGs hidden from screen readers, so the text reads as
+it would without them. When an annotation carries meaning, wrap the text in a
+semantic element such as `mark` or `del` as well.
+
+### Is Scribbled Text free to use?
+
+Yes. Scribbled Text is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

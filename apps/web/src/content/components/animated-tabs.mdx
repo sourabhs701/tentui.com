@@ -4,7 +4,7 @@ description: An accessible animated tabs component for React and shadcn/ui with 
 seoTitle: React Animated Tabs Component for shadcn/ui
 seoDescription: Animated Tabs is an accessible React tabs component for shadcn/ui with a fluid Motion shared-layout indicator, keyboard navigation, and Tailwind CSS styling.
 createdAt: 2026-07-21
-updatedAt: 2026-07-29
+updatedAt: 2026-11-12
 ---
 
 <ComponentPreview name="animated-tabs-demo" />
@@ -108,3 +108,44 @@ the user requests less animation. For more implementation patterns, read
   path="src/registry/components/animated-tabs/animated-tabs.tsx"
   name="AnimatedTabsProps"
 />
+
+## FAQ
+
+### How do I install the Animated Tabs with shadcn?
+
+Run `npx shadcn@latest add @tentui/animated-tabs` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/animated-tabs.json` without it. The
+CLI copies `animated-tabs.tsx` into your project and installs `motion`.
+
+### Can I control the active tab from state?
+
+Yes. Pass `value` and `onValueChange` to control it, or `defaultValue` to let
+the component manage it; without either, the first tab starts active. In both
+modes `onValueChange` fires with the new tab's `value`.
+
+### Are the Animated Tabs keyboard accessible?
+
+Yes. The control is a `radiogroup` with one tab stop on the active option, and
+the arrow keys, `Home`, and `End` move focus and selection together. Name it
+with `aria-label` or `aria-labelledby`, since the group has no visible label.
+
+### Does it render the tab panels?
+
+No. Animated Tabs is the segmented control only, so render the matching content
+yourself from the selected value, for example by keeping it in state and
+switching on it.
+
+### How does the sliding indicator work, and can I turn it off?
+
+One Motion element with a shared `layoutId` springs to the selected option,
+while keyboard selection moves it instantly. With reduced motion enabled in the
+operating system, Motion skips the slide; each instance generates its own
+`layoutId`, so several tab bars on a page don't interfere.
+
+### Is TentUI's Animated Tabs component free?
+
+Yes. Animated Tabs is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

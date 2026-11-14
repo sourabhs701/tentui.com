@@ -5,6 +5,10 @@ import { CopyButton } from "../../registry/components/copy-button/copy-button";
 import { getIconForLanguageExtension } from "../icons";
 import { CodeBlockCommand } from "./code-block-command";
 
+// Inline `code` and the `code` inside highlighted blocks share this class.
+export const mdxCodeClassName =
+	"rounded bg-transparent px-1.5 py-0.5 font-mono text-[0.85em] text-foreground";
+
 export const mdxCodeBlockComponents = {
 	figure({ className, ...props }: React.ComponentProps<"figure">) {
 		const hasPrettyCode = "data-rehype-pretty-code-figure" in props;

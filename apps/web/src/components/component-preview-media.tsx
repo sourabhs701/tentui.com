@@ -59,12 +59,21 @@ function getVideoSrc(component: RegistryItem, theme: "light" | "dark") {
 	return typeof video === "string" ? themedMediaUrl(video, theme, "mp4") : null;
 }
 
+// How much of the media must be on screen, and for how long, before its video
+// is attached. Scrolling past a card only ever shows the still, so a long
+// grid doesn't download every video on the way down.
+const VIEW_THRESHOLD = 0.4;
+const VIEW_DWELL_MS = 250;
+
 /**
  * A component's captured still with its preview video layered on top.
  *
  * Leave `playing` unset to autoplay while the media is on screen, or control
- * it (e.g. on hover). The video for the active theme mounts only once it is
- * first needed, and reduced motion keeps the still.
+ * it (e.g. on hover). The still renders on the server; the video for the
+ * active theme mounts only once it is needed (`preload="none"`, so nothing
+ * downloads before then), pauses off screen, and is dropped again if it
+ * leaves before it could play, which cancels the download. Reduced motion
+ * keeps the still.
  */
 export function ComponentPreviewMedia({
 	component,
@@ -84,6 +93,7 @@ export function ComponentPreviewMedia({
 	const [inView, setInView] = useState(false);
 	const [activated, setActivated] = useState(false);
 	const [videoReady, setVideoReady] = useState(false);
+	const [hasPlayed, setHasPlayed] = useState(false);
 
 	const controlled = playing !== undefined;
 	const shouldPlay = reduceMotion !== true && (controlled ? playing : inView);
@@ -98,20 +108,35 @@ export function ComponentPreviewMedia({
 		const root = rootRef.current;
 		if (!root) return;
 
+		let dwell: ReturnType<typeof setTimeout> | undefined;
 		const observer = new IntersectionObserver(
-			([entry]) => setInView(entry?.isIntersecting ?? false),
-			{ threshold: 0.4 },
+			([entry]) => {
+				clearTimeout(dwell);
+				if (entry?.isIntersecting) {
+					dwell = setTimeout(() => setInView(true), VIEW_DWELL_MS);
+				} else {
+					setInView(false);
+				}
+			},
+			{ threshold: VIEW_THRESHOLD },
 		);
 		observer.observe(root);
-		return () => observer.disconnect();
+		return () => {
+			clearTimeout(dwell);
+			observer.disconnect();
+		};
 	}, [controlled]);
 
 	useEffect(() => {
 		if (shouldPlay) setActivated(true);
-	}, [shouldPlay]);
+		// Left before the first frame played: unmount to cancel the download.
+		else if (!hasPlayed) setActivated(false);
+	}, [shouldPlay, hasPlayed]);
 
 	useEffect(() => {
-		if (videoSrc) setVideoReady(false);
+		if (!videoSrc) return;
+		setVideoReady(false);
+		setHasPlayed(false);
 	}, [videoSrc]);
 
 	useEffect(() => {
@@ -142,11 +167,18 @@ export function ComponentPreviewMedia({
 					key={videoSrc}
 					ref={setVideo}
 					src={videoSrc}
+					aria-hidden
+					tabIndex={-1}
 					muted
 					loop
 					playsInline
-					preload="auto"
-					onPlaying={() => setVideoReady(true)}
+					disablePictureInPicture
+					disableRemotePlayback
+					preload="none"
+					onPlaying={() => {
+						setVideoReady(true);
+						setHasPlayed(true);
+					}}
 					className={cn(
 						"absolute inset-0 size-full object-cover transition-opacity duration-300 ease-out",
 						showVideo ? "opacity-100" : "opacity-0",
