@@ -451,6 +451,22 @@ export const scenarios = {
 		},
 	},
 
+	"upload-chip": {
+		async run(d) {
+			// Nothing to click: the scene scripts the drops and the hover.
+			d.hideCursor();
+			// The run starts from the idle Attach pill on the take's first frame.
+			// A file is dragged in (the pill wakes and leans), dropped at 1.1 s,
+			// fills to 100% and turns its icon into a check; two more drop into
+			// the deck at 3.9 s, it fans out at 5 s and folds back, and the chip
+			// collapses into the pill at 6.8 s.
+			await d.page.evaluate(() =>
+				window.dispatchEvent(new Event("upload-chip-capture")),
+			);
+			await d.wait(7500);
+		},
+	},
+
 	"ink-filter-bar": {
 		rest: { x: 330, y: 300 },
 		async run(d) {

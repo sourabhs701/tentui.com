@@ -1,0 +1,2213 @@
+"use client";
+
+import { useTiks } from "@rexa-developer/tiks/react";
+import {
+	CircleAlert,
+	FileArchive,
+	File as FileGlyph,
+	FileImage,
+	FileMusic,
+	FileText,
+	Paperclip,
+	X,
+} from "lucide-react";
+import { useReducedMotion } from "motion/react";
+import {
+	type ChangeEvent,
+	type ComponentProps,
+	type CSSProperties,
+	type DragEvent,
+	type FocusEvent,
+	type KeyboardEvent,
+	type MouseEvent,
+	type PointerEvent,
+	type ReactNode,
+	type RefObject,
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from "react";
+import { useWebHaptics } from "web-haptics/react";
+import { cn } from "@/lib/utils";
+
+// Layout, in px. Chips are pills of one height; a deck tucks the extra files
+// behind the first chip as offset edges.
+const HEIGHT = { sm: 28, md: 32 } as const;
+/** Gap between fanned chips, and before the attach button. */
+const GAP = 6;
+/** How far each tucked chip peeks out past the one in front. */
+const EDGE = 4;
+/** Tucked chips shrink a little per layer, from their far edge. */
+const EDGE_SCALE = 0.11;
+/** At most this many edges show behind the front chip. */
+const MAX_EDGES = 2;
+
+// Motion. Widths spring with no visible overshoot (about 1%); the fill edge
+// springs toward the reported progress, so jumpy reports still flow.
+const widthSpring = { stiffness: 380, damping: 32 } as const;
+const fanSpring = { stiffness: 420, damping: 34 } as const;
+const fillSpring = { stiffness: 110, damping: 21 } as const;
+/** Once the upload is done the fill runs to the end a little quicker. */
+const finishSpring = { stiffness: 170, damping: 26 } as const;
+const magnetSpring = { stiffness: 300, damping: 35 } as const;
+/** Delay between chips as the deck fans out or folds back. */
+const FAN_STAGGER = 30;
+/** The deck folds back this long after the pointer or focus leaves. */
+const FAN_CLOSE_DELAY = 400;
+/** Peak height of the meniscus wave, in px, while the fill is moving. */
+const WAVE_AMPLITUDE = 2;
+/** How far the surface leans into the flow at the top, in px. */
+const MAX_LEAN = 1.5;
+/**
+ * Each edge is a strip this wide centred on the fill's end. At 0 and 1 the
+ * strip sits just outside the chip, so empty is empty and full is full.
+ */
+const REACH = (WAVE_AMPLITUDE + MAX_LEAN) * 2;
+/** The wave's travel speed, in cycles per second. */
+const WAVE_SPEED = 1.3;
+/** An indeterminate band is this share of the chip and crosses in this long. */
+const BAND_WIDTH = 0.3;
+const BAND_PERIOD = 1500;
+/** On error the fill drains back to empty. */
+const DRAIN_DURATION = 300;
+/** No progress for this long and the chip says it's waiting. */
+const STALL_DELAY = 2000;
+/** How long a rejected drop shows its note on the attach button. */
+const NOTE_DURATION = 1600;
+/** A chip removed from a deck fades out before it unmounts. */
+const LEAVE_DURATION = 180;
+/** Max drag pull toward the pointer, in px. */
+const MAGNET_MAX = 4;
+/** Time constant of the percent digits rolling to a new number, in ms. */
+const DIGIT_EASE = 55;
+/** Ms of quiet before the live region speaks. */
+const ANNOUNCE_DELAY = 350;
+/** Two cues closer than this play once. */
+const CUE_GAP = 90;
+
+// A soft tik when files land, a brighter one when an upload completes, and a
+// low one when it fails.
+const ATTACH_SOUND = {
+	name: "upload-chip-attach",
+	baseFreq: 880,
+	noiseColor: "pink",
+	oscType: "sine",
+	filterFreq: 2600,
+	filterQ: 1.4,
+	attack: 0.002,
+	decay: 0.45,
+	brightness: 2400,
+} as const;
+const DONE_SOUND = {
+	...ATTACH_SOUND,
+	name: "upload-chip-done",
+	baseFreq: 1560,
+	filterFreq: 5200,
+	decay: 0.4,
+	brightness: 4600,
+} as const;
+const ERROR_SOUND = {
+	...ATTACH_SOUND,
+	name: "upload-chip-error",
+	baseFreq: 300,
+	oscType: "triangle",
+	filterFreq: 900,
+	decay: 0.7,
+	brightness: 1200,
+} as const;
+
+// Hoisted and deduplicated by React, so every instance shares one sheet.
+const STYLES =
+	"@keyframes upload-chip-in{from{opacity:0;filter:blur(1px)}}" +
+	"@keyframes upload-chip-out{to{opacity:0;filter:blur(1px)}}" +
+	"@keyframes upload-chip-enter{from{opacity:0}}" +
+	"[data-slot=upload-chip] [data-fade-in]{animation:upload-chip-in .2s ease-out both}" +
+	"[data-slot=upload-chip] [data-ghost]{animation:upload-chip-out .12s ease-out both}" +
+	"[data-slot=upload-chip] [data-entering]{animation:upload-chip-enter .2s ease-out both}" +
+	// Once measured, chips are placed by the layout loop. Before that (the
+	// server render) they sit side by side in the list's own flow.
+	"[data-slot=upload-chip-list][data-ready]>li{position:absolute;top:0;inset-inline-start:0}" +
+	"[data-slot=upload-chip][data-static] *{animation-duration:.12s!important;animation-delay:0s!important}" +
+	"[data-slot=upload-chip][data-static] [data-check]{transition:none!important}";
+
+export interface UploadChipFile {
+	id: string;
+	name: string;
+	/** Bytes. Shown as "2.4 MB" once the upload is done; 0 hides it. */
+	size?: number;
+	/** MIME type, used with the extension to pick the file icon. */
+	type?: string;
+	/** 0 to 1. Leave it out while the size of the upload isn't known. */
+	progress?: number;
+	status: "idle" | "uploading" | "done" | "error";
+	/** Why it failed, read out with the failure and shown as a tooltip. */
+	error?: string;
+	/** An image URL shown as a tiny thumbnail in place of the file icon. */
+	previewUrl?: string;
+}
+
+export interface UploadChipProps
+	extends Omit<ComponentProps<"div">, "children" | "onDrop"> {
+	/** The files to show, in order. Upload logic and progress are yours. */
+	files?: readonly UploadChipFile[];
+	/** Called with the files picked or dropped that pass `accept` and `maxFiles`. */
+	onFilesAdded?: (files: File[]) => void;
+	/** Called from a chip's remove button once it's done or failed. */
+	onRemove?: (id: string) => void;
+	/** Called from the Retry button of a failed chip. */
+	onRetry?: (id: string) => void;
+	/** Called from the remove button while uploading. Falls back to `onRemove`. */
+	onCancel?: (id: string) => void;
+	/** File types to accept, as for `<input type="file">`, such as `"image/*,.pdf"`. */
+	accept?: string;
+	/** Allow more than one file. */
+	multiple?: boolean;
+	/** The most files the chip holds at once. */
+	maxFiles?: number;
+	disabled?: boolean;
+	/** The attach button's label. */
+	label?: string;
+	/** The attach button's label while files are dragged over the page. */
+	dropLabel?: string;
+	size?: "sm" | "md";
+	/** Tuck extra files into a deck that fans out on hover or focus. `false` lays chips side by side. */
+	stack?: boolean;
+	/** An element that also accepts dropped files, such as a whole composer. */
+	dropTargetRef?: RefObject<HTMLElement | null>;
+	/** Play soft tiks on attach, done, and error. */
+	sound?: boolean;
+	/** Haptics on attach, done, and error, on touch devices only. */
+	haptics?: boolean;
+	/** Set `false` to skip the springs, the wave, and the shake, as with reduced motion. */
+	animated?: boolean;
+}
+
+interface Spring {
+	value: number;
+	velocity: number;
+	target: number;
+}
+
+type Phase = "idle" | "uploading" | "done" | "error";
+
+interface Geo {
+	w: Spring;
+	x: Spring;
+	y: Spring;
+	s: Spring;
+	/** The row's own width, measured. */
+	natural: number;
+	/** Springs hold still until this time, for the fan stagger. */
+	holdUntil: number;
+	behind: boolean;
+	/** Set until the first layout places the chip. */
+	fresh: boolean;
+	entering: boolean;
+	morph: boolean;
+	li: HTMLLIElement | null;
+	clip: HTMLDivElement | null;
+	row: HTMLDivElement | null;
+}
+
+interface ListItem {
+	file: UploadChipFile;
+	leaving: boolean;
+}
+
+function clamp(value: number, min = 0, max = 1) {
+	return Math.min(Math.max(value, min), max);
+}
+
+function spring(value: number): Spring {
+	return { value, velocity: 0, target: value };
+}
+
+function jump(s: Spring, value = s.target) {
+	s.value = value;
+	s.target = value;
+	s.velocity = 0;
+}
+
+/** Steps a spring by `dt` seconds. Returns whether it's still moving. */
+function stepSpring(
+	s: Spring,
+	dt: number,
+	{ stiffness, damping }: { stiffness: number; damping: number },
+	epsilon: number,
+) {
+	let left = dt;
+	while (left > 0) {
+		const h = Math.min(left, 1 / 240);
+		const accel = -stiffness * (s.value - s.target) - damping * s.velocity;
+		s.velocity += accel * h;
+		s.value += s.velocity * h;
+		left -= h;
+	}
+	if (
+		Math.abs(s.value - s.target) < epsilon &&
+		Math.abs(s.velocity) < epsilon * 10
+	) {
+		jump(s);
+		return false;
+	}
+	return true;
+}
+
+function smoothstep(t: number) {
+	return t * t * (3 - 2 * t);
+}
+
+/** Runs `step` once per frame while it returns `true`. Nothing runs at rest. */
+function useFrameLoop(step: (dt: number, now: number) => boolean) {
+	const stepRef = useRef(step);
+	stepRef.current = step;
+	const frameRef = useRef(0);
+	const lastRef = useRef(0);
+
+	const tick = useCallback((now: number) => {
+		const dt = clamp((now - lastRef.current) / 1000, 0, 1 / 20);
+		lastRef.current = now;
+		frameRef.current = stepRef.current(dt, now)
+			? requestAnimationFrame(tick)
+			: 0;
+	}, []);
+
+	useEffect(
+		() => () => {
+			cancelAnimationFrame(frameRef.current);
+			frameRef.current = 0;
+		},
+		[],
+	);
+
+	return useCallback(() => {
+		if (frameRef.current) return;
+		lastRef.current = performance.now();
+		frameRef.current = requestAnimationFrame(tick);
+	}, [tick]);
+}
+
+/** "2.4 MB", in SI units like the file managers on macOS and iOS. */
+export function formatFileSize(bytes: number) {
+	if (!Number.isFinite(bytes) || bytes <= 0) return "";
+	const units = ["B", "KB", "MB", "GB", "TB"];
+	let value = bytes;
+	let unit = 0;
+	while (value >= 1000 && unit < units.length - 1) {
+		value /= 1000;
+		unit++;
+	}
+	const digits = unit === 0 || value >= 10 ? 0 : 1;
+	return `${value.toFixed(digits).replace(/\.0$/, "")} ${units[unit]}`;
+}
+
+function graphemes(text: string) {
+	if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
+		return Array.from(
+			new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(text),
+			(part) => part.segment,
+		);
+	}
+	return Array.from(text);
+}
+
+/**
+ * Splits a name so the end survives truncation: "quarterly-rep" may be cut
+ * short, "ort.pdf" always shows. Short names keep the last few characters.
+ */
+function splitName(name: string): [string, string] {
+	const chars = graphemes(name);
+	const dot = name.lastIndexOf(".");
+	const extension =
+		dot > 0 && name.length - dot <= 9 ? graphemes(name.slice(dot)).length : 0;
+	const keep = Math.min(chars.length, extension + (extension ? 3 : 5));
+	if (chars.length - keep < 2) return [name, ""];
+	return [
+		chars.slice(0, chars.length - keep).join(""),
+		chars.slice(chars.length - keep).join(""),
+	];
+}
+
+type FileKind = "image" | "audio" | "archive" | "document" | "file";
+
+function fileKind(file: { name: string; type?: string }): FileKind {
+	const type = file.type ?? "";
+	const extension = file.name.split(".").pop()?.toLowerCase() ?? "";
+	if (
+		type.startsWith("image/") ||
+		/^(png|jpe?g|gif|webp|avif|heic|svg|bmp|tiff?)$/.test(extension)
+	)
+		return "image";
+	if (
+		type.startsWith("audio/") ||
+		/^(mp3|wav|m4a|aac|flac|ogg|opus|aiff?)$/.test(extension)
+	)
+		return "audio";
+	if (
+		/zip|compressed|x-tar|gzip|x-7z|x-rar/.test(type) ||
+		/^(zip|rar|7z|tar|gz|tgz|bz2|xz)$/.test(extension)
+	)
+		return "archive";
+	if (
+		type.startsWith("text/") ||
+		/pdf|document|msword|sheet|presentation|rtf/.test(type) ||
+		/^(pdf|docx?|txt|md|rtf|odt|pages|key|pptx?|xlsx?|csv|numbers)$/.test(
+			extension,
+		)
+	)
+		return "document";
+	return "file";
+}
+
+/** Matches a file against an `accept` string: extensions, `type/*`, or exact types. */
+function accepts(file: File, accept: string | undefined) {
+	if (!accept?.trim()) return true;
+	const name = file.name.toLowerCase();
+	const type = file.type.toLowerCase();
+	return accept
+		.split(",")
+		.map((rule) => rule.trim().toLowerCase())
+		.filter(Boolean)
+		.some((rule) => {
+			if (rule.startsWith(".")) return name.endsWith(rule);
+			if (rule.endsWith("/*")) return type.startsWith(rule.slice(0, -1));
+			return type === rule;
+		});
+}
+
+function hasFiles(event: { dataTransfer: DataTransfer | null }) {
+	return Array.from(event.dataTransfer?.types ?? []).includes("Files");
+}
+
+function isTouchDevice() {
+	return (
+		typeof window !== "undefined" &&
+		window.matchMedia?.("(pointer: coarse)").matches
+	);
+}
+
+/**
+ * The meniscus: the fill's edge as a wave `amplitude` px high that leans
+ * `lean` px at the top, inside a strip `REACH` wide. Returns the filled shape
+ * and the surface line alone.
+ */
+function wavePath(
+	height: number,
+	amplitude: number,
+	phase: number,
+	lean: number,
+): [string, string] {
+	const center = REACH / 2;
+	const steps = 8;
+	const points: Array<[number, number]> = [];
+	for (let index = -1; index <= steps + 1; index++) {
+		const along = index / steps;
+		const t = along * Math.PI * 1.7 + phase;
+		points.push([
+			center + amplitude * Math.sin(t) + lean * (0.5 - along) * 2,
+			along * height,
+		]);
+	}
+	const r = (value: number) => Math.round(value * 100) / 100;
+	let curve = "";
+	for (let index = 1; index <= steps; index++) {
+		const [x0, y0] = points[index - 1];
+		const [x1, y1] = points[index];
+		const [x2, y2] = points[index + 1];
+		const [x3, y3] = points[index + 2];
+		curve += `C${r(x1 + (x2 - x0) / 6)} ${r(y1 + (y2 - y0) / 6)} ${r(x2 - (x3 - x1) / 6)} ${r(y2 - (y3 - y1) / 6)} ${r(x2)} ${r(y2)}`;
+	}
+	const top = `${r(points[1][0])} 0`;
+	return [`M0 0L${top}${curve}L0 ${r(height)}Z`, `M${top}${curve}`];
+}
+
+/** One edge of the fill, a `REACH`-wide strip that rides on `--f0` or `--f1`. */
+function EdgeStrip({
+	side,
+	height,
+	pathRef,
+	line = false,
+}: {
+	side: "start" | "end";
+	height: number;
+	pathRef: RefObject<SVGPathElement | null>;
+	line?: boolean;
+}) {
+	return (
+		<svg
+			aria-hidden="true"
+			className={cn(
+				"absolute top-0 h-full overflow-visible",
+				side === "start" && "-scale-x-100",
+			)}
+			width={REACH}
+			viewBox={`0 0 ${REACH} ${height}`}
+			preserveAspectRatio="none"
+			style={
+				side === "start"
+					? { left: `calc(var(--f0) * (100% + ${REACH}px) - ${REACH}px)` }
+					: {
+							right: `calc((1 - var(--f1)) * (100% + ${REACH}px) - ${REACH}px)`,
+						}
+			}
+		>
+			<path
+				ref={pathRef}
+				fill={line ? "none" : "currentColor"}
+				stroke={line ? "currentColor" : undefined}
+				strokeWidth={line ? 1.25 : undefined}
+				vectorEffect={line ? "non-scaling-stroke" : undefined}
+			/>
+		</svg>
+	);
+}
+
+/** The whole percent the chip reports for a file. */
+function percentOf(status: Phase, determinate: boolean, progress: number) {
+	if (status === "done") return 100;
+	return determinate ? Math.round(progress * 100) : 0;
+}
+
+/** Points each digit place at the number `n`, rolling the short way round. */
+function rollTo(
+	e: { shown: number[]; goal: number[]; n: number },
+	n: number,
+	instant: boolean,
+) {
+	if (n === e.n && !instant) return;
+	const digits = [Math.floor(n / 100) % 10, Math.floor(n / 10) % 10, n % 10];
+	for (let place = 0; place < 3; place++) {
+		const current = ((Math.round(e.goal[place]) % 10) + 10) % 10;
+		const step =
+			e.n < 0 || instant
+				? digits[place] - current
+				: n >= e.n
+					? (digits[place] - current + 10) % 10
+					: -((current - digits[place] + 10) % 10);
+		e.goal[place] = Math.round(e.goal[place]) + step;
+		if (instant || e.n < 0) e.shown[place] = e.goal[place];
+	}
+	e.n = n;
+}
+
+let measureContext: CanvasRenderingContext2D | null = null;
+
+/**
+ * A name cut in the middle when it doesn't fit: "quarterly-rep…ort.pdf".
+ * The full name, hidden, sizes the box; the visible text is fitted to it.
+ */
+function MiddleName({ name }: { name: string }) {
+	const boxRef = useRef<HTMLSpanElement>(null);
+	const fullRef = useRef<HTMLSpanElement>(null);
+	const [label, setLabel] = useState(name);
+
+	useLayoutEffect(() => {
+		const box = boxRef.current;
+		const full = fullRef.current;
+		if (!box || !full) return;
+		const fit = () => {
+			const room = box.clientWidth;
+			if (full.offsetWidth <= room + 0.5) {
+				setLabel(name);
+				return;
+			}
+			measureContext ??= document.createElement("canvas").getContext("2d");
+			if (!measureContext) return;
+			const style = getComputedStyle(full);
+			measureContext.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+			const [head, tail] = splitName(name);
+			const chars = graphemes(head);
+			const width = (count: number) =>
+				measureContext?.measureText(
+					`${chars.slice(0, count).join("")}\u2026${tail}`,
+				).width ?? 0;
+			// The longest start that fits, leaving a px for rounding.
+			let low = 1;
+			let high = chars.length;
+			while (low < high) {
+				const mid = Math.ceil((low + high) / 2);
+				if (width(mid) <= room - 1) low = mid;
+				else high = mid - 1;
+			}
+			setLabel(`${chars.slice(0, low).join("").trimEnd()}\u2026${tail}`);
+		};
+		fit();
+		const observer = new ResizeObserver(fit);
+		observer.observe(box);
+		return () => observer.disconnect();
+	}, [name]);
+
+	return (
+		<span
+			ref={boxRef}
+			className="grid min-w-0 overflow-hidden"
+			style={{ gridTemplateColumns: "minmax(0, max-content)" }}
+		>
+			<span
+				ref={fullRef}
+				className="invisible col-start-1 row-start-1 justify-self-start whitespace-pre"
+			>
+				{name}
+			</span>
+			<span className="col-start-1 row-start-1 truncate whitespace-pre">
+				{label}
+			</span>
+		</span>
+	);
+}
+
+/** A check drawn with one stroke, for the done state. */
+function CheckGlyph({ drawn }: { drawn: boolean }) {
+	return (
+		<svg
+			aria-hidden="true"
+			viewBox="0 0 16 16"
+			fill="none"
+			className="absolute inset-0 size-full overflow-visible"
+		>
+			<path
+				data-check=""
+				d="M3.25 8.4l3.1 3.1 6.4-6.9"
+				pathLength={1}
+				stroke="currentColor"
+				strokeWidth={1.6}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeDasharray="1 1"
+				style={{
+					strokeDashoffset: drawn ? 0 : 1,
+					transition: drawn
+						? "stroke-dashoffset 260ms cubic-bezier(.3,.7,.2,1) 70ms"
+						: "none",
+				}}
+			/>
+		</svg>
+	);
+}
+
+const KIND_ICONS = {
+	image: FileImage,
+	audio: FileMusic,
+	archive: FileArchive,
+	document: FileText,
+	file: FileGlyph,
+} as const;
+
+/** The file-type glyph, which cross-morphs into a check or an alert. */
+function ChipIcon({
+	file,
+	state,
+	px,
+}: {
+	file: UploadChipFile;
+	state: "file" | "check" | "alert";
+	px: number;
+}) {
+	const Glyph = KIND_ICONS[fileKind(file)];
+	const face =
+		"absolute inset-0 transition-[opacity,scale,filter] duration-200 ease-out";
+	const hidden = "scale-50 opacity-0 blur-[1px]";
+	return (
+		<span
+			aria-hidden="true"
+			className="relative shrink-0"
+			style={{ width: px, height: px }}
+		>
+			<span className={cn(face, state !== "file" && hidden)}>
+				{file.previewUrl ? (
+					// biome-ignore lint/performance/noImgElement: a 16 px thumbnail from any URL
+					<img
+						src={file.previewUrl}
+						alt=""
+						draggable={false}
+						className="size-full rounded-[4px] object-cover ring-1 ring-foreground/10"
+					/>
+				) : (
+					<Glyph className="size-full" strokeWidth={1.75} />
+				)}
+			</span>
+			<span
+				className={cn(face, state !== "alert" && hidden, "text-destructive")}
+			>
+				<CircleAlert className="size-full" strokeWidth={1.75} />
+			</span>
+			<CheckGlyph drawn={state === "check"} />
+		</span>
+	);
+}
+
+/** Percent in three tabular places that roll like an odometer. */
+function PercentDigits({
+	digitsRef,
+	dim,
+}: {
+	digitsRef: RefObject<Array<HTMLSpanElement | null>>;
+	dim: boolean;
+}) {
+	return (
+		// Numbers read left to right in right-to-left text too.
+		<span
+			aria-hidden="true"
+			dir="ltr"
+			className={cn(
+				"inline-flex shrink-0 justify-end tabular-nums transition-opacity duration-200",
+				dim && "opacity-50",
+			)}
+		>
+			{[0, 1, 2].map((place) => (
+				<span
+					key={place}
+					className="relative inline-block h-[1lh] overflow-hidden transition-opacity duration-150 [mask-image:linear-gradient(transparent,#000_22%,#000_78%,transparent)]"
+					ref={(node) => {
+						digitsRef.current[place * 2] = node;
+					}}
+				>
+					<span
+						className="flex flex-col"
+						ref={(node) => {
+							digitsRef.current[place * 2 + 1] = node;
+						}}
+					>
+						{/* 0 to 9 and 0 again, so 9 rolls on into 0 */}
+						{Array.from({ length: 11 }, (_, index) => (
+							<span key={index} className="block h-[1lh] text-center">
+								{index % 10}
+							</span>
+						))}
+					</span>
+				</span>
+			))}
+			<span>%</span>
+		</span>
+	);
+}
+
+interface ChipProps {
+	file: UploadChipFile;
+	size: "sm" | "md";
+	leaving: boolean;
+	behind: boolean;
+	morph: boolean;
+	label: string;
+	still: boolean;
+	disabled: boolean;
+	onRemove?: (id: string) => void;
+	onRetry?: (id: string) => void;
+	onCancel?: (id: string) => void;
+	register: (
+		id: string,
+		part: "li" | "clip" | "row",
+		node: Element | null,
+	) => void;
+	onMeasure: (id: string, width: number) => void;
+	onSettle: (file: UploadChipFile, outcome: "done" | "error") => void;
+	onAction: (event: MouseEvent<HTMLButtonElement>, id: string) => void;
+}
+
+function Chip({
+	file,
+	size,
+	leaving,
+	behind,
+	morph,
+	label,
+	still,
+	disabled,
+	onRemove,
+	onRetry,
+	onCancel,
+	register,
+	onMeasure,
+	onSettle,
+	onAction,
+}: ChipProps) {
+	const height = HEIGHT[size];
+	const status = file.status;
+	const determinate =
+		typeof file.progress === "number" && Number.isFinite(file.progress);
+	const progress = determinate ? clamp(file.progress as number) : 0;
+
+	// A chip that mounts done or failed shows it at once; one that gets there
+	// while you watch fills to the end first.
+	const [phase, setPhase] = useState<Phase>(status);
+	const [stalled, setStalled] = useState(false);
+	const [ghost, setGhost] = useState(morph);
+	const mountedRef = useRef(false);
+
+	const rowRef = useRef<HTMLDivElement>(null);
+	const shellRef = useRef<HTMLDivElement>(null);
+	const fillRef = useRef<HTMLDivElement>(null);
+	const startWaveRef = useRef<SVGPathElement>(null);
+	const endWaveRef = useRef<SVGPathElement>(null);
+	const startLipRef = useRef<SVGPathElement>(null);
+	const endLipRef = useRef<SVGPathElement>(null);
+	const digitsRef = useRef<Array<HTMLSpanElement | null>>([]);
+
+	const engine = useRef({
+		f0: spring(0),
+		f1: spring(status === "done" ? 1 : determinate ? progress : 0),
+		amp: 0,
+		wave: 0,
+		drain: null as null | { from0: number; from1: number; start: number },
+		band: 0,
+		lean: 0,
+		/** Each place's rolled position, and where it's rolling to. */
+		shown: [0, 0, 0],
+		goal: [0, 0, 0],
+		n: -1,
+		onScreen: true,
+		lastMove: 0,
+	});
+	const latest = useRef({ status, determinate, progress, phase, still });
+	latest.current = { status, determinate, progress, phase, still };
+
+	const paint = useCallback(() => {
+		const e = engine.current;
+		const fill = fillRef.current;
+		if (fill) {
+			fill.style.setProperty("--f0", e.f0.value.toFixed(4));
+			fill.style.setProperty("--f1", e.f1.value.toFixed(4));
+		}
+		const [fillPath, linePath] = wavePath(height, e.amp, e.wave, e.lean);
+		startWaveRef.current?.setAttribute("d", fillPath);
+		endWaveRef.current?.setAttribute("d", fillPath);
+		startLipRef.current?.setAttribute("d", linePath);
+		endLipRef.current?.setAttribute("d", linePath);
+		// Leading places stay in the slot, so the width never changes, but
+		// show only once the number reaches them.
+		const shownFrom = [100, 10, 0];
+		for (let place = 0; place < 3; place++) {
+			const box = digitsRef.current[place * 2];
+			const strip = digitsRef.current[place * 2 + 1];
+			if (!box || !strip) continue;
+			const shown = ((e.shown[place] % 10) + 10) % 10;
+			strip.style.transform = `translateY(${((-shown / 11) * 100).toFixed(3)}%)`;
+			box.style.opacity = Math.max(e.n, 0) >= shownFrom[place] ? "1" : "0";
+		}
+	}, [height]);
+
+	const step = useCallback(
+		(dt: number, now: number) => {
+			const e = engine.current;
+			const { status, determinate, progress, phase, still } = latest.current;
+			const indeterminate = status === "uploading" && !determinate;
+			if (!e.onScreen || still) {
+				// Off screen or without motion: land on the end state at once.
+				if (e.drain) e.drain = null;
+				const [a, b] = indeterminate
+					? [0, still ? BAND_WIDTH : 0]
+					: [0, status === "error" ? 0 : status === "done" ? 1 : progress];
+				jump(e.f0, a);
+				jump(e.f1, b);
+				e.amp = 0;
+				e.lean = 0;
+				rollTo(e, percentOf(status, determinate, progress), true);
+				paint();
+				if (status === "done" && phase !== "done") setPhase("done");
+				return false;
+			}
+
+			let moving = false;
+			if (e.drain) {
+				const t = clamp((now - e.drain.start) / DRAIN_DURATION);
+				jump(e.f1, e.drain.from1 * (1 - smoothstep(t)));
+				jump(e.f0, e.drain.from0 * (1 - smoothstep(t)));
+				if (t >= 1) e.drain = null;
+				else moving = true;
+			} else {
+				if (indeterminate) {
+					// The band ping-pongs across, eased at each end.
+					e.band += (dt * 1000) / BAND_PERIOD;
+					const along = 0.5 - 0.5 * Math.cos(e.band * Math.PI);
+					e.f0.target = along * (1 - BAND_WIDTH);
+					e.f1.target = e.f0.target + BAND_WIDTH;
+				} else {
+					e.f0.target = 0;
+					e.f1.target =
+						status === "done"
+							? 1
+							: status === "uploading"
+								? progress
+								: e.f1.target;
+				}
+				const a = stepSpring(e.f0, dt, fillSpring, 0.0004);
+				const b = stepSpring(
+					e.f1,
+					dt,
+					status === "done" ? finishSpring : fillSpring,
+					0.0004,
+				);
+				moving = a || b || indeterminate;
+			}
+
+			// The wave swells while the fill moves and settles flat when it stops,
+			// and the surface leans into the direction it flows, like a slosh.
+			const velocity = indeterminate
+				? (e.f0.velocity + e.f1.velocity) / 2
+				: e.f1.velocity;
+			const flowing = moving && (Math.abs(velocity) > 0.004 || indeterminate);
+			if (flowing) e.lastMove = now;
+			const targetAmp = now - e.lastMove < 250 ? WAVE_AMPLITUDE : 0;
+			const ease = 1 - Math.exp(-dt / 0.18);
+			e.amp += (targetAmp - e.amp) * ease;
+			if (Math.abs(e.amp - targetAmp) < 0.02) e.amp = targetAmp;
+			const targetLean = flowing ? clamp(velocity * 6, -1, 1) * MAX_LEAN : 0;
+			e.lean += (targetLean - e.lean) * ease;
+			if (Math.abs(e.lean - targetLean) < 0.02) e.lean = targetLean;
+			e.wave += dt * WAVE_SPEED * Math.PI * 2;
+
+			// Each digit rolls to its new value, onward for a rise, back for a fall.
+			rollTo(e, percentOf(status, determinate, progress), false);
+			let rolling = false;
+			for (let place = 0; place < 3; place++) {
+				const gap = e.goal[place] - e.shown[place];
+				if (Math.abs(gap) < 0.002) e.shown[place] = e.goal[place];
+				else {
+					e.shown[place] += gap * (1 - Math.exp((-dt * 1000) / DIGIT_EASE));
+					rolling = true;
+				}
+			}
+			paint();
+
+			if (status === "done" && phase !== "done" && e.f1.value >= 0.99) {
+				setPhase("done");
+			}
+			return moving || rolling || e.amp > 0 || e.lean !== 0;
+		},
+		[paint],
+	);
+	const kick = useFrameLoop(step);
+
+	// Phase follows the status, except that "done" waits for the fill. Each
+	// new progress report wakes the loop.
+	// biome-ignore lint/correctness/useExhaustiveDependencies: progress changes restart the loop
+	useLayoutEffect(() => {
+		const e = engine.current;
+		if (!mountedRef.current) {
+			mountedRef.current = true;
+			paint();
+			return;
+		}
+		if (status === "error" && phase !== "error") {
+			setPhase("error");
+			e.drain = {
+				from0: e.f0.value,
+				from1: e.f1.value,
+				start: performance.now(),
+			};
+			if (!still) {
+				shellRef.current?.animate(
+					[
+						{ transform: "translateX(0)" },
+						{ transform: "translateX(-3px)" },
+						{ transform: "translateX(3px)" },
+						{ transform: "translateX(-1.5px)" },
+						{ transform: "translateX(0)" },
+					],
+					{ duration: 320, easing: "ease-out" },
+				);
+			}
+		} else if (status !== "done" && status !== "error" && phase !== status) {
+			setPhase(status);
+		}
+		kick();
+	}, [status, progress, determinate, phase, still, kick, paint]);
+
+	// Cues for the outcome, only for changes seen after mount.
+	const settledRef = useRef<Phase>(phase);
+	useEffect(() => {
+		if (settledRef.current === phase) return;
+		settledRef.current = phase;
+		if (phase === "done" || phase === "error") onSettle(file, phase);
+	}, [phase, file, onSettle]);
+
+	// No progress for a while reads as waiting.
+	useEffect(() => {
+		setStalled(false);
+		if (status !== "uploading" || !determinate || progress >= 1) return;
+		const timer = window.setTimeout(() => setStalled(true), STALL_DELAY);
+		return () => clearTimeout(timer);
+	}, [status, determinate, progress]);
+
+	// The wave and the band only run while the chip is on screen.
+	useEffect(() => {
+		const node = shellRef.current;
+		if (!node || typeof IntersectionObserver === "undefined") return;
+		const observer = new IntersectionObserver(([entry]) => {
+			engine.current.onScreen = entry?.isIntersecting ?? true;
+			kick();
+		});
+		observer.observe(node);
+		return () => observer.disconnect();
+	}, [kick]);
+
+	// The deck springs the chip's width toward the row's own.
+	useLayoutEffect(() => {
+		const row = rowRef.current;
+		if (!row) return;
+		onMeasure(file.id, Number.parseFloat(getComputedStyle(row).width) || 0);
+		const observer = new ResizeObserver(([entry]) => {
+			const box = entry?.borderBoxSize?.[0];
+			onMeasure(file.id, box ? box.inlineSize : row.offsetWidth);
+		});
+		observer.observe(row);
+		return () => observer.disconnect();
+	}, [file.id, onMeasure]);
+
+	const done = phase === "done";
+	const failed = phase === "error";
+	const uploading = !done && !failed && status !== "idle";
+	const sizeText = formatFileSize(file.size ?? 0);
+	const removeLabel = uploading ? `Cancel ${file.name}` : `Remove ${file.name}`;
+	const removeHandler = uploading ? (onCancel ?? onRemove) : onRemove;
+	const iconPx = size === "sm" ? 14 : 16;
+
+	let meta: ReactNode = null;
+	let metaKey = "none";
+	if (failed) {
+		metaKey = "error";
+		meta = onRetry ? (
+			<button
+				type="button"
+				data-slot="upload-chip-retry"
+				disabled={disabled}
+				aria-label={`Retry ${file.name}`}
+				onClick={(event) => {
+					onAction(event, file.id);
+					onRetry(file.id);
+				}}
+				className="relative cursor-pointer rounded-full px-1 font-medium text-foreground underline-offset-2 outline-none pointer-coarse:after:absolute pointer-coarse:after:-inset-x-2 pointer-coarse:after:-inset-y-3 hover:underline focus-visible:outline-2 focus-visible:outline-foreground"
+			>
+				Retry
+			</button>
+		) : (
+			<span className="text-foreground/65">Failed</span>
+		);
+	} else if (done) {
+		metaKey = "size";
+		meta = sizeText ? (
+			<span className="whitespace-nowrap text-foreground/65 tabular-nums">
+				<span aria-hidden="true">· </span>
+				{sizeText}
+			</span>
+		) : null;
+	} else if (status === "idle") {
+		metaKey = "queued";
+		meta = <span className="text-foreground/65">Queued</span>;
+	} else if (!determinate) {
+		metaKey = "indeterminate";
+		meta = <span className="text-foreground/65">Uploading</span>;
+	} else {
+		metaKey = "percent";
+		meta = (
+			<span className="inline-flex items-center gap-1.5 text-foreground/65">
+				{stalled ? <span data-fade-in="">Waiting</span> : null}
+				<PercentDigits digitsRef={digitsRef} dim={stalled} />
+			</span>
+		);
+	}
+
+	const progressProps = uploading
+		? {
+				role: "progressbar",
+				"aria-label": file.name,
+				"aria-valuemin": 0,
+				"aria-valuemax": 100,
+				...(determinate
+					? {
+							"aria-valuenow": Math.round(progress * 100),
+							"aria-valuetext": `${Math.round(progress * 100)} percent`,
+						}
+					: { "aria-valuetext": "Uploading" }),
+			}
+		: {};
+
+	return (
+		<li
+			ref={(node) => register(file.id, "li", node)}
+			data-slot="upload-chip-item"
+			data-status={status}
+			data-phase={phase}
+			data-behind={behind ? "" : undefined}
+			data-leaving={leaving ? "" : undefined}
+			inert={leaving || undefined}
+			title={file.error ? `${file.name}: ${file.error}` : file.name}
+			className={cn(
+				"group/chip transition-opacity duration-150 ease-out will-change-transform",
+				leaving && "pointer-events-none opacity-0",
+			)}
+		>
+			<div
+				ref={shellRef}
+				data-slot="upload-chip-shell"
+				className="relative rounded-full"
+				style={{ height }}
+			>
+				{/* The chip's surface and the liquid fill, clipped to the pill. */}
+				<span
+					aria-hidden="true"
+					className="absolute inset-0 overflow-hidden rounded-full bg-[color-mix(in_oklab,var(--color-muted)_60%,var(--color-background))] in-data-[wake]:ring-foreground/20 ring-1 ring-foreground/8 ring-inset transition-shadow duration-200 group-data-[behind]/chip:bg-[color-mix(in_oklab,var(--color-muted)_85%,var(--color-foreground)_4%)]"
+				>
+					<span
+						className={cn(
+							"absolute inset-0 transition-opacity ease-out",
+							done ? "opacity-0 duration-500" : "opacity-100 duration-150",
+						)}
+					>
+						<div
+							ref={fillRef}
+							className="absolute inset-0 text-foreground rtl:-scale-x-100"
+							style={{ "--f0": 0, "--f1": 0 } as CSSProperties}
+						>
+							{/*
+							 * The liquid: a body between two wavy edges, which overlap it by
+							 * half a px. One group opacity, so the overlap never shows.
+							 */}
+							<div className="absolute inset-0 opacity-[.07] dark:opacity-[.12]">
+								<span
+									className="absolute inset-y-0 bg-current"
+									style={{
+										left: `calc(var(--f0) * (100% + ${REACH}px) - 0.5px)`,
+										right: `calc((1 - var(--f1)) * (100% + ${REACH}px) - 0.5px)`,
+									}}
+								/>
+								<EdgeStrip
+									side="start"
+									height={height}
+									pathRef={startWaveRef}
+								/>
+								<EdgeStrip side="end" height={height} pathRef={endWaveRef} />
+							</div>
+							{/* The surface line, a touch darker, like a meniscus. */}
+							<div className="absolute inset-0 opacity-[.09] dark:opacity-[.14]">
+								<EdgeStrip
+									side="start"
+									height={height}
+									pathRef={startLipRef}
+									line
+								/>
+								<EdgeStrip
+									side="end"
+									height={height}
+									pathRef={endLipRef}
+									line
+								/>
+							</div>
+						</div>
+					</span>
+				</span>
+				<div
+					ref={(node) => register(file.id, "clip", node)}
+					className="relative h-full overflow-hidden rounded-full data-[rest]:overflow-visible"
+				>
+					{ghost ? (
+						<span
+							data-ghost=""
+							aria-hidden="true"
+							onAnimationEnd={() => setGhost(false)}
+							className={cn(
+								"pointer-events-none absolute inset-y-0 start-0 flex items-center gap-1.5 whitespace-nowrap font-medium",
+								size === "sm" ? "ps-2.5" : "ps-3",
+							)}
+						>
+							<Paperclip
+								style={{ width: iconPx, height: iconPx }}
+								strokeWidth={1.75}
+							/>
+							{label}
+						</span>
+					) : null}
+					<div
+						ref={(node) => {
+							rowRef.current = node;
+							register(file.id, "row", node);
+						}}
+						data-fade-in={morph ? "" : undefined}
+						className={cn(
+							"flex h-full w-max items-center whitespace-nowrap transition-opacity duration-150",
+							size === "sm" ? "gap-1.5 ps-2 pe-2.5" : "gap-1.5 ps-2.5 pe-3",
+							behind && "opacity-0",
+						)}
+						style={morph ? { animationDelay: "50ms" } : undefined}
+					>
+						<ChipIcon
+							file={file}
+							px={iconPx}
+							state={failed ? "alert" : done ? "check" : "file"}
+						/>
+						<span
+							{...progressProps}
+							className="flex min-w-0 items-center gap-1.5"
+						>
+							<span className="sr-only">{file.name}</span>
+							{/* Its own direction, so a Latin name in an RTL page keeps its order. */}
+							<span
+								aria-hidden="true"
+								dir="auto"
+								className={cn(
+									"flex min-w-0 font-medium text-foreground",
+									size === "sm" ? "max-w-[10rem]" : "max-w-[13rem]",
+								)}
+							>
+								<MiddleName name={file.name} />
+							</span>
+							{meta ? (
+								<span
+									key={metaKey}
+									data-fade-in={mountedRef.current ? "" : undefined}
+									className="flex shrink-0 items-center"
+								>
+									{meta}
+								</span>
+							) : null}
+						</span>
+						{removeHandler ? (
+							<span
+								data-slot="upload-chip-remove-slot"
+								className="pointer-events-none pointer-coarse:pointer-events-auto -ms-1.5 pointer-coarse:ms-0 flex pointer-coarse:w-4 w-0 shrink-0 justify-end overflow-hidden pointer-coarse:overflow-visible opacity-0 pointer-coarse:opacity-100 transition-opacity duration-150 group-hover/chip:pointer-events-auto group-hover/chip:ms-0 group-hover/chip:w-4 group-hover/chip:overflow-visible group-hover/chip:opacity-100 group-has-[:focus-visible]/chip:pointer-events-auto group-has-[:focus-visible]/chip:ms-0 group-has-[:focus-visible]/chip:w-4 group-has-[:focus-visible]/chip:overflow-visible group-has-[:focus-visible]/chip:opacity-100"
+							>
+								<button
+									type="button"
+									data-slot="upload-chip-remove"
+									disabled={disabled}
+									aria-label={removeLabel}
+									onClick={(event) => {
+										onAction(event, file.id);
+										removeHandler(file.id);
+									}}
+									className="relative -me-0.5 flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-full text-foreground/55 outline-none transition-colors pointer-coarse:after:absolute pointer-coarse:after:-inset-3.5 hover:text-foreground focus-visible:outline-2 focus-visible:outline-foreground"
+								>
+									<X className="size-3.5" strokeWidth={2} />
+								</button>
+							</span>
+						) : null}
+					</div>
+				</div>
+			</div>
+		</li>
+	);
+}
+
+/**
+ * The attach button. Its width springs to fit its label, so "Attach" grows
+ * into "Drop to attach" and a chip collapses back into it. `compact` is the
+ * round button beside a deck, which shows a label only for a note.
+ */
+function AttachButton({
+	buttonRef,
+	text,
+	compact,
+	wake,
+	size,
+	fromRef,
+	still,
+	disabled,
+	ariaLabel,
+	onClick,
+	widthRef,
+}: {
+	buttonRef: RefObject<HTMLButtonElement | null>;
+	text: string | null;
+	compact: boolean;
+	wake: boolean;
+	size: "sm" | "md";
+	/** The last chip's width, when that chip collapses into this pill. */
+	fromRef: RefObject<number> | null;
+	still: boolean;
+	disabled: boolean;
+	ariaLabel: string;
+	onClick: () => void;
+	widthRef?: RefObject<number>;
+}) {
+	const height = HEIGHT[size];
+	const iconPx = size === "sm" ? 14 : 16;
+	const rowRef = useRef<HTMLSpanElement>(null);
+	const clipRef = useRef<HTMLSpanElement>(null);
+	const width = useRef(spring(0));
+	const morphRef = useRef(fromRef?.current ?? 0);
+	const naturalRef = useRef(0);
+	const stillRef = useRef(still);
+	stillRef.current = still;
+
+	const write = useCallback(() => {
+		const w = width.current;
+		const button = buttonRef.current;
+		if (button) button.style.width = `${w.value}px`;
+		if (widthRef) widthRef.current = w.value;
+		const clip = clipRef.current;
+		if (clip) {
+			if (Math.abs(w.value - naturalRef.current) < 0.5)
+				clip.setAttribute("data-rest", "");
+			else clip.removeAttribute("data-rest");
+		}
+	}, [buttonRef, widthRef]);
+
+	const kick = useFrameLoop((dt) => {
+		const active = stepSpring(width.current, dt, widthSpring, 0.05);
+		write();
+		return active;
+	});
+
+	useLayoutEffect(() => {
+		const row = rowRef.current;
+		if (!row) return;
+		const measure = (next: number) => {
+			naturalRef.current = next;
+			const w = width.current;
+			w.target = next;
+			if (stillRef.current) jump(w, next);
+			else if (w.value === 0) {
+				// First measure: start at the chip's width if it's morphing back.
+				jump(w, morphRef.current || next);
+				w.target = next;
+			}
+			write();
+			kick();
+		};
+		measure(Number.parseFloat(getComputedStyle(row).width) || 0);
+		const observer = new ResizeObserver(([entry]) => {
+			const box = entry?.borderBoxSize?.[0];
+			measure(box ? box.inlineSize : row.offsetWidth);
+		});
+		observer.observe(row);
+		return () => observer.disconnect();
+	}, [kick, write]);
+
+	return (
+		<button
+			ref={buttonRef}
+			type="button"
+			data-slot="upload-chip-attach"
+			data-wake={wake ? "" : undefined}
+			disabled={disabled}
+			aria-label={ariaLabel}
+			onClick={onClick}
+			className={cn(
+				"group/attach relative shrink-0 cursor-pointer touch-manipulation select-none rounded-full font-medium text-foreground text-sm outline-none transition-[box-shadow] duration-200 pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 disabled:cursor-not-allowed data-[wake]:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-foreground)_5%,transparent),0_2px_14px_color-mix(in_oklab,var(--color-foreground)_10%,transparent)]",
+				size === "sm"
+					? "text-[13px] pointer-coarse:after:-inset-y-2"
+					: "pointer-coarse:after:-inset-y-1.5",
+				compact && "text-foreground/70 hover:text-foreground",
+			)}
+			style={{ height, minWidth: height }}
+		>
+			<span
+				aria-hidden="true"
+				className="absolute inset-0 rounded-full bg-[color-mix(in_oklab,var(--color-muted)_60%,var(--color-background))] ring-1 ring-foreground/8 ring-inset transition-[background-color,box-shadow] duration-200 group-hover/attach:bg-[color-mix(in_oklab,var(--color-muted)_100%,var(--color-foreground)_2%)] group-data-[wake]/attach:ring-foreground/20"
+			/>
+			<span
+				ref={clipRef}
+				className="relative flex h-full overflow-hidden rounded-full data-[rest]:overflow-visible"
+			>
+				<span
+					ref={rowRef}
+					data-fade-in={fromRef ? "" : undefined}
+					className={cn(
+						"flex h-full w-max items-center gap-1.5 whitespace-nowrap",
+						compact && !text
+							? "justify-center"
+							: size === "sm"
+								? "ps-2.5 pe-3"
+								: "ps-3 pe-3.5",
+					)}
+					style={compact && !text ? { width: height } : undefined}
+				>
+					<Paperclip
+						aria-hidden="true"
+						className="shrink-0"
+						style={{ width: iconPx, height: iconPx }}
+						strokeWidth={1.75}
+					/>
+					{text ? (
+						<span key={text} data-fade-in="">
+							{text}
+						</span>
+					) : null}
+				</span>
+			</span>
+		</button>
+	);
+}
+
+/**
+ * An attach button that becomes the upload itself. Pick or drop a file and the
+ * pill springs into a chip that fills with liquid as bytes go up, rolls its
+ * percent, and turns its file icon into a check. More files tuck into a deck.
+ */
+export function UploadChip({
+	files = [],
+	onFilesAdded,
+	onRemove,
+	onRetry,
+	onCancel,
+	accept,
+	multiple = true,
+	maxFiles,
+	disabled = false,
+	label = "Attach",
+	dropLabel = "Drop to attach",
+	size = "md",
+	stack = true,
+	dropTargetRef,
+	sound = false,
+	haptics = true,
+	animated = true,
+	className,
+	onKeyDown,
+	...props
+}: UploadChipProps) {
+	// The preference applies after hydration, so server and client markup match.
+	const reducedMotion = useReducedMotion() ?? false;
+	const [hydrated, setHydrated] = useState(false);
+	useEffect(() => setHydrated(true), []);
+	const still = !animated || (hydrated && reducedMotion);
+	const height = HEIGHT[size];
+
+	const { trigger: haptic } = useWebHaptics();
+	const { click: playAttach } = useTiks({
+		theme: ATTACH_SOUND,
+		volume: 0.16,
+		respectReducedMotion: false,
+	});
+	const { click: playDone } = useTiks({
+		theme: DONE_SOUND,
+		volume: 0.18,
+		respectReducedMotion: false,
+	});
+	const { click: playError } = useTiks({
+		theme: ERROR_SOUND,
+		volume: 0.2,
+		respectReducedMotion: false,
+	});
+
+	// Rendered chips: the files, plus any just removed that are fading out.
+	const [list, setList] = useState(() => ({
+		files,
+		items: files.map((file): ListItem => ({ file, leaving: false })),
+		morphId: null as string | null,
+		pillMorph: false,
+	}));
+	let current = list;
+	if (list.files !== files) {
+		const ids = new Set(files.map((file) => file.id));
+		const items: ListItem[] = files.map((file) => ({ file, leaving: false }));
+		if (files.length > 0) {
+			list.items.forEach((item, index) => {
+				if (!ids.has(item.file.id) && !item.leaving) {
+					items.splice(Math.min(index, items.length), 0, {
+						file: item.file,
+						leaving: true,
+					});
+				}
+			});
+		}
+		current = {
+			files,
+			items,
+			morphId:
+				list.files.length === 0 && files.length > 0
+					? (files[0]?.id ?? null)
+					: list.morphId,
+			pillMorph: list.files.length > 0 && files.length === 0,
+		};
+		setList(current);
+	}
+	const items = current.items;
+	const live = items.filter((item) => !item.leaving);
+	const count = files.length;
+	const limit = multiple ? (maxFiles ?? Number.POSITIVE_INFINITY) : 1;
+	const canAdd = !disabled && count < limit;
+
+	const [wake, setWake] = useState(false);
+	const [note, setNote] = useState<string | null>(null);
+	const [fanned, setFanned] = useState(false);
+	const [announcement, setAnnouncement] = useState("");
+	const fanOpen = !stack || (fanned && live.length > 1);
+
+	const rootRef = useRef<HTMLDivElement>(null);
+	const stageRef = useRef<HTMLDivElement>(null);
+	const listRef = useRef<HTMLUListElement>(null);
+	const countRef = useRef<HTMLSpanElement>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
+	const attachRef = useRef<HTMLButtonElement>(null);
+	const compactRef = useRef<HTMLButtonElement>(null);
+	const pillWidthRef = useRef(0);
+	const frontWidthRef = useRef(0);
+
+	const latest = useRef({
+		sound,
+		haptics,
+		still,
+		onFilesAdded,
+		accept,
+		limit,
+		count,
+		canAdd,
+	});
+	latest.current = {
+		sound,
+		haptics,
+		still,
+		onFilesAdded,
+		accept,
+		limit,
+		count,
+		canAdd,
+	};
+
+	// Cues. Never on mount, never while the tab is hidden.
+	const lastCueRef = useRef(Number.NEGATIVE_INFINITY);
+	const cue = useCallback(
+		(kind: "attach" | "done" | "error") => {
+			if (document.visibilityState === "hidden") return;
+			const now = performance.now();
+			if (now - lastCueRef.current < CUE_GAP) return;
+			lastCueRef.current = now;
+			const { sound, haptics } = latest.current;
+			if (sound) {
+				if (kind === "attach") playAttach();
+				else if (kind === "done") playDone();
+				else playError();
+			}
+			if (haptics && isTouchDevice()) {
+				void haptic(
+					kind === "attach" ? "light" : kind === "done" ? "success" : "error",
+				);
+			}
+		},
+		[haptic, playAttach, playDone, playError],
+	);
+
+	// The live region speaks once things settle, not for every change.
+	const pendingRef = useRef<string[]>([]);
+	const announceTimer = useRef(0);
+	const announce = useCallback((message: string) => {
+		pendingRef.current.push(message);
+		clearTimeout(announceTimer.current);
+		announceTimer.current = window.setTimeout(() => {
+			setAnnouncement(pendingRef.current.join(". "));
+			pendingRef.current = [];
+		}, ANNOUNCE_DELAY);
+	}, []);
+	useEffect(() => () => clearTimeout(announceTimer.current), []);
+
+	const onSettle = useCallback(
+		(file: UploadChipFile, outcome: "done" | "error") => {
+			cue(outcome);
+			announce(
+				outcome === "done"
+					? `${file.name} uploaded`
+					: `${file.name} failed${file.error ? `: ${file.error}` : ""}${onRetry ? ", Retry" : ""}`,
+			);
+		},
+		[announce, cue, onRetry],
+	);
+
+	const noteTimer = useRef(0);
+	const showNote = useCallback((text: string) => {
+		setNote(text);
+		clearTimeout(noteTimer.current);
+		noteTimer.current = window.setTimeout(() => setNote(null), NOTE_DURATION);
+	}, []);
+	useEffect(() => () => clearTimeout(noteTimer.current), []);
+
+	/** Filters picked or dropped files by `accept` and the limit, then hands them on. */
+	const addFiles = useCallback(
+		(incoming: File[]) => {
+			const { accept, limit, count, canAdd, onFilesAdded } = latest.current;
+			if (!canAdd || incoming.length === 0) return;
+			const supported = incoming.filter((file) => accepts(file, accept));
+			const room = Math.max(0, limit - count);
+			const taken = supported.slice(0, room);
+			if (supported.length < incoming.length) {
+				showNote("Not supported");
+				const rejected = incoming.find((file) => !accepts(file, accept));
+				announce(
+					rejected ? `${rejected.name} is not supported` : "File not supported",
+				);
+				cue("error");
+			} else if (taken.length < supported.length) {
+				showNote("Limit reached");
+				announce(
+					limit === 1
+						? "Only one file can be attached"
+						: `Only ${limit} files can be attached`,
+				);
+				cue("error");
+			}
+			if (taken.length === 0) return;
+			cue("attach");
+			onFilesAdded?.(taken);
+		},
+		[announce, cue, showNote],
+	);
+
+	// Deck layout: every chip's width, place, and scale spring together.
+	const geos = useRef(new Map<string, Geo>());
+	const deck = useRef({
+		order: [] as string[],
+		fan: spring(0),
+		fanned: false,
+		avail: Number.POSITIVE_INFINITY,
+		rtl: false,
+		ready: false,
+		height,
+		stack,
+	});
+
+	const geo = useCallback((id: string) => {
+		let entry = geos.current.get(id);
+		if (!entry) {
+			entry = {
+				w: spring(0),
+				x: spring(0),
+				y: spring(0),
+				s: spring(1),
+				natural: 0,
+				holdUntil: 0,
+				behind: false,
+				fresh: true,
+				entering: false,
+				morph: false,
+				li: null,
+				clip: null,
+				row: null,
+			};
+			geos.current.set(id, entry);
+		}
+		return entry;
+	}, []);
+
+	const writeDeck = useCallback(() => {
+		const d = deck.current;
+		const sign = d.rtl ? -1 : 1;
+		let right = 0;
+		let bottom = 0;
+		let frontRight = 0;
+		for (const [index, id] of d.order.entries()) {
+			const g = geos.current.get(id);
+			if (!g) continue;
+			if (g.li) {
+				g.li.style.transform = `translate3d(${(sign * g.x.value).toFixed(2)}px,${g.y.value.toFixed(2)}px,0) scale(${g.s.value.toFixed(4)})`;
+				g.li.style.transformOrigin = d.rtl ? "left center" : "right center";
+				g.li.style.zIndex = String(d.order.length - index);
+				const shell = g.li.firstElementChild as HTMLElement | null;
+				if (shell) shell.style.width = `${g.w.value.toFixed(2)}px`;
+			}
+			if (g.clip) {
+				if (!g.behind && Math.abs(g.w.value - g.natural) < 0.5)
+					g.clip.setAttribute("data-rest", "");
+				else g.clip.removeAttribute("data-rest");
+			}
+			right = Math.max(right, g.x.value + g.w.value);
+			bottom = Math.max(bottom, g.y.value + d.height);
+			if (index === 0) {
+				frontRight = g.x.value + g.w.value;
+				frontWidthRef.current = g.w.value;
+			}
+		}
+		const tucked = Math.min(d.order.length - 1, MAX_EDGES);
+		const counter = countRef.current;
+		if (counter) {
+			const at = frontRight + tucked * EDGE + GAP;
+			counter.style.transform = `translateX(${(sign * at).toFixed(2)}px)`;
+			const reach = (at + counter.offsetWidth) * (1 - d.fan.value);
+			if (d.order.length > 1 && d.stack) right = Math.max(right, reach);
+		}
+		const ul = listRef.current;
+		if (ul) {
+			ul.style.width = `${Math.ceil(right)}px`;
+			ul.style.height = `${Math.ceil(bottom)}px`;
+		}
+	}, []);
+
+	const deckStep = useCallback(
+		(dt: number, now: number) => {
+			const d = deck.current;
+			let active = stepSpring(d.fan, dt, fanSpring, 0.002);
+			for (const id of d.order) {
+				const g = geos.current.get(id);
+				if (!g) continue;
+				if (now < g.holdUntil) {
+					active = true;
+					continue;
+				}
+				const a = stepSpring(g.w, dt, widthSpring, 0.05);
+				const b = stepSpring(g.x, dt, fanSpring, 0.05);
+				const c = stepSpring(g.y, dt, fanSpring, 0.05);
+				const e = stepSpring(g.s, dt, fanSpring, 0.0005);
+				active = active || a || b || c || e;
+			}
+			writeDeck();
+			return active;
+		},
+		[writeDeck],
+	);
+	const kickDeck = useFrameLoop(deckStep);
+
+	/** Sets every chip's targets for the current files, fan state, and room. */
+	const relayout = useCallback(
+		(stagger: "open" | "close" | null = null) => {
+			const d = deck.current;
+			const order = d.order;
+			const fannedNow = d.fanned;
+			const now = performance.now();
+			const tucked = Math.min(order.length - 1, MAX_EDGES);
+			const counterWidth = countRef.current?.offsetWidth ?? 0;
+			const collapsedRoom =
+				d.avail - (order.length > 1 ? tucked * EDGE + GAP + counterWidth : 0);
+			let x = 0;
+			let y = 0;
+			let frontTarget = 0;
+			d.fan.target = fannedNow ? 1 : 0;
+			for (const [index, id] of order.entries()) {
+				const g = geos.current.get(id);
+				if (!g) continue;
+				const room = Math.max(
+					height * 2,
+					fannedNow || index > 0 ? d.avail : collapsedRoom,
+				);
+				if (g.row) g.row.style.maxWidth = `${room}px`;
+				const own = Math.min(g.natural, room);
+				let tx: number;
+				let ty: number;
+				let ts: number;
+				let tw: number;
+				if (fannedNow) {
+					if (x > 0 && x + own > d.avail) {
+						x = 0;
+						y += height + GAP;
+					}
+					tx = x;
+					ty = y;
+					ts = 1;
+					tw = own;
+					x += own + GAP;
+					g.behind = false;
+				} else if (index === 0) {
+					tx = 0;
+					ty = 0;
+					ts = 1;
+					tw = own;
+					frontTarget = own;
+					g.behind = false;
+				} else {
+					const layer = Math.min(index, MAX_EDGES);
+					tx = layer * EDGE;
+					ty = 0;
+					ts = 1 - layer * EDGE_SCALE;
+					tw = frontTarget;
+					g.behind = true;
+				}
+				g.x.target = tx;
+				g.y.target = ty;
+				g.s.target = ts;
+				g.w.target = tw;
+				if (g.fresh) {
+					g.fresh = false;
+					jump(g.x);
+					jump(g.y);
+					jump(g.s);
+					jump(g.w);
+					if (g.morph && pillWidthRef.current > 0) {
+						// The pill becomes this chip: start at its width.
+						jump(g.w, pillWidthRef.current);
+						g.w.target = tw;
+					} else if (g.entering && !d.fanned) {
+						// A new file slides in behind the deck.
+						g.x.value += 10;
+						g.s.value *= 0.92;
+					} else if (g.entering) {
+						g.s.value = 0.9;
+					}
+				}
+				if (stagger && !g.fresh) {
+					const rank = stagger === "open" ? index : order.length - 1 - index;
+					g.holdUntil = now + rank * FAN_STAGGER;
+				}
+				if (latest.current.still) {
+					jump(g.x);
+					jump(g.y);
+					jump(g.s);
+					jump(g.w);
+				}
+			}
+			if (latest.current.still) jump(d.fan);
+			writeDeck();
+			kickDeck();
+		},
+		[height, kickDeck, writeDeck],
+	);
+
+	const register = useCallback(
+		(id: string, part: "li" | "clip" | "row", node: Element | null) => {
+			const g = node ? geo(id) : geos.current.get(id);
+			if (!g) return;
+			if (part === "li") g.li = node as HTMLLIElement | null;
+			else if (part === "clip") g.clip = node as HTMLDivElement | null;
+			else g.row = node as HTMLDivElement | null;
+		},
+		[geo],
+	);
+
+	const onMeasure = useCallback(
+		(id: string, width: number) => {
+			const g = geo(id);
+			if (Math.abs(g.natural - width) < 0.25) return;
+			g.natural = width;
+			if (deck.current.ready) relayout();
+		},
+		[geo, relayout],
+	);
+
+	// Keep the deck's order in step with the rendered chips.
+	const orderKey = items
+		.filter((item) => !item.leaving)
+		.map((item) => item.file.id)
+		.join("\u0000");
+	const leavingKey = items
+		.filter((item) => item.leaving)
+		.map((item) => item.file.id)
+		.join("\u0000");
+	const firstLayout = useRef(true);
+	useLayoutEffect(() => {
+		const d = deck.current;
+		const ids = orderKey ? orderKey.split("\u0000") : [];
+		for (const id of ids) {
+			const g = geo(id);
+			if (g.fresh) {
+				g.entering = !firstLayout.current && id !== current.morphId;
+				g.morph = id === current.morphId;
+				g.li?.toggleAttribute("data-entering", g.entering);
+			}
+		}
+		for (const id of geos.current.keys()) {
+			if (!ids.includes(id) && !leavingKey.split("\u0000").includes(id))
+				geos.current.delete(id);
+		}
+		d.order = ids;
+		d.height = height;
+		d.stack = stack;
+		d.rtl = rootRef.current
+			? getComputedStyle(rootRef.current).direction === "rtl"
+			: false;
+		const stagger =
+			d.fanned !== fanOpen && !firstLayout.current
+				? fanOpen
+					? "open"
+					: "close"
+				: null;
+		d.fanned = fanOpen;
+		firstLayout.current = false;
+		if (ids.length === 0) {
+			d.ready = false;
+			return;
+		}
+		d.ready = true;
+		listRef.current?.setAttribute("data-ready", "");
+		relayout(stagger);
+	}, [
+		orderKey,
+		height,
+		stack,
+		fanOpen,
+		geo,
+		relayout,
+		leavingKey,
+		current.morphId,
+	]);
+
+	// A deck down to one chip forgets it was fanned.
+	useEffect(() => {
+		if (live.length <= 1 && fanned) setFanned(false);
+	}, [live.length, fanned]);
+
+	// The room the deck has: its parent's content box, less the attach button.
+	const showCompact = count > 0 && (canAdd || note !== null);
+	useLayoutEffect(() => {
+		const root = rootRef.current;
+		const parent = root?.parentElement;
+		if (!root || !parent) return;
+		const update = () => {
+			const style = getComputedStyle(parent);
+			const inner =
+				parent.clientWidth -
+				Number.parseFloat(style.paddingLeft) -
+				Number.parseFloat(style.paddingRight);
+			const avail = Math.max(
+				height * 3,
+				inner - (showCompact ? height + GAP : 0),
+			);
+			if (Math.abs(avail - deck.current.avail) < 0.5) return;
+			deck.current.avail = avail;
+			if (deck.current.ready) relayout();
+		};
+		update();
+		const observer = new ResizeObserver(update);
+		observer.observe(parent);
+		return () => observer.disconnect();
+	}, [height, showCompact, relayout]);
+
+	// Fade out removed chips, then drop them.
+	useEffect(() => {
+		if (!leavingKey) return;
+		const timer = window.setTimeout(() => {
+			setList((state) => ({
+				...state,
+				items: state.items.filter((item) => !item.leaving),
+			}));
+		}, LEAVE_DURATION);
+		return () => clearTimeout(timer);
+	}, [leavingKey]);
+
+	// Focus follows a keyboard removal to the next chip, or to the attach button.
+	const keyboardActionRef = useRef<{ id: string; index: number } | null>(null);
+	const onAction = useCallback(
+		(event: MouseEvent<HTMLButtonElement>, id: string) => {
+			// A click with no pointer behind it (`detail` 0) came from the keyboard.
+			keyboardActionRef.current =
+				event.detail === 0
+					? { id, index: deck.current.order.indexOf(id) }
+					: null;
+		},
+		[],
+	);
+	useLayoutEffect(() => {
+		const action = keyboardActionRef.current;
+		const root = rootRef.current;
+		if (!action || !root) return;
+		const active = document.activeElement;
+		const lost =
+			!active ||
+			active === document.body ||
+			!!active.closest("[data-leaving]") ||
+			!root.contains(active);
+		if (!lost) return;
+		keyboardActionRef.current = null;
+		// The same chip (a retry swaps its buttons), else the one now in its place.
+		const chips = Array.from(
+			root.querySelectorAll<HTMLElement>(
+				"[data-slot=upload-chip-item]:not([data-leaving])",
+			),
+		);
+		const same = chips.find((chip) => geos.current.get(action.id)?.li === chip);
+		const target =
+			same ?? chips[Math.min(action.index, chips.length - 1)] ?? null;
+		const next =
+			target?.querySelector<HTMLElement>("button:not(:disabled)") ??
+			attachRef.current ??
+			compactRef.current;
+		next?.focus({ preventScroll: true });
+	});
+
+	// Fan out on hover (mouse) or focus, fold back a beat after leaving.
+	const closeTimer = useRef(0);
+	const suppressRef = useRef(false);
+	const openFan = useCallback(() => {
+		clearTimeout(closeTimer.current);
+		if (!suppressRef.current) setFanned(true);
+	}, []);
+	const closeFanSoon = useCallback(() => {
+		clearTimeout(closeTimer.current);
+		closeTimer.current = window.setTimeout(
+			() => setFanned(false),
+			FAN_CLOSE_DELAY,
+		);
+	}, []);
+	useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+	// A tap outside folds a deck fanned by touch.
+	useEffect(() => {
+		if (!fanned) return;
+		const onDown = (event: globalThis.PointerEvent) => {
+			if (!listRef.current?.contains(event.target as Node)) setFanned(false);
+		};
+		document.addEventListener("pointerdown", onDown);
+		return () => document.removeEventListener("pointerdown", onDown);
+	}, [fanned]);
+
+	// Files dragged anywhere over the page wake the attach button.
+	useEffect(() => {
+		if (disabled) return;
+		let timer = 0;
+		const onOver = (event: globalThis.DragEvent) => {
+			if (!hasFiles(event)) return;
+			// A stray drop outside any drop zone would open the file in the tab.
+			if (!event.defaultPrevented) {
+				event.preventDefault();
+				if (event.dataTransfer) event.dataTransfer.dropEffect = "none";
+			}
+			setWake(true);
+			clearTimeout(timer);
+			timer = window.setTimeout(() => setWake(false), 160);
+		};
+		const onDrop = (event: globalThis.DragEvent) => {
+			if (hasFiles(event) && !event.defaultPrevented) event.preventDefault();
+			clearTimeout(timer);
+			setWake(false);
+		};
+		window.addEventListener("dragover", onOver);
+		window.addEventListener("dragenter", onOver);
+		window.addEventListener("drop", onDrop);
+		return () => {
+			clearTimeout(timer);
+			window.removeEventListener("dragover", onOver);
+			window.removeEventListener("dragenter", onOver);
+			window.removeEventListener("drop", onDrop);
+		};
+	}, [disabled]);
+
+	// Dragging over the chip pulls it toward the pointer, a few px at most.
+	const magnet = useRef({ x: spring(0), y: spring(0) });
+	const kickMagnet = useFrameLoop((dt) => {
+		const m = magnet.current;
+		const a = stepSpring(m.x, dt, magnetSpring, 0.02);
+		const b = stepSpring(m.y, dt, magnetSpring, 0.02);
+		const stage = stageRef.current;
+		if (stage) {
+			stage.style.transform =
+				m.x.value === 0 && m.y.value === 0
+					? ""
+					: `translate(${m.x.value.toFixed(2)}px,${m.y.value.toFixed(2)}px)`;
+		}
+		return a || b;
+	});
+	const pull = useCallback(
+		(clientX: number | null, clientY = 0) => {
+			const m = magnet.current;
+			const stage = stageRef.current;
+			if (clientX === null || !stage || latest.current.still) {
+				m.x.target = 0;
+				m.y.target = 0;
+			} else {
+				const box = stage.getBoundingClientRect();
+				const dx = clientX - (box.left + box.width / 2) + m.x.value;
+				const dy = clientY - (box.top + box.height / 2) + m.y.value;
+				const length = Math.hypot(dx, dy) || 1;
+				const reach = Math.min(MAGNET_MAX, length * 0.08);
+				m.x.target = (dx / length) * reach;
+				m.y.target = (dy / length) * reach;
+			}
+			kickMagnet();
+		},
+		[kickMagnet],
+	);
+
+	const [over, setOver] = useState(false);
+	const onDragOver = (event: DragEvent<HTMLDivElement>) => {
+		if (!hasFiles(event) || !latest.current.canAdd) return;
+		event.preventDefault();
+		event.dataTransfer.dropEffect = "copy";
+		setOver(true);
+		pull(event.clientX, event.clientY);
+	};
+	const onDragLeave = (event: DragEvent<HTMLDivElement>) => {
+		if (event.currentTarget.contains(event.relatedTarget as Node | null))
+			return;
+		setOver(false);
+		pull(null);
+	};
+	const onDrop = (event: DragEvent<HTMLDivElement>) => {
+		if (!hasFiles(event)) return;
+		event.preventDefault();
+		setOver(false);
+		pull(null);
+		addFiles(Array.from(event.dataTransfer.files));
+	};
+
+	// An outside container can take drops too.
+	useEffect(() => {
+		const target = dropTargetRef?.current;
+		if (!target || disabled) return;
+		const onOver = (event: globalThis.DragEvent) => {
+			if (!hasFiles(event) || !latest.current.canAdd) return;
+			event.preventDefault();
+			if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
+		};
+		const onDropHere = (event: globalThis.DragEvent) => {
+			if (!hasFiles(event)) return;
+			event.preventDefault();
+			addFiles(Array.from(event.dataTransfer?.files ?? []));
+		};
+		target.addEventListener("dragover", onOver);
+		target.addEventListener("drop", onDropHere);
+		return () => {
+			target.removeEventListener("dragover", onOver);
+			target.removeEventListener("drop", onDropHere);
+		};
+	}, [dropTargetRef, disabled, addFiles]);
+
+	const openPicker = () => {
+		if (!latest.current.canAdd) {
+			showNote("Limit reached");
+			return;
+		}
+		inputRef.current?.click();
+	};
+	const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+		addFiles(Array.from(event.target.files ?? []));
+		event.target.value = "";
+	};
+
+	const listPointer = {
+		onPointerEnter: (event: PointerEvent<HTMLUListElement>) => {
+			if (event.pointerType !== "touch") openFan();
+		},
+		onPointerLeave: (event: PointerEvent<HTMLUListElement>) => {
+			suppressRef.current = false;
+			if (event.pointerType !== "touch") closeFanSoon();
+		},
+		onClick: () => {
+			// A tap on a folded deck fans it out, so tucked chips can be reached.
+			if (!fanned && live.length > 1) openFan();
+		},
+		onFocus: () => openFan(),
+		onBlur: (event: FocusEvent<HTMLUListElement>) => {
+			if (event.currentTarget.contains(event.relatedTarget as Node | null))
+				return;
+			suppressRef.current = false;
+			closeFanSoon();
+		},
+	};
+
+	const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+		onKeyDown?.(event);
+		if (event.defaultPrevented || event.key !== "Escape" || !fanned) return;
+		event.preventDefault();
+		clearTimeout(closeTimer.current);
+		suppressRef.current = true;
+		setFanned(false);
+	};
+
+	const front = live[0]?.file.id;
+	const pillText = note ?? (wake || over ? dropLabel : label);
+	const extra = live.length - 1;
+
+	return (
+		<div
+			ref={rootRef}
+			data-slot="upload-chip"
+			data-wake={(wake || over) && canAdd ? "" : undefined}
+			data-static={still ? "" : undefined}
+			data-disabled={disabled ? "" : undefined}
+			aria-disabled={disabled || undefined}
+			className={cn(
+				"relative inline-flex max-w-full align-middle text-sm data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+				size === "sm" && "text-[13px]",
+				className,
+			)}
+			onDragOver={onDragOver}
+			onDragEnter={onDragOver}
+			onDragLeave={onDragLeave}
+			onDrop={onDrop}
+			onKeyDown={handleKeyDown}
+			{...props}
+		>
+			<style href="tentui-upload-chip" precedence="default">
+				{STYLES}
+			</style>
+			<input
+				ref={inputRef}
+				type="file"
+				hidden
+				tabIndex={-1}
+				accept={accept}
+				multiple={multiple}
+				disabled={disabled}
+				onChange={onInputChange}
+				data-slot="upload-chip-input"
+			/>
+			<div
+				ref={stageRef}
+				className="flex max-w-full flex-wrap items-start"
+				style={{ gap: GAP }}
+			>
+				{items.length === 0 ? (
+					<AttachButton
+						buttonRef={attachRef}
+						widthRef={pillWidthRef}
+						text={pillText}
+						compact={false}
+						wake={(wake || over) && canAdd}
+						size={size}
+						fromRef={current.pillMorph ? frontWidthRef : null}
+						still={still}
+						disabled={disabled}
+						ariaLabel={label === "Attach" ? "Attach files" : label}
+						onClick={openPicker}
+					/>
+				) : (
+					<ul
+						ref={listRef}
+						data-slot="upload-chip-list"
+						aria-label="Attached files"
+						className="relative flex max-w-full shrink-0 flex-wrap"
+						style={{ gap: GAP, minHeight: height }}
+						{...listPointer}
+					>
+						{items.map((item) => (
+							<Chip
+								key={item.file.id}
+								file={item.file}
+								size={size}
+								leaving={item.leaving}
+								behind={
+									stack && !fanOpen && !item.leaving && item.file.id !== front
+								}
+								morph={item.file.id === current.morphId}
+								label={label}
+								still={still}
+								disabled={disabled}
+								onRemove={onRemove}
+								onRetry={onRetry}
+								onCancel={onCancel}
+								register={register}
+								onMeasure={onMeasure}
+								onSettle={onSettle}
+								onAction={onAction}
+							/>
+						))}
+						{stack && extra > 0 ? (
+							<span
+								ref={countRef}
+								data-slot="upload-chip-count"
+								aria-hidden="true"
+								className={cn(
+									"pointer-events-none absolute start-0 top-0 flex items-center px-0.5 font-medium text-foreground/60 text-xs tabular-nums transition-opacity duration-150",
+									fanOpen ? "opacity-0" : "opacity-100 delay-75",
+								)}
+								style={{ height }}
+							>
+								+{extra}
+							</span>
+						) : null}
+					</ul>
+				)}
+				{showCompact ? (
+					<AttachButton
+						key="compact"
+						buttonRef={compactRef}
+						// Beside a deck a drag only wakes it; a label would push it onto
+						// a new line in a narrow layout.
+						text={note}
+						compact
+						wake={(wake || over) && canAdd}
+						size={size}
+						fromRef={null}
+						still={still}
+						disabled={disabled}
+						ariaLabel="Attach more files"
+						onClick={openPicker}
+					/>
+				) : null}
+			</div>
+			<span role="status" aria-live="polite" aria-atomic className="sr-only">
+				{announcement}
+			</span>
+		</div>
+	);
+}
+
+export default UploadChip;

@@ -46,6 +46,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"star-rating",
 			"tick-ruler",
 			"time-ring",
+			"upload-chip",
 			"wheel-picker",
 		],
 	},

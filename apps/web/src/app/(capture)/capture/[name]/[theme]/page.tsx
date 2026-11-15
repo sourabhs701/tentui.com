@@ -10,6 +10,7 @@ import { InkFilterBarCapture } from "@/components/capture/ink-filter-bar-capture
 import { LiquidGlassMenuCapture } from "@/components/capture/liquid-glass-menu-capture";
 import { MorphLightboxCapture } from "@/components/capture/morph-lightbox-capture";
 import { PromptChipInputCapture } from "@/components/capture/prompt-chip-input-capture";
+import { UploadChipCapture } from "@/components/capture/upload-chip-capture";
 import {
 	COMPONENT_CAPTURE_FRAME,
 	COMPONENT_CAPTURE_FRAMING,
@@ -36,6 +37,7 @@ const captureScenes: Record<string, ComponentType> = {
 	"morph-lightbox": MorphLightboxCapture,
 	"prompt-chip-input": PromptChipInputCapture,
 	"liquid-glass-menu": LiquidGlassMenuCapture,
+	"upload-chip": UploadChipCapture,
 };
 
 export const dynamic = "force-static";

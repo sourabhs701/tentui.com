@@ -4,6 +4,34 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "upload-chip-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("upload-chip")],
+		files: [
+			{
+				path: "examples/upload-chip-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-56 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "upload-chip-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("upload-chip")],
+		files: [
+			{
+				path: "examples/upload-chip-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[34rem] place-items-center content-start px-4",
+		},
+	},
+	{
 		name: "agent-thinking-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("agent-thinking")],

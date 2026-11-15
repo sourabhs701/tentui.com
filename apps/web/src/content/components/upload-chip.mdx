@@ -1,0 +1,254 @@
+---
+title: Upload Chip
+description: A React file upload chip for shadcn/ui where the Attach button becomes the upload itself. The pill springs into a chip that fills with liquid as bytes go up, rolls its percent, turns its file icon into a check, and tucks extra files into a small deck.
+seoTitle: "React File Upload Chip Component for shadcn/ui"
+seoDescription: Upload Chip is a React file upload chip for shadcn/ui. The Attach pill morphs into the file chip, fills with a liquid meniscus as progress arrives, rolls a tabular percent, and stacks extra files into a fan-out deck.
+createdAt: 2026-11-15
+updatedAt: 2026-11-15
+---
+
+<ComponentPreview name="upload-chip-preview" />
+
+## Example
+
+<ComponentPreview name="upload-chip-demo" />
+
+## Features
+
+- One pill is both the Attach button and the upload. Pick or drop a file and
+  the pill springs wider into a chip that fits the file name. Remove the last
+  file and the chip collapses back into the pill.
+- The chip's own surface fills from its start edge like liquid as bytes go
+  up. The leading edge is a soft meniscus that ripples while progress moves
+  and goes flat when it stops, and the fill springs toward each report, so
+  jumpy progress still flows.
+- The percent rolls like an odometer in tabular digits, in a slot as wide as
+  "100%", so the chip never jitters.
+- At 100% the file-type icon (document, image thumbnail, audio, archive, or a
+  plain file) turns into a drawn check, the fill fades out, and the chip
+  settles to "name · 2.4 MB".
+- On error the fill drains back, the chip shakes once, the icon becomes an
+  alert, and the meta turns into a real Retry button.
+- With no progress for 2 s, the percent dims and the chip says "Waiting".
+  Without a progress value at all, a band of liquid travels back and forth.
+- Extra files tuck behind the first chip as offset edges with a "+2" counter.
+  Hover or focus fans the deck out into separate chips, each with its own
+  fill; it folds back 400 ms after you leave, or on `Esc`.
+- Drag files anywhere over the page and the pill wakes up with "Drop to
+  attach". Dragging over it pulls it a few pixels toward the pointer.
+- Long names are cut in the middle, so the extension stays: "quarterly-rep…ort.pdf".
+- Nothing runs at rest: the wave, the band, and the springs only animate
+  while something moves, and pause off screen.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/upload-chip
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="upload-chip" title="components/upload-chip.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { UploadChip, type UploadChipFile } from "@/components/upload-chip";
+```
+
+The chip shows the `files` you pass and never uploads anything itself.
+`onFilesAdded` hands you the picked or dropped `File` objects; start your
+uploads there and report each one's `progress` from 0 to 1.
+
+```tsx
+const [files, setFiles] = useState<UploadChipFile[]>([]);
+
+const update = (id: string, patch: Partial<UploadChipFile>) =>
+  setFiles((current) =>
+    current.map((file) => (file.id === id ? { ...file, ...patch } : file)),
+  );
+
+function upload(file: File) {
+  const id = crypto.randomUUID();
+  setFiles((current) => [
+    ...current,
+    { id, name: file.name, size: file.size, type: file.type, progress: 0, status: "uploading" },
+  ]);
+
+  const xhr = new XMLHttpRequest();
+  xhr.upload.onprogress = (event) => {
+    if (event.lengthComputable) update(id, { progress: event.loaded / event.total });
+  };
+  xhr.onload = () =>
+    update(id, xhr.status < 300 ? { status: "done" } : { status: "error", error: xhr.statusText });
+  xhr.onerror = () => update(id, { status: "error", error: "Network error" });
+  xhr.open("POST", "/api/upload");
+  xhr.send(file);
+}
+
+<UploadChip
+  files={files}
+  onFilesAdded={(picked) => picked.forEach(upload)}
+  onRemove={(id) => setFiles((current) => current.filter((file) => file.id !== id))}
+/>
+```
+
+Pass `onCancel` to abort an upload from its remove button while it runs, and
+`onRetry` to show a Retry button on failed chips. Leave `progress` out while
+the size isn't known yet; the chip shows a travelling band and "Uploading".
+
+```tsx
+<UploadChip
+  files={files}
+  onFilesAdded={startUploads}
+  onCancel={(id) => requests.get(id)?.abort()}
+  onRemove={removeFile}
+  onRetry={retryUpload}
+  accept="image/*,.pdf"
+  maxFiles={5}
+/>
+```
+
+`accept` and `maxFiles` also apply to dropped files. A rejected drop shows
+"Not supported" or "Limit reached" on the attach button for a moment and is
+read out by screen readers. To take drops over a bigger area, such as a whole
+message composer, pass its ref as `dropTargetRef`:
+
+```tsx
+const composer = useRef<HTMLDivElement>(null);
+
+<div ref={composer}>
+  <textarea />
+  <UploadChip files={files} onFilesAdded={startUploads} dropTargetRef={composer} />
+</div>
+```
+
+Use `size="sm"` for a 28 px chip, and `stack={false}` to lay chips side by
+side, wrapping, instead of in a deck.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Click, `Enter`, or `Space` on Attach | Opens the file picker |
+| Drop files on the chip | Adds them, as does dropping on `dropTargetRef` |
+| Hover or focus the deck | Fans it out into separate chips |
+| Tap a folded deck | Fans it out; a tap outside folds it |
+| `Tab` | Moves through each chip's Remove, Cancel, or Retry button |
+| `Esc` | Folds a fanned deck |
+
+A remove button shows on hover or keyboard focus, and always on touch
+screens. After a chip is removed with the keyboard, focus moves to the chip
+that takes its place, or to the attach button.
+
+## Sound and haptics
+
+Sound is off by default; turn it on with `sound`. Adding files plays a soft
+tik, a finished upload a brighter one, and a failure a low one. On touch
+devices the same moments play a `light`, `success`, or `error` haptic; turn
+them off with `haptics={false}`. Nothing plays on mount or while the tab is
+hidden, and uploads that finish together play once.
+
+## Accessibility
+
+The attach button is a `button` named "Attach files" that opens a hidden file
+input. Chips are items in a list named "Attached files". While a file
+uploads, its name and percent form a `progressbar` with `aria-valuenow` and
+a value text like "42 percent", or no value while the size is unknown. A
+polite live region says "report.pdf uploaded" or "report.pdf failed, Retry"
+once things settle, not for every percent. Remove, Cancel, and Retry are
+buttons named after the file, such as "Remove report.pdf", with 44 px touch
+targets.
+
+The focus ring shows for keyboard focus only. Text keeps at least 4.5:1
+contrast on the empty and the full fill, in light and dark mode. In
+right-to-left layouts the fill grows from the right and the percent still
+reads left to right.
+
+With reduced motion, or `animated={false}`, the meniscus stays flat, nothing
+shakes or leans toward the pointer, the deck fans out without springs, widths
+and fills change at once, and the check appears without being drawn.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/upload-chip/upload-chip.tsx"
+  name="UploadChipProps"
+/>
+
+<AutoTypeTable
+  path="src/registry/components/upload-chip/upload-chip.tsx"
+  name="UploadChipFile"
+/>
+
+## FAQ
+
+### How do I install the Upload Chip with shadcn?
+
+Run `npx shadcn@latest add @tentui/upload-chip` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or
+run `npx shadcn@latest add https://tentui.com/r/upload-chip.json` without it.
+The CLI copies `upload-chip.tsx` into your project and installs `motion`,
+`lucide-react`, `web-haptics`, and `@rexa-developer/tiks`.
+
+### How do I show real upload progress?
+
+The chip only draws the `progress` you pass, from 0 to 1. With
+`XMLHttpRequest`, set `progress` to `event.loaded / event.total` in
+`xhr.upload.onprogress`, then set `status` to `"done"` or `"error"` when the
+request ends. The fill springs between reports, so coarse or uneven progress
+still looks smooth.
+
+### Can it handle multiple files?
+
+Yes. `multiple` is on by default, and extra files tuck behind the first chip
+as a deck with a "+2" counter that fans out on hover or focus. Cap the count
+with `maxFiles`, or pass `stack={false}` to show every chip side by side.
+
+### Does it support drag and drop?
+
+Yes. Dropping files on the chip adds them, and dragging files anywhere over
+the page wakes it with "Drop to attach". Pass `dropTargetRef` to accept drops
+over a larger element, such as a whole composer. Dropped files go through the
+same `accept` and `maxFiles` checks as picked ones.
+
+### Is the Upload Chip accessible, and does it respect reduced motion?
+
+Yes. Uploading chips are `progressbar` elements named after the file, results
+are announced through a polite live region, and every remove, cancel, and
+retry control is a named button reachable with `Tab`. With
+`prefers-reduced-motion` the wave, shake, magnetic pull, and springs are
+skipped.
+
+### Is the Upload Chip free to use?
+
+Yes. The Upload Chip is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

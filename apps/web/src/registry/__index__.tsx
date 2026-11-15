@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"upload-chip": {
+		name: "upload-chip",
+		title: "Upload Chip",
+		description: "An Attach pill that becomes the upload itself. Pick or drop a file and the pill springs into a chip that fills with liquid as bytes go up, rolls its percent, and turns its file icon into a check. Extra files tuck into a small deck that fans out on hover.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/upload-chip/upload-chip.tsx","type":"registry:component","target":"@components/upload-chip.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/upload-chip/upload-chip")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for upload-chip");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-11-15"},
+	},
 	"agent-thinking": {
 		name: "agent-thinking",
 		title: "Agent Thinking",
@@ -976,6 +994,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"upload-chip-preview": {
+		name: "upload-chip-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/upload-chip-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/upload-chip-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for upload-chip-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-56 place-items-center content-center px-4"},
+	},
+	"upload-chip-demo": {
+		name: "upload-chip-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/upload-chip-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/upload-chip-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for upload-chip-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[34rem] place-items-center content-start px-4"},
 	},
 	"agent-thinking-preview": {
 		name: "agent-thinking-preview",

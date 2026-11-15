@@ -2,6 +2,31 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "upload-chip",
+		type: "registry:component",
+		title: "Upload Chip",
+		description:
+			"An Attach pill that becomes the upload itself. Pick or drop a file and the pill springs into a chip that fills with liquid as bytes go up, rolls its percent, and turns its file icon into a check. Extra files tuck into a small deck that fans out on hover.",
+		dependencies: [
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/upload-chip/upload-chip.tsx",
+				type: "registry:component",
+				target: "@components/upload-chip.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-11-15",
+		},
+		docs: "https://tentui.com/components/upload-chip",
+	},
+	{
 		name: "agent-thinking",
 		type: "registry:component",
 		title: "Agent Thinking",
