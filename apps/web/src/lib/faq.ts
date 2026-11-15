@@ -3,7 +3,7 @@ import remarkGfm from "remark-gfm";
 import remarkMdx from "remark-mdx";
 
 /**
- * FAQ sections in component MDX are the single source of truth for the
+ * FAQ sections in component and blog MDX are the single source of truth for the
  * on-page FAQ and its FAQPage JSON-LD. The format is:
  *
  *   ## FAQ

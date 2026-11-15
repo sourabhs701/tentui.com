@@ -1,6 +1,6 @@
 import { blockCategories } from "@/config/registry";
 import { SITE_INFO } from "@/config/site";
-import { getComponentDocs } from "@/lib/documents";
+import { getBlogPosts, getComponentDocs } from "@/lib/documents";
 import { parseRssDate, type RssItem } from "@/lib/rss";
 import { blocks } from "@/registry/blocks/_registry";
 
@@ -11,6 +11,16 @@ export function getComponentRssItems(): RssItem[] {
 		url: absoluteUrl(`/components/${doc.slug}`),
 		publishedAt: parseRssDate(doc.metadata.createdAt, doc.metadata.title),
 		category: "Component",
+	}));
+}
+
+export function getBlogRssItems(): RssItem[] {
+	return getBlogPosts().map((post) => ({
+		title: post.metadata.title,
+		description: post.metadata.description,
+		url: absoluteUrl(`/blog/${post.slug}`),
+		publishedAt: parseRssDate(post.metadata.createdAt, post.metadata.title),
+		category: "Blog",
 	}));
 }
 

@@ -5,7 +5,7 @@ author: Sourabh Soni
 authorImage: https://cdn.tentui.com/srb.avif
 category: Engineering
 createdAt: "2026-07-29"
-updatedAt: "2026-07-29"
+updatedAt: "2026-11-15"
 ---
 
 When a component is missing from shadcn, the answer is not always to build it
@@ -32,6 +32,7 @@ saw in a mockup or an old article.
 | A common control such as a button, dialog, or input | The official shadcn component catalog |
 | A composed feature such as a login form or dashboard | Official and community blocks |
 | A specialized interaction or animation | A focused community registry |
+| An AI chat input or thinking state | The AI Elements components on the shadcn site, then focused registries |
 | A variation of an installed primitive | Compose the existing source and its built-in variants |
 | A component from an old install command | Confirm that its registry item still returns valid JSON |
 
@@ -193,6 +194,61 @@ URLs and manual installation. Browse the
 unclear, or use the [shadcn animation guide](/blog/how-to-add-animations-to-shadcn-components)
 for shared-layout and async-feedback examples.
 
+## Specialized components added in November 2026
+
+Most of these have a close relative in the official shadcn catalog, so they are
+not missing in the strict sense. They are specialized versions for cases where
+the interaction itself is the feature. Check the official piece first, and
+reach for one of these only when you need its specific behavior:
+
+| Tent UI component | What it adds | Closest official piece |
+| --- | --- | --- |
+| [Prompt Chip Input](/components/prompt-chip-input) | Typed `@mentions`, `/commands`, and `~model` choices become chips in place, with structured submit values | Textarea and Input Group; Prompt Input in AI Elements |
+| [Agent Thinking](/components/agent-thinking) | An AI thinking indicator built from finished agent steps, with a delayed timer and a step log | Spinner; Reasoning and Chain of Thought in AI Elements |
+| [Morph Lightbox](/components/morph-lightbox) | An image viewer that grows from the clicked thumbnail and pulls down to dismiss | Dialog |
+| [Liquid Glass Menu](/components/liquid-glass-menu) | A liquid-glass dropdown on Base UI that grows out of its round trigger | Dropdown Menu |
+| [Liquid Glass Carousel](/components/liquid-glass-carousel) | A carousel whose cards melt into liquid glass at the frame edges | Carousel |
+| [Ink Filter Bar](/components/ink-filter-bar) | Filter chips that dock into a results-count capsule while the count rolls | Toggle Group |
+| [Ripple Reveal](/components/ripple-reveal) | A show and hide control for sensitive values with a tap-origin WebGL ripple | No direct equivalent |
+| [Fluid Tooltip](/components/fluid-tooltip) | One tooltip shared by a toolbar that glides between buttons | Tooltip |
+| [ASCII Decode Text](/components/ascii-decode-text) | A headline that decodes from ASCII art into selectable type | No direct equivalent |
+| [Glass Toggle](/components/glass-toggle) | A frosted-glass switch with a pixel moon-to-sun flip | Switch |
+
+The closest-piece column reflects the official catalog and the AI Elements
+components listed on the shadcn site at the time of writing. Both change, so
+check the current lists before deciding something is missing.
+
+Each one installs with the same inspect-then-add workflow. View the payload
+first, then add only what you need:
+
+```bash
+npx shadcn@latest view @tentui/prompt-chip-input
+npx shadcn@latest add @tentui/prompt-chip-input
+```
+
+The other install commands follow the same pattern:
+
+```bash
+npx shadcn@latest add @tentui/agent-thinking
+npx shadcn@latest add @tentui/morph-lightbox
+npx shadcn@latest add @tentui/liquid-glass-menu
+npx shadcn@latest add @tentui/liquid-glass-carousel
+npx shadcn@latest add @tentui/ink-filter-bar
+npx shadcn@latest add @tentui/ripple-reveal
+npx shadcn@latest add @tentui/fluid-tooltip
+npx shadcn@latest add @tentui/ascii-decode-text
+npx shadcn@latest add @tentui/glass-toggle
+```
+
+Most of these depend on `motion`, `web-haptics`, and `@rexa-developer/tiks`,
+and Liquid Glass Menu also installs `@base-ui/react`. Several play short sounds
+by default. Check the dependency and sound sections on each component page
+during the review below. For walkthroughs of the two AI components, see
+[how to build an AI thinking indicator in React](/blog/how-to-build-ai-thinking-indicator-react)
+and [AI prompt input UX in React](/blog/ai-prompt-input-ux-react-chips-mentions).
+The [animated shadcn/ui components guide](/blog/best-animated-shadcn-ui-components-2026)
+groups the rest of the catalog by job.
+
 ## Review the installed source in context
 
 A registry payload can be valid and still be wrong for your application. After
@@ -212,7 +268,7 @@ A component that uses hooks or browser APIs needs a client boundary in a
 React Server Components project. The CLI can place files correctly, but it
 cannot decide these product-specific boundaries for you.
 
-## Frequently asked questions
+## FAQ
 
 ### Does shadcn include every component?
 
@@ -232,12 +288,27 @@ Treat the item as unavailable at that URL. The host is probably returning a
 site fallback instead of JSON. Find the author's current item name or registry
 instructions, report the broken endpoint, or choose a maintained alternative.
 
+### Does the official shadcn catalog include an AI prompt input or thinking indicator?
+
+At the time of writing, the core catalog has Textarea, Input Group, and
+Spinner, and the AI Elements components listed on the shadcn site include
+Prompt Input, Reasoning, and Chain of Thought. Tent UI's
+[Prompt Chip Input](/components/prompt-chip-input) and
+[Agent Thinking](/components/agent-thinking) are specialized alternatives for
+inline chips and step-by-step progress.
+
 ### Should I build the missing component myself?
 
 Build or compose it locally when the behavior is small, product-specific, or
 not available from a source you trust. Use a registry item when it supplies a
 meaningful, reviewable implementation that you would otherwise have to design
 and test yourself.
+
+### Are Tent UI components free to use?
+
+Yes. Tent UI components are free and source-available: the shadcn CLI copies
+their source into your project, and you can use them in personal and client
+projects under the [TentUI License](/license).
 
 ## A safer default for missing shadcn components
 
