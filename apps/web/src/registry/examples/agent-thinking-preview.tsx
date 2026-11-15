@@ -16,8 +16,14 @@ const STEPS = [
 ];
 /** Ms into the run each step finishes; the last one ends the run. */
 const FINISH_AT = [1000, 2200, 3300, 4400, 5500];
-/** Ms into the run the next one starts, after a short hold on the done state. */
-const LOOP_AT = 7000;
+const END = FINISH_AT[FINISH_AT.length - 1];
+/** Ms into the run it fades out, and the next one starts. */
+const FADE_AT = 7600;
+const LOOP_AT = 8000;
+
+const REASONING =
+	"The question is how to show tool calls while the answer streams. The AI SDK docs cover useChat and streamText, so I'll start there. Three sources disagree on when a tool result is merged; the v5 changelog settles it. In the code, message.parts carries every tool call with its state, so each one maps straight to a step.";
+const WORDS = REASONING.split(" ");
 
 /** True while the element is on screen and the tab is visible. */
 function useActive(ref: RefObject<HTMLElement | null>) {
@@ -43,8 +49,9 @@ function useActive(ref: RefObject<HTMLElement | null>) {
 }
 
 /**
- * A scripted agent run on its own clock: it only advances while `active`, so
- * scrolling away or hiding the tab pauses it, and `epoch` shifts to match.
+ * A looping scripted run on its own clock, ticking every 100 ms so the
+ * reasoning streams. It only advances while `active`, so scrolling away or
+ * hiding the tab pauses it, and `epoch` shifts to match.
  */
 function useRunClock(active: boolean) {
 	const [clock, setClock] = useState({ run: 0, elapsed: 0, epoch: 0 });
@@ -54,8 +61,7 @@ function useRunClock(active: boolean) {
 	useEffect(() => {
 		if (!active) return;
 		let epoch = Date.now() - elapsedRef.current;
-		let timeout = 0;
-		const update = () => {
+		const tick = () => {
 			let elapsed = Date.now() - epoch;
 			if (elapsed >= LOOP_AT) {
 				runRef.current += 1;
@@ -64,15 +70,10 @@ function useRunClock(active: boolean) {
 			}
 			elapsedRef.current = elapsed;
 			setClock({ run: runRef.current, elapsed, epoch });
-			const next =
-				[...FINISH_AT, LOOP_AT].find((at) => at > elapsed) ?? LOOP_AT;
-			timeout = window.setTimeout(update, next - elapsed);
 		};
-		update();
-		return () => {
-			window.clearTimeout(timeout);
-			elapsedRef.current = Date.now() - epoch;
-		};
+		tick();
+		const interval = window.setInterval(tick, 100);
+		return () => window.clearInterval(interval);
 	}, [active]);
 
 	return clock;
@@ -95,16 +96,42 @@ function AgentThinkingPreview() {
 		}),
 	);
 	const done = finished === STEPS.length;
+	const shared = {
+		status: done ? ("done" as const) : ("thinking" as const),
+		startedAt: epoch || undefined,
+		endedAt: done && epoch ? epoch + END : undefined,
+	};
+	// The first words arrive a moment in, and the last just before the end.
+	const words = Math.ceil((WORDS.length * (elapsed - 400)) / (END - 800));
+	const reasoning = WORDS.slice(
+		0,
+		Math.max(0, Math.min(words, WORDS.length)),
+	).join(" ");
 
 	return (
-		<div ref={ref} className="w-60 max-w-full">
+		<div
+			ref={ref}
+			// As tall as the run, so nothing moves as the card unfolds and folds.
+			className="flex h-68 w-72 max-w-full flex-col gap-4 transition-opacity duration-300"
+			style={{ opacity: elapsed >= FADE_AT ? 0 : 1 }}
+		>
+			<AgentThinking key={`cluster-${run}`} {...shared} steps={steps} />
 			<AgentThinking
-				status={done ? "done" : "thinking"}
+				key={`shimmer-${run}`}
+				variant="shimmer"
+				{...shared}
 				steps={steps}
-				startedAt={epoch || undefined}
-				endedAt={
-					done && epoch ? epoch + FINISH_AT[STEPS.length - 1] : undefined
-				}
+			/>
+			<div className="flex">
+				<div className="flex rounded-2xl rounded-bl-md bg-muted px-3 py-2">
+					<AgentThinking key={`orb-${run}`} variant="orb" {...shared} />
+				</div>
+			</div>
+			<AgentThinking
+				key={`card-${run}`}
+				variant="card"
+				{...shared}
+				reasoning={reasoning}
 			/>
 		</div>
 	);

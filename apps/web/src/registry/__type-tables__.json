@@ -133,7 +133,7 @@
 				},
 				{
 					"name": "open",
-					"description": "Controlled open state of the step log.",
+					"description": "Controlled open state of the step log, or of the card body.",
 					"tags": [
 						{
 							"name": "component-prop",
@@ -147,7 +147,7 @@
 				},
 				{
 					"name": "defaultOpen",
-					"description": "",
+					"description": "Closed by default, except `\"timeline\"`. Until it's toggled, the card is\nopen while thinking and closes when done.",
 					"tags": [
 						{
 							"name": "component-prop",
@@ -203,15 +203,29 @@
 				},
 				{
 					"name": "variant",
-					"description": "`\"pill\"` puts the row on a soft rounded background.",
+					"description": "`\"plain\"` is the dot cluster, and `\"pill\"` puts it on a soft rounded\nbackground. `\"shimmer\"`, `\"orb\"`, `\"timeline\"`, and `\"card\"` are other\nlooks over the same steps, timer, and labels.",
 					"tags": [
 						{
 							"name": "component-prop",
 							"text": ""
 						}
 					],
-					"type": "\"plain\" | \"pill\" | undefined",
+					"type": "AgentThinkingVariant | undefined",
 					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "reasoning",
+					"description": "Streamed reasoning text, shown in the body of the `\"card\"` variant.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
 					"required": false,
 					"deprecated": false
 				},

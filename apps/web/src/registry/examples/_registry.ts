@@ -32,6 +32,62 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "agent-thinking-shimmer-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-shimmer-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "agent-thinking-orb-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-orb-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "agent-thinking-timeline-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-timeline-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "agent-thinking-card-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-card-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "ascii-decode-text-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("ascii-decode-text")],

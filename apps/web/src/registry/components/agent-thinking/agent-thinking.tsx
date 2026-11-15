@@ -6,12 +6,14 @@ import {
 	domAnimation,
 	LazyMotion,
 	m,
+	useIsPresent,
 	useReducedMotion,
 	type Variants,
 } from "motion/react";
 import {
 	type ComponentProps,
 	type KeyboardEvent,
+	type ReactNode,
 	useEffect,
 	useId,
 	useLayoutEffect,
@@ -88,10 +90,26 @@ const STYLES =
 	"[data-slot=agent-thinking] [data-sweep]:dir(rtl){animation-direction:reverse}" +
 	"[data-slot=agent-thinking] [data-pulse]{animation:agent-thinking-pulse 2.4s ease-in-out infinite}" +
 	"[data-slot=agent-thinking] [data-flash]{animation:agent-thinking-flash .7s ease-out}" +
-	"[data-slot=agent-thinking] [data-sizing] [data-slot=agent-thinking-label]{text-overflow:clip}" +
+	// While the width eases the label keeps its own, so what's still coming
+	// (the timer, or the rest of a longer label) is revealed at the edge.
+	"[data-slot=agent-thinking] [data-sizing] [data-slot=agent-thinking-label]{text-overflow:clip;flex-shrink:0}" +
 	"@keyframes agent-thinking-fill{from{opacity:.25}40%{transform:scale(1.4)}}" +
 	"[data-slot=agent-thinking] [data-fill]{animation:agent-thinking-fill .45s cubic-bezier(.2,.8,.2,1)}" +
-	"@media (prefers-reduced-motion:reduce){[data-slot=agent-thinking] [data-sweep]{animation:none;background:none;-webkit-text-fill-color:currentColor}[data-slot=agent-thinking] [data-fill]{animation:none}}";
+	// The other variants: a light band over muted text, a halo for the step in
+	// progress, the orb's drifting lobes and breath, and streamed text that
+	// resolves out of a blur.
+	"[data-slot=agent-thinking] [data-shine]{background-image:linear-gradient(90deg,currentColor 38%,var(--color-foreground,currentColor) 50%,currentColor 62%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:agent-thinking-sweep 2.2s cubic-bezier(.45,0,.55,1) infinite}" +
+	"[data-slot=agent-thinking] [data-shine]:dir(rtl){animation-direction:reverse}" +
+	"@keyframes agent-thinking-halo{from{transform:scale(1);opacity:.4}to{transform:scale(2.8);opacity:0}}" +
+	"[data-slot=agent-thinking] [data-halo]::after{content:'';position:absolute;inset:0;border-radius:inherit;background:currentColor;animation:agent-thinking-halo 1.8s cubic-bezier(.2,.8,.2,1) infinite}" +
+	"@keyframes agent-thinking-spin{to{transform:rotate(1turn)}}" +
+	"[data-slot=agent-thinking] [data-orbit]{animation:agent-thinking-spin 3s linear infinite}" +
+	"@keyframes agent-thinking-breathe{50%{transform:scale(.84)}}" +
+	"[data-slot=agent-thinking] [data-breathe]{animation:agent-thinking-breathe 2.4s ease-in-out infinite}" +
+	"@keyframes agent-thinking-in{from{opacity:0;filter:blur(3px)}}" +
+	"[data-slot=agent-thinking] [data-stream]{animation:agent-thinking-in .6s cubic-bezier(.2,.8,.2,1)}" +
+	"[data-slot=agent-thinking-body][data-fade]{-webkit-mask-image:linear-gradient(to bottom,transparent .25rem,#000 2.75rem);mask-image:linear-gradient(to bottom,transparent .25rem,#000 2.75rem)}" +
+	"@media (prefers-reduced-motion:reduce){[data-slot=agent-thinking] :is([data-sweep],[data-shine]){animation:none;background:none;-webkit-text-fill-color:currentColor}[data-slot=agent-thinking] :is([data-fill],[data-orbit],[data-breathe],[data-stream]){animation:none}[data-slot=agent-thinking] [data-halo]::after{display:none}}";
 
 /**
  * Label and timer swaps run in sequence: the old text is blurred out before
@@ -135,6 +153,15 @@ const sizes = {
 		timer: "text-[11px]",
 		/** One line per step; the label's line box is the row. */
 		step: "text-xs leading-6",
+		/** Orb box, and the orb in the card header, in px. */
+		orb: 14,
+		glyph: 12,
+		/** Node column of the timeline. */
+		nodeClass: "w-3.5",
+		cardPad: "px-3",
+		cardHeader: "min-h-10",
+		/** Streamed reasoning in the card. */
+		body: "text-xs leading-5",
 	},
 	md: {
 		mark: 28,
@@ -149,12 +176,31 @@ const sizes = {
 		label: "text-sm",
 		timer: "text-xs",
 		step: "text-sm leading-7",
+		orb: 18,
+		glyph: 14,
+		nodeClass: "w-4",
+		cardPad: "px-3.5",
+		cardHeader: "min-h-11",
+		body: "text-[13px] leading-5",
 	},
 } as const;
 
 type SizeConfig = (typeof sizes)[keyof typeof sizes];
 
 export type AgentThinkingStatus = "thinking" | "done" | "error";
+
+/**
+ * `"plain"` and `"pill"` are the dot cluster. `"shimmer"` is a line of text,
+ * `"orb"` a compact mark for chat bubbles, `"timeline"` a streaming step list,
+ * and `"card"` a reasoning card that collapses into its summary.
+ */
+export type AgentThinkingVariant =
+	| "plain"
+	| "pill"
+	| "shimmer"
+	| "orb"
+	| "timeline"
+	| "card";
 
 export interface AgentThinkingStep {
 	id: string;
@@ -190,15 +236,25 @@ export interface AgentThinkingProps
 	/** Ms before the elapsed timer fades in. */
 	timerDelay?: number;
 	showTimer?: boolean;
-	/** Controlled open state of the step log. */
+	/** Controlled open state of the step log, or of the card body. */
 	open?: boolean;
+	/**
+	 * Closed by default, except `"timeline"`. Until it's toggled, the card is
+	 * open while thinking and closes when done.
+	 */
 	defaultOpen?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	/** Finished steps that get their own dot; more thicken the existing ones. */
 	maxDots?: number;
 	size?: keyof typeof sizes;
-	/** `"pill"` puts the row on a soft rounded background. */
-	variant?: "plain" | "pill";
+	/**
+	 * `"plain"` is the dot cluster, and `"pill"` puts it on a soft rounded
+	 * background. `"shimmer"`, `"orb"`, `"timeline"`, and `"card"` are other
+	 * looks over the same steps, timer, and labels.
+	 */
+	variant?: AgentThinkingVariant;
+	/** Streamed reasoning text, shown in the body of the `"card"` variant. */
+	reasoning?: string;
 	/** A soft tick per landed step and a brighter one when done. */
 	sound?: boolean;
 	/** A light tick per landed step and a success pattern when done, on touch devices. */
@@ -1130,11 +1186,12 @@ export function AgentThinking({
 	timerDelay = 1500,
 	showTimer = true,
 	open: openProp,
-	defaultOpen = false,
+	defaultOpen,
 	onOpenChange,
 	maxDots = 24,
 	size = "md",
 	variant = "plain",
+	reasoning,
 	sound = false,
 	haptics = true,
 	animated = true,
@@ -1144,7 +1201,12 @@ export function AgentThinking({
 }: AgentThinkingProps) {
 	const config = sizes[size];
 	const thinking = status === "thinking";
+	const cluster = variant === "plain" || variant === "pill";
 	const hasSteps = steps !== undefined && steps.length > 0;
+	// An empty string is reasoning still to come: the card opens onto it.
+	const hasReasoning = variant === "card" && reasoning !== undefined;
+	// The orb is a mark only; every other look opens onto its steps.
+	const expandable = variant !== "orb" && (hasSteps || hasReasoning);
 	const finished = (steps ?? []).filter(isFinished);
 	const finishedKey = finished
 		.map((step) => `${step.id}:${step.status === "error" ? 1 : 0}`)
@@ -1156,8 +1218,17 @@ export function AgentThinking({
 	// state and the client switches after hydration.
 	const still = !animated || (hydrated && reducedMotion);
 
-	const [openState, setOpenState] = useState(defaultOpen);
-	const open = (openProp ?? openState) && hasSteps;
+	// `null` until toggled, so the card can follow the run until then.
+	const [openState, setOpenState] = useState<boolean | null>(
+		defaultOpen ?? (variant === "timeline" ? true : null),
+	);
+	const auto = openProp === undefined && openState === null;
+	const open =
+		expandable && (openProp ?? openState ?? (variant === "card" && thinking));
+	// The card's body follows the stream while it opened on its own.
+	const peek = variant === "card" && auto && thinking;
+	// The card unfolds once there's something to show.
+	const hasBody = hasReasoning ? reasoning !== "" : hasSteps;
 	const setOpen = (next: boolean) => {
 		if (openProp === undefined) setOpenState(next);
 		onOpenChange?.(next);
@@ -1215,18 +1286,28 @@ export function AgentThinking({
 	const elapsedMs =
 		start !== null && end !== null ? Math.max(0, end - start) : durationSum;
 	const doneInfo = { elapsedMs, steps: finished.length };
+	// The count only where the steps aren't already in view.
+	const countSteps = cluster || variant === "timeline";
 	const doneText =
 		typeof doneLabel === "function"
 			? doneLabel(doneInfo)
 			: (doneLabel ??
 				`${elapsedMs > 0 ? `Thought for ${formatElapsed(roundElapsed(elapsedMs))}` : "Done"}${
-					finished.length > 0 ? ` · ${stepsWord(finished.length)}` : ""
+					countSteps && finished.length > 0
+						? ` · ${stepsWord(finished.length)}`
+						: ""
 				}`);
 	const labelText = thinking
 		? label
 		: status === "error"
 			? errorLabel
 			: doneText;
+	// The shimmer line reads the step in progress, if there is one.
+	const activeStep = steps?.find((step) => step.status === "active");
+	const shownLabel =
+		variant === "shimmer" && thinking && activeStep
+			? activeStep.label
+			: labelText;
 	const timerElapsed =
 		thinking && start !== null && now !== null ? Math.max(0, now - start) : 0;
 	const timerShown = hydrated && thinking && timerElapsed >= timerDelay;
@@ -1309,6 +1390,10 @@ export function AgentThinking({
 	}, []);
 
 	useLayoutEffect(() => {
+		if (!cluster) {
+			engine.stop();
+			return;
+		}
 		engine.onLand = (error) => {
 			// A step that lands as the run ends is covered by the done cue.
 			if (thinking) cue("land");
@@ -1330,6 +1415,16 @@ export function AgentThinking({
 		});
 	});
 	useEffect(() => () => engine.stop(), [engine]);
+
+	// Without the cluster there are no landings, so a step cues as it finishes.
+	const cuedRef = useRef<Set<string> | null>(null);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: keyed by the finished ids
+	useEffect(() => {
+		const cued = cuedRef.current;
+		cuedRef.current = new Set(finished.map((step) => step.id));
+		if (cluster || !cued || !thinking) return;
+		if (finished.some((step) => !cued.has(step.id))) cue("land");
+	}, [finishedKey]);
 
 	// Played when a run finishes while mounted, never for one done at mount.
 	const statusRef = useRef(status);
@@ -1406,7 +1501,7 @@ export function AgentThinking({
 			element.style.overflow = "";
 			delete element.dataset.sizing;
 		};
-	}, [labelText, thinking, timerText.length]);
+	}, [shownLabel, thinking, timerText.length]);
 
 	// --- Announcements ----------------------------------------------------------
 	const [message, setMessage] = useState("");
@@ -1592,19 +1687,58 @@ export function AgentThinking({
 		</span>
 	);
 
-	const text = (
+	const moving = thinking && !still && live;
+	const logTransition = {
+		duration: still ? 0.15 : 0.3,
+		ease: SWAP_EASE,
+	};
+	const logMotion = {
+		initial: still ? { opacity: 0 } : { height: 0, opacity: 0 },
+		animate: { height: "auto", opacity: 1 },
+		exit: still ? { opacity: 0 } : { height: 0, opacity: 0 },
+		transition: logTransition,
+		onUpdate: noop,
+	};
+
+	const timer = (className?: string) =>
+		thinking && showTimer ? (
+			<m.span
+				key="timer"
+				custom={still}
+				aria-hidden
+				dir="ltr"
+				data-slot="agent-thinking-timer"
+				className={cn(
+					"shrink-0 text-muted-foreground tabular-nums",
+					// Takes room only once shown; the row's width eases open.
+					timerText && "ms-2 min-w-[3ch]",
+					config.timer,
+					className,
+				)}
+				variants={SWAP}
+				initial={false}
+				animate={timerShown ? "shown" : "hidden"}
+				exit="exit"
+				onUpdate={noop}
+			>
+				{timerText}
+			</m.span>
+		) : null;
+
+	const text = (className?: string, timerClassName?: string) => (
 		<span
 			ref={textRef}
 			data-slot="agent-thinking-text"
-			className="relative flex min-w-0 items-baseline"
+			className={cn("relative flex min-w-0 items-baseline", className)}
 		>
 			<AnimatePresence initial={false} mode="popLayout">
 				<m.span
-					key={`${status}:${labelText}`}
+					key={`${status}:${shownLabel}`}
 					custom={still}
 					ref={labelRef}
 					data-slot="agent-thinking-label"
-					data-sweep={thinking && !still && live ? "" : undefined}
+					data-sweep={cluster && moving ? "" : undefined}
+					data-shine={!cluster && moving ? "" : undefined}
 					onAnimationEnd={(event) => {
 						if (event.animationName === "agent-thinking-flash") {
 							delete event.currentTarget.dataset.flash;
@@ -1613,8 +1747,16 @@ export function AgentThinking({
 					className={cn(
 						"min-w-0 truncate font-medium transition-colors duration-150",
 						config.label,
-						status === "error" ? "text-destructive" : "text-current/80",
-						hasSteps && status !== "error" && "group-hover/row:text-current",
+						status === "error"
+							? "text-destructive"
+							: cluster
+								? "text-current/80"
+								: "text-muted-foreground",
+						expandable &&
+							status !== "error" &&
+							(cluster
+								? "group-hover/row:text-current"
+								: !thinking && "group-hover/row:text-foreground"),
 					)}
 					variants={SWAP}
 					initial="enter"
@@ -1623,39 +1765,416 @@ export function AgentThinking({
 					// Keeps the fade on motion's frame loop for frame-stepped captures.
 					onUpdate={noop}
 				>
-					{labelText}
+					{shownLabel}
 				</m.span>
-				{thinking && showTimer ? (
-					<m.span
-						key="timer"
-						custom={still}
-						aria-hidden
-						dir="ltr"
-						data-slot="agent-thinking-timer"
-						className={cn(
-							"shrink-0 text-muted-foreground tabular-nums",
-							// Takes room only once shown; the row's width eases open.
-							timerText && "ms-2 min-w-[3ch]",
-							config.timer,
-						)}
-						variants={SWAP}
-						initial={false}
-						animate={timerShown ? "shown" : "hidden"}
-						exit="exit"
-						onUpdate={noop}
-					>
-						{timerText}
-					</m.span>
-				) : null}
+				{timer(timerClassName)}
 			</AnimatePresence>
 		</span>
 	);
 
-	const rowClass = cn(
-		"group/row relative flex min-h-8 min-w-0 max-w-full items-center text-start",
-		config.gapClass,
-		variant === "pill" ? "rounded-full bg-muted/50 px-3 py-1.5" : "rounded-md",
+	const chevron = (className?: string) => (
+		<svg
+			aria-hidden
+			viewBox="0 0 16 16"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth={1.5}
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			data-slot="agent-thinking-chevron"
+			className={cn(
+				"size-3.5 shrink-0 text-muted-foreground transition-[rotate,color] duration-300 ease-[cubic-bezier(.2,.8,.2,1)] group-hover/row:text-foreground",
+				open ? "rotate-90" : "rtl:rotate-180",
+				className,
+			)}
+		>
+			<path d="m6 3.5 4.5 4.5L6 12.5" />
+		</svg>
 	);
+
+	/** The row: a button that opens the log or body, or a plain element. */
+	const trigger = (className: string, children: ReactNode) =>
+		expandable ? (
+			<button
+				ref={triggerRef}
+				type="button"
+				data-slot="agent-thinking-trigger"
+				aria-expanded={open}
+				aria-controls={listId}
+				onClick={() => setOpen(!open)}
+				className={cn(
+					"pointer-coarse:min-h-11 cursor-pointer select-none outline-none [-webkit-tap-highlight-color:transparent] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-solid focus-visible:outline-offset-2",
+					className,
+				)}
+			>
+				{children}
+			</button>
+		) : (
+			<div data-slot="agent-thinking-trigger" className={className}>
+				{children}
+			</div>
+		);
+
+	/** The status mark of a step, or of a run without steps. */
+	const node = (state: AgentThinkingStep["status"], active: boolean) => (
+		<AnimatePresence initial={false}>
+			{state === "done" || state === "error" ? (
+				<Glyph key={state} kind={state} px={12} still={still} />
+			) : (
+				<m.span
+					key={state ?? "active"}
+					data-halo={state === "active" && active && moving ? "" : undefined}
+					data-pulse={
+						state === "active" && active && still && live ? "" : undefined
+					}
+					className={cn(
+						"absolute inset-0 m-auto size-1.5 rounded-full bg-current",
+						state === "active" ? "text-foreground/80" : "text-current/25",
+					)}
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					exit={{ opacity: 0, scale: still ? 1 : 0.4 }}
+					transition={{ duration: 0.18, ease: SWAP_EASE }}
+					onUpdate={noop}
+				/>
+			)}
+		</AnimatePresence>
+	);
+
+	const rail = "absolute left-[calc(50%-0.5px)] h-[calc(50%-6px)] w-px";
+
+	/** Steps in order on a thin rail, used by the timeline, shimmer, and card. */
+	const timeline = (className?: string, id?: string) => (
+		<ol
+			id={id}
+			data-slot="agent-thinking-timeline"
+			className={cn("flex min-w-0 flex-col", className)}
+		>
+			<AnimatePresence initial={false}>
+				{(steps ?? []).map((step, index, all) => {
+					const state = step.status ?? "done";
+					const finishedStep = isFinished(step);
+					const shine = state === "active" && moving;
+					return (
+						<m.li
+							key={step.id}
+							data-slot="agent-thinking-step"
+							data-status={state}
+							className={cn(
+								"flex min-w-0 items-baseline overflow-hidden",
+								config.gapClass,
+								config.step,
+							)}
+							initial={still ? { opacity: 0 } : { height: 0, opacity: 0 }}
+							animate={{ height: "auto", opacity: 1 }}
+							exit={still ? { opacity: 0 } : { height: 0, opacity: 0 }}
+							transition={{ duration: still ? 0.15 : 0.32, ease: SWAP_EASE }}
+							onUpdate={noop}
+						>
+							<span
+								aria-hidden
+								className={cn(
+									"relative shrink-0 self-stretch",
+									config.nodeClass,
+								)}
+							>
+								{index > 0 ? (
+									<span className={cn(rail, "top-0 bg-current/20")} />
+								) : null}
+								{/* Drawn down toward the next step as it arrives. */}
+								<AnimatePresence initial={false}>
+									{index < all.length - 1 ? (
+										<m.span
+											key="rail"
+											className={cn(rail, "bottom-0 bg-current/20")}
+											style={{ originY: 0 }}
+											initial={still ? { opacity: 0 } : { scaleY: 0 }}
+											animate={{ opacity: 1, scaleY: 1 }}
+											exit={{ opacity: 0 }}
+											transition={{ duration: 0.24, ease: SWAP_EASE }}
+											onUpdate={noop}
+										/>
+									) : null}
+								</AnimatePresence>
+								{node(state, thinking)}
+							</span>
+							<span
+								title={step.label}
+								data-shine={shine ? "" : undefined}
+								className={cn(
+									"min-w-0 flex-1 truncate transition-colors duration-200",
+									state === "error"
+										? "text-destructive"
+										: state === "active"
+											? cn(
+													"font-medium",
+													shine ? "text-muted-foreground" : "text-foreground",
+												)
+											: state === "pending"
+												? "text-muted-foreground/60"
+												: "text-muted-foreground",
+								)}
+							>
+								{step.label}
+								<span className="sr-only">{`, ${stateWord(state)}`}</span>
+							</span>
+							{step.durationMs !== undefined && finishedStep ? (
+								<m.span
+									className={cn(
+										"ms-3 min-w-[4ch] shrink-0 text-end text-muted-foreground tabular-nums",
+										config.timer,
+									)}
+									initial={still ? false : { opacity: 0 }}
+									animate={{ opacity: 1 }}
+									transition={{ duration: 0.2, delay: 0.1 }}
+									onUpdate={noop}
+								>
+									{formatStepDuration(step.durationMs)}
+								</m.span>
+							) : null}
+						</m.li>
+					);
+				})}
+			</AnimatePresence>
+		</ol>
+	);
+
+	const clusterLog = (
+		<AnimatePresence initial={false}>
+			{open && steps ? (
+				<m.div
+					key="log"
+					data-slot="agent-thinking-log"
+					className="w-full min-w-0 overflow-hidden"
+					{...logMotion}
+				>
+					<ol
+						id={listId}
+						className={cn(
+							"flex min-w-0 flex-col pt-1 pb-0.5",
+							variant === "pill" && "px-3",
+						)}
+					>
+						{steps.map((step) => {
+							const state = step.status ?? "done";
+							const done = isFinished(step);
+							return (
+								<li
+									key={step.id}
+									data-slot="agent-thinking-step"
+									data-status={state}
+									// Baseline-aligned, so the smaller duration sits on the
+									// label's baseline.
+									className={cn(
+										"flex min-w-0 items-baseline",
+										config.gapClass,
+										config.step,
+									)}
+								>
+									<span
+										aria-hidden
+										className={cn(
+											"relative shrink-0 self-stretch",
+											config.bulletClass,
+										)}
+									>
+										{done ? (
+											<span
+												key="done"
+												ref={engine.ref("bullet", step.id)}
+												data-slot="agent-thinking-bullet"
+												className={cn(
+													"absolute rounded-full bg-current",
+													fadeClass,
+													state === "error" && "text-destructive",
+												)}
+												style={{ ...bulletBox, opacity: 0 }}
+											/>
+										) : (
+											<span
+												key="pending"
+												className="absolute rounded-full bg-current opacity-25"
+												style={bulletBox}
+											/>
+										)}
+									</span>
+									<span
+										title={step.label}
+										data-sweep={state === "active" && moving ? "" : undefined}
+										className={cn(
+											"min-w-0 flex-1 truncate",
+											state === "error"
+												? "text-destructive"
+												: state === "active"
+													? "font-medium text-current/80"
+													: "text-muted-foreground",
+										)}
+									>
+										{step.label}
+										<span className="sr-only">{`, ${stateWord(state)}`}</span>
+									</span>
+									{step.durationMs !== undefined ? (
+										<span
+											className={cn(
+												"ms-3 min-w-[4ch] shrink-0 text-end text-muted-foreground tabular-nums",
+												config.timer,
+											)}
+										>
+											{formatStepDuration(step.durationMs)}
+										</span>
+									) : null}
+								</li>
+							);
+						})}
+					</ol>
+				</m.div>
+			) : null}
+		</AnimatePresence>
+	);
+
+	const stepLog = (className?: string) => (
+		<AnimatePresence initial={false}>
+			{open && steps ? (
+				<m.div
+					key="log"
+					data-slot="agent-thinking-log"
+					className="w-full min-w-0 overflow-hidden"
+					{...logMotion}
+				>
+					{timeline(className, listId)}
+				</m.div>
+			) : null}
+		</AnimatePresence>
+	);
+
+	const row =
+		"group/row relative flex min-h-8 min-w-0 max-w-full items-center rounded-md text-start";
+
+	let body: ReactNode;
+	if (variant === "shimmer") {
+		body = (
+			<>
+				{trigger(
+					row,
+					<>
+						{text()}
+						{expandable ? chevron("ms-1") : null}
+					</>,
+				)}
+				{stepLog("pt-1 pb-0.5")}
+			</>
+		);
+	} else if (variant === "orb") {
+		body = (
+			<div
+				data-slot="agent-thinking-trigger"
+				className="relative inline-flex items-center"
+			>
+				<Orb
+					px={config.orb}
+					status={status}
+					moving={!still && live}
+					still={still}
+				/>
+				<span className="sr-only">{labelText}</span>
+			</div>
+		);
+	} else if (variant === "timeline") {
+		body = (
+			<>
+				{trigger(
+					cn(row, config.gapClass),
+					<>
+						<span
+							aria-hidden
+							className={cn(
+								"relative grid shrink-0 place-items-center self-stretch",
+								config.nodeClass,
+							)}
+						>
+							{expandable
+								? chevron()
+								: node(thinking ? "active" : status, thinking)}
+						</span>
+						{text()}
+					</>,
+				)}
+				{stepLog("pb-0.5")}
+			</>
+		);
+	} else if (variant === "card") {
+		body = (
+			<div
+				data-slot="agent-thinking-card"
+				className="w-full min-w-0 overflow-hidden rounded-xl border bg-card text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04)] dark:shadow-none"
+			>
+				{trigger(
+					cn(
+						"group/row relative flex w-full min-w-0 items-center gap-2.5 rounded-[inherit] text-start focus-visible:-outline-offset-2",
+						config.cardHeader,
+						config.cardPad,
+					),
+					<>
+						<Orb
+							px={config.glyph}
+							status={status}
+							moving={!still && live}
+							still={still}
+						/>
+						{text("flex-1", "ms-auto ps-3")}
+						{expandable ? chevron("-me-0.5") : null}
+					</>,
+				)}
+				<AnimatePresence initial={false}>
+					{open && hasBody ? (
+						<m.div
+							key="body"
+							id={listId}
+							className="min-w-0 overflow-hidden"
+							{...logMotion}
+						>
+							<CardBody
+								peek={peek}
+								follow={thinking}
+								still={still}
+								className={cn(config.cardPad, "pb-3")}
+							>
+								{hasReasoning ? (
+									<p
+										className={cn(
+											"whitespace-pre-line text-pretty text-muted-foreground",
+											config.body,
+										)}
+									>
+										<StreamedText text={reasoning ?? ""} animate={!still} />
+									</p>
+								) : (
+									timeline("-mt-1")
+								)}
+							</CardBody>
+						</m.div>
+					) : null}
+				</AnimatePresence>
+			</div>
+		);
+	} else {
+		body = (
+			<>
+				{trigger(
+					cn(
+						row,
+						config.gapClass,
+						variant === "pill" && "rounded-full bg-muted/50 px-3 py-1.5",
+					),
+					<>
+						{mark}
+						{text()}
+					</>,
+				)}
+				{clusterLog}
+			</>
+		);
+	}
 
 	return (
 		<LazyMotion features={domAnimation}>
@@ -1667,7 +2186,10 @@ export function AgentThinking({
 				data-variant={variant}
 				data-open={open ? "" : undefined}
 				className={cn(
-					"flex w-full min-w-0 flex-col items-start text-foreground",
+					variant === "orb"
+						? "inline-flex align-middle"
+						: "flex w-full min-w-0 flex-col items-start",
+					"text-foreground",
 					className,
 				)}
 				onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
@@ -1682,144 +2204,308 @@ export function AgentThinking({
 				<style href="tentui-agent-thinking" precedence="default">
 					{STYLES}
 				</style>
-				{hasSteps ? (
-					<button
-						ref={triggerRef}
-						type="button"
-						data-slot="agent-thinking-trigger"
-						aria-expanded={open}
-						aria-controls={listId}
-						onClick={() => setOpen(!open)}
-						className={cn(
-							rowClass,
-							"pointer-coarse:min-h-11 cursor-pointer select-none outline-none [-webkit-tap-highlight-color:transparent] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-solid focus-visible:outline-offset-2",
-						)}
-					>
-						{mark}
-						{text}
-					</button>
-				) : (
-					<div data-slot="agent-thinking-trigger" className={rowClass}>
-						{mark}
-						{text}
-					</div>
-				)}
-				<AnimatePresence initial={false}>
-					{open && steps ? (
-						<m.div
-							key="log"
-							data-slot="agent-thinking-log"
-							className="w-full min-w-0 overflow-hidden"
-							initial={still ? { opacity: 0 } : { height: 0, opacity: 0 }}
-							animate={{ height: "auto", opacity: 1 }}
-							exit={still ? { opacity: 0 } : { height: 0, opacity: 0 }}
-							transition={{
-								duration: still ? 0.15 : 0.3,
-								ease: [0.2, 0.8, 0.2, 1],
-							}}
-							onUpdate={noop}
-						>
-							<ol
-								id={listId}
-								className={cn(
-									"flex min-w-0 flex-col pt-1 pb-0.5",
-									variant === "pill" && "px-3",
-								)}
-							>
-								{steps.map((step) => {
-									const state = step.status ?? "done";
-									const done = isFinished(step);
-									return (
-										<li
-											key={step.id}
-											data-slot="agent-thinking-step"
-											data-status={state}
-											// Baseline-aligned, so the smaller duration sits on the
-											// label's baseline.
-											className={cn(
-												"flex min-w-0 items-baseline",
-												config.gapClass,
-												config.step,
-											)}
-										>
-											<span
-												aria-hidden
-												className={cn(
-													"relative shrink-0 self-stretch",
-													config.bulletClass,
-												)}
-											>
-												{done ? (
-													<span
-														key="done"
-														ref={engine.ref("bullet", step.id)}
-														data-slot="agent-thinking-bullet"
-														className={cn(
-															"absolute rounded-full bg-current",
-															fadeClass,
-															state === "error" && "text-destructive",
-														)}
-														style={{ ...bulletBox, opacity: 0 }}
-													/>
-												) : (
-													<span
-														key="pending"
-														className="absolute rounded-full bg-current opacity-25"
-														style={bulletBox}
-													/>
-												)}
-											</span>
-											<span
-												title={step.label}
-												data-sweep={
-													state === "active" && thinking && !still && live
-														? ""
-														: undefined
-												}
-												className={cn(
-													"min-w-0 flex-1 truncate",
-													state === "error"
-														? "text-destructive"
-														: state === "active"
-															? "font-medium text-current/80"
-															: "text-muted-foreground",
-												)}
-											>
-												{step.label}
-												<span className="sr-only">
-													{`, ${
-														state === "done"
-															? "done"
-															: state === "error"
-																? "failed"
-																: state === "active"
-																	? "in progress"
-																	: "pending"
-													}`}
-												</span>
-											</span>
-											{step.durationMs !== undefined ? (
-												<span
-													className={cn(
-														"ms-3 min-w-[4ch] shrink-0 text-end text-muted-foreground tabular-nums",
-														config.timer,
-													)}
-												>
-													{formatStepDuration(step.durationMs)}
-												</span>
-											) : null}
-										</li>
-									);
-								})}
-							</ol>
-						</m.div>
-					) : null}
-				</AnimatePresence>
+				{body}
 				<span role="status" aria-live="polite" aria-atomic className="sr-only">
 					{message}
 				</span>
 			</div>
 		</LazyMotion>
+	);
+}
+
+function stateWord(state: NonNullable<AgentThinkingStep["status"]>) {
+	return state === "done"
+		? "done"
+		: state === "error"
+			? "failed"
+			: state === "active"
+				? "in progress"
+				: "pending";
+}
+
+const GLYPHS = {
+	done: ["M3.75 8.5 6.6 11.25 12.25 5"],
+	error: ["M5 5l6 6", "M11 5l-6 6"],
+} as const;
+
+const DRAW: Variants = {
+	hidden: { pathLength: 0 },
+	shown: (index: number) => ({
+		pathLength: 1,
+		transition: { duration: 0.3, delay: 0.08 + index * 0.08, ease: SWAP_EASE },
+	}),
+};
+
+/** A check or a cross that draws itself in, centered in its parent. */
+function Glyph({
+	kind,
+	px,
+	still,
+}: {
+	kind: "done" | "error";
+	px: number;
+	still: boolean;
+}) {
+	return (
+		<m.svg
+			aria-hidden
+			viewBox="0 0 16 16"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth={1.6}
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			className={cn(
+				"absolute inset-0 m-auto",
+				kind === "error" ? "text-destructive" : "text-muted-foreground",
+			)}
+			style={{ width: px, height: px }}
+			initial={still ? { opacity: 0 } : "hidden"}
+			animate={still ? { opacity: 1 } : "shown"}
+			exit={{ opacity: 0, transition: { duration: 0.12 } }}
+			onUpdate={noop}
+		>
+			{GLYPHS[kind].map((path, index) => (
+				<m.path
+					key={path}
+					d={path}
+					custom={index}
+					variants={still ? undefined : DRAW}
+				/>
+			))}
+		</m.svg>
+	);
+}
+
+/**
+ * Soft highlights circling inside the orb at different speeds and sizes, so
+ * the light in it never quite repeats.
+ */
+const GLINTS = [
+	{ angle: -135, period: 3.2, reverse: false, size: 0.7, alpha: 0.55 },
+	{ angle: 45, period: 4.4, reverse: true, size: 0.55, alpha: 0.35 },
+	{ angle: 160, period: 5.6, reverse: false, size: 0.45, alpha: 0.25 },
+] as const;
+
+/**
+ * A breathing orb with light moving inside it. When the run ends it fades
+ * down and a check draws in its place.
+ */
+function Orb({
+	px,
+	status,
+	moving,
+	still,
+}: {
+	px: number;
+	status: AgentThinkingStatus;
+	/** On screen and animated; otherwise the light holds where it is. */
+	moving: boolean;
+	still: boolean;
+}) {
+	const thinking = status === "thinking";
+	const playState = moving && thinking ? "running" : "paused";
+	return (
+		<span
+			aria-hidden
+			data-slot="agent-thinking-orb"
+			className="relative shrink-0"
+			style={{ width: px, height: px }}
+		>
+			<m.span
+				className="absolute inset-0"
+				initial={false}
+				animate={
+					thinking ? { scale: 1, opacity: 1 } : { scale: 0.5, opacity: 0 }
+				}
+				transition={{ duration: still ? 0.15 : 0.3, ease: SWAP_EASE }}
+				onUpdate={noop}
+			>
+				<span
+					data-breathe={still ? undefined : ""}
+					data-pulse={still && thinking ? "" : undefined}
+					// Light glints on a dark orb, and in dark mode bright ones on a dimmer
+					// pearl, so the light always reads as light.
+					className="absolute inset-[6%] overflow-hidden rounded-full bg-current/90 [--glint:var(--color-background,Canvas)] dark:bg-current/60 dark:[--glint:currentColor]"
+					style={{ animationPlayState: playState }}
+				>
+					{GLINTS.map((glint) => (
+						<span
+							key={glint.angle}
+							data-orbit={still ? undefined : ""}
+							className="absolute inset-0"
+							style={{
+								rotate: `${glint.angle}deg`,
+								animationDuration: `${glint.period}s`,
+								animationDirection: glint.reverse ? "reverse" : undefined,
+								animationPlayState: playState,
+							}}
+						>
+							<span
+								className="absolute top-1/2 rounded-full"
+								style={{
+									width: `${glint.size * 100}%`,
+									height: `${glint.size * 100}%`,
+									left: `${(0.62 - glint.size / 2) * 100}%`,
+									translate: "0 -50%",
+									background: `radial-gradient(closest-side, color-mix(in oklab, var(--glint) ${glint.alpha * 100}%, transparent), transparent)`,
+								}}
+							/>
+						</span>
+					))}
+				</span>
+			</m.span>
+			<AnimatePresence initial={false}>
+				{thinking ? null : (
+					<Glyph
+						key={status}
+						kind={status === "error" ? "error" : "done"}
+						px={Math.round(px * 0.86)}
+						still={still}
+					/>
+				)}
+			</AnimatePresence>
+		</span>
+	);
+}
+
+/** Chunks fresh enough to still be fading in keep their own span. */
+const STREAM_CHUNKS = 24;
+
+/**
+ * Streamed text where each appended chunk resolves out of a blur. Text that
+ * is replaced rather than extended shows at once.
+ */
+function StreamedText({ text, animate }: { text: string; animate: boolean }) {
+	const [stream, setStream] = useState(() => ({
+		text,
+		starts: [text.length],
+	}));
+	let { starts } = stream;
+	if (stream.text !== text) {
+		const grew =
+			animate &&
+			text.length > stream.text.length &&
+			text.startsWith(stream.text);
+		starts = grew
+			? [...starts, stream.text.length].slice(-STREAM_CHUNKS)
+			: [text.length];
+		setStream({ text, starts });
+	}
+	return (
+		<>
+			{text.slice(0, starts[0])}
+			{starts.map((start, index) => {
+				const end = starts[index + 1] ?? text.length;
+				return end > start ? (
+					<span key={start} data-stream="">
+						{text.slice(start, end)}
+					</span>
+				) : null;
+			})}
+		</>
+	);
+}
+
+/** Fades the top edge out once there's text above it. */
+function fade(element: HTMLElement, above: number) {
+	element.toggleAttribute("data-fade", above > 1);
+}
+
+/**
+ * The card body. While it peeks it's a window of a fixed height, so the card
+ * never grows mid-run, and the text glides up inside it as lines arrive.
+ * Opened on purpose it scrolls, and follows the stream only while scrolled
+ * to the end.
+ */
+function CardBody({
+	peek,
+	follow,
+	still,
+	className,
+	children,
+}: {
+	peek: boolean;
+	/** Start at the end, for a run still streaming. */
+	follow: boolean;
+	still: boolean;
+	className?: string;
+	children: ReactNode;
+}) {
+	const ref = useRef<HTMLDivElement>(null);
+	const contentRef = useRef<HTMLDivElement>(null);
+	// Holds its look while it collapses, so the window doesn't jump.
+	const present = useIsPresent();
+	const [peeking, setPeeking] = useState(peek);
+	if (present && peeking !== peek) setPeeking(peek);
+	const peekRef = useRef(peeking);
+	const stickRef = useRef(follow || peek);
+
+	useLayoutEffect(() => {
+		const element = ref.current;
+		const content = contentRef.current;
+		if (!element || !content) return;
+		const pin = () => {
+			if (peekRef.current) {
+				const offset = Math.max(0, content.offsetHeight - element.clientHeight);
+				content.style.transform = offset ? `translateY(${-offset}px)` : "";
+				fade(element, offset);
+				return;
+			}
+			if (stickRef.current) element.scrollTop = element.scrollHeight;
+			fade(element, element.scrollTop);
+		};
+		const observer = new ResizeObserver(pin);
+		observer.observe(content);
+		observer.observe(element);
+		pin();
+		return () => observer.disconnect();
+	}, []);
+
+	useLayoutEffect(() => {
+		const element = ref.current;
+		const content = contentRef.current;
+		if (!element || !content || peekRef.current === peeking) return;
+		peekRef.current = peeking;
+		if (peeking) return;
+		// Opened on purpose mid-run: the glide becomes a scroll, in place.
+		const offset = Math.max(0, content.offsetHeight - element.clientHeight);
+		content.style.transform = "";
+		element.scrollTop = offset;
+		stickRef.current = true;
+	}, [peeking]);
+
+	return (
+		<div
+			ref={ref}
+			data-slot="agent-thinking-body"
+			onScroll={(event) => {
+				const element = event.currentTarget;
+				if (peekRef.current) return;
+				stickRef.current =
+					element.scrollTop + element.clientHeight >= element.scrollHeight - 4;
+				fade(element, element.scrollTop);
+			}}
+			className={cn(
+				!still &&
+					"transition-[min-height,max-height] duration-300 ease-[cubic-bezier(.2,.8,.2,1)]",
+				peeking
+					? "max-h-20 min-h-20 overflow-hidden"
+					: "max-h-64 min-h-0 overflow-y-auto overscroll-contain",
+			)}
+		>
+			<div
+				ref={contentRef}
+				className={cn(
+					peeking &&
+						!still &&
+						"transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)]",
+					className,
+				)}
+			>
+				{children}
+			</div>
+		</div>
 	);
 }
 

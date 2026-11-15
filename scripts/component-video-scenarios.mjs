@@ -407,27 +407,20 @@ export const scenarios = {
 	},
 
 	"agent-thinking": {
-		rest: { x: 400, y: 320 },
 		async run(d) {
-			const row = '[data-slot="agent-thinking-trigger"]';
-			// The scene starts a run with two steps landed; the rest land at
-			// 0.7 s, 1.8 s, and 3.6 s, and it resets itself at 6.6 s.
+			// Nothing to click: the four looks run on their own.
+			d.hideCursor();
+			// The scene starts a run on the virtual clock from its quiet first
+			// frame: the dot cluster, the shimmer line, the orb, and the card
+			// in sync. Steps land at 1.0, 2.2, 3.3, and 4.4 s while the card
+			// streams its reasoning, and all four finish together at 5.5 s.
 			await d.page.evaluate(() =>
 				window.dispatchEvent(new Event("agent-thinking-capture")),
 			);
-			await d.wait(1300);
-			await d.move(row, 500, { x: 0.66, y: 0.5 });
-			await d.wait(100);
-			// The dots leave the cluster in order and become the bullets.
-			await d.click();
-			await d.wait(2300);
-			// The last step has landed and the label reads "Thought for 6s":
-			// the bullets fly back into the settled cluster.
-			await d.click();
-			await d.wait(800);
-			await d.move(d.rest, 700);
-			// Ends just before the scene resets to the first frame.
-			await d.wait(580);
+			await d.wait(5500);
+			// The card folds into its summary and the rest settle: a calm hold.
+			// Ends just before the scene resets to the first frame at 7.3 s.
+			await d.wait(1750);
 		},
 	},
 
