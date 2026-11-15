@@ -109,7 +109,9 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 					{author.avatarUrl ? (
 						<AvatarImage
 							alt=""
+							height={24}
 							src={author.avatarUrl.replace("_normal.", "_bigger.")}
+							width={24}
 						/>
 					) : null}
 					<AvatarFallback className="text-[10px]">

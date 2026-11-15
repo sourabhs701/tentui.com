@@ -108,6 +108,20 @@ const nextConfig: NextConfig = {
 	async headers() {
 		return [
 			{
+				source: "/:path*",
+				headers: [
+					{ key: "X-Content-Type-Options", value: "nosniff" },
+					{ key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+					// Component and block pages embed /preview/* in same-origin
+					// iframes, so allow the site itself as a framer.
+					{ key: "X-Frame-Options", value: "SAMEORIGIN" },
+					{ key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
+					// No includeSubDomains: other tentui.com subdomains aren't
+					// verified to be HTTPS-only.
+					{ key: "Strict-Transport-Security", value: "max-age=31536000" },
+				],
+			},
+			{
 				source: "/components/:slug([^.]+)",
 				headers: [
 					{

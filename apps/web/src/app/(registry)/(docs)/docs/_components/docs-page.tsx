@@ -35,18 +35,20 @@ function getDocHref(slug: string): Route {
 }
 
 export function getDocsPageMetadata(doc: Doc): Metadata {
-	const { title, description, image, createdAt, updatedAt } = doc.metadata;
+	const { title, seoTitle, description, image, createdAt, updatedAt } =
+		doc.metadata;
 	const url = getDocHref(doc.slug);
+	const pageTitle = seoTitle ?? title;
 	const ogImage =
 		image ||
 		`/og/simple?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
 
 	return {
-		title: doc.slug === "introduction" ? { absolute: title } : title,
+		title: doc.slug === "introduction" ? { absolute: pageTitle } : pageTitle,
 		description,
 		alternates: { canonical: url },
 		openGraph: {
-			title,
+			title: pageTitle,
 			description,
 			type: "article",
 			url,
@@ -56,7 +58,7 @@ export function getDocsPageMetadata(doc: Doc): Metadata {
 		},
 		twitter: {
 			card: "summary_large_image",
-			title,
+			title: pageTitle,
 			description,
 			images: [ogImage],
 		},

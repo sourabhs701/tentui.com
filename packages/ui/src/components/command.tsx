@@ -45,10 +45,6 @@ function CommandDialog({
 }) {
 	return (
 		<Dialog {...props}>
-			<DialogHeader className="sr-only">
-				<DialogTitle>{title}</DialogTitle>
-				<DialogDescription>{description}</DialogDescription>
-			</DialogHeader>
 			<DialogContent
 				className={cn(
 					"rounded-2xl! bg-surface p-0 outline-none max-sm:top-16 max-sm:translate-y-0 sm:max-w-lg",
@@ -57,6 +53,12 @@ function CommandDialog({
 				showCloseButton={showCloseButton}
 				showOverlay={false}
 			>
+				{/* Inside the popup so the sr-only title only exists while the dialog
+				    is open; outside it, every page would carry a stray h2. */}
+				<DialogHeader className="sr-only">
+					<DialogTitle>{title}</DialogTitle>
+					<DialogDescription>{description}</DialogDescription>
+				</DialogHeader>
 				<Command
 					className={cn(
 						"px-1 outline-none",

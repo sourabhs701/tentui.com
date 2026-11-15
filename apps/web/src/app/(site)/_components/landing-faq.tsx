@@ -15,6 +15,7 @@ import {
 	MessageAvatar,
 	MessageContent,
 } from "@/components/ui/message";
+import type { LandingFaqItem } from "./landing-faq-items";
 
 declare global {
 	interface Window {
@@ -22,40 +23,7 @@ declare global {
 	}
 }
 
-const FAQS = [
-	{
-		id: "getting-started",
-		question: "How quickly can I get started?",
-		answer:
-			"You can be up and running in a few minutes. Install the package, choose the components you need, and customize them directly in your codebase.",
-	},
-	{
-		id: "customize",
-		question: "Can I customize every component?",
-		answer:
-			"Yes. You own the source code, so every detail is yours to adapt — from tokens and typography to layout, behavior, and motion.",
-	},
-	{
-		id: "frameworks",
-		question: "Which frameworks are supported?",
-		answer:
-			"The components are designed for React and work especially well with Next.js. They use standard TypeScript, Tailwind CSS, and accessible primitives.",
-	},
-	{
-		id: "accessibility",
-		question: "Are the components accessible?",
-		answer:
-			"Accessibility is built into the underlying primitives, including keyboard navigation, focus management, and the appropriate ARIA attributes.",
-	},
-	{
-		id: "updates",
-		question: "Do I get future updates?",
-		answer:
-			"Yes. You can pull newer versions whenever they are useful while keeping full control over the local changes you have made.",
-	},
-];
-
-export default function LandingFaq() {
+export default function LandingFaq({ items }: { items: LandingFaqItem[] }) {
 	return (
 		<section
 			aria-labelledby="landing-faq-heading"
@@ -77,8 +45,14 @@ export default function LandingFaq() {
 
 				<div className="mt-12 w-full rounded-[21px] border bg-muted p-0.5">
 					<div className="rounded-[19px] border bg-background px-4 py-6 sm:px-8 sm:py-8">
-						<Accordion className="gap-3" defaultValue={["getting-started"]}>
-							{FAQS.map((faq) => (
+						{/* hiddenUntilFound keeps closed answers in the HTML, so they match
+						    the FAQPage JSON-LD and stay findable with in-page search. */}
+						<Accordion
+							className="gap-3"
+							defaultValue={items.slice(0, 1).map((item) => item.id)}
+							hiddenUntilFound
+						>
+							{items.map((faq) => (
 								<AccordionItem
 									className="border-0 not-last:border-b-0"
 									key={faq.id}
@@ -102,7 +76,9 @@ export default function LandingFaq() {
 												<Avatar size="lg">
 													<AvatarImage
 														alt="Sourabh"
+														height={40}
 														src="https://cdn.tentui.com/srb.avif"
+														width={40}
 													/>
 													<AvatarFallback>SR</AvatarFallback>
 												</Avatar>
