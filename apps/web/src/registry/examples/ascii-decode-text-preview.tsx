@@ -15,16 +15,19 @@ function AsciiDecodeTextPreview() {
 	const wrapper = useRef<HTMLDivElement>(null);
 	const timer = useRef(0);
 	const visible = useRef(true);
+	const hovered = useRef(false);
 	const waiting = useRef(false);
 
 	const schedule = () => {
 		window.clearTimeout(timer.current);
 		timer.current = window.setTimeout(() => {
-			// Paused offscreen and in hidden tabs; it picks up when seen again.
-			if (!visible.current || document.hidden) {
+			// Paused offscreen, in hidden tabs, and while the pointer explores the
+			// text with the lens; it picks up again after that.
+			if (!visible.current || hovered.current || document.hidden) {
 				waiting.current = true;
 				return;
 			}
+			waiting.current = false;
 			text.current?.replay();
 		}, HOLD_MS);
 	};
@@ -57,6 +60,15 @@ function AsciiDecodeTextPreview() {
 				size="xl"
 				className="mx-auto w-fit"
 				onDecoded={schedule}
+				onPointerEnter={(event) => {
+					if (event.pointerType !== "touch") hovered.current = true;
+				}}
+				onPointerLeave={(event) => {
+					if (event.pointerType === "touch") return;
+					hovered.current = false;
+					// Give the lens time to heal before the loop resumes.
+					if (waiting.current) schedule();
+				}}
 			>
 				Decode the signal
 			</AsciiDecodeText>

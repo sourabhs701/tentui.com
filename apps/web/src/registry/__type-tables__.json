@@ -328,7 +328,7 @@
 				},
 				{
 					"name": "lens",
-					"description": "Re-encodes the text under the pointer, or under a sideways touch drag,\nafter decoding. Defaults to `true`; always off with `trigger=\"hover\"` and\nreduced motion.",
+					"description": "Re-encodes the text under the pointer, or under a sideways touch drag,\nafter decoding. While it sits on the text it replaces the mouse cursor.\nDefaults to `true`; always off with `trigger=\"hover\"` and reduced motion.",
 					"tags": [
 						{
 							"name": "component-prop",
@@ -5863,7 +5863,7 @@
 							"text": ""
 						}
 					],
-					"type": "React.ReactNode",
+					"type": "ReactNode",
 					"simplifiedType": "ReactNode",
 					"required": false,
 					"deprecated": false
@@ -5877,7 +5877,7 @@
 							"text": ""
 						}
 					],
-					"type": "React.ReactNode",
+					"type": "ReactNode",
 					"simplifiedType": "ReactNode",
 					"required": false,
 					"deprecated": false

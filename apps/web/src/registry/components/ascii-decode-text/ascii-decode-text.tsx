@@ -20,27 +20,29 @@ const DEFAULT_RAMP = " .:-=+*#%@";
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
 /** Width of the soft edge on the text reveal, in px. */
-const EDGE_PX = 24;
+const EDGE_PX = 14;
 /** Ms each cell takes to fade once the front reaches it. */
-const CELL_FADE_MS = 120;
+const CELL_FADE_MS = 70;
 /** Ms a cell flickers through neighbouring ramp characters before it resolves. */
-const FLICKER_MS = 150;
+const FLICKER_MS = 140;
 /** Ms each flicker character holds. */
-const FLICKER_STEP_MS = 45;
+const FLICKER_STEP_MS = 70;
 /** Spread of the per-cell decode time, in ms. */
-const JITTER_MS = 90;
+const JITTER_MS = 70;
 /** Ms of flicker on the first cells before the front starts moving. */
-const LEAD_MS = 120;
+const LEAD_MS = 100;
 /** A re-encode runs at this fraction of `duration`. */
 const ENCODE_SPEED = 0.6;
 /** Cross-fade length under reduced motion, in ms. */
-const FADE_MS = 200;
+const FADE_MS = 240;
+/** Ms the lens takes to open where the pointer arrives. */
+const LENS_IN_MS = 140;
 /** Ms the lens takes to heal behind the pointer. */
-const HEAL_MS = 250;
+const HEAL_MS = 300;
 /** Most trail points kept for the healing lens. */
 const MAX_TRAIL = 16;
 /** Inner part of the lens, as a fraction of its radius, that is fully encoded. */
-const LENS_CORE = 0.55;
+const LENS_CORE = 0.7;
 /** Touch moves this far, mostly sideways, before the lens starts. */
 const TOUCH_SLOP_PX = 6;
 /** Minimum ms between type ticks, and the most ticks per decode. */
@@ -57,6 +59,11 @@ const SAMPLES_PER_CELL = 8;
 const MIN_CELL_PX = 3.5;
 /** Monospace cell width as a fraction of its height. */
 const CELL_ASPECT = 0.62;
+/**
+ * Art glyph size as a fraction of the cell height, so the characters fill
+ * their rows and the letters read as solid shapes, not stripes.
+ */
+const GLYPH_SCALE = 1.05;
 /** At most this fraction of empty cells get a dust character. */
 const DUST_FRACTION = 0.06;
 const DUST_ALPHA = 0.25;
@@ -76,15 +83,25 @@ const TYPE_SOUND = {
 
 /** Ink opacity at the lightest and the densest cell. */
 const tones = {
-	default: [0.55, 1],
+	default: [0.72, 1],
 	muted: [0.5, 0.6],
 } as const;
 
+/**
+ * Light glyphs on a dark ground read heavier and glare, so dark themes get
+ * a lighter weight and slightly less ink rather than a straight inversion.
+ */
+const inks = {
+	light: { weight: 500, scale: 1 },
+	dark: { weight: 400, scale: 0.9 },
+} as const;
+
+/** Display type: leading opens up and tracking tightens as the size grows. */
 const sizes = {
-	sm: "text-2xl",
-	md: "text-4xl",
-	lg: "text-4xl sm:text-5xl",
-	xl: "text-5xl sm:text-6xl",
+	sm: "text-2xl leading-[1.2] tracking-[-0.02em]",
+	md: "text-4xl leading-[1.1] tracking-[-0.025em]",
+	lg: "text-4xl leading-[1.1] tracking-[-0.025em] sm:text-5xl sm:leading-[1.05] sm:tracking-[-0.03em]",
+	xl: "text-5xl leading-[1.05] tracking-[-0.03em] sm:text-6xl sm:tracking-[-0.035em]",
 } as const;
 
 export type AsciiDecodeTextTrigger = "mount" | "view" | "hover" | "manual";
@@ -104,7 +121,34 @@ function hash(a: number, b: number) {
 }
 
 function smoothstep(t: number) {
-	return t * t * (3 - 2 * t);
+	const x = clamp(t, 0, 1);
+	return x * x * (3 - 2 * x);
+}
+
+/** The sweep's ease: a calm start and a soft landing, with no overshoot. */
+function easeInOutSine(t: number) {
+	return (1 - Math.cos(Math.PI * clamp(t, 0, 1))) / 2;
+}
+
+/** The inverse of `easeInOutSine`: when the front reaches progress `p`. */
+function easeInOutSineInverse(p: number) {
+	return Math.acos(1 - 2 * clamp(p, 0, 1)) / Math.PI;
+}
+
+function easeOutCubic(t: number) {
+	return 1 - (1 - clamp(t, 0, 1)) ** 3;
+}
+
+/** Whether a CSS colour is light, i.e. the text sits on a dark theme. */
+function isLightColor(color: string) {
+	const ctx = document.createElement("canvas").getContext("2d", {
+		willReadFrequently: true,
+	});
+	if (!ctx) return false;
+	ctx.fillStyle = color;
+	ctx.fillRect(0, 0, 1, 1);
+	const [r = 0, g = 0, b = 0] = ctx.getImageData(0, 0, 1, 1).data;
+	return 0.2126 * r + 0.7152 * g + 0.0722 * b > 140;
 }
 
 function subscribeToReducedMotion(onStoreChange: () => void) {
@@ -275,8 +319,12 @@ interface Grid {
 	maskDistance: Float32Array;
 	/** Front distance of each letter, sorted, for the type ticks. */
 	letters: Float32Array;
+	/** Line boxes of the real text, for the lens cursor. */
+	lines: Line[];
 	atlas: HTMLCanvasElement;
 	color: string;
+	/** Ink for the current text colour: lighter on dark themes. */
+	tint: (typeof inks)[keyof typeof inks];
 	glyphs: string[];
 	monoFamily: string;
 	fontSize: number;
@@ -323,7 +371,16 @@ interface Animation {
 interface TrailPoint {
 	x: number;
 	y: number;
+	/** Radius when the point was left behind, and when that was. */
+	r: number;
 	t: number;
+}
+
+interface LensHead {
+	x: number;
+	y: number;
+	/** When the lens opened, so it grows in rather than popping. */
+	since: number;
 }
 
 function createCanvas(width: number, height: number) {
@@ -348,7 +405,10 @@ class DecodeEngine {
 	private dirty = true;
 	private animation: Animation | null = null;
 	private trail: TrailPoint[] = [];
-	private head: { x: number; y: number } | null = null;
+	private head: LensHead | null = null;
+	/** Last mouse or pen position over the root, so the lens can open on decode. */
+	private hover: { x: number; y: number } | null = null;
+	private cursorHidden = false;
 	private touch: { id: number; x: number; y: number; active: boolean } | null =
 		null;
 	private frame = 0;
@@ -425,6 +485,7 @@ class DecodeEngine {
 
 	destroy() {
 		this.destroyed = true;
+		this.setCursorHidden(false);
 		cancelAnimationFrame(this.frame);
 		cancelAnimationFrame(this.resizeFrame);
 		for (const cleanup of this.cleanups) cleanup();
@@ -446,6 +507,7 @@ class DecodeEngine {
 		if (!this.lensEnabled() && (this.head || this.trail.length)) {
 			this.head = null;
 			this.trail = [];
+			this.setCursorHidden(false);
 			this.paintLens(performance.now());
 		}
 	}
@@ -496,6 +558,7 @@ class DecodeEngine {
 	private start(kind: "decode" | "encode", next: "decode" | null) {
 		this.head = null;
 		this.trail = [];
+		this.setCursorHidden(false);
 		const grid = this.ensureGrid();
 		const fade = this.options.reducedMotion;
 		if (!grid) {
@@ -539,6 +602,10 @@ class DecodeEngine {
 		this.clearCanvas();
 		this.setPhase("decoded");
 		if (notify) this.callbacks.onDecoded();
+		// The pointer is already resting on the text: open the lens under it.
+		if (this.hover && this.lensReady()) {
+			this.moveLens(this.hover.x, this.hover.y, true);
+		}
 	}
 
 	private finishEncoded() {
@@ -575,7 +642,8 @@ class DecodeEngine {
 		}
 		if (this.head || this.trail.length) {
 			this.paintLens(now);
-			if (this.trail.length) this.wake();
+			const opening = this.head && now - this.head.since < LENS_IN_MS;
+			if (this.trail.length || opening) this.wake();
 		}
 	}
 
@@ -605,6 +673,7 @@ class DecodeEngine {
 		const color = getComputedStyle(this.root).color;
 		if (color === grid.color) return;
 		grid.color = color;
+		grid.tint = isLightColor(color) ? inks.dark : inks.light;
 		grid.atlas = this.buildAtlas(grid);
 	}
 
@@ -633,18 +702,25 @@ class DecodeEngine {
 		);
 		const ctx = atlas.getContext("2d");
 		if (!ctx) return atlas;
-		ctx.font = `400 ${grid.cellHeight}px ${grid.monoFamily}`;
+		ctx.font = this.atlasFont(grid);
 		ctx.textAlign = "center";
-		ctx.textBaseline = "middle";
+		ctx.textBaseline = "alphabetic";
 		ctx.fillStyle = grid.color;
+		// Centre the cap height in the cell, on whole pixels, so every row of
+		// characters shares one optical middle and stays crisp.
+		const cap =
+			ctx.measureText("H").actualBoundingBoxAscent || grid.cellHeight * 0.7;
+		const baseline = Math.round((grid.cellHeight + cap) / 2);
+		const middle = Math.round(grid.cellWidth / 2);
 		grid.glyphs.forEach((glyph, index) => {
-			ctx.fillText(
-				glyph,
-				index * grid.cellWidth + grid.cellWidth / 2,
-				grid.cellHeight / 2 + grid.cellHeight * 0.04,
-			);
+			ctx.fillText(glyph, index * grid.cellWidth + middle, baseline);
 		});
 		return atlas;
+	}
+
+	private atlasFont(grid: Grid) {
+		const size = Math.round(grid.cellHeight * GLYPH_SCALE);
+		return `${grid.tint.weight} ${size}px ${grid.monoFamily}`;
 	}
 
 	/**
@@ -801,9 +877,9 @@ class DecodeEngine {
 				const cell = r * columns + c;
 				const coverage = counts[cell] ? sums[cell] / (counts[cell] * 255) : 0;
 				// Faint anti-aliased edges drop out, so the letter shapes stay sharp.
-				const level = clamp((coverage - 0.06) / 0.84, 0, 1);
+				const level = clamp((coverage - 0.08) / 0.8, 0, 1);
 				const index = Math.round(level * levels);
-				if (coverage > 0.1 && index > 0 && glyphs[index] !== " ") {
+				if (coverage > 0.14 && index > 0 && glyphs[index] !== " ") {
 					col.push(c);
 					row.push(r);
 					glyph.push(index);
@@ -878,15 +954,21 @@ class DecodeEngine {
 			span,
 			maskDistance,
 			letters,
+			lines,
 			atlas: createCanvas(1, 1),
 			color: getComputedStyle(root).color,
+			tint: inks.light,
 			glyphs,
 			monoFamily,
 			fontSize,
 		};
+		grid.tint = isLightColor(grid.color) ? inks.dark : inks.light;
 		grid.atlas = this.buildAtlas(grid);
 		// The mono font may not be in use anywhere else yet; redraw once it is.
-		const monoFont = `${cellHeight}px ${monoFamily.split(",")[0]}`;
+		const monoFont = this.atlasFont({
+			...grid,
+			monoFamily: monoFamily.split(",")[0] ?? monoFamily,
+		});
 		if (document.fonts && !document.fonts.check(monoFont)) {
 			document.fonts
 				.load(monoFont)
@@ -929,7 +1011,7 @@ class DecodeEngine {
 		glyph: number,
 		alpha: number,
 	) {
-		ctx.globalAlpha = alpha;
+		ctx.globalAlpha = alpha * grid.tint.scale;
 		ctx.drawImage(
 			grid.atlas,
 			glyph * grid.cellWidth,
@@ -972,16 +1054,21 @@ class DecodeEngine {
 		const decoding = animation.kind === "decode";
 
 		if (animation.fade) {
-			// Reduced motion: one cross-fade, no sweep and no flicker.
+			// Reduced motion: no sweep and no flicker. The outgoing layer fades
+			// first and the incoming one follows, so the two never sit on top of
+			// each other at half strength.
 			const progress = clamp(elapsed / animation.total, 0, 1);
-			const textAlpha = decoding ? progress : 1 - progress;
+			const out = 1 - smoothstep(progress / 0.6);
+			const into = smoothstep((progress - 0.4) / 0.6);
+			const artAlpha = decoding ? out : into;
+			const textAlpha = decoding ? into : out;
 			for (let index = 0; index < grid.count; index++) {
 				this.drawCell(
 					ctx,
 					grid,
 					index,
 					grid.glyph[index],
-					grid.ink[index] * (1 - textAlpha),
+					grid.ink[index] * artAlpha,
 				);
 			}
 			const alpha = textAlpha.toFixed(3);
@@ -991,12 +1078,15 @@ class DecodeEngine {
 			return;
 		}
 
+		// The front eases in and out; each cell resolves when the eased front
+		// reaches it, so the art and the text mask stay in step.
 		const t = elapsed - animation.lead;
 		const travel = grid.span + EDGE_PX;
-		const front = (t / animation.sweep) * travel - EDGE_PX / 2;
+		const front = easeInOutSine(t / animation.sweep) * travel - EDGE_PX / 2;
 		for (let index = 0; index < grid.count; index++) {
+			const reach = (grid.distance[index] + EDGE_PX / 2) / travel;
 			const at =
-				((grid.distance[index] + EDGE_PX / 2) / travel) * animation.sweep -
+				easeInOutSineInverse(reach) * animation.sweep -
 				CELL_FADE_MS / 2 +
 				grid.jitter[index];
 			const local = t - at;
@@ -1111,18 +1201,26 @@ class DecodeEngine {
 		}
 		const grid = this.grid;
 		const ctx = this.context();
-		if (!grid || !ctx || (!this.head && !this.trail.length)) {
+		// The lens opens with an ease-out and heals with an ease-in-out, so it
+		// arrives quickly and settles back into the type without a snap.
+		const circles = this.trail.map((point) => ({
+			x: point.x,
+			y: point.y,
+			r: point.r * (1 - smoothstep((now - point.t) / HEAL_MS)),
+		}));
+		if (this.head && grid) {
+			circles.push({
+				x: this.head.x,
+				y: this.head.y,
+				r: this.headRadius(grid, now),
+			});
+		}
+		const visible = circles.filter((circle) => circle.r >= 0.5);
+		if (!grid || !ctx || !visible.length) {
 			this.setMask(null);
 			this.clearCanvas();
 			return;
 		}
-		const radius = this.lensRadius(grid);
-		const circles = this.trail.map((point) => ({
-			x: point.x,
-			y: point.y,
-			r: radius * (1 - (now - point.t) / HEAL_MS),
-		}));
-		if (this.head) circles.push({ ...this.head, r: radius });
 
 		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		this.painted = true;
@@ -1130,7 +1228,7 @@ class DecodeEngine {
 		let maxX = Number.NEGATIVE_INFINITY;
 		let minY = Number.POSITIVE_INFINITY;
 		let maxY = Number.NEGATIVE_INFINITY;
-		for (const circle of circles) {
+		for (const circle of visible) {
 			minX = Math.min(minX, circle.x - circle.r);
 			maxX = Math.max(maxX, circle.x + circle.r);
 			minY = Math.min(minY, circle.y - circle.r);
@@ -1144,7 +1242,7 @@ class DecodeEngine {
 			if (x < minX || x > maxX || y < minY || y > maxY) continue;
 			// The text mask multiplies the holes, so the art is its complement.
 			let clear = 1;
-			for (const circle of circles) {
+			for (const circle of visible) {
 				const reach = Math.hypot(x - circle.x, y - circle.y);
 				const inner = circle.r * LENS_CORE;
 				const open =
@@ -1161,7 +1259,7 @@ class DecodeEngine {
 			this.drawCell(ctx, grid, index, glyph, grid.ink[index] * strength);
 		}
 		this.setMask(
-			circles
+			visible
 				.map(
 					(circle) =>
 						`radial-gradient(circle ${circle.r.toFixed(1)}px at ${(circle.x - grid.textLeft).toFixed(1)}px ${(circle.y - grid.textTop).toFixed(1)}px, #0000 ${(circle.r * LENS_CORE).toFixed(1)}px, #000 ${circle.r.toFixed(1)}px)`,
@@ -1170,29 +1268,70 @@ class DecodeEngine {
 		);
 	}
 
-	private moveLens(clientX: number, clientY: number) {
+	private headRadius(grid: Grid, now: number) {
+		const opened = this.head ? (now - this.head.since) / LENS_IN_MS : 1;
+		return this.lensRadius(grid) * easeOutCubic(opened);
+	}
+
+	/**
+	 * Moves the lens. A mouse or pen hides the cursor while the lens sits on
+	 * the text, because the lens is the cursor there; over the blank parts of
+	 * the box the cursor comes back.
+	 */
+	private moveLens(clientX: number, clientY: number, pointer: boolean) {
 		const grid = this.ensureGrid();
 		if (!grid) return;
 		const { toLocal } = this.toLocalFactory();
 		const point = toLocal(clientX, clientY);
 		const now = performance.now();
 		const head = this.head;
+		const radius = this.lensRadius(grid);
 		if (
 			head &&
-			Math.hypot(point.x - head.x, point.y - head.y) >=
-				this.lensRadius(grid) * 0.3
+			Math.hypot(point.x - head.x, point.y - head.y) >= radius * 0.3
 		) {
-			this.trail.push({ ...head, t: now });
+			this.trail.push({
+				x: head.x,
+				y: head.y,
+				r: this.headRadius(grid, now),
+				t: now,
+			});
 		}
-		this.head = point;
+		this.head = { x: point.x, y: point.y, since: head?.since ?? now };
+		const reach = radius * 0.35;
+		this.setCursorHidden(
+			pointer &&
+				grid.lines.some(
+					(line) =>
+						point.x >= line.left - reach &&
+						point.x <= line.right + reach &&
+						point.y >= line.top - reach &&
+						point.y <= line.top + line.height + reach,
+				),
+		);
 		this.wake();
 	}
 
 	private releaseLens() {
-		if (!this.head) return;
-		this.trail.push({ ...this.head, t: performance.now() });
+		this.setCursorHidden(false);
+		const grid = this.grid;
+		if (!this.head || !grid) return;
+		const now = performance.now();
+		this.trail.push({
+			x: this.head.x,
+			y: this.head.y,
+			r: this.headRadius(grid, now),
+			t: now,
+		});
 		this.head = null;
 		this.wake();
+	}
+
+	private setCursorHidden(hidden: boolean) {
+		if (this.cursorHidden === hidden) return;
+		this.cursorHidden = hidden;
+		if (hidden) this.root.dataset.lens = "";
+		else delete this.root.dataset.lens;
 	}
 
 	private lensReady() {
@@ -1208,12 +1347,16 @@ class DecodeEngine {
 				active: false,
 			};
 		} else if (event.pointerType === "mouse") {
-			// A press starts a text selection; keep the text clear for it.
+			// A press starts a text selection; keep the text clear for it, and
+			// bring the cursor back so the selection has a caret to follow.
 			this.releaseLens();
 		}
 	}
 
 	pointerMove(event: PointerEvent<HTMLElement>) {
+		if (event.pointerType !== "touch") {
+			this.hover = { x: event.clientX, y: event.clientY };
+		}
 		if (!this.lensReady()) return;
 		if (event.pointerType === "touch") {
 			const touch = this.touch;
@@ -1235,7 +1378,7 @@ class DecodeEngine {
 		} else if (event.pointerType === "mouse" && event.buttons !== 0) {
 			return;
 		}
-		this.moveLens(event.clientX, event.clientY);
+		this.moveLens(event.clientX, event.clientY, event.pointerType !== "touch");
 	}
 
 	pointerEnd(event: PointerEvent<HTMLElement>) {
@@ -1247,7 +1390,9 @@ class DecodeEngine {
 	}
 
 	pointerLeave(event: PointerEvent<HTMLElement>) {
-		if (event.pointerType !== "touch") this.releaseLens();
+		if (event.pointerType === "touch") return;
+		this.hover = null;
+		this.releaseLens();
 	}
 }
 
@@ -1294,8 +1439,8 @@ export interface AsciiDecodeTextProps
 	dust?: boolean;
 	/**
 	 * Re-encodes the text under the pointer, or under a sideways touch drag,
-	 * after decoding. Defaults to `true`; always off with `trigger="hover"` and
-	 * reduced motion.
+	 * after decoding. While it sits on the text it replaces the mouse cursor.
+	 * Defaults to `true`; always off with `trigger="hover"` and reduced motion.
 	 */
 	lens?: boolean;
 	/** Lens radius in px. Defaults to 0.6em, clamped to 24-64 px. */
@@ -1434,8 +1579,12 @@ export function AsciiDecodeText({
 			className={cn(
 				// The last cell column can overhang the box by a fraction; clip it so
 				// the art never widens the page.
-				"relative max-w-full overflow-x-clip break-words font-semibold tracking-tight",
+				"relative max-w-full overflow-x-clip text-balance break-words font-semibold",
 				"data-[state=encoded]:[--ascii-decode-mask:linear-gradient(#0000,#0000)]",
+				// The lens is the cursor while it sits on the text (set by the engine
+				// for mouse and pen only).
+				"data-[lens]:cursor-none",
+				"rounded-sm outline-none [-webkit-tap-highlight-color:transparent] focus-visible:outline-2 focus-visible:outline-ring/60 focus-visible:outline-offset-4",
 				// A new formatting context, so the text's negative margins below
 				// never collapse through the root.
 				Component === "span" ? "inline-block" : "flow-root",
