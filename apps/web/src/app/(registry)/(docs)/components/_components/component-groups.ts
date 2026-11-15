@@ -61,6 +61,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"dynamic-island",
 			"fluid-tooltip",
 			"morph-lightbox",
+			"liquid-glass-menu",
 			"search-command",
 			"snap-sheet",
 			"swipe-actions",
@@ -70,11 +71,13 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		id: "text-and-visual-effects",
 		title: "Text and visual effects",
 		description:
-			"Annotate text, reveal content, and add pointer-reactive visuals.",
+			"Annotate and decode text, reveal content, and add pointer-reactive visuals.",
 		components: [
+			"ascii-decode-text",
 			"bubble-wrap",
 			"email-dock",
 			"interactive-sprite",
+			"ripple-reveal",
 			"scratch-card",
 			"scribbled-text",
 			"tile-field",

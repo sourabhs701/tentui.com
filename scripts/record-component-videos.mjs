@@ -150,10 +150,13 @@ function syncFrame({ now, previous, cursor }) {
 
 	const element = document.getElementById("capture-cursor");
 	if (!element) return;
-	element.style.display = cursor.visible ? "block" : "none";
 	const target = document.elementFromPoint(cursor.x, cursor.y);
-	const isHand =
-		target !== null && getComputedStyle(target).cursor === "pointer";
+	const targetCursor = target === null ? "" : getComputedStyle(target).cursor;
+	// Components that hide the cursor (e.g. a lens that replaces it) hide the
+	// drawn one too.
+	element.style.display =
+		cursor.visible && targetCursor !== "none" ? "block" : "none";
+	const isHand = targetCursor === "pointer";
 	const arrow = element.querySelector('[data-kind="arrow"]');
 	const hand = element.querySelector('[data-kind="hand"]');
 	arrow.style.display = isHand ? "none" : "block";

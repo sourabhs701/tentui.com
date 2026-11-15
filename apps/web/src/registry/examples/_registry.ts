@@ -19,6 +19,63 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "fluid-tooltip-demo",
+		type: "registry:example",
+		dependencies: ["lucide-react"],
+		registryDependencies: [getRegistryItemUrl("fluid-tooltip")],
+		files: [
+			{
+				path: "examples/fluid-tooltip-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			demoClassName: "min-h-80 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "liquid-glass-menu-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("liquid-glass-menu")],
+		files: [
+			{
+				path: "examples/liquid-glass-menu-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "liquid-glass-menu-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("liquid-glass-menu")],
+		files: [
+			{
+				path: "examples/liquid-glass-menu-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[40rem] place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "ascii-decode-text-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ascii-decode-text")],
+		files: [
+			{
+				path: "examples/ascii-decode-text-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "prompt-chip-input-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("prompt-chip-input")],
@@ -58,6 +115,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-56 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "ripple-reveal-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ripple-reveal")],
+		files: [
+			{
+				path: "examples/ripple-reveal-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
 		},
 	},
 	{
@@ -397,6 +468,20 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "ascii-decode-text-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ascii-decode-text")],
+		files: [
+			{
+				path: "examples/ascii-decode-text-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[36rem] place-items-center content-center",
+		},
+	},
+	{
 		name: "morph-lightbox-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("morph-lightbox")],
@@ -495,21 +580,6 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
-		name: "fluid-tooltip-demo",
-		type: "registry:example",
-		dependencies: ["lucide-react"],
-		registryDependencies: [getRegistryItemUrl("fluid-tooltip")],
-		files: [
-			{
-				path: "examples/fluid-tooltip-demo.tsx",
-				type: "registry:example",
-			},
-		],
-		meta: {
-			demoClassName: "min-h-80 place-items-center content-center px-4",
-		},
-	},
-	{
 		name: "ink-filter-bar-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("ink-filter-bar")],
@@ -521,6 +591,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-80 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "ripple-reveal-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ripple-reveal")],
+		files: [
+			{
+				path: "examples/ripple-reveal-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
 		},
 	},
 	{

@@ -293,6 +293,42 @@ export const Index = {
 		categories: ["overlays"],
 		meta: {"createdAt":"2026-11-13","image":"https://cdn.tentui.com/images/components/fluid-tooltip?v=2","video":"https://cdn.tentui.com/videos/components/fluid-tooltip?v=2"},
 	},
+	"liquid-glass-menu": {
+		name: "liquid-glass-menu",
+		title: "Liquid Glass Menu",
+		description: "A dropdown menu with a liquid-glass surface that stays fully keyboard and screen-reader accessible. The round trigger flows into the panel as one blob of glass, the items sharpen from a blur, and a small glass lens slides to the highlighted item.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx","type":"registry:component","target":"@components/liquid-glass-menu.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/liquid-glass-menu/liquid-glass-menu")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-menu");
+			}
+			return { default: module.default };
+		}),
+		categories: ["menus"],
+		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/liquid-glass-menu?v=2","video":"https://cdn.tentui.com/videos/components/liquid-glass-menu?v=2"},
+	},
+	"ascii-decode-text": {
+		name: "ascii-decode-text",
+		title: "ASCII Decode Text",
+		description: "A headline that first appears as ASCII art of its own letter shapes, then a decode front sweeps across and condenses the art into real, crisp, selectable type. After decoding, a pointer lens re-encodes the text under it and heals behind.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/ascii-decode-text/ascii-decode-text.tsx","type":"registry:component","target":"@components/ascii-decode-text.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/ascii-decode-text/ascii-decode-text")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ascii-decode-text");
+			}
+			return { default: module.default };
+		}),
+		categories: ["typography"],
+		meta: {"createdAt":"2026-11-14","image":"https://cdn.tentui.com/images/components/ascii-decode-text?v=2","video":"https://cdn.tentui.com/videos/components/ascii-decode-text?v=2"},
+	},
 	"prompt-chip-input": {
 		name: "prompt-chip-input",
 		title: "Prompt Chip Input",
@@ -346,6 +382,24 @@ export const Index = {
 		}),
 		categories: ["inputs"],
 		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/ink-filter-bar?v=1","video":"https://cdn.tentui.com/videos/components/ink-filter-bar?v=1"},
+	},
+	"ripple-reveal": {
+		name: "ripple-reveal",
+		title: "Ripple Reveal",
+		description: "Hide or show a sensitive value with a ripple that starts exactly where you tap. A damped sine swell travels out across the surface and flips the content between its shown and hidden faces as the front passes, with a soft tap and a light haptic.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/ripple-reveal/ripple-reveal.tsx","type":"registry:component","target":"@components/ripple-reveal.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/ripple-reveal/ripple-reveal")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ripple-reveal");
+			}
+			return { default: module.default };
+		}),
+		categories: [],
+		meta: {"createdAt":"2026-11-11","image":"https://cdn.tentui.com/images/components/ripple-reveal?v=1","video":"https://cdn.tentui.com/videos/components/ripple-reveal?v=1"},
 	},
 	"glass-toggle": {
 		name: "glass-toggle",
@@ -905,6 +959,78 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-56 place-items-center content-center px-4"},
 	},
+	"fluid-tooltip-demo": {
+		name: "fluid-tooltip-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/fluid-tooltip-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/fluid-tooltip-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for fluid-tooltip-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"demoClassName":"min-h-80 place-items-center content-center px-4"},
+	},
+	"liquid-glass-menu-preview": {
+		name: "liquid-glass-menu-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/liquid-glass-menu-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/liquid-glass-menu-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-menu-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 place-items-center content-center px-4"},
+	},
+	"liquid-glass-menu-demo": {
+		name: "liquid-glass-menu-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/liquid-glass-menu-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/liquid-glass-menu-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-menu-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[40rem] place-items-center content-center px-4"},
+	},
+	"ascii-decode-text-preview": {
+		name: "ascii-decode-text-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ascii-decode-text-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ascii-decode-text-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ascii-decode-text-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
+	},
 	"prompt-chip-input-preview": {
 		name: "prompt-chip-input-preview",
 		title: undefined,
@@ -958,6 +1084,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-56 place-items-center content-center px-4"},
+	},
+	"ripple-reveal-preview": {
+		name: "ripple-reveal-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ripple-reveal-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ripple-reveal-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ripple-reveal-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
 	},
 	"glass-toggle-preview": {
 		name: "glass-toggle-preview",
@@ -1391,6 +1535,24 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-72 place-items-center content-center"},
 	},
+	"ascii-decode-text-demo": {
+		name: "ascii-decode-text-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ascii-decode-text-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ascii-decode-text-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ascii-decode-text-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[36rem] place-items-center content-center"},
+	},
 	"morph-lightbox-demo": {
 		name: "morph-lightbox-demo",
 		title: undefined,
@@ -1517,24 +1679,6 @@ export const Index = {
 		categories: undefined,
 		meta: {"previewClassName":"min-h-[36rem] place-items-center content-start px-4"},
 	},
-	"fluid-tooltip-demo": {
-		name: "fluid-tooltip-demo",
-		title: undefined,
-		description: "",
-		type: "registry:example",
-		files: [{"path":"src/registry/examples/fluid-tooltip-demo.tsx","type":"registry:example"}],
-		component: React.lazy(async () => {
-			const module = (await import("@/registry/examples/fluid-tooltip-demo")) as unknown as {
-				default?: React.ComponentType;
-			};
-			if (!module.default) {
-				throw new Error("No default export found for fluid-tooltip-demo");
-			}
-			return { default: module.default };
-		}),
-		categories: undefined,
-		meta: {"demoClassName":"min-h-80 place-items-center content-center px-4"},
-	},
 	"ink-filter-bar-demo": {
 		name: "ink-filter-bar-demo",
 		title: undefined,
@@ -1552,6 +1696,24 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-80 place-items-center content-center px-4"},
+	},
+	"ripple-reveal-demo": {
+		name: "ripple-reveal-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/ripple-reveal-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/ripple-reveal-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for ripple-reveal-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
 	},
 	"glass-toggle-demo": {
 		name: "glass-toggle-demo",

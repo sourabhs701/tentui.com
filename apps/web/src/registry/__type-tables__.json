@@ -101,6 +101,318 @@
 			]
 		}
 	],
+	"src/registry/components/ascii-decode-text/ascii-decode-text.tsx#AsciiDecodeTextHandle#": [
+		{
+			"id": "ascii-decode-text.tsx-AsciiDecodeTextHandle",
+			"name": "AsciiDecodeTextHandle",
+			"description": "",
+			"entries": [
+				{
+					"name": "replay",
+					"description": "Re-encodes the text to ASCII art, then decodes it again.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "() => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "encode",
+					"description": "Sweeps the text back into ASCII art and holds it there.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "() => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "decode",
+					"description": "Decodes the ASCII art into the text.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "() => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/ascii-decode-text/ascii-decode-text.tsx#AsciiDecodeTextProps#": [
+		{
+			"id": "ascii-decode-text.tsx-AsciiDecodeTextProps",
+			"name": "AsciiDecodeTextProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "children",
+					"description": "The headline. Plain text only: the art is drawn from this string.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "as",
+					"description": "The element to render.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"h2\" | \"h1\" | \"h3\" | \"p\" | \"span\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "Type scale of the headline. Overridable with `className`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "trigger",
+					"description": "What starts the decode: on mount, once 40% of it is in view, on hover or\nfocus (which re-encodes first), or only through `decoded` and the ref.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "AsciiDecodeTextTrigger | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "decoded",
+					"description": "Controlled state for `trigger=\"manual\"`: `true` decodes, `false` re-encodes.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onDecoded",
+					"description": "Called each time a decode finishes.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "direction",
+					"description": "Where the front starts. `\"ltr\"` means the start of the line, so it runs from the right in RTL text.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "AsciiDecodeTextDirection | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "duration",
+					"description": "Length of the decode sweep, in ms. A re-encode takes 60% of it.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "density",
+					"description": "ASCII cells per cap height, from 4 to 12. Small text uses larger cells,\ndown to 4 per cap height, so the characters stay legible.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "ramp",
+					"description": "Characters from empty to full ink.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "tone",
+					"description": "Ink colour of the art: the text colour, or a quieter 60% of it.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"default\" | \"muted\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "dust",
+					"description": "Sprinkles faint dust characters around the letters while encoded.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "lens",
+					"description": "Re-encodes the text under the pointer, or under a sideways touch drag,\nafter decoding. While it sits on the text it replaces the mouse cursor.\nDefaults to `true`; always off with `trigger=\"hover\"` and reduced motion.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "lensRadius",
+					"description": "Lens radius in px. Defaults to 0.6em, clamped to 24-64 px.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "A very soft type tick as the front crosses each letter.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "A light haptic when a touch lens starts.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "animated",
+					"description": "Set to `false` for a plain cross-fade, as with reduced motion.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "ref",
+					"description": "Exposes `replay()`, `encode()`, and `decode()`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Ref<AsciiDecodeTextHandle> | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/brand-context-menu/brand-context-menu.tsx#BrandContextMenuProps#": [
 		{
 			"id": "brand-context-menu.tsx-BrandContextMenuProps",
@@ -2064,6 +2376,201 @@
 			]
 		}
 	],
+	"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx#LiquidGlassMenuContentProps#": [
+		{
+			"id": "liquid-glass-menu.tsx-LiquidGlassMenuContentProps",
+			"name": "LiquidGlassMenuContentProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "side",
+					"description": "Which side of the trigger the panel opens on. Defaults to `\"bottom\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Side | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "align",
+					"description": "How the panel lines up with the trigger along that side. Defaults to `\"start\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Align | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sideOffset",
+					"description": "Gap to the trigger, in px. Defaults to covering the round trigger, so the\npanel grows out of it, or 8 px from any other trigger.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | OffsetFunction | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "alignOffset",
+					"description": "Shift along the aligned edge, in px.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | OffsetFunction | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "collisionPadding",
+					"description": "Space kept from the edge of the viewport, in px. Defaults to 8.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Padding | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx#LiquidGlassMenuItemProps#": [
+		{
+			"id": "liquid-glass-menu.tsx-LiquidGlassMenuItemProps",
+			"name": "LiquidGlassMenuItemProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "icon",
+					"description": "Leading icon, such as a lucide icon or a colored badge. Plain icons are drawn at 16 px.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "shortcut",
+					"description": "Trailing hint, such as a keyboard shortcut. Shown, not bound.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "The label.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx#LiquidGlassMenuProps#": [
+		{
+			"id": "liquid-glass-menu.tsx-LiquidGlassMenuProps",
+			"name": "LiquidGlassMenuProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "morph",
+					"description": "Flow the trigger into the panel as one blob of glass, and back on close.\n`false` gives a plain scale-and-fade popover.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "refraction",
+					"description": "Bend the backdrop at the rim of the glass and the lens where the browser\ncan (Chromium). Elsewhere, and with `\"off\"`, the glass is a clean blur.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"auto\" | \"off\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a glass pop on open and close, and a tick on select.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptics on supported devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/morph-lightbox/morph-lightbox.tsx#MorphLightboxItem#": [
 		{
 			"id": "morph-lightbox.tsx-MorphLightboxItem",
@@ -3719,6 +4226,201 @@
 					],
 					"type": "boolean | undefined",
 					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/ripple-reveal/ripple-reveal.tsx#RippleRevealProps#": [
+		{
+			"id": "ripple-reveal.tsx-RippleRevealProps",
+			"name": "RippleRevealProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "revealed",
+					"description": "Controlled state: `true` shows the value, `false` hides it.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultRevealed",
+					"description": "Initial state when uncontrolled.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onRevealedChange",
+					"description": "Called the moment the trigger is pressed, before the wave has crossed.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((revealed: boolean) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a soft tap when the trigger is pressed.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger a light haptic on supported devices when the trigger is pressed.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/ripple-reveal/ripple-reveal.tsx#RippleRevealSurfaceProps#": [
+		{
+			"id": "ripple-reveal.tsx-RippleRevealSurfaceProps",
+			"name": "RippleRevealSurfaceProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "children",
+					"description": "The shown face: the value itself.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "placeholder",
+					"description": "The hidden face. Defaults to five dots in the current text color.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "hiddenLabel",
+					"description": "What assistive technology gets in place of the value while it's hidden.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "valueText",
+					"description": "Plain text announced on reveal. Defaults to the shown face's text.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/ripple-reveal/ripple-reveal.tsx#RippleRevealTriggerProps#": [
+		{
+			"id": "ripple-reveal.tsx-RippleRevealTriggerProps",
+			"name": "RippleRevealTriggerProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "label",
+					"description": "Accessible name. Ignored when `aria-label` or `aria-labelledby` is set.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "Replaces the default eye icon.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
 					"required": false,
 					"deprecated": false
 				}
@@ -5570,7 +6272,7 @@
 							"text": ""
 						}
 					],
-					"type": "React.ReactNode",
+					"type": "ReactNode",
 					"simplifiedType": "ReactNode",
 					"required": false,
 					"deprecated": false
@@ -5584,7 +6286,7 @@
 							"text": ""
 						}
 					],
-					"type": "React.ReactNode",
+					"type": "ReactNode",
 					"simplifiedType": "ReactNode",
 					"required": false,
 					"deprecated": false
