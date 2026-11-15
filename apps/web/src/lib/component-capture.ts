@@ -33,6 +33,11 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"bubble-wrap": { zoom: 1.2 },
 	"hold-to-confirm": { zoom: 1.6 },
 	"ink-filter-bar": { zoom: 1.3 },
+	// The preview is a tall column; scaled down so all three capsules fit.
+	"liquid-glass-carousel": {
+		zoom: 0.82,
+		className: "place-items-center content-center",
+	},
 	// The viewer is portaled out of the zoomed stage, so it is framed at 1:1.
 	"morph-lightbox": {},
 	// The menu is portaled out of the zoomed stage, so it is framed at 1:1.

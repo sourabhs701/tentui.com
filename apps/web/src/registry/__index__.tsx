@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"liquid-glass-carousel": {
+		name: "liquid-glass-carousel",
+		title: "Liquid Glass Carousel",
+		description: "A snap carousel of capsule cards that melt into liquid glass at the edges of the frame. Cards stretch into a flared, smeared drip with a thin rainbow fringe as they leave, re-form as they come back, and the centred card stays crisp.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/liquid-glass-carousel/liquid-glass-carousel.tsx","type":"registry:component","target":"@components/liquid-glass-carousel.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/liquid-glass-carousel/liquid-glass-carousel")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-carousel");
+			}
+			return { default: module.default };
+		}),
+		categories: ["lists"],
+		meta: {"createdAt":"2026-11-14","image":"https://cdn.tentui.com/images/components/liquid-glass-carousel?v=1","video":"https://cdn.tentui.com/videos/components/liquid-glass-carousel?v=1"},
+	},
 	"fluid-tooltip": {
 		name: "fluid-tooltip",
 		title: "Fluid Tooltip",
@@ -940,6 +958,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"liquid-glass-carousel-preview": {
+		name: "liquid-glass-carousel-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/liquid-glass-carousel-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/liquid-glass-carousel-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-carousel-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[30rem] place-items-center content-center px-4"},
+	},
+	"liquid-glass-carousel-demo": {
+		name: "liquid-glass-carousel-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/liquid-glass-carousel-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/liquid-glass-carousel-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-carousel-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"place-items-center content-center px-4"},
 	},
 	"fluid-tooltip-preview": {
 		name: "fluid-tooltip-preview",

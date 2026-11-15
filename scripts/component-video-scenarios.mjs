@@ -509,6 +509,28 @@ export const scenarios = {
 		},
 	},
 
+	"liquid-glass-carousel": {
+		rest: { x: 450, y: 330 },
+		async run(d) {
+			const current = '[data-slot="liquid-glass-carousel-item"][data-current]';
+			// Autoplay steps twice (every 2.2 s) while the cursor rests off the
+			// column: each card drains into the top edge as the next is born
+			// from the bottom one.
+			await d.wait(4700);
+			// Then a slow drag up melts the next card in by hand.
+			await d.move(current, 750, { x: 0.5, y: 0.6 });
+			await d.wait(150);
+			const from = await d.point(current, { x: 0.5, y: 0.6 });
+			await d.down();
+			await d.move({ x: from.x, y: from.y - 120 }, 700);
+			await d.wait(120);
+			await d.up();
+			await d.wait(900);
+			await d.move(d.rest, 800);
+			await d.wait(600);
+		},
+	},
+
 	"glass-toggle": {
 		rest: { x: 420, y: 310 },
 		async run(d) {
