@@ -24,6 +24,28 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/agent-thinking",
 	},
 	{
+		name: "ascii-decode-text",
+		type: "registry:component",
+		title: "ASCII Decode Text",
+		description:
+			"A headline that first appears as ASCII art of its own letter shapes, then a decode front sweeps across and condenses the art into real, crisp, selectable type. After decoding, a pointer lens re-encodes the text under it and heals behind.",
+		dependencies: ["@rexa-developer/tiks", "web-haptics"],
+		files: [
+			{
+				path: "components/ascii-decode-text/ascii-decode-text.tsx",
+				type: "registry:component",
+				target: "@components/ascii-decode-text.tsx",
+			},
+		],
+		categories: ["typography"],
+		meta: {
+			createdAt: "2026-11-14",
+			image: "https://cdn.tentui.com/images/components/ascii-decode-text?v=2",
+			video: "https://cdn.tentui.com/videos/components/ascii-decode-text?v=2",
+		},
+		docs: "https://tentui.com/components/ascii-decode-text",
+	},
+	{
 		name: "prompt-chip-input",
 		type: "registry:component",
 		title: "Prompt Chip Input",
@@ -88,6 +110,28 @@ export const components: Registry["items"] = [
 			video: "https://cdn.tentui.com/videos/components/ink-filter-bar?v=1",
 		},
 		docs: "https://tentui.com/components/ink-filter-bar",
+	},
+	{
+		name: "ripple-reveal",
+		type: "registry:component",
+		title: "Ripple Reveal",
+		description:
+			"Hide or show a sensitive value with a ripple that starts exactly where you tap. A damped sine swell travels out across the surface and flips the content between its shown and hidden faces as the front passes, with a soft tap and a light haptic.",
+		dependencies: ["@rexa-developer/tiks", "web-haptics"],
+		files: [
+			{
+				path: "components/ripple-reveal/ripple-reveal.tsx",
+				type: "registry:component",
+				target: "@components/ripple-reveal.tsx",
+			},
+		],
+		categories: [],
+		meta: {
+			createdAt: "2026-11-11",
+			image: "https://cdn.tentui.com/images/components/ripple-reveal?v=1",
+			video: "https://cdn.tentui.com/videos/components/ripple-reveal?v=1",
+		},
+		docs: "https://tentui.com/components/ripple-reveal",
 	},
 	{
 		name: "glass-toggle",

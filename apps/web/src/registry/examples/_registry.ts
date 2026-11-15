@@ -18,6 +18,34 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "agent-thinking-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[36rem] place-items-center content-start px-4",
+		},
+	},
+	{
+		name: "ascii-decode-text-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ascii-decode-text")],
+		files: [
+			{
+				path: "examples/ascii-decode-text-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "prompt-chip-input-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("prompt-chip-input")],
@@ -57,6 +85,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-56 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "ripple-reveal-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ripple-reveal")],
+		files: [
+			{
+				path: "examples/ripple-reveal-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
 		},
 	},
 	{
@@ -396,6 +438,20 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "ascii-decode-text-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ascii-decode-text")],
+		files: [
+			{
+				path: "examples/ascii-decode-text-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[36rem] place-items-center content-center",
+		},
+	},
+	{
 		name: "morph-lightbox-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("morph-lightbox")],
@@ -480,20 +536,6 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
-		name: "agent-thinking-demo",
-		type: "registry:example",
-		registryDependencies: [getRegistryItemUrl("agent-thinking")],
-		files: [
-			{
-				path: "examples/agent-thinking-demo.tsx",
-				type: "registry:example",
-			},
-		],
-		meta: {
-			previewClassName: "min-h-[36rem] place-items-center content-start px-4",
-		},
-	},
-	{
 		name: "prompt-chip-input-demo",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("prompt-chip-input")],
@@ -519,6 +561,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-80 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "ripple-reveal-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ripple-reveal")],
+		files: [
+			{
+				path: "examples/ripple-reveal-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
 		},
 	},
 	{
