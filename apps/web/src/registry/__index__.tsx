@@ -291,7 +291,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["lists"],
-		meta: {"createdAt":"2026-11-14"},
+		meta: {"createdAt":"2026-11-14","image":"https://cdn.tentui.com/images/components/liquid-glass-carousel?v=1","video":"https://cdn.tentui.com/videos/components/liquid-glass-carousel?v=1"},
 	},
 	"ascii-decode-text": {
 		name: "ascii-decode-text",

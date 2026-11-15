@@ -23,6 +23,10 @@ export const components: Registry["items"] = [
 		categories: ["lists"],
 		meta: {
 			createdAt: "2026-11-14",
+			image:
+				"https://cdn.tentui.com/images/components/liquid-glass-carousel?v=1",
+			video:
+				"https://cdn.tentui.com/videos/components/liquid-glass-carousel?v=1",
 		},
 		docs: "https://tentui.com/components/liquid-glass-carousel",
 	},
