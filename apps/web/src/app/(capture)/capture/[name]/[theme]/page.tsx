@@ -5,6 +5,7 @@ import type { ComponentType } from "react";
 import { AsciiDecodeTextCapture } from "@/components/capture/ascii-decode-text-capture";
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
 import { InkFilterBarCapture } from "@/components/capture/ink-filter-bar-capture";
+import { LiquidGlassMenuCapture } from "@/components/capture/liquid-glass-menu-capture";
 import { MorphLightboxCapture } from "@/components/capture/morph-lightbox-capture";
 import { PromptChipInputCapture } from "@/components/capture/prompt-chip-input-capture";
 import {
@@ -30,6 +31,7 @@ const captureScenes: Record<string, ComponentType> = {
 	"ink-filter-bar": InkFilterBarCapture,
 	"morph-lightbox": MorphLightboxCapture,
 	"prompt-chip-input": PromptChipInputCapture,
+	"liquid-glass-menu": LiquidGlassMenuCapture,
 };
 
 export const dynamic = "force-static";

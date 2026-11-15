@@ -436,6 +436,34 @@ export const scenarios = {
 		},
 	},
 
+	"liquid-glass-menu": {
+		rest: { x: 300, y: 330 },
+		async run(d) {
+			const items = '[data-slot="liquid-glass-menu-item"]';
+			await d.wait(300);
+			await d.move('[data-slot="liquid-glass-menu-trigger"]', 550, {
+				x: 0.55,
+				y: 0.6,
+			});
+			await d.wait(100);
+			// The button flows into the panel and the rows sharpen.
+			await d.click();
+			await d.wait(550);
+			// Down the rows and back up: the lens slides after the pointer.
+			for (const index of [0, 1, 2, 0]) {
+				await d.move(`${items} >> nth=${index}`, 320, { x: 0.45, y: 0.5 });
+				await d.wait(170);
+			}
+			// A click on the page outside drains it back into the button.
+			await d.move({ x: 140, y: 120 }, 400);
+			await d.wait(80);
+			await d.click();
+			await d.wait(600);
+			await d.move(d.rest, 500);
+			await d.wait(200);
+		},
+	},
+
 	"animated-tabs": {
 		rest: { x: 360, y: 320 },
 		async run(d) {
