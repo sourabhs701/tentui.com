@@ -2,6 +2,55 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "liquid-glass-menu",
+		type: "registry:component",
+		title: "Liquid Glass Menu",
+		description:
+			"A dropdown menu with a liquid-glass surface that stays fully keyboard and screen-reader accessible. The round trigger flows into the panel as one blob of glass, the items sharpen from a blur, and a small glass lens slides to the highlighted item.",
+		dependencies: [
+			"@base-ui/react",
+			"@rexa-developer/tiks",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/liquid-glass-menu/liquid-glass-menu.tsx",
+				type: "registry:component",
+				target: "@components/liquid-glass-menu.tsx",
+			},
+		],
+		categories: ["menus"],
+		meta: {
+			createdAt: "2026-11-12",
+			image: "https://cdn.tentui.com/images/components/liquid-glass-menu?v=2",
+			video: "https://cdn.tentui.com/videos/components/liquid-glass-menu?v=2",
+		},
+		docs: "https://tentui.com/components/liquid-glass-menu",
+	},
+	{
+		name: "ascii-decode-text",
+		type: "registry:component",
+		title: "ASCII Decode Text",
+		description:
+			"A headline that first appears as ASCII art of its own letter shapes, then a decode front sweeps across and condenses the art into real, crisp, selectable type. After decoding, a pointer lens re-encodes the text under it and heals behind.",
+		dependencies: ["@rexa-developer/tiks", "web-haptics"],
+		files: [
+			{
+				path: "components/ascii-decode-text/ascii-decode-text.tsx",
+				type: "registry:component",
+				target: "@components/ascii-decode-text.tsx",
+			},
+		],
+		categories: ["typography"],
+		meta: {
+			createdAt: "2026-11-14",
+			image: "https://cdn.tentui.com/images/components/ascii-decode-text?v=2",
+			video: "https://cdn.tentui.com/videos/components/ascii-decode-text?v=2",
+		},
+		docs: "https://tentui.com/components/ascii-decode-text",
+	},
+	{
 		name: "prompt-chip-input",
 		type: "registry:component",
 		title: "Prompt Chip Input",
@@ -68,31 +117,26 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/ink-filter-bar",
 	},
 	{
-		name: "liquid-glass-menu",
+		name: "ripple-reveal",
 		type: "registry:component",
-		title: "Liquid Glass Menu",
+		title: "Ripple Reveal",
 		description:
-			"A dropdown menu with a liquid-glass surface that stays fully keyboard and screen-reader accessible. The round trigger flows into the panel as one blob of glass, the items sharpen from a blur, and a small glass lens slides to the highlighted item.",
-		dependencies: [
-			"@base-ui/react",
-			"@rexa-developer/tiks",
-			"motion",
-			"web-haptics",
-		],
+			"Hide or show a sensitive value with a ripple that starts exactly where you tap. A damped sine swell travels out across the surface and flips the content between its shown and hidden faces as the front passes, with a soft tap and a light haptic.",
+		dependencies: ["@rexa-developer/tiks", "web-haptics"],
 		files: [
 			{
-				path: "components/liquid-glass-menu/liquid-glass-menu.tsx",
+				path: "components/ripple-reveal/ripple-reveal.tsx",
 				type: "registry:component",
-				target: "@components/liquid-glass-menu.tsx",
+				target: "@components/ripple-reveal.tsx",
 			},
 		],
-		categories: ["menus"],
+		categories: [],
 		meta: {
-			createdAt: "2026-11-12",
-			image: "https://cdn.tentui.com/images/components/liquid-glass-menu?v=2",
-			video: "https://cdn.tentui.com/videos/components/liquid-glass-menu?v=2",
+			createdAt: "2026-11-11",
+			image: "https://cdn.tentui.com/images/components/ripple-reveal?v=1",
+			video: "https://cdn.tentui.com/videos/components/ripple-reveal?v=1",
 		},
-		docs: "https://tentui.com/components/liquid-glass-menu",
+		docs: "https://tentui.com/components/ripple-reveal",
 	},
 	{
 		name: "glass-toggle",

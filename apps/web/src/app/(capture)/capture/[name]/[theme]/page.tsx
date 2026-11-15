@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
 
+import { AsciiDecodeTextCapture } from "@/components/capture/ascii-decode-text-capture";
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
 import { InkFilterBarCapture } from "@/components/capture/ink-filter-bar-capture";
 import { LiquidGlassMenuCapture } from "@/components/capture/liquid-glass-menu-capture";
@@ -26,6 +27,7 @@ const captureIndex = Index as Record<string, CaptureIndexItem>;
 
 // Capture-only framings for demos that don't fit the 4:3 frame.
 const captureScenes: Record<string, ComponentType> = {
+	"ascii-decode-text": AsciiDecodeTextCapture,
 	"ink-filter-bar": InkFilterBarCapture,
 	"morph-lightbox": MorphLightboxCapture,
 	"prompt-chip-input": PromptChipInputCapture,
