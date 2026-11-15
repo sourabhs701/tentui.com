@@ -448,6 +448,33 @@
       "type": "registry:block"
     },
     {
+      "name": "fluid-tooltip",
+      "title": "Fluid Tooltip",
+      "description": "One shared tooltip for a toolbar, rail, or dock. Slide between buttons and a single quiet bubble glides with you on soft springs, settles without overshoot, and crossfades to the new label.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/fluid-tooltip/fluid-tooltip.tsx",
+          "type": "registry:component",
+          "target": "@components/fluid-tooltip.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-13",
+        "image": "https://cdn.tentui.com/images/components/fluid-tooltip?v=2",
+        "video": "https://cdn.tentui.com/videos/components/fluid-tooltip?v=2"
+      },
+      "docs": "https://tentui.com/components/fluid-tooltip",
+      "categories": [
+        "overlays"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "liquid-glass-menu",
       "title": "Liquid Glass Menu",
       "description": "A dropdown menu with a liquid-glass surface that stays fully keyboard and screen-reader accessible. The round trigger flows into the panel as one blob of glass, the items sharpen from a blur, and a small glass lens slides to the highlighted item.",
