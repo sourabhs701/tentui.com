@@ -582,6 +582,21 @@ export const scenarios = {
 		},
 	},
 
+	"ascii-decode-text": {
+		rest: { x: 420, y: 320 },
+		async run(d) {
+			const headline = '[data-slot="ascii-decode-text"]';
+			// The capture scene decodes 400 ms after the first pointer move and
+			// re-encodes at 5 s, so the take starts and ends as ASCII art.
+			await d.wait(1700);
+			await d.move(headline, 600, { x: 0.04, y: 0.55 });
+			// Glide across: the lens re-encodes the letters and heals behind.
+			await d.move(headline, 1700, { x: 0.96, y: 0.45 }, (t) => t);
+			await d.move(d.rest, 700);
+			await d.wait(2300);
+		},
+	},
+
 	"rotary-knob": {
 		async run(d) {
 			const dial = '[data-slot="rotary-knob-dial"]';
