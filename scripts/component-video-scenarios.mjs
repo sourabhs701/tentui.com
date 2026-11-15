@@ -7,6 +7,23 @@
 const TICK_RULER_FLICKS = [84, 137, 200];
 
 export const scenarios = {
+	"agent-thinking": {
+		async run(d) {
+			// Nothing to click: the four looks run on their own.
+			d.hideCursor();
+			// The scene starts a run on the virtual clock from its quiet first
+			// frame: the dot cluster, the shimmer line, the orb, and the card
+			// in sync. Steps land at 1.0, 2.2, 3.3, and 4.4 s while the card
+			// streams its reasoning, and all four finish together at 5.5 s.
+			await d.page.evaluate(() =>
+				window.dispatchEvent(new Event("agent-thinking-capture")),
+			);
+			await d.wait(5500);
+			// The card folds into its summary and the rest settle: a calm hold.
+			// Ends just before the scene resets to the first frame at 7.3 s.
+			await d.wait(1750);
+		},
+	},
 	"snap-sheet": {
 		rest: { x: 420, y: 320 },
 		async run(d) {

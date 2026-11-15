@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
 
+import { AgentThinkingCapture } from "@/components/capture/agent-thinking-capture";
 import { AsciiDecodeTextCapture } from "@/components/capture/ascii-decode-text-capture";
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
 import { FluidTooltipCapture } from "@/components/capture/fluid-tooltip-capture";
@@ -28,6 +29,7 @@ const captureIndex = Index as Record<string, CaptureIndexItem>;
 
 // Capture-only framings for demos that don't fit the 4:3 frame.
 const captureScenes: Record<string, ComponentType> = {
+	"agent-thinking": AgentThinkingCapture,
 	"fluid-tooltip": FluidTooltipCapture,
 	"ascii-decode-text": AsciiDecodeTextCapture,
 	"ink-filter-bar": InkFilterBarCapture,

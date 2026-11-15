@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"agent-thinking": {
+		name: "agent-thinking",
+		title: "Agent Thinking",
+		description: "An AI thinking state where every finished agent step becomes a dot that lands in a growing sunflower cluster, a seeking dot circles the edge for the step in progress, and a quiet timer shows up only once the wait matters. Open it and the dots fly out to become the bullets of the step log.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/agent-thinking/agent-thinking.tsx","type":"registry:component","target":"@components/agent-thinking.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/agent-thinking/agent-thinking")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for agent-thinking");
+			}
+			return { default: module.default };
+		}),
+		categories: ["feedback"],
+		meta: {"createdAt":"2026-11-14","image":"https://cdn.tentui.com/images/components/agent-thinking?v=2","video":"https://cdn.tentui.com/videos/components/agent-thinking?v=2"},
+	},
 	"liquid-glass-carousel": {
 		name: "liquid-glass-carousel",
 		title: "Liquid Glass Carousel",
@@ -958,6 +976,114 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"agent-thinking-preview": {
+		name: "agent-thinking-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/agent-thinking-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/agent-thinking-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for agent-thinking-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"agent-thinking-demo": {
+		name: "agent-thinking-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/agent-thinking-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/agent-thinking-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for agent-thinking-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[36rem] place-items-center content-start px-4"},
+	},
+	"agent-thinking-shimmer-demo": {
+		name: "agent-thinking-shimmer-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/agent-thinking-shimmer-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/agent-thinking-shimmer-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for agent-thinking-shimmer-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"agent-thinking-orb-demo": {
+		name: "agent-thinking-orb-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/agent-thinking-orb-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/agent-thinking-orb-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for agent-thinking-orb-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"agent-thinking-timeline-demo": {
+		name: "agent-thinking-timeline-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/agent-thinking-timeline-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/agent-thinking-timeline-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for agent-thinking-timeline-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"agent-thinking-card-demo": {
+		name: "agent-thinking-card-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/agent-thinking-card-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/agent-thinking-card-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for agent-thinking-card-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
 	},
 	"liquid-glass-carousel-preview": {
 		name: "liquid-glass-carousel-preview",

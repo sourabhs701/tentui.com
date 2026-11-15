@@ -4,6 +4,90 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "agent-thinking-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "agent-thinking-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[36rem] place-items-center content-start px-4",
+		},
+	},
+	{
+		name: "agent-thinking-shimmer-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-shimmer-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "agent-thinking-orb-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-orb-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "agent-thinking-timeline-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-timeline-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "agent-thinking-card-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("agent-thinking")],
+		files: [
+			{
+				path: "examples/agent-thinking-card-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "liquid-glass-carousel-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("liquid-glass-carousel")],

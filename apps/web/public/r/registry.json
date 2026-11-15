@@ -448,6 +448,33 @@
       "type": "registry:block"
     },
     {
+      "name": "agent-thinking",
+      "title": "Agent Thinking",
+      "description": "An AI thinking state where every finished agent step becomes a dot that lands in a growing sunflower cluster, a seeking dot circles the edge for the step in progress, and a quiet timer shows up only once the wait matters. Open it and the dots fly out to become the bullets of the step log.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/agent-thinking/agent-thinking.tsx",
+          "type": "registry:component",
+          "target": "@components/agent-thinking.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-14",
+        "image": "https://cdn.tentui.com/images/components/agent-thinking?v=2",
+        "video": "https://cdn.tentui.com/videos/components/agent-thinking?v=2"
+      },
+      "docs": "https://tentui.com/components/agent-thinking",
+      "categories": [
+        "feedback"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "liquid-glass-carousel",
       "title": "Liquid Glass Carousel",
       "description": "A snap carousel of capsule cards that melt into liquid glass at the edges of the frame. Cards stretch into a flared, smeared drip with a thin rainbow fringe as they leave, re-form as they come back, and the centred card stays crisp.",

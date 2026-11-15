@@ -18,6 +18,8 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	string,
 	{ zoom?: number; className?: string }
 > = {
+	// The scene stacks four variants; the card folds up when the run ends.
+	"agent-thinking": { zoom: 1.1 },
 	"animated-arrow": { zoom: 1.6 },
 	// The capture scene sizes the headline itself, so the art stays at 1:1.
 	"ascii-decode-text": { className: "px-6" },

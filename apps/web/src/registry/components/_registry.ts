@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "agent-thinking",
+		type: "registry:component",
+		title: "Agent Thinking",
+		description:
+			"An AI thinking state where every finished agent step becomes a dot that lands in a growing sunflower cluster, a seeking dot circles the edge for the step in progress, and a quiet timer shows up only once the wait matters. Open it and the dots fly out to become the bullets of the step log.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/agent-thinking/agent-thinking.tsx",
+				type: "registry:component",
+				target: "@components/agent-thinking.tsx",
+			},
+		],
+		categories: ["feedback"],
+		meta: {
+			createdAt: "2026-11-14",
+			image: "https://cdn.tentui.com/images/components/agent-thinking?v=2",
+			video: "https://cdn.tentui.com/videos/components/agent-thinking?v=2",
+		},
+		docs: "https://tentui.com/components/agent-thinking",
+	},
+	{
 		name: "liquid-glass-carousel",
 		type: "registry:component",
 		title: "Liquid Glass Carousel",
