@@ -1,0 +1,240 @@
+---
+title: Liquid Glass Carousel
+description: A React carousel for shadcn/ui whose capsule cards melt into liquid glass at the edges of the frame, smearing and flaring into a drip with a thin rainbow fringe, while the centred card stays crisp and the carousel underneath stays fully accessible.
+seoTitle: React Liquid Glass Carousel Component for shadcn/ui
+seoDescription: Liquid Glass Carousel is a React snap carousel for shadcn/ui. Cards melt through a glass lens at the edges with a rainbow fringe, and it supports drag, wheel, keys, and autoplay.
+createdAt: 2026-11-14
+updatedAt: 2026-11-14
+---
+
+<ComponentPreview name="liquid-glass-carousel-preview" />
+
+## Example
+
+<ComponentPreview name="liquid-glass-carousel-demo" />
+
+## Features
+
+- The edge of the frame is the effect. Inside the outer `meltZone` at each
+  end, a lens fixed to the frame magnifies cards toward the edge, so they
+  smear into long streaks, flare wider like a drip, and pick up a thin rainbow
+  fringe where the colour channels bend by different amounts. Cards coming
+  back in contract into a clean capsule.
+- The melt is a function of position only, so it follows a drag exactly and
+  reverses exactly. The band between the zones is passed through untouched,
+  so the centred card is pixel-crisp.
+- Slides are real DOM: images, video, text, or anything else. There is no
+  WebGL and no canvas. The lens is one SVG filter on the track, and its
+  displacement maps are drawn once per size.
+- A real carousel underneath: drag or swipe with momentum and snap, wheel and
+  trackpad, arrow keys, `Home`, `End`, `PageUp`, and `PageDown`, and clicking a
+  neighbour centres it.
+- Loops seamlessly by default, with clones drawn only when there are too few
+  slides to hide the seam. Optional autoplay, with a pause button.
+- A soft glass tick and a light haptic when a slide you moved to settles.
+- At rest nothing renders per frame, and no animation loop runs.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/liquid-glass-carousel
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="liquid-glass-carousel"
+  title="components/liquid-glass-carousel.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  LiquidGlassCarousel,
+  LiquidGlassCarouselSlide,
+} from "@/components/liquid-glass-carousel";
+```
+
+```tsx
+<LiquidGlassCarousel aria-label="Featured artists">
+  {artists.map((artist) => (
+    <LiquidGlassCarouselSlide key={artist.id} aria-label={artist.name}>
+      <img src={artist.portrait} alt="" className="size-full object-cover" />
+    </LiquidGlassCarouselSlide>
+  ))}
+</LiquidGlassCarousel>
+```
+
+Slides are capsules by default. Pass a `className` such as `rounded-3xl` to
+change the shape, and `slideSize` and `gap` to change the size. Px sizes scale
+down to fit narrow containers. The viewport is 2.6 slides long; set the
+`--lgc-length` CSS variable on the root to change it.
+
+Add `LiquidGlassCarouselControls` anywhere inside the carousel for previous
+and next buttons and a "03 / 07" counter. It also shows the pause button when
+autoplay is on.
+
+```tsx
+<LiquidGlassCarousel aria-label="Swatches" autoplay={2200} className="gap-2">
+  {slides}
+  <LiquidGlassCarouselControls />
+</LiquidGlassCarousel>
+```
+
+Use `index` and `onIndexChange` to control it, or a ref for `next()`,
+`prev()`, and `goTo(index)`. Controlled changes and ref calls glide there
+silently; a jump of several slides skips ahead and glides the last two.
+
+```tsx
+const [index, setIndex] = useState(0);
+
+<LiquidGlassCarousel
+  aria-label="Chapters"
+  index={index}
+  onIndexChange={setIndex}
+>
+  {slides}
+</LiquidGlassCarousel>
+```
+
+Set `orientation="horizontal"` for a row, which follows the page direction in
+right-to-left layouts. `melt="off"` keeps the soft fade at the edges but never
+distorts the slides.
+
+The fringe is mixed against the page colour, `--background`. On another
+surface, such as a card, set `--lgc-surface` on the root to that colour.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Drag or swipe along the axis | Moves the slides 1:1; letting go snaps to the nearest slide, and a flick travels up to two |
+| Wheel or trackpad | One slide per gesture |
+| Click or tap a neighbour | Centres it |
+| `ArrowDown` / `ArrowUp` | Next / previous slide (vertical) |
+| `ArrowRight` / `ArrowLeft` | Next / previous slide (horizontal; swapped in right-to-left pages) |
+| `PageDown` / `PageUp` | Three slides forward / back |
+| `Home` / `End` | First / last slide |
+
+Fast key repeats queue up to three slides ahead, onto one spring. A swipe
+across the axis still scrolls the page. Without `loop`, a drag rubber-bands
+past either end and the wheel scrolls the page on once you reach an end.
+
+## Sound and haptics
+
+Each time a slide you moved to settles at the centre, it plays a short, bright
+glass tick, and on touch devices a light `selection` haptic. Autoplay steps,
+the first render, `index` changes, and ref calls are silent, and nothing plays
+while the tab is hidden. Turn each off with `sound={false}` and
+`haptics={false}`.
+
+## Browser support
+
+The lens needs SVG filters on HTML that are fast and exact, so it runs in
+Chromium browsers (Chrome, Edge, Arc, Opera). Safari draws SVG filters on HTML
+unreliably and Firefox draws them on the CPU, so there each card stretches
+toward the edge, flares a little, and softens with a small blur instead. Both
+fade into the page at the very edge.
+
+## Accessibility
+
+The root is a `region` with `aria-roledescription="carousel"` and your
+`aria-label`. Each slide is a `group` with `aria-roledescription="slide"`,
+labelled "n of N" unless you pass `aria-label`. Only the centred slide is in
+the tab order and the accessibility tree; its neighbours and the loop's clones
+are `inert`.
+
+The slides take keyboard focus as one stop, with a focus ring for keyboard
+focus only. A polite live region announces "Slide n of N" when you move the
+carousel, but not on autoplay steps. Buttons have 44 px hit areas.
+
+Autoplay pauses while the pointer is over the carousel, while it has keyboard
+focus, during a press, and while the tab is hidden. A visible pause button
+stops it for good (WCAG 2.2.2).
+
+With reduced motion enabled the slides never melt (the edges keep their soft
+fade), each move is a 150 ms fade instead of a glide, and autoplay starts
+paused until the play button is pressed. Sound and haptics stay on because
+they confirm the move rather than decorate it.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/liquid-glass-carousel/liquid-glass-carousel.tsx"
+  name="LiquidGlassCarouselProps"
+/>
+
+### LiquidGlassCarouselSlide
+
+<AutoTypeTable
+  path="src/registry/components/liquid-glass-carousel/liquid-glass-carousel.tsx"
+  name="LiquidGlassCarouselSlideProps"
+/>
+
+## FAQ
+
+### How do I install the Liquid Glass Carousel with shadcn?
+
+Run `npx shadcn@latest add @tentui/liquid-glass-carousel` after adding the
+`@tentui` registry to `components.json` ([installation guide](/docs/installation)).
+The CLI copies `liquid-glass-carousel.tsx` into your project and installs
+`motion`, `lucide-react`, `web-haptics`, and `@rexa-developer/tiks`.
+
+### Is the carousel accessible, and can autoplay be paused?
+
+Yes. It is a labelled `region` with slides as labelled groups, arrow keys,
+`Home`, `End`, `PageUp`, and `PageDown` move it, and a polite live region
+announces changes you make. Autoplay pauses on hover, keyboard focus, and a
+hidden tab, and always shows a pause button.
+
+### Does the melt work in Safari and Firefox, and is it fast?
+
+The full lens, with streaks and the rainbow fringe, runs in Chromium browsers
+as one SVG filter on the track, with its maps drawn once per size. Safari and
+Firefox get a lighter melt instead: cards stretch toward the edge, flare a
+little, blur slightly, and fade into the page. At rest nothing renders per
+frame in either.
+
+### What happens with reduced motion?
+
+The slides never distort, each move becomes a 150 ms fade instead of a glide,
+and autoplay starts paused. The edges keep their soft fade.
+
+### Can I use images, video, or any content in the slides?
+
+Yes. Slides are ordinary DOM elements, so any children work, and the melt is
+applied to the whole track as it is drawn. Use `horizontal` orientation for a
+row of wider cards.
+
+### Is the Liquid Glass Carousel free to use?
+
+Yes. The Liquid Glass Carousel is free and source-available: the shadcn CLI
+copies its source into your project, and you can use it in unlimited personal
+and client projects under the [TentUI License](/license).

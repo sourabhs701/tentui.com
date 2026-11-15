@@ -88,6 +88,92 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "liquid-glass-carousel-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("liquid-glass-carousel")],
+		files: [
+			{
+				path: "examples/liquid-glass-carousel-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[30rem] place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "liquid-glass-carousel-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("liquid-glass-carousel")],
+		files: [
+			{
+				path: "examples/liquid-glass-carousel-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "fluid-tooltip-preview",
+		type: "registry:example",
+		dependencies: ["lucide-react"],
+		registryDependencies: [getRegistryItemUrl("fluid-tooltip")],
+		files: [
+			{
+				path: "examples/fluid-tooltip-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-56 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "fluid-tooltip-demo",
+		type: "registry:example",
+		dependencies: ["lucide-react"],
+		registryDependencies: [getRegistryItemUrl("fluid-tooltip")],
+		files: [
+			{
+				path: "examples/fluid-tooltip-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			demoClassName: "min-h-80 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "liquid-glass-menu-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("liquid-glass-menu")],
+		files: [
+			{
+				path: "examples/liquid-glass-menu-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "liquid-glass-menu-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("liquid-glass-menu")],
+		files: [
+			{
+				path: "examples/liquid-glass-menu-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[40rem] place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "ascii-decode-text-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("ascii-decode-text")],

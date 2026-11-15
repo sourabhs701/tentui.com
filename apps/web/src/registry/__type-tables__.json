@@ -1944,6 +1944,220 @@
 			]
 		}
 	],
+	"src/registry/components/fluid-tooltip/fluid-tooltip.tsx#FluidTooltipGroupProps#": [
+		{
+			"id": "fluid-tooltip.tsx-FluidTooltipGroupProps",
+			"name": "FluidTooltipGroupProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "side",
+					"description": "Where the bubble sits relative to the trigger. Flips if there is no room.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Side | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "align",
+					"description": "Alignment along the trigger's edge. `start` and `end` follow text direction.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Align | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sideOffset",
+					"description": "Gap between the trigger and the bubble, in px.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "delay",
+					"description": "Ms a pointer rests on a trigger before the bubble opens.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "skipDelay",
+					"description": "Ms after the bubble closes during which it reopens without the delay.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "follow",
+					"description": "Lean the resting bubble a couple of px toward the pointer. Off by default, so it stays still.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a soft tick each time the bubble lands on a new trigger.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "className",
+					"description": "Classes for the bubble.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/fluid-tooltip/fluid-tooltip.tsx#FluidTooltipProps#": [
+		{
+			"id": "fluid-tooltip.tsx-FluidTooltipProps",
+			"name": "FluidTooltipProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "content",
+					"description": "The label. Keep it short and plain; interactive content needs a popover.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "shortcut",
+					"description": "Keyboard shortcut shown dimmer after the label, such as `\"⌘K\"` or `[\"⌘\", \"K\"]`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Shortcut | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "side",
+					"description": "Overrides the group's `side` for this trigger.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Side | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "Never show the tooltip. A disabled child is treated the same way.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "Exactly one focusable element, usually a button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactElement<unknown, string | JSXElementConstructor<any>>",
+					"simplifiedType": "object",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/glass-toggle/glass-toggle.tsx#GlassToggleProps#": [
 		{
 			"id": "glass-toggle.tsx-GlassToggleProps",
@@ -2496,6 +2710,447 @@
 					],
 					"type": "CSSProperties | undefined",
 					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/liquid-glass-carousel/liquid-glass-carousel.tsx#LiquidGlassCarouselProps#": [
+		{
+			"id": "liquid-glass-carousel.tsx-LiquidGlassCarouselProps",
+			"name": "LiquidGlassCarouselProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "children",
+					"description": "`LiquidGlassCarouselSlide` elements, and optionally `LiquidGlassCarouselControls`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "aria-label",
+					"description": "Names the carousel region, such as \"Featured artists\".",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "orientation",
+					"description": "Axis the slides travel along.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Orientation | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "index",
+					"description": "Controlled index of the centred slide.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultIndex",
+					"description": "Slide centred on mount when uncontrolled.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onIndexChange",
+					"description": "Called when a drag, key, click, wheel, or autoplay step picks a new slide.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((index: number) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "loop",
+					"description": "Wrap from the last slide back to the first, with no seam.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "autoplay",
+					"description": "Ms between automatic steps, or `false`. Starts paused under reduced motion.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | false | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "meltZone",
+					"description": "Depth of the melt at each end, as a share of the viewport length, from 0 to 0.5.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "melt",
+					"description": "`\"off\"` keeps the soft edge fade but never distorts the slides.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"auto\" | \"off\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "slideSize",
+					"description": "Slide size, in px or CSS lengths. Px sizes scale down to fit narrow\ncontainers. The viewport is 2.6 slides long; set `--lgc-length` on the\nroot to change it.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "{ width: LiquidGlassCarouselLength; height: LiquidGlassCarouselLength; } | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "gap",
+					"description": "Space between slides, in px or a CSS length.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "LiquidGlassCarouselLength | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a soft glass tick when a slide you moved to settles.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger a haptic tick on touch devices when a swiped slide settles.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "ref",
+					"description": "Exposes `next()`, `prev()`, and `goTo()`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Ref<LiquidGlassCarouselHandle> | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/liquid-glass-carousel/liquid-glass-carousel.tsx#LiquidGlassCarouselSlideProps#": [
+		{
+			"id": "liquid-glass-carousel.tsx-LiquidGlassCarouselSlideProps",
+			"name": "LiquidGlassCarouselSlideProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "aria-label",
+					"description": "Defaults to \"n of N\".",
+					"tags": [
+						{
+							"name": "see",
+							"text": "aria-labelledby."
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx#LiquidGlassMenuContentProps#": [
+		{
+			"id": "liquid-glass-menu.tsx-LiquidGlassMenuContentProps",
+			"name": "LiquidGlassMenuContentProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "side",
+					"description": "Which side of the trigger the panel opens on. Defaults to `\"bottom\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Side | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "align",
+					"description": "How the panel lines up with the trigger along that side. Defaults to `\"start\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Align | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sideOffset",
+					"description": "Gap to the trigger, in px. Defaults to covering the round trigger, so the\npanel grows out of it, or 8 px from any other trigger.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | OffsetFunction | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "alignOffset",
+					"description": "Shift along the aligned edge, in px.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | OffsetFunction | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "collisionPadding",
+					"description": "Space kept from the edge of the viewport, in px. Defaults to 8.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Padding | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx#LiquidGlassMenuItemProps#": [
+		{
+			"id": "liquid-glass-menu.tsx-LiquidGlassMenuItemProps",
+			"name": "LiquidGlassMenuItemProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "icon",
+					"description": "Leading icon, such as a lucide icon or a colored badge. Plain icons are drawn at 16 px.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "shortcut",
+					"description": "Trailing hint, such as a keyboard shortcut. Shown, not bound.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "The label.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx#LiquidGlassMenuProps#": [
+		{
+			"id": "liquid-glass-menu.tsx-LiquidGlassMenuProps",
+			"name": "LiquidGlassMenuProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "morph",
+					"description": "Flow the trigger into the panel as one blob of glass, and back on close.\n`false` gives a plain scale-and-fade popover.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "refraction",
+					"description": "Bend the backdrop at the rim of the glass and the lens where the browser\ncan (Chromium). Elsewhere, and with `\"off\"`, the glass is a clean blur.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"auto\" | \"off\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a glass pop on open and close, and a tick on select.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptics on supported devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
 					"required": false,
 					"deprecated": false
 				}

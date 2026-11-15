@@ -7,6 +7,23 @@
 const TICK_RULER_FLICKS = [84, 137, 200];
 
 export const scenarios = {
+	"agent-thinking": {
+		async run(d) {
+			// Nothing to click: the four looks run on their own.
+			d.hideCursor();
+			// The scene starts a run on the virtual clock from its quiet first
+			// frame: the dot cluster, the shimmer line, the orb, and the card
+			// in sync. Steps land at 1.0, 2.2, 3.3, and 4.4 s while the card
+			// streams its reasoning, and all four finish together at 5.5 s.
+			await d.page.evaluate(() =>
+				window.dispatchEvent(new Event("agent-thinking-capture")),
+			);
+			await d.wait(5500);
+			// The card folds into its summary and the rest settle: a calm hold.
+			// Ends just before the scene resets to the first frame at 7.3 s.
+			await d.wait(1750);
+		},
+	},
 	"snap-sheet": {
 		rest: { x: 420, y: 320 },
 		async run(d) {
@@ -406,21 +423,31 @@ export const scenarios = {
 		},
 	},
 
-	"agent-thinking": {
+	"fluid-tooltip": {
+		rest: { x: 410, y: 320 },
 		async run(d) {
-			// Nothing to click: the four looks run on their own.
-			d.hideCursor();
-			// The scene starts a run on the virtual clock from its quiet first
-			// frame: the dot cluster, the shimmer line, the orb, and the card
-			// in sync. Steps land at 1.0, 2.2, 3.3, and 4.4 s while the card
-			// streams its reasoning, and all four finish together at 5.5 s.
-			await d.page.evaluate(() =>
-				window.dispatchEvent(new Event("agent-thinking-capture")),
+			const tool = (label) =>
+				`[data-slot="fluid-tooltip-trigger"][aria-label="${label}"]`;
+			await d.wait(300);
+			// Rest on Bold: after the delay the bubble fades in above it.
+			await d.move(tool("Bold"), 700, { x: 0.5, y: 0.6 });
+			await d.wait(800);
+			// Slide along: each step the bubble glides over and the label crossfades.
+			for (const label of ["Italic", "Link", "Comment"]) {
+				await d.move(tool(label), 380, { x: 0.5, y: 0.6 });
+				await d.wait(label === "Comment" ? 650 : 320);
+			}
+			// A quick sweep back heads straight to Bold.
+			await d.move(tool("Bold"), 260, { x: 0.5, y: 0.6 });
+			await d.wait(600);
+			// Leaving the toolbar straight down fades it out without crossing Italic.
+			const bold = await d.page.locator(tool("Bold")).first().boundingBox();
+			await d.move(
+				{ x: bold.x + bold.width / 2, y: bold.y + bold.height + 40 },
+				300,
 			);
-			await d.wait(5500);
-			// The card folds into its summary and the rest settle: a calm hold.
-			// Ends just before the scene resets to the first frame at 7.3 s.
-			await d.wait(1750);
+			await d.move(d.rest, 600);
+			await d.wait(450);
 		},
 	},
 
@@ -454,6 +481,34 @@ export const scenarios = {
 		},
 	},
 
+	"liquid-glass-menu": {
+		rest: { x: 300, y: 330 },
+		async run(d) {
+			const items = '[data-slot="liquid-glass-menu-item"]';
+			await d.wait(300);
+			await d.move('[data-slot="liquid-glass-menu-trigger"]', 550, {
+				x: 0.55,
+				y: 0.6,
+			});
+			await d.wait(100);
+			// The button flows into the panel and the rows sharpen.
+			await d.click();
+			await d.wait(550);
+			// Down the rows and back up: the lens slides after the pointer.
+			for (const index of [0, 1, 2, 0]) {
+				await d.move(`${items} >> nth=${index}`, 320, { x: 0.45, y: 0.5 });
+				await d.wait(170);
+			}
+			// A click on the page outside drains it back into the button.
+			await d.move({ x: 140, y: 120 }, 400);
+			await d.wait(80);
+			await d.click();
+			await d.wait(600);
+			await d.move(d.rest, 500);
+			await d.wait(200);
+		},
+	},
+
 	"animated-tabs": {
 		rest: { x: 360, y: 320 },
 		async run(d) {
@@ -466,6 +521,28 @@ export const scenarios = {
 				await d.click();
 				await d.wait(900);
 			}
+			await d.move(d.rest, 800);
+			await d.wait(600);
+		},
+	},
+
+	"liquid-glass-carousel": {
+		rest: { x: 450, y: 330 },
+		async run(d) {
+			const current = '[data-slot="liquid-glass-carousel-item"][data-current]';
+			// Autoplay steps twice (every 2.2 s) while the cursor rests off the
+			// column: each card drains into the top edge as the next is born
+			// from the bottom one.
+			await d.wait(4700);
+			// Then a slow drag up melts the next card in by hand.
+			await d.move(current, 750, { x: 0.5, y: 0.6 });
+			await d.wait(150);
+			const from = await d.point(current, { x: 0.5, y: 0.6 });
+			await d.down();
+			await d.move({ x: from.x, y: from.y - 120 }, 700);
+			await d.wait(120);
+			await d.up();
+			await d.wait(900);
 			await d.move(d.rest, 800);
 			await d.wait(600);
 		},
