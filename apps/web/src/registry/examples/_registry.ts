@@ -18,6 +18,34 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "liquid-glass-carousel-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("liquid-glass-carousel")],
+		files: [
+			{
+				path: "examples/liquid-glass-carousel-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "ascii-decode-text-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ascii-decode-text")],
+		files: [
+			{
+				path: "examples/ascii-decode-text-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center",
+		},
+	},
+	{
 		name: "prompt-chip-input-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("prompt-chip-input")],
@@ -57,6 +85,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-56 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "ripple-reveal-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ripple-reveal")],
+		files: [
+			{
+				path: "examples/ripple-reveal-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
 		},
 	},
 	{
@@ -396,17 +438,17 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
-		name: "liquid-glass-carousel-demo",
+		name: "ascii-decode-text-demo",
 		type: "registry:example",
-		registryDependencies: [getRegistryItemUrl("liquid-glass-carousel")],
+		registryDependencies: [getRegistryItemUrl("ascii-decode-text")],
 		files: [
 			{
-				path: "examples/liquid-glass-carousel-demo.tsx",
+				path: "examples/ascii-decode-text-demo.tsx",
 				type: "registry:example",
 			},
 		],
 		meta: {
-			previewClassName: "place-items-center content-center px-4",
+			previewClassName: "min-h-[36rem] place-items-center content-center",
 		},
 	},
 	{
@@ -519,6 +561,20 @@ export const examples: Registry["items"] = [
 		],
 		meta: {
 			previewClassName: "min-h-80 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "ripple-reveal-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("ripple-reveal")],
+		files: [
+			{
+				path: "examples/ripple-reveal-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
 		},
 	},
 	{

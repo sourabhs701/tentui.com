@@ -19,6 +19,8 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	{ zoom?: number; className?: string }
 > = {
 	"animated-arrow": { zoom: 1.6 },
+	// The capture scene sizes the headline itself, so the art stays at 1:1.
+	"ascii-decode-text": { className: "px-6" },
 	"animated-tabs": { zoom: 1.6 },
 	"copy-button": { zoom: 1.8 },
 	"dynamic-island": { zoom: 1.4 },
@@ -42,6 +44,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	// Starts near the top so the suggestion list opens below the field.
 	"prompt-chip-input": { className: "items-start px-6 pt-10" },
 	"pull-cord": { zoom: 1.1 },
+	"ripple-reveal": { zoom: 1.2 },
 	"rotary-knob": { zoom: 1.5 },
 	"scratch-card": { zoom: 1.3 },
 	"search-command": { zoom: 2 },
