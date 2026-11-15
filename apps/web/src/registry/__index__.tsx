@@ -293,6 +293,42 @@ export const Index = {
 		categories: ["lists"],
 		meta: {"createdAt":"2026-11-14","image":"https://cdn.tentui.com/images/components/liquid-glass-carousel?v=1","video":"https://cdn.tentui.com/videos/components/liquid-glass-carousel?v=1"},
 	},
+	"fluid-tooltip": {
+		name: "fluid-tooltip",
+		title: "Fluid Tooltip",
+		description: "One shared tooltip for a toolbar, rail, or dock. Slide between buttons and a single quiet bubble glides with you on soft springs, settles without overshoot, and crossfades to the new label.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/fluid-tooltip/fluid-tooltip.tsx","type":"registry:component","target":"@components/fluid-tooltip.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/fluid-tooltip/fluid-tooltip")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for fluid-tooltip");
+			}
+			return { default: module.default };
+		}),
+		categories: ["overlays"],
+		meta: {"createdAt":"2026-11-13","image":"https://cdn.tentui.com/images/components/fluid-tooltip?v=2","video":"https://cdn.tentui.com/videos/components/fluid-tooltip?v=2"},
+	},
+	"liquid-glass-menu": {
+		name: "liquid-glass-menu",
+		title: "Liquid Glass Menu",
+		description: "A dropdown menu with a liquid-glass surface that stays fully keyboard and screen-reader accessible. The round trigger flows into the panel as one blob of glass, the items sharpen from a blur, and a small glass lens slides to the highlighted item.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/liquid-glass-menu/liquid-glass-menu.tsx","type":"registry:component","target":"@components/liquid-glass-menu.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/liquid-glass-menu/liquid-glass-menu")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-menu");
+			}
+			return { default: module.default };
+		}),
+		categories: ["menus"],
+		meta: {"createdAt":"2026-11-12","image":"https://cdn.tentui.com/images/components/liquid-glass-menu?v=2","video":"https://cdn.tentui.com/videos/components/liquid-glass-menu?v=2"},
+	},
 	"ascii-decode-text": {
 		name: "ascii-decode-text",
 		title: "ASCII Decode Text",
@@ -958,6 +994,78 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"place-items-center content-center px-4"},
+	},
+	"fluid-tooltip-preview": {
+		name: "fluid-tooltip-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/fluid-tooltip-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/fluid-tooltip-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for fluid-tooltip-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-56 place-items-center content-center px-4"},
+	},
+	"fluid-tooltip-demo": {
+		name: "fluid-tooltip-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/fluid-tooltip-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/fluid-tooltip-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for fluid-tooltip-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"demoClassName":"min-h-80 place-items-center content-center px-4"},
+	},
+	"liquid-glass-menu-preview": {
+		name: "liquid-glass-menu-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/liquid-glass-menu-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/liquid-glass-menu-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-menu-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 place-items-center content-center px-4"},
+	},
+	"liquid-glass-menu-demo": {
+		name: "liquid-glass-menu-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/liquid-glass-menu-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/liquid-glass-menu-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for liquid-glass-menu-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[40rem] place-items-center content-center px-4"},
 	},
 	"ascii-decode-text-preview": {
 		name: "ascii-decode-text-preview",
