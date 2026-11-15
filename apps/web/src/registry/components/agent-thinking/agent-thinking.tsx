@@ -7,6 +7,7 @@ import {
 	LazyMotion,
 	m,
 	useReducedMotion,
+	type Variants,
 } from "motion/react";
 import {
 	type ComponentProps,
@@ -51,7 +52,7 @@ const TAIL = [
 
 /** Under 4% overshoot, about 380 ms to rest. */
 const LAND_SPRING = { stiffness: 290, damping: 24.5 } as const;
-/** Flights to and from the log: longer, so damped harder. */
+/** Flights to and from the log: longer, so damped harder (under 0.2%). */
 const LOG_SPRING = { stiffness: 260, damping: 29 } as const;
 
 // A very soft tick per landing and a slightly brighter one when done.
@@ -77,7 +78,8 @@ const DONE_SOUND = {
 
 // Hoisted and deduplicated by React, so every instance shares one sheet.
 // The sweep paints the label through a moving gradient; `currentColor` keeps
-// it on the text color because only the fill is made transparent.
+// it on the text color because only the fill is made transparent. A step that
+// finishes with the log open fills its bullet up from the pending dot.
 const STYLES =
 	"@keyframes agent-thinking-sweep{from{background-position:100% 0}to{background-position:0 0}}" +
 	"@keyframes agent-thinking-pulse{50%{opacity:.4}}" +
@@ -86,7 +88,33 @@ const STYLES =
 	"[data-slot=agent-thinking] [data-sweep]:dir(rtl){animation-direction:reverse}" +
 	"[data-slot=agent-thinking] [data-pulse]{animation:agent-thinking-pulse 2.4s ease-in-out infinite}" +
 	"[data-slot=agent-thinking] [data-flash]{animation:agent-thinking-flash .7s ease-out}" +
-	"@media (prefers-reduced-motion:reduce){[data-slot=agent-thinking] [data-sweep]{animation:none;background:none;-webkit-text-fill-color:currentColor}}";
+	"[data-slot=agent-thinking] [data-sizing] [data-slot=agent-thinking-label]{text-overflow:clip}" +
+	"@keyframes agent-thinking-fill{from{opacity:.25}40%{transform:scale(1.4)}}" +
+	"[data-slot=agent-thinking] [data-fill]{animation:agent-thinking-fill .45s cubic-bezier(.2,.8,.2,1)}" +
+	"@media (prefers-reduced-motion:reduce){[data-slot=agent-thinking] [data-sweep]{animation:none;background:none;-webkit-text-fill-color:currentColor}[data-slot=agent-thinking] [data-fill]{animation:none}}";
+
+/**
+ * Label and timer swaps run in sequence: the old text is blurred out before
+ * the new one is legible, so the two never read as one word. `custom` is
+ * `true` for reduced motion, which keeps the fade alone.
+ */
+const SWAP_EASE: [number, number, number, number] = [0.2, 0.8, 0.2, 1];
+const SWAP: Variants = {
+	enter: (still: boolean) =>
+		still ? { opacity: 0 } : { opacity: 0, y: 3, filter: "blur(2px)" },
+	shown: (still: boolean) => ({
+		opacity: 1,
+		y: 0,
+		filter: "blur(0px)",
+		transition: { duration: still ? 0.14 : 0.22, delay: 0.1, ease: SWAP_EASE },
+	}),
+	hidden: { opacity: 0, transition: { duration: 0.3, ease: SWAP_EASE } },
+	exit: (still: boolean) => ({
+		opacity: 0,
+		...(still ? {} : { y: -3, filter: "blur(2px)" }),
+		transition: { duration: still ? 0.1 : 0.12, ease: "easeOut" },
+	}),
+};
 
 const sizes = {
 	sm: {
@@ -105,7 +133,8 @@ const sizes = {
 		bulletClass: "w-5",
 		label: "text-xs",
 		timer: "text-[11px]",
-		step: "min-h-6 text-xs",
+		/** One line per step; the label's line box is the row. */
+		step: "text-xs leading-6",
 	},
 	md: {
 		mark: 28,
@@ -119,7 +148,7 @@ const sizes = {
 		bulletClass: "w-7",
 		label: "text-sm",
 		timer: "text-xs",
-		step: "min-h-7 text-sm",
+		step: "text-sm leading-7",
 	},
 } as const;
 
@@ -367,9 +396,6 @@ interface Flight {
 	/** Engine time the flight leaves, for the stagger. */
 	at: number;
 	started: boolean;
-	/** Leaves from the seeking dot rather than the cluster. */
-	fromSeeker: boolean;
-	cue: boolean;
 	x: number;
 	y: number;
 	vx: number;
@@ -405,6 +431,8 @@ interface Dot {
 	/** Represented in the log: a flight or its bullet. */
 	away: boolean;
 	bullet: boolean;
+	/** Finished with the log open: its bullet fills in place, once. */
+	fill: boolean;
 	flight: Flight | null;
 }
 
@@ -523,9 +551,12 @@ class ClusterEngine {
 		const still = model.still;
 		let flights = 0;
 		for (const dot of this.dots.values()) {
-			if (dot.landing || dot.flight?.fromSeeker) flights++;
+			if (dot.landing) flights++;
 		}
-		const seekerFree = !still && previous.thinking && this.seeker.alpha > 0.2;
+		// With the log open the step's bullet fills in place instead: a dot
+		// dropping across the rows would leave its own row empty on the way.
+		const seekerFree =
+			!still && !model.open && previous.thinking && this.seeker.alpha > 0.2;
 		for (const dot of fresh) {
 			const target = this.target(dot);
 			dot.x = target.x;
@@ -538,30 +569,15 @@ class ClusterEngine {
 				flights++;
 				// The seeking dot becomes this step's dot; a new one fades in later.
 				const { x, y, vx, vy } = this.seeker;
-				if (model.open) {
-					dot.away = true;
-					dot.flight = this.flight(true, this.time, true);
-					Object.assign(dot.flight, {
-						started: true,
-						cue: true,
-						x,
-						y,
-						vx,
-						vy,
-						alpha: 1,
-						scale: SEEKER_SCALE,
-					});
-					this.aimAtBullet(dot);
-				} else {
-					Object.assign(dot, { x, y, vx, vy, alpha: 1, landing: true });
-					dot.scale = SEEKER_SCALE;
-				}
+				Object.assign(dot, { x, y, vx, vy, alpha: 1, landing: true });
+				dot.scale = SEEKER_SCALE;
 				this.seeker.alpha = 0;
 				this.seeker.returnAt = this.time + 0.22;
 			} else {
 				if (model.open) {
 					dot.away = true;
 					dot.bullet = true;
+					dot.fill = !still;
 				}
 				this.onLand(dot.error);
 			}
@@ -625,19 +641,18 @@ class ClusterEngine {
 			leaving: false,
 			away: false,
 			bullet: false,
+			fill: false,
 			flight: null,
 		};
 		this.dots.set(key, dot);
 		return dot;
 	}
 
-	flight(out: boolean, at: number, fromSeeker = false): Flight {
+	flight(out: boolean, at: number): Flight {
 		return {
 			out,
 			at,
 			started: false,
-			fromSeeker,
-			cue: false,
 			x: 0,
 			y: 0,
 			vx: 0,
@@ -668,7 +683,6 @@ class ClusterEngine {
 			}
 			if (dot.flight?.started) {
 				dot.flight.out = false;
-				dot.flight.fromSeeker = false;
 			} else if (dot.flight) {
 				dot.flight = null;
 				dot.away = false;
@@ -912,13 +926,7 @@ class ClusterEngine {
 			flight.tx = target.x;
 			flight.ty = target.y;
 		}
-		spring(
-			flight,
-			flight.tx,
-			flight.ty,
-			dt,
-			flight.fromSeeker ? LAND_SPRING : LOG_SPRING,
-		);
+		spring(flight, flight.tx, flight.ty, dt, LOG_SPRING);
 		const alphaTo = flight.out
 			? bulletAlpha(dot)
 			: ageAlpha(dot.rank, SEEDS + (this.model?.steps.length ?? 0));
@@ -932,7 +940,6 @@ class ClusterEngine {
 		dot.flight = null;
 		if (flight.out) {
 			dot.bullet = true;
-			if (flight.cue) this.onLand(dot.error);
 		} else {
 			dot.away = false;
 			this.retarget(dot);
@@ -1023,7 +1030,11 @@ class ClusterEngine {
 				} else setStyle(flyer, null, 0);
 			}
 			const bullet = this.elements.bullet.get(dot.key);
-			if (bullet) setStyle(bullet, null, dot.bullet ? bulletAlpha(dot) : 0);
+			if (bullet) {
+				setStyle(bullet, null, dot.bullet ? bulletAlpha(dot) : 0);
+				if (dot.fill) bullet.dataset.fill = "";
+				dot.fill = false;
+			}
 		}
 		const seeker = this.seeker;
 		const fade = 1 - seeker.collapse;
@@ -1364,15 +1375,25 @@ export function AgentThinking({
 		const zoom =
 			(element as HTMLElement & { currentCSSZoom?: number }).currentCSSZoom ??
 			1;
-		const from = element.getBoundingClientRect().width / zoom;
-		for (const animation of element.getAnimations()) {
-			if (animation.id === "agent-thinking-width") animation.cancel();
+		// The new text is already in, so start from the width still on screen,
+		// or the last one measured.
+		const running = element
+			.getAnimations()
+			.filter((animation) => animation.id === "agent-thinking-width");
+		const current = element.getBoundingClientRect().width / zoom;
+		for (const animation of running) {
+			// Its cancel event lands after the new ease starts; don't let it undo it.
+			animation.onfinish = animation.oncancel = null;
+			animation.cancel();
 		}
 		const to = element.getBoundingClientRect().width / zoom;
-		const previous = widthRef.current;
+		const from = running.length ? current : widthRef.current;
 		widthRef.current = to;
-		if (previous === null || still || Math.abs(from - to) < 0.5) return;
+		if (from === null || still || Math.abs(from - to) < 0.5) return;
+		// Clipped rather than truncated while it eases, so the incoming label
+		// is revealed behind the edge instead of showing an ellipsis.
 		element.style.overflow = "hidden";
+		element.dataset.sizing = "";
 		const animation = element.animate(
 			[{ width: `${from}px` }, { width: `${to}px` }],
 			{
@@ -1383,6 +1404,7 @@ export function AgentThinking({
 		);
 		animation.onfinish = animation.oncancel = () => {
 			element.style.overflow = "";
+			delete element.dataset.sizing;
 		};
 	}, [labelText, thinking, timerText.length]);
 
@@ -1454,13 +1476,26 @@ export function AgentThinking({
 	const count = SEEDS + finished.length;
 	const layout = layoutCluster(count, config, maxDots);
 	const initialScale = thinking ? 1 : SETTLED_SCALE;
+	// Whole-pixel offsets, so dots and bullets at rest render crisp at 1x.
+	const inset = -Math.floor(config.dot / 2);
+	const dotBox = {
+		left: inset,
+		top: inset,
+		width: config.dot,
+		height: config.dot,
+	};
+	// On whole pixels like the mark's dots; in a 28px row the bullet's centre
+	// lands at 14.5px, between the label's cap-height and x-height centres.
+	const bulletBox = {
+		left: `calc(50% + ${inset}px)`,
+		top: `calc(50% + ${inset}px)`,
+		width: config.dot,
+		height: config.dot,
+	};
 	const initialStyle = (rank: number, away: boolean) => {
 		const point = layout.points[rank] ?? { x: 0, y: 0 };
 		return {
-			left: -config.dot / 2,
-			top: -config.dot / 2,
-			width: config.dot,
-			height: config.dot,
+			...dotBox,
 			transform: transformOf(
 				point.x * initialScale,
 				point.y * initialScale,
@@ -1468,12 +1503,6 @@ export function AgentThinking({
 			),
 			opacity: open && away ? GHOST_ALPHA : ageAlpha(rank, count),
 		};
-	};
-	const dotBox = {
-		left: -config.dot / 2,
-		top: -config.dot / 2,
-		width: config.dot,
-		height: config.dot,
 	};
 	const orbit = orbitRadius(layout.radius, config);
 	const seekerStart = transformOf(
@@ -1567,11 +1596,12 @@ export function AgentThinking({
 		<span
 			ref={textRef}
 			data-slot="agent-thinking-text"
-			className="relative flex min-w-0 items-baseline gap-2"
+			className="relative flex min-w-0 items-baseline"
 		>
 			<AnimatePresence initial={false} mode="popLayout">
 				<m.span
 					key={`${status}:${labelText}`}
+					custom={still}
 					ref={labelRef}
 					data-slot="agent-thinking-label"
 					data-sweep={thinking && !still && live ? "" : undefined}
@@ -1581,35 +1611,43 @@ export function AgentThinking({
 						}
 					}}
 					className={cn(
-						"min-w-0 truncate font-medium",
+						"min-w-0 truncate font-medium transition-colors duration-150",
 						config.label,
 						status === "error" ? "text-destructive" : "text-current/80",
 						hasSteps && status !== "error" && "group-hover/row:text-current",
 					)}
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					exit={{ opacity: 0 }}
-					transition={{ duration: still ? 0.12 : 0.24, ease: "easeOut" }}
+					variants={SWAP}
+					initial="enter"
+					animate="shown"
+					exit="exit"
 					// Keeps the fade on motion's frame loop for frame-stepped captures.
 					onUpdate={noop}
 				>
 					{labelText}
 				</m.span>
+				{thinking && showTimer ? (
+					<m.span
+						key="timer"
+						custom={still}
+						aria-hidden
+						dir="ltr"
+						data-slot="agent-thinking-timer"
+						className={cn(
+							"shrink-0 text-muted-foreground tabular-nums",
+							// Takes room only once shown; the row's width eases open.
+							timerText && "ms-2 min-w-[3ch]",
+							config.timer,
+						)}
+						variants={SWAP}
+						initial={false}
+						animate={timerShown ? "shown" : "hidden"}
+						exit="exit"
+						onUpdate={noop}
+					>
+						{timerText}
+					</m.span>
+				) : null}
 			</AnimatePresence>
-			{thinking && showTimer ? (
-				<span
-					aria-hidden
-					dir="ltr"
-					data-slot="agent-thinking-timer"
-					className={cn(
-						"min-w-[3ch] shrink-0 text-muted-foreground tabular-nums transition-opacity duration-300",
-						config.timer,
-					)}
-					style={{ opacity: timerShown ? 1 : 0 }}
-				>
-					{timerText}
-				</span>
-			) : null}
 		</span>
 	);
 
@@ -1654,7 +1692,7 @@ export function AgentThinking({
 						onClick={() => setOpen(!open)}
 						className={cn(
 							rowClass,
-							"pointer-coarse:min-h-11 cursor-pointer select-none outline-none focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-solid focus-visible:outline-offset-2",
+							"pointer-coarse:min-h-11 cursor-pointer select-none outline-none [-webkit-tap-highlight-color:transparent] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-solid focus-visible:outline-offset-2",
 						)}
 					>
 						{mark}
@@ -1696,8 +1734,10 @@ export function AgentThinking({
 											key={step.id}
 											data-slot="agent-thinking-step"
 											data-status={state}
+											// Baseline-aligned, so the smaller duration sits on the
+											// label's baseline.
 											className={cn(
-												"flex min-w-0 items-center",
+												"flex min-w-0 items-baseline",
 												config.gapClass,
 												config.step,
 											)}
@@ -1705,29 +1745,27 @@ export function AgentThinking({
 											<span
 												aria-hidden
 												className={cn(
-													"relative flex shrink-0 items-center justify-center self-stretch",
+													"relative shrink-0 self-stretch",
 													config.bulletClass,
 												)}
 											>
 												{done ? (
 													<span
+														key="done"
 														ref={engine.ref("bullet", step.id)}
 														data-slot="agent-thinking-bullet"
 														className={cn(
-															"rounded-full bg-current",
+															"absolute rounded-full bg-current",
 															fadeClass,
 															state === "error" && "text-destructive",
 														)}
-														style={{
-															width: config.dot,
-															height: config.dot,
-															opacity: 0,
-														}}
+														style={{ ...bulletBox, opacity: 0 }}
 													/>
 												) : (
 													<span
-														className="rounded-full bg-current opacity-25"
-														style={{ width: config.dot, height: config.dot }}
+														key="pending"
+														className="absolute rounded-full bg-current opacity-25"
+														style={bulletBox}
 													/>
 												)}
 											</span>
@@ -1761,7 +1799,12 @@ export function AgentThinking({
 												</span>
 											</span>
 											{step.durationMs !== undefined ? (
-												<span className="shrink-0 ps-3 text-muted-foreground text-xs tabular-nums">
+												<span
+													className={cn(
+														"ms-3 min-w-[4ch] shrink-0 text-end text-muted-foreground tabular-nums",
+														config.timer,
+													)}
+												>
 													{formatStepDuration(step.durationMs)}
 												</span>
 											) : null}

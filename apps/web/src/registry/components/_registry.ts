@@ -18,6 +18,8 @@ export const components: Registry["items"] = [
 		categories: ["feedback"],
 		meta: {
 			createdAt: "2026-11-14",
+			image: "https://cdn.tentui.com/images/components/agent-thinking?v=1",
+			video: "https://cdn.tentui.com/videos/components/agent-thinking?v=1",
 		},
 		docs: "https://tentui.com/components/agent-thinking",
 	},

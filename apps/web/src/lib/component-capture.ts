@@ -19,7 +19,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	{ zoom?: number; className?: string }
 > = {
 	// The scene keeps room under the row for the step log the take opens.
-	"agent-thinking": { zoom: 1.6 },
+	"agent-thinking": { zoom: 1.3 },
 	"animated-arrow": { zoom: 1.6 },
 	"animated-tabs": { zoom: 1.6 },
 	"copy-button": { zoom: 1.8 },

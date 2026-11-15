@@ -86,12 +86,13 @@ export function AgentThinkingCapture() {
 	if (motion === null) return null;
 	const done = take.finished === STEPS.length;
 	return (
-		// The still is centered; the take starts at the top, so the log has room.
+		// The still is centered; the take starts at the top, so the opened log
+		// ends up centered in the frame and its labels do not truncate.
 		<div
 			className={
 				motion
-					? "flex h-[190px] w-[220px] flex-col justify-start"
-					: "flex h-[190px] w-[220px] flex-col items-center justify-center"
+					? "flex h-[184px] w-[260px] flex-col justify-start"
+					: "flex h-[184px] w-[260px] flex-col items-center justify-center"
 			}
 		>
 			<AgentThinking
