@@ -90,16 +90,23 @@ const RAMP = 1;
 const FLARE = 0.3;
 /**
  * Blue bends further than green, and red less: the spread of their pulls
- * along the axis, and of their flare across it. Small along the axis, where
- * the lens magnifies 7 times, so content keeps clean streaks; wider across,
- * so the flared sides pick up the rainbow.
+ * along the axis, and of their flare across it. Tiny along the axis, where
+ * the lens magnifies 7 times, so content keeps clean streaks; a little wider
+ * across, so the flared sides split by a pixel or two at the very edge.
  */
-const DISPERSION_ALONG = 0.01;
-const DISPERSION_ACROSS = 0.26;
+const DISPERSION_ALONG = 0.004;
+const DISPERSION_ACROSS = 0.1;
+/**
+ * Share of the split colour kept in the result; the rest is the undispersed
+ * image, so the fringe is a faint tint, never a saturated rim.
+ */
+const FRINGE = 0.45;
 /** Blur along the axis inside the zones, in px, so magnified rows read as streaks. */
 const STREAK_BLUR = 2;
 /** A little blur across, so the fringe reads as light, not as painted bands. */
-const FRINGE_BLUR = 0.6;
+const FRINGE_BLUR = 0.8;
+/** Depth of the soft fade at each end, as a share of the viewport length. */
+const EDGE_FADE = 0.12;
 /** Where SVG filters are off, slides stretch, flare, and blur on their own. */
 const FALLBACK_STRETCH = 0.28;
 const FALLBACK_FLARE = 0.08;
@@ -306,6 +313,30 @@ function supportsSvgMelt() {
 	return brands?.some((entry) => entry.brand === "Chromium") ?? false;
 }
 
+/**
+ * The edge fade as a mask. Smoothstep-eased over many stops, so it has no
+ * crease where it starts and dark cards dissolve into the page instead of
+ * passing through a band of grey.
+ */
+function edgeMask(orientation: Orientation) {
+	const steps = 8;
+	const ramp = Array.from({ length: steps + 1 }, (_, step) => {
+		const t = step / steps;
+		return {
+			alpha: round(t * t * (3 - 2 * t)),
+			at: round(t * EDGE_FADE * 100),
+		};
+	});
+	const stops = [
+		...ramp.map(({ alpha, at }) => `rgb(0 0 0 / ${alpha}) ${at}%`),
+		...ramp
+			.reverse()
+			.map(({ alpha, at }) => `rgb(0 0 0 / ${alpha}) ${100 - at}%`),
+	];
+	const to = orientation === "vertical" ? "bottom" : "right";
+	return `linear-gradient(to ${to}, ${stops.join(", ")})`;
+}
+
 const mapCache = new Map<string, string>();
 
 /**
@@ -364,7 +395,13 @@ function lensMap(
 	const image = context.createImageData(width, height);
 	const scale = lensScale(zone);
 	const edgePull = lensPull(zone) * (1 + SPREAD[channel] * DISPERSION_ALONG);
-	const flare = FLARE * (1 + SPREAD[channel] * DISPERSION_ACROSS);
+	// A slide flared by `f` is `1 / (1 - f)` times as wide at the edge. Where
+	// the band is narrower than that, the flare is eased off to fit, so the
+	// drip is never cut off by the frame.
+	const room =
+		(1 - slideCross / (band - BAND_MARGIN * 2)) / (1 + DISPERSION_ACROSS);
+	const flare =
+		clamp(room, 0, FLARE) * (1 + SPREAD[channel] * DISPERSION_ACROSS);
 	// Past this distance from the axis the flare stays flat; it only moves page.
 	const reach = slideCross * 0.75;
 	for (let y = 0; y < height; y++) {
@@ -387,8 +424,9 @@ function lensMap(
 			const index = (y * width + x) * 4;
 			image.data[index] = Math.round((vertical ? side : axis) * 255);
 			image.data[index + 1] = Math.round((vertical ? axis : side) * 255);
-			// Blue: how much of the streak blur shows, easing in with depth.
-			image.data[index + 2] = Math.round(depth * depth * (3 - 2 * depth) * 255);
+			// Blue: how much of the streak blur shows. It eases out, so it is
+			// already there where rows start to magnify and step the flared rims.
+			image.data[index + 2] = Math.round((1 - (1 - depth) ** 2) * 255);
 			image.data[index + 3] = 255;
 		}
 	}
@@ -413,12 +451,12 @@ const WEIGHT = "0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 1 0 0";
 /**
  * The lens filter for the track. Each colour channel is displaced through its
  * own map and laid over the page colour, so where one channel's card reaches
- * past the others the page shows through in the rest: a thin rainbow fringe,
- * pink on a blue card's rim, yellow on an orange one. The channels are joined
- * under the union of their shapes and blurred along the axis, more toward
- * the edge, so magnified rows read as streaks. The band
- * between the zones is the untouched source, so the centred card is never
- * resampled.
+ * past the others the page shows through in the rest: a thin rainbow fringe.
+ * Only `FRINGE` of it is kept over the undispersed (green) pass, so the rim is
+ * a faint tint. The channels are joined under the union of their shapes and
+ * blurred along the axis, more toward the edge, so magnified rows read as
+ * streaks. The band between the zones is the untouched source, so the centred
+ * card is never resampled.
  */
 function LensFilter({
 	id,
@@ -505,7 +543,15 @@ function LensFilter({
 				result="rg-shape"
 			/>
 			<feComposite in="b-moved" in2="rg-shape" operator="over" result="shape" />
-			<feComposite in="rgb" in2="shape" operator="in" result="lens" />
+			<feComposite
+				in="rgb"
+				in2="g-flat"
+				operator="arithmetic"
+				k2={FRINGE}
+				k3={1 - FRINGE}
+				result="mixed"
+			/>
+			<feComposite in="mixed" in2="shape" operator="in" result="lens" />
 			<feColorMatrix in="g-map" values={WEIGHT} result="weight" />
 			<feGaussianBlur
 				in="lens"
@@ -834,7 +880,7 @@ export function LiquidGlassCarousel({
 			const band = Math.min(
 				across,
 				Math.ceil(
-					cross * (1 + FLARE * (1 + DISPERSION_ACROSS)) + BAND_MARGIN * 2,
+					cross / (1 - FLARE * (1 + DISPERSION_ACROSS)) + BAND_MARGIN * 2,
 				),
 			);
 			const maps = {
@@ -1338,12 +1384,13 @@ export function LiquidGlassCarousel({
 						className={cn(
 							"peer relative w-full select-none overflow-hidden outline-none",
 							vertical
-								? "h-(--lgc-viewport) touch-pan-x [mask-image:linear-gradient(to_bottom,transparent,#000_4%,#000_96%,transparent)]"
-								: "h-[calc(var(--lgc-h)*1.24)] touch-pan-y [mask-image:linear-gradient(to_right,transparent,#000_4%,#000_96%,transparent)]",
+								? "h-(--lgc-viewport) touch-pan-x"
+								: "h-[calc(var(--lgc-h)*1.4)] touch-pan-y",
 						)}
 						style={
 							{
 								"--lgc-viewport": `var(--lgc-length, calc(var(--lgc-h) * ${VIEWPORT_SLIDES}))`,
+								maskImage: edgeMask(orientation),
 							} as CSSProperties
 						}
 						onKeyDown={onKeyDown}
@@ -1425,7 +1472,8 @@ export function LiquidGlassCarousel({
 							playing={playing}
 							onToggle={() => setPlaying(!playing)}
 							className={cn(
-								"absolute",
+								// The face sits at the outer edge of its hit area, flush with the column.
+								"absolute justify-end",
 								vertical
 									? "top-1/2 right-0 -translate-y-1/2 rtl:right-auto rtl:left-0"
 									: "right-0 bottom-0 rtl:right-auto rtl:left-0",
@@ -1512,9 +1560,9 @@ function PlayButton({
 			    carousel's pointerleave and keep autoplay paused. */}
 			<span className="pointer-events-none inline-flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors group-hover/lgc-button:bg-muted group-hover/lgc-button:text-foreground group-focus-visible/lgc-button:ring-2 group-focus-visible/lgc-button:ring-ring/60">
 				{playing ? (
-					<PauseIcon className="size-3.5" fill="currentColor" strokeWidth={0} />
+					<PauseIcon className="size-3" fill="currentColor" strokeWidth={0} />
 				) : (
-					<PlayIcon className="size-3.5" fill="currentColor" strokeWidth={0} />
+					<PlayIcon className="size-3" fill="currentColor" strokeWidth={0} />
 				)}
 			</span>
 		</button>

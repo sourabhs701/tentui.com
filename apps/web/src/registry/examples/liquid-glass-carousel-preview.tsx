@@ -5,7 +5,7 @@ import {
 	LiquidGlassCarouselSlide,
 } from "@/registry/components/liquid-glass-carousel/liquid-glass-carousel";
 
-/** A pale rim around an off-white card, like a print in a capsule frame. */
+/** A mat around an off-white card, like a print in a capsule frame. Pale in light, graphite in dark. */
 function PrintCard({
 	children,
 	dark,
@@ -14,7 +14,7 @@ function PrintCard({
 	dark?: boolean;
 }) {
 	return (
-		<div className="flex size-full items-center justify-center bg-[#e8e8ea] px-[9%]">
+		<div className="flex size-full items-center justify-center bg-[#e8e8ea] px-[9%] dark:bg-[#232325]">
 			<div
 				className={
 					dark
@@ -114,11 +114,12 @@ export const slides = [
 	},
 ];
 
+// Inset 8px, the same as the pause glyph, so the right column lines up.
 const CORNERS = [
-	{ label: "Cosmos", className: "top-0 left-0" },
-	{ label: "Orbit", className: "top-0 right-0" },
-	{ label: "Nova", className: "bottom-0 left-0" },
-	{ label: "Light", className: "bottom-0 right-0" },
+	{ label: "Cosmos", className: "top-0 left-2" },
+	{ label: "Orbit", className: "top-0 right-2" },
+	{ label: "Nova", className: "bottom-0 left-2" },
+	{ label: "Light", className: "bottom-0 right-2" },
 ];
 
 export function LiquidGlassCarouselPreview() {
@@ -128,7 +129,7 @@ export function LiquidGlassCarouselPreview() {
 				<span
 					key={corner.label}
 					aria-hidden
-					className={`pointer-events-none absolute font-medium text-[9px] text-foreground/80 uppercase tracking-[0.18em] ${corner.className}`}
+					className={`pointer-events-none absolute font-medium text-[10px] text-muted-foreground uppercase leading-none tracking-[0.14em] ${corner.className}`}
 				>
 					{corner.label}
 				</span>
