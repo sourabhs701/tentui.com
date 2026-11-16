@@ -1,0 +1,378 @@
+---
+title: "AI Prompt Input UX in React: Chips, Mentions, and Model Pickers"
+description: Build a React AI prompt input with @mentions, /commands, and model chips that submits structured values, using TentUI's Prompt Chip Input for shadcn/ui.
+author: Sourabh Soni
+authorImage: https://cdn.tentui.com/srb.avif
+category: Engineering
+createdAt: "2026-11-15"
+updatedAt: "2026-11-15"
+---
+
+A modern AI prompt input should turn what people type after a trigger, such as
+`@` for a person, `/` for a command, or `~` for a model, into an atomic chip in
+the text, and submit a structured value instead of a raw string. That gives the
+user visible confirmation of what the prompt refers to, and gives your code the
+ids it needs without parsing names back out of text.
+
+In a shadcn/ui project you can install TentUI's
+[Prompt Chip Input](/components/prompt-chip-input) with
+`npx shadcn@latest add @tentui/prompt-chip-input`, pass it a `triggers` array,
+and read `text`, `chips`, and `segments` in `onSubmit`. It is one
+`contentEditable` element with no TipTap, Lexical, or ProseMirror dependency.
+
+This guide covers why a plain textarea falls short, how to model mentions,
+commands, and model choices, and how to build a composer with async search, a
+model picker, and restorable drafts.
+
+## Why a textarea is not enough for AI prompts
+
+A `textarea` is the right starting point for a single free-form question. It
+starts to fail once a prompt refers to things:
+
+- **Mentions need identity.** "@Ana" in plain text does not tell your backend
+  which Ana. A chip carries an `id` and a `value`, so the model receives
+  `@ana` and your code knows exactly who was meant.
+- **Commands change what happens.** A `/summarize` command is an instruction to
+  your app, not just words for the model. It should be easy to see and hard to
+  half-delete.
+- **Model choice belongs near the prompt.** People increasingly pick a model per
+  message. A separate dropdown works, but an inline `~model` chip keeps the
+  choice where the user is already typing.
+- **Editing must stay predictable.** The caret should skip over a chip, a
+  selection should take it whole, and Backspace should do something sensible.
+
+You can approximate this with a regular expression over textarea text, but the
+user never sees what matched, and names with spaces or similar labels become
+ambiguous. A rich text editor solves it at the cost of a large dependency and a
+second document model. Prompt Chip Input sits between the two.
+
+## Three kinds of tokens
+
+Most AI composers need the same three token types. Prompt Chip Input ships them
+as preset kinds, each with its own tint, icon, and screen reader name:
+
+| Kind | Typical trigger | What the chip stands for | In `value.text` |
+| --- | --- | --- | --- |
+| `mention` | `@` | A person, file, or other entity | `@ana` |
+| `command` | `/` | An action your app runs | `/summarize` |
+| `model` | `~` | The model for this message | `~claude-opus-5-5` |
+
+The trigger characters are your choice. Each trigger names a character, the kind
+of chip it makes, and the items it offers. You can also add your own kinds,
+covered below.
+
+## Install Prompt Chip Input
+
+TentUI is a free and source-available library of React components for
+shadcn/ui. Add its registry to `components.json`:
+
+```json
+{
+  "registries": {
+    "@tentui": "https://tentui.com/r/{name}.json"
+  }
+}
+```
+
+Then install the component:
+
+```bash
+npx shadcn@latest add @tentui/prompt-chip-input
+```
+
+The CLI copies `prompt-chip-input.tsx` into your project and installs its
+dependencies. For a manual install, add them yourself and copy the source from
+the [component page](/components/prompt-chip-input):
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+## Define triggers and items
+
+Import the component and pass one trigger per token type:
+
+```tsx
+import { PromptChipInput } from "@/components/prompt-chip-input";
+```
+
+```tsx
+<PromptChipInput
+  triggers={[
+    { char: "@", kind: "mention", items: people },
+    { char: "/", kind: "command", items: commands },
+    { char: "~", kind: "model", items: models },
+  ]}
+  placeholder="Ask anything. @ to mention, / for commands, ~ to pick a model"
+  onSubmit={(value) => send(value.text)}
+/>
+```
+
+An item is `{ id, label, value?, description?, icon?, avatar? }`. The `label` is
+what the user sees. The `value` is what the chip stands for in `value.text`,
+and it defaults to the label. That split is what makes a model picker work: a
+chip labelled "Opus" can send `~claude-opus-5-5`. The component's demo defines
+its models like this:
+
+```tsx
+const MODELS: PromptChipItem[] = [
+  {
+    id: "opus",
+    label: "Opus",
+    value: "claude-opus-5-5",
+    description: "Most capable",
+  },
+  {
+    id: "sonnet",
+    label: "Sonnet",
+    value: "claude-sonnet-5-5",
+    description: "Balanced",
+  },
+];
+```
+
+`description` is the dim secondary text in the suggestion row, and `avatar`
+takes an image URL for a small round avatar in the chip.
+
+## What the typing feels like
+
+When someone types `@`, `/`, or `~`, the trigger and the query are wrapped in a
+faint live capsule right in the text, and the rest of the best match shows as
+ghost text after the caret. `Tab`, `Enter`, or a click commits the suggestion,
+and the capsule solidifies into a chip.
+
+Backspace right after a chip melts it back into its raw text, such as
+`@Ana Lima`, with the menu reopened so the user can retarget it. A second
+Backspace deletes characters as usual. If you prefer Backspace to delete the
+chip at once, set `meltOnBackspace={false}`.
+
+A few rules keep triggers from firing by accident:
+
+- A trigger needs a word boundary before it, so `a@b.com` never opens the list.
+- The `command` kind opens only at the start of a line by default. Set
+  `position: "any"` on its trigger to open it mid-line.
+- Queries stop at a space unless the trigger sets `allowSpaces`.
+- `Esc` closes the list and keeps the text.
+- Pasting `@Ana` from elsewhere stays plain text, while copying and pasting
+  between prompt fields keeps chips as chips.
+
+## Use the structured value
+
+`onSubmit` runs on `Enter`, while `Shift+Enter` inserts a newline. It and
+`onValueChange` receive the same object:
+
+```ts
+{
+  text: "Ask @ana to /summarize the notes with ~claude-opus-5-5",
+  chips: [{ kind: "mention", id: "ana", label: "Ana Lima", value: "ana" }, …],
+  segments: [{ type: "text", text: "Ask " }, { type: "chip", … }, …],
+}
+```
+
+Each part has a job:
+
+- `text` is model-ready. Each chip is written as its trigger plus its value.
+- `chips` lists every chip with its kind, id, label, and value, so you can
+  route on them without parsing `text`. For example, the last `model` chip can
+  select the model for the request.
+- `segments` is the ordered text and chips, which you can store and pass back
+  as `value` or `defaultValue` to restore a draft.
+
+The field empties after `onSubmit` by default. Set `clearOnSubmit={false}` to
+keep the text, for example in a comment field.
+
+## Search a server for mentions
+
+Pass a function to `items` to search as the user types. It receives the query
+and returns items or a promise of them:
+
+```tsx
+<PromptChipInput
+  triggers={[
+    {
+      char: "@",
+      kind: "mention",
+      items: (query) =>
+        fetch(`/api/people?q=${encodeURIComponent(query)}`).then((res) =>
+          res.json(),
+        ),
+    },
+  ]}
+/>
+```
+
+The latest request wins, so a slow response for an earlier query cannot replace
+newer results. Earlier results stay visible while the next ones load, and a
+small spinner takes the place of the ghost text.
+
+## Build a composer with a model picker
+
+Children render inside the card under the text, which is where a toolbar with a
+model chip and a send button belongs. The component's demo does this with the
+imperative handle, which has `focus()`, `clear()`, `insertChip(kind, item)`, and
+`getValue()`:
+
+```tsx
+const ref = useRef<PromptChipInputHandle>(null);
+const [draft, setDraft] = useState<PromptChipValue | null>(null);
+// The footer shows the model the draft picks, or the default.
+const model =
+  draft?.chips.findLast((chip) => chip.kind === "model")?.label ?? "Opus";
+
+<PromptChipInput
+  ref={ref}
+  triggers={TRIGGERS}
+  placeholder="Ask anything. @ to mention, / for commands, ~ to pick a model"
+  onValueChange={setDraft}
+  onSubmit={send}
+>
+  <div className="flex items-center justify-between gap-2">
+    <PromptChip
+      chip={{ kind: "model", id: "footer-model", label: model }}
+      className="text-xs"
+    />
+    <SendButton
+      onClick={() => {
+        const value = ref.current?.getValue();
+        if (!value) return;
+        send(value);
+        ref.current?.clear();
+      }}
+    />
+  </div>
+</PromptChipInput>
+```
+
+`SendButton` is your own button. `insertChip` lets a regular menu or button add
+a chip too, which helps users who never discover the `~` trigger:
+
+```tsx
+<button type="button" onClick={() => ref.current?.insertChip("model", opus)}>
+  Use Opus
+</button>
+```
+
+To render sent messages with the same chip styles, map the stored `segments`
+and use the exported `PromptChip` for chip parts:
+
+```tsx
+<p>
+  {segments.map((segment, index) =>
+    segment.type === "text" ? (
+      <span key={index}>{segment.text}</span>
+    ) : (
+      <PromptChip key={index} chip={segment} />
+    ),
+  )}
+</p>
+```
+
+## Add your own chip kinds
+
+`kinds` overrides a preset or adds a new kind. `className` styles the chip, and
+the live capsule shows a lighter wash of the same tint:
+
+```tsx
+<PromptChipInput
+  triggers={[{ char: "#", kind: "tag", items: tags }]}
+  kinds={{
+    tag: {
+      label: "Tag",
+      action: "added",
+      className: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+    },
+  }}
+/>
+```
+
+`label` is read before the chip by screen readers, as in "Tag: design", and
+`action` is announced after a commit. `showTrigger` keeps the trigger visible in
+the chip, as commands do. `icon` accepts `"initials"`, `"sparkle"`, or any
+element for items without their own. Chips carry `data-slot="prompt-chip"` and
+`data-kind` for styling.
+
+## Keyboard, screen readers, and IME
+
+An AI input is used all day, so its keyboard model matters as much as its
+look:
+
+| Input | Action |
+| --- | --- |
+| `↑` / `↓`, `Ctrl+P` / `Ctrl+N` | Move through suggestions |
+| `Tab` / `Enter` / click | Commit the active suggestion as a chip |
+| `Space` | Commit an exact match, otherwise close the list |
+| `Backspace` after a chip | Melt it back into editable text |
+| `Delete` before a chip | Remove it |
+| `Ctrl+Z` / `Ctrl+Shift+Z` | Undo and redo, chips included |
+
+The field is a `textbox` with `aria-multiline` and `aria-autocomplete="list"`,
+named "Message" unless you pass `aria-label` or `aria-labelledby`. While the
+list is open, `aria-activedescendant` points at the active option, so focus
+never leaves the text. Chips read with their kind first, such as "Mention: Ana
+Lima", and a polite live region announces the number of suggestions, commits,
+and melts.
+
+Typing and composition stay native because the capsule and ghost text are
+overlays measured from text ranges. `Enter` never submits while an IME is
+composing. On touch screens the text is 16 px so iOS does not zoom, and tapping
+a suggestion keeps the keyboard open. With reduced motion, capsules and chips
+switch with a short cross-fade instead of the spring and morph.
+
+Sound is off by default. With `sound`, committing a chip plays a soft tick and
+melting one a lower tick. Haptics are on by default and fire only when a chip is
+committed from touch; turn them off with `haptics={false}`.
+
+## When another approach fits better
+
+Use a plain shadcn `Textarea` when prompts never reference people, commands, or
+models. Use a full rich text editor when users need formatting, embeds, or
+collaborative editing. If you already use the AI Elements components listed on
+the shadcn site, compare their Prompt Input and Model Selector first, since a
+composer with a separate model menu may be all you need.
+
+Prompt Chip Input fits when typed references must become structured data while
+the field still feels like plain text. On the output side of the same
+conversation, [Agent Thinking](/components/agent-thinking) shows what the agent
+is doing while it works; the guide to
+[building an AI thinking indicator in React](/blog/how-to-build-ai-thinking-indicator-react)
+covers it in detail. For other specialized interactions, see
+[shadcn missing components](/blog/shadcn-missing-components).
+
+## FAQ
+
+### How do I add @mentions to a React prompt input?
+
+Use a field that turns a trigger plus a query into a chip with an id, rather
+than parsing plain text. With TentUI's Prompt Chip Input, pass a trigger such
+as `{ char: "@", kind: "mention", items: people }` and read the committed chips
+from `onSubmit`.
+
+### How do I add a model picker to an AI chat input?
+
+Add a `model` trigger such as `~` whose items use the display name as `label`
+and the model id as `value`. The chip shows the name and `value.text` contains
+the id, and the `insertChip` handle lets a regular button add the same chip.
+
+### What does the prompt input send to my backend?
+
+`onSubmit` receives `text`, a model-ready string with each chip written as its
+trigger plus its value, `chips`, the list of chips with their kind, id, label,
+and value, and `segments`, the ordered parts you can store as a draft.
+
+### Does Prompt Chip Input need TipTap or Lexical?
+
+No. It is a single `contentEditable` element with its own chip handling, so it
+needs no editor library. Its dependencies are `motion`, `web-haptics`, and
+`@rexa-developer/tiks`.
+
+### Is the prompt input accessible with a keyboard and screen reader?
+
+Yes. Focus stays in the `textbox` while `aria-activedescendant` follows the
+active suggestion, arrow keys and `Tab` or `Enter` pick a suggestion, and chips
+read with their kind, such as "Mention: Ana Lima".
+
+### Is Prompt Chip Input free to use?
+
+Yes. Prompt Chip Input is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in personal and client projects
+under the [TentUI License](/license).

@@ -51,7 +51,8 @@ Every component in `src/registry/components/<slug>` needs a docs page at
   blocks, or nested headings. The section ends at the next `##` heading.
 
 Schema is automatic. `src/lib/faq.ts` parses the FAQ section and the component
-page emits FAQPage JSON-LD for it; pages without one emit none. The page,
+page emits FAQPage JSON-LD for it; pages without one emit none. Blog posts in
+`src/content/blog` use the same `## FAQ` format and get the same JSON-LD. The page,
 `/llms.txt`, and `/llms-full.txt` all read the MDX, so there is nothing else to
 register. Check the format with `pnpm exec tsx src/lib/faq.test.ts`, run from
 `apps/web`.

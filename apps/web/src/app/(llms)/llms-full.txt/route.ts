@@ -1,6 +1,6 @@
 import { SITE_INFO } from "@/config/site";
 import { getAllBlocks } from "@/lib/blocks";
-import { getComponentDocs, getDocs } from "@/lib/documents";
+import { getBlogPosts, getComponentDocs, getDocs } from "@/lib/documents";
 import {
 	getBlockLLMText,
 	getComponentLLMText,
@@ -22,6 +22,7 @@ function frontmatter(values: Record<string, string | undefined>) {
 export async function GET() {
 	const components = getComponentDocs();
 	const docs = getDocs();
+	const posts = getBlogPosts();
 	const blocks = await getAllBlocks();
 	const docsContent = await Promise.all(
 		docs.map(async (item) => {
@@ -47,6 +48,18 @@ export async function GET() {
 			})}\n\n${await getComponentLLMText(item)}`;
 		}),
 	);
+	const postContent = await Promise.all(
+		posts.map(async (item) => {
+			return `${frontmatter({
+				title: item.metadata.title,
+				description: item.metadata.description,
+				author: item.metadata.author,
+				published: getISODate(item.metadata.createdAt),
+				last_updated: getISODate(item.metadata.updatedAt),
+				source: `${SITE_INFO.url}/blog/${item.slug}`,
+			})}\n\n${await getComponentLLMText(item)}`;
+		}),
+	);
 	const blockContent = blocks.map((item) => {
 		return `${frontmatter({
 			title: item.title ?? item.name,
@@ -60,7 +73,7 @@ export async function GET() {
 
 > ${LLMS_SUMMARY}
 
-This document contains the complete TentUI component documentation and block source intended for technical reference and LLM consumption.
+This document contains the complete TentUI component documentation, block source, and blog guides intended for technical reference and LLM consumption.
 
 ## Getting started
 
@@ -73,6 +86,10 @@ ${componentContent.join("\n\n")}
 ## Blocks
 
 ${blockContent.join("\n\n")}
+
+## Blog
+
+${postContent.join("\n\n")}
 `;
 
 	return new Response(content, {

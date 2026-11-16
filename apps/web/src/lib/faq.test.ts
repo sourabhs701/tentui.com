@@ -51,22 +51,29 @@ assert.equal(jsonLd["@type"], "FAQPage");
 assert.equal(jsonLd.mainEntity.length, 2);
 assert.equal(jsonLd.mainEntity[0].acceptedAnswer.text.includes("`"), false);
 
-// Every component FAQ parses: each `###` under it is a question with an answer.
-const docsDirectory = path.join(process.cwd(), "src/content/components");
-for (const file of fs.readdirSync(docsDirectory)) {
-	if (path.extname(file) !== ".mdx") continue;
+// Every component and blog FAQ parses: each `###` under it is a question with
+// an answer.
+for (const directory of ["src/content/components", "src/content/blog"]) {
+	const docsDirectory = path.join(process.cwd(), directory);
+	for (const file of fs.readdirSync(docsDirectory)) {
+		if (path.extname(file) !== ".mdx") continue;
 
-	const { content } = matter(
-		fs.readFileSync(path.join(docsDirectory, file), "utf8"),
-	);
-	const section = content.split(/^## FAQ$/m)[1]?.split(/^## /m)[0];
-	if (section === undefined) continue;
+		const { content } = matter(
+			fs.readFileSync(path.join(docsDirectory, file), "utf8"),
+		);
+		const section = content.split(/^## FAQ$/m)[1]?.split(/^## /m)[0];
+		if (section === undefined) continue;
 
-	const questions = section.match(/^### .+$/gm) ?? [];
-	const items = getFaqItems(content);
-	assert.ok(items.length > 0, `${file}: empty FAQ section`);
-	assert.equal(items.length, questions.length, `${file}: unanswered question`);
-	for (const item of items) {
-		assert.ok(item.question.endsWith("?"), `${file}: "${item.question}"`);
+		const questions = section.match(/^### .+$/gm) ?? [];
+		const items = getFaqItems(content);
+		assert.ok(items.length > 0, `${file}: empty FAQ section`);
+		assert.equal(
+			items.length,
+			questions.length,
+			`${file}: unanswered question`,
+		);
+		for (const item of items) {
+			assert.ok(item.question.endsWith("?"), `${file}: "${item.question}"`);
+		}
 	}
 }

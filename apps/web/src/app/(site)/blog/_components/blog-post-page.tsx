@@ -24,6 +24,7 @@ import { ComponentPageRoot } from "@/components/sidebar/component-page-root";
 import { SITE_INFO } from "@/config/site";
 import type { BlogPost } from "@/lib/documents";
 import { findNeighbour, getBlogPosts } from "@/lib/documents";
+import { faqPageJsonLd, getFaqItems } from "@/lib/faq";
 import {
 	absoluteUrl,
 	breadcrumbJsonLd,
@@ -126,6 +127,7 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
 	const previous = neighbours.next;
 	const next = neighbours.previous;
 	const url = getBlogHref(post.slug);
+	const faq = getFaqItems(post.content);
 
 	return (
 		<ComponentPageRoot className="px-2">
@@ -140,6 +142,9 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
 								{ name: post.metadata.title, href: url },
 							])}
 						/>
+						{faq.length > 0 ? (
+							<JsonLdScript data={faqPageJsonLd(faq, absoluteUrl(url))} />
+						) : null}
 						<DocKeyboardShortcuts
 							previous={previous ? getBlogHref(previous.slug) : null}
 							next={next ? getBlogHref(next.slug) : null}

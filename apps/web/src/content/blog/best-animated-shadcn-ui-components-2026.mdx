@@ -1,0 +1,309 @@
+---
+title: Best Animated shadcn/ui Components in 2026
+description: A guide to TentUI's animated shadcn/ui components by job, from async buttons and pickers to tooltips, lightboxes, text effects, and AI thinking and prompt UI.
+author: Sourabh Soni
+authorImage: https://cdn.tentui.com/srb.avif
+category: Engineering
+createdAt: "2026-11-15"
+updatedAt: "2026-11-15"
+---
+
+The best animated shadcn/ui component is the one whose motion explains a state
+change in your interface: an async action finishing, a selection moving, an
+image opening from where it was, or an agent making progress. For most
+projects that means a short list chosen by job, not a gallery of effects.
+
+This is a guide to TentUI's own catalog, not an independent or paid comparison.
+TentUI is a free and source-available library of animated React components
+installed with the shadcn CLI, and every component below exists in it today.
+If you only need one per job, start with
+[Stateful Button](/components/stateful-button) for async actions,
+[Hold to Confirm](/components/hold-to-confirm) for destructive ones,
+[OTP Field](/components/otp-field) for codes,
+[Animated Tabs](/components/animated-tabs) for segmented views,
+[Fluid Tooltip](/components/fluid-tooltip) for toolbars,
+[Morph Lightbox](/components/morph-lightbox) for image grids, and
+[Agent Thinking](/components/agent-thinking) for AI responses.
+
+The sections below group the rest by the job they do, with the install command
+for each.
+
+## How this list was chosen
+
+Every component here meets four practical tests:
+
+- **The motion carries information.** It shows progress, continuity, or a
+  result, rather than decorating a static element.
+- **It works without a mouse.** The interactive components are built on real
+  buttons, inputs, or accessible roles, and most pages include a keyboard table
+  in their interaction or accessibility section.
+- **It has a reduced-motion path or very little motion.** Check each page's
+  accessibility section for the exact fallback.
+- **You own the source.** The shadcn CLI copies the file into your project, so
+  you can change timing, styles, and behavior.
+
+The official shadcn catalog already includes Tabs, Tooltip, Carousel, Switch,
+Dropdown Menu, Drawer, Input OTP, and more. Use those when you do not need the
+specialized motion. The TentUI components below are for the cases where the
+interaction itself is the point.
+
+## Add the TentUI registry
+
+Add the `@tentui` namespace to the `registries` field of `components.json`:
+
+```json
+{
+  "registries": {
+    "@tentui": "https://tentui.com/r/{name}.json"
+  }
+}
+```
+
+If the file already contains a `registries` object, add the entry alongside the
+existing ones. Then install any component by name:
+
+```bash
+npx shadcn@latest add @tentui/animated-arrow
+```
+
+You can also install an item from its registry URL without configuring the
+namespace:
+
+```bash
+npx shadcn@latest add https://tentui.com/r/animated-arrow.json
+```
+
+The [installation guide](/docs/installation) covers manual setup, and the
+[MCP guide](/docs/mcp) shows how to let an AI coding tool find and add TentUI
+components for you. To review a payload before anything is written, run
+`npx shadcn@latest view @tentui/<name>` first.
+
+## Buttons and confirmation
+
+**[Stateful Button](/components/stateful-button)** keeps loading, success, and
+error feedback inside the button, animating label changes character by
+character. Use it for saves, submits, and other async actions where the user
+should see the outcome without a toast. The
+[shadcn loading button guide](/blog/shadcn-loading-button) explains the state
+model behind it.
+
+**[Hold to Confirm](/components/hold-to-confirm)** guards destructive actions
+behind a press-and-hold fill with a rising tone, haptic ticks, and a
+checkmark. It works with pointer, touch, and keyboard (hold `Space` or `Enter`),
+and fits deletes that are too frequent for a confirmation dialog.
+
+**[Copy Button](/components/copy-button)** animates between idle, success, and
+error icons, with matching sounds and haptics. Use it for install commands, API
+keys, and share links.
+
+**[Glass Toggle](/components/glass-toggle)** is an on/off switch with a frosted
+glass thumb: flip it and a pixel moon scatters and reassembles as a pixel sun.
+It is built from CSS and SVG layers, with no WebGL or canvas, and suits a
+showcase setting such as a theme or lamp control.
+
+**[Animated Arrow](/components/animated-arrow)** slides an arrow on hover and
+keyboard focus with a CSS transition. It is the lightest item here and a good
+default for call-to-action links.
+
+```bash
+npx shadcn@latest add @tentui/stateful-button
+npx shadcn@latest add @tentui/hold-to-confirm
+npx shadcn@latest add @tentui/copy-button
+npx shadcn@latest add @tentui/glass-toggle
+npx shadcn@latest add @tentui/animated-arrow
+```
+
+## Inputs and pickers
+
+**[OTP Field](/components/otp-field)** uses one real input with
+`autocomplete="one-time-code"` behind per-digit slots, so SMS autofill,
+password managers, and paste work natively. Digits lift into place, a paste
+cascades in, and a wrong code shakes and clears. The guide to
+[fixing an OTP input cursor on mobile](/blog/fix-otp-input-cursor-mobile)
+covers why the single-input design matters.
+
+**[Wheel Picker](/components/wheel-picker)** is an iOS-style scroll wheel that
+coasts with inertia, settles on a row, and ticks for every row that passes the
+centre. Use it for durations, times, and short option lists on touch screens.
+
+**[Number Stepper](/components/number-stepper)** rolls its digits in the
+direction you count, accelerates when held, and nudges at its limits. It fits
+quantities, guests, and other bounded numbers.
+
+**[Elastic Slider](/components/elastic-slider)** thickens under your finger and
+stretches like rubber past either end, with detents at `marks`. Use it where a
+slider's limits should be felt as well as seen.
+
+**[Star Rating](/components/star-rating)** takes a tap, a sweep across the row,
+or the arrow keys, supports half stars, and submits through native forms with
+`name`.
+
+**[Ink Filter Bar](/components/ink-filter-bar)** turns filter chips and a
+results count into one capsule: picking a chip floods it with ink from the
+count pill while the number rolls to the new total. Use it above a filtered
+list where the count is the feedback.
+
+```bash
+npx shadcn@latest add @tentui/otp-field
+npx shadcn@latest add @tentui/wheel-picker
+npx shadcn@latest add @tentui/number-stepper
+npx shadcn@latest add @tentui/elastic-slider
+npx shadcn@latest add @tentui/star-rating
+npx shadcn@latest add @tentui/ink-filter-bar
+```
+
+## Navigation, menus, and overlays
+
+**[Animated Tabs](/components/animated-tabs)** moves one shared indicator with a
+Motion layout spring instead of remounting one per option, with arrow-key,
+`Home`, and `End` navigation. It is the simplest way to add continuity to a
+segmented control.
+
+**[Fluid Tooltip](/components/fluid-tooltip)** shares one tooltip across a
+toolbar, rail, or dock. Move between buttons and the same bubble glides and
+crossfades its label instead of closing and reopening.
+
+**[Liquid Glass Menu](/components/liquid-glass-menu)** is a dropdown menu whose
+round trigger flows into a liquid-glass panel. Roles, focus management,
+typeahead, and `Esc` come from the Base UI menu underneath.
+
+**[Snap Sheet](/components/snap-sheet)** is a bottom sheet you drag between snap
+points, with a rubber band past full height and a flick to close. It is built
+on Base UI Dialog for the focus trap, scroll lock, and returned focus.
+
+**[Swipe Actions](/components/swipe-actions)** gives list rows iOS-style swipe
+actions with threshold haptics and a full-swipe snap, plus keyboard support.
+
+**[Dynamic Island](/components/dynamic-island)** morphs one pill between an
+idle state, a compact live activity, and an expanded card. Use it for a timer
+or other background activity that needs a persistent but small surface.
+
+```bash
+npx shadcn@latest add @tentui/animated-tabs
+npx shadcn@latest add @tentui/fluid-tooltip
+npx shadcn@latest add @tentui/liquid-glass-menu
+npx shadcn@latest add @tentui/snap-sheet
+npx shadcn@latest add @tentui/swipe-actions
+npx shadcn@latest add @tentui/dynamic-island
+```
+
+## Media and reveals
+
+**[Morph Lightbox](/components/morph-lightbox)** grows a photo out of the
+thumbnail you clicked, uncrops it to its real aspect ratio, scrolls natively
+between slides, and pulls down to dismiss into the photo you are on. Use it for
+galleries and product images where losing your place is the main problem.
+
+**[Liquid Glass Carousel](/components/liquid-glass-carousel)** melts cards into
+liquid glass at the edges of the frame while the centred card stays crisp.
+Slides are real DOM, and the carousel supports drag, wheel, and the arrow,
+`Home`, `End`, `PageUp`, and `PageDown` keys.
+
+**[Ripple Reveal](/components/ripple-reveal)** hides a balance or other
+sensitive value behind a ripple that starts exactly where you tap, drawn by a
+WebGL shader over live DOM. With reduced motion, or without WebGL, the two faces
+cross-fade instead.
+
+```bash
+npx shadcn@latest add @tentui/morph-lightbox
+npx shadcn@latest add @tentui/liquid-glass-carousel
+npx shadcn@latest add @tentui/ripple-reveal
+```
+
+## Text effects
+
+**[ASCII Decode Text](/components/ascii-decode-text)** shows a headline first
+as ASCII art of its own letter shapes, then decodes it into real, selectable
+type. It suits a hero headline or section title, not body copy.
+
+**[Scribbled Text](/components/scribbled-text)** marks inline text with
+hand-drawn underlines, highlights, and enclosures that draw once as they enter
+the viewport. Use it to emphasise one phrase, not a paragraph.
+
+```bash
+npx shadcn@latest add @tentui/ascii-decode-text
+npx shadcn@latest add @tentui/scribbled-text
+```
+
+## AI interfaces
+
+**[Agent Thinking](/components/agent-thinking)** is an AI thinking indicator in
+which each finished agent step becomes a dot in a growing cluster, a quiet
+timer appears only once the wait matters, and the row opens into a step log. It
+also has shimmer, orb, timeline, and card variants. The guide to
+[building an AI thinking indicator in React](/blog/how-to-build-ai-thinking-indicator-react)
+walks through wiring it to a stream.
+
+**[Prompt Chip Input](/components/prompt-chip-input)** turns typed `@mentions`,
+`/commands`, and `~model` choices into chips in place, and submits structured
+text, chips, and segments, with no editor dependency. See
+[AI prompt input UX in React](/blog/ai-prompt-input-ux-react-chips-mentions)
+for a full composer.
+
+```bash
+npx shadcn@latest add @tentui/agent-thinking
+npx shadcn@latest add @tentui/prompt-chip-input
+```
+
+The catalog also has more playful pieces, such as
+[Bubble Wrap](/components/bubble-wrap), [Pull Cord](/components/pull-cord), and
+[Scratch Card](/components/scratch-card). Browse the full
+[component catalog](/components) for the rest.
+
+## Check these before you ship
+
+Animated components add more than motion. Before merging one, check:
+
+1. **Dependencies.** Most of the components above use `motion`, and many add
+   `web-haptics` and `@rexa-developer/tiks` for haptics and sound. Animated
+   Arrow needs no animation library. Each page lists its exact dependencies.
+2. **Sound.** Several components play short sounds by default, while others,
+   such as Agent Thinking and Prompt Chip Input, keep sound off until you pass
+   `sound`. Read each page's sound and haptics section and set the prop to match
+   your product.
+3. **Reduced motion.** Test with the operating system's reduced-motion setting
+   on, and confirm the state change is still clear.
+4. **Client boundaries.** Interactive components use hooks and browser APIs and
+   start with `"use client"`. In a React Server Components project, pass
+   callbacks such as `onClick` from your own client components.
+5. **Fit.** One expressive component per screen usually reads better than
+   several competing ones.
+
+The guide to
+[adding animations to shadcn components](/blog/how-to-add-animations-to-shadcn-components)
+goes deeper on choosing motion by state change, and
+[Motion that earns its place](/blog/motion-that-earns-its-place) covers when to
+leave it out.
+
+## FAQ
+
+### What are the best animated shadcn/ui components?
+
+The best choice depends on the job. For async actions use a stateful button,
+for destructive actions a hold-to-confirm button, and for segmented views
+animated tabs. TentUI's catalog covers each of these, plus pickers, overlays,
+media, text effects, and AI interface components.
+
+### How do I install animated components into a shadcn project?
+
+Add `"@tentui": "https://tentui.com/r/{name}.json"` to the `registries` field of
+`components.json`, then run `npx shadcn@latest add @tentui/<name>`. The CLI
+copies the source into your project and installs its dependencies.
+
+### Which animation library do TentUI components use?
+
+Most use Motion, the React animation library, and several add `web-haptics` and
+`@rexa-developer/tiks` for haptics and sound. Some use CSS transitions only,
+such as Animated Arrow.
+
+### Do these animated components support reduced motion?
+
+Each component page documents its own reduced-motion behavior. For example,
+Agent Thinking keeps its cluster still and Ripple Reveal cross-fades instead of
+rippling when reduced motion is on.
+
+### Are TentUI components free?
+
+Yes. TentUI components are free and source-available: the shadcn CLI copies the
+source into your project, and you can use them in personal and client projects
+under the [TentUI License](/license).

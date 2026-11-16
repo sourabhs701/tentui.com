@@ -1,0 +1,337 @@
+---
+title: How to Build an AI Thinking Indicator in React
+description: Build a React AI thinking indicator that follows the stream, shows real agent steps, delays the timer, and announces progress, using TentUI's Agent Thinking.
+author: Sourabh Soni
+authorImage: https://cdn.tentui.com/srb.avif
+category: Engineering
+createdAt: "2026-11-15"
+updatedAt: "2026-11-15"
+---
+
+An AI thinking indicator should follow the real state of the response: show
+"thinking" while the model or agent is still working, switch to "done" or
+"error" when the stream ends, and, where you have them, show the steps that
+actually finished instead of a looping spinner. A good one also waits before it
+shows a timer, sums up the run when it ends, and tells screen reader users what
+changed.
+
+In a shadcn/ui project you can install TentUI's
+[Agent Thinking](/components/agent-thinking) component with
+`npx shadcn@latest add @tentui/agent-thinking` and drive it with one prop:
+`<AgentThinking status={isStreaming ? "thinking" : "done"} />`. Pass `steps` as
+well and every finished step becomes a dot in a growing cluster, and the row
+opens into a step log.
+
+The rest of this guide explains what the indicator needs to communicate, how to
+model the state, and how to wire Agent Thinking to a streaming response,
+including its shimmer, orb, timeline, and card variants.
+
+## Why a spinner is not enough
+
+A spinner answers one question: is something happening? For a short request
+that is fine. Agent runs are different. A model may call several tools, read
+documents, and reason for tens of seconds before the first answer token
+arrives. During that wait users want to know three more things:
+
+- **Is it still making progress, or stuck?** A spinner looks the same at second
+  two and second forty.
+- **How long has it been?** A visible clock is useful once a wait is long, and
+  noise when it is short.
+- **What did it do?** After the answer arrives, a summary such as "Thought for
+  14s · 6 steps" and an expandable log let people check the work.
+
+None of this needs fake progress. The useful signal is the work the agent has
+already finished. If your backend streams tool calls or named steps, you can
+show them. If it does not, an honest indeterminate state with a timer is still
+better than a progress bar that invents a percentage.
+
+## Model the state before the animation
+
+Keep the indicator's state as small as the data you really have:
+
+| Data | Where it comes from | What the indicator shows |
+| --- | --- | --- |
+| `status`: `"thinking"`, `"done"`, or `"error"` | Your stream or chat status | Thinking label, done summary, or error label |
+| `steps`: `{ id, label, status?, durationMs? }` | Tool calls or agent steps, in log order | A dot per finished step and a step log |
+| `startedAt` / `endedAt` | Epoch ms from your run record | The elapsed timer and the done summary |
+| `reasoning` | Streamed reasoning text, if your model exposes it | The body of the card variant |
+
+Each step's `status` is `"pending"`, `"active"`, `"done"`, or `"error"`. It
+defaults to `"done"`, so a list of past steps renders as a settled cluster.
+Keying steps by `id` matters: when the list changes, removed steps fade out and
+reordered ones move instead of the whole indicator resetting.
+
+If you are still deciding whether this wait needs motion at all, the standard in
+[Motion that earns its place](/blog/motion-that-earns-its-place) applies here
+too: the motion should explain a change in state, and here the change is
+finished work.
+
+## Install Agent Thinking
+
+TentUI is a free and source-available component library distributed through
+the shadcn CLI. Add the registry to `components.json` once:
+
+```json
+{
+  "registries": {
+    "@tentui": "https://tentui.com/r/{name}.json"
+  }
+}
+```
+
+Then install the component:
+
+```bash
+npx shadcn@latest add @tentui/agent-thinking
+```
+
+The CLI copies `agent-thinking.tsx` into your project. For a manual install,
+add its dependencies and copy the source from the
+[component page](/components/agent-thinking):
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+The file starts with `"use client"`, because it uses state, effects, and a
+`requestAnimationFrame` loop. Render it from a client component, which is
+usually where your chat state lives anyway. The
+[installation guide](/docs/installation) covers direct registry URLs and manual
+setup.
+
+## The smallest useful indicator
+
+Import the component:
+
+```tsx
+import { AgentThinking } from "@/components/agent-thinking";
+```
+
+Without steps it is a status indicator: three seed dots, a seeking dot that
+circles them, the label, and a timer.
+
+```tsx
+<AgentThinking status={isStreaming ? "thinking" : "done"} />
+```
+
+That one prop already covers several details:
+
+- The label reads "Thinking" by default.
+- The elapsed timer stays hidden until `timerDelay`, 1500 ms by default, so most
+  quick answers never show a clock.
+- When `status` leaves `"thinking"`, the label cross-fades to a summary such as
+  "Thought for 2s".
+- Without steps, the row is a plain status element rather than a button.
+
+## Show real progress with steps
+
+Pass `steps` in log order. Steps that are `"done"` or `"error"` become dots in
+the cluster, and the first `"active"` step is the seeking dot:
+
+```tsx
+<AgentThinking
+  status="thinking"
+  steps={[
+    { id: "read", label: "Reading the question", durationMs: 1000 },
+    { id: "search", label: "Searching the docs", durationMs: 1200 },
+    { id: "compare", label: "Comparing 3 sources", status: "active" },
+  ]}
+/>
+```
+
+When a step finishes, its dot springs into its slot in a sunflower
+(golden-angle) cluster, so a two-step answer looks small and a long run looks
+dense. With steps, the whole row becomes a button that opens the step log, and
+the dots fly out to become the bullets of the log.
+
+Past `maxDots`, 24 by default, the existing dots thicken instead of adding more,
+so the mark keeps its size during very long runs.
+
+## Connect it to the AI SDK
+
+If you use the AI SDK, the component's documentation maps the tool calls of the
+assistant message to steps and the chat status to `status`:
+
+```tsx
+import { getToolName, isToolUIPart } from "ai";
+
+const steps = message.parts.filter(isToolUIPart).map((part) => ({
+  id: part.toolCallId,
+  label: toolLabels[getToolName(part)],
+  status:
+    part.state === "output-available"
+      ? "done"
+      : part.state === "output-error"
+        ? "error"
+        : "active",
+}));
+
+<AgentThinking
+  status={status === "error" ? "error" : isLastMessageStreaming ? "thinking" : "done"}
+  steps={steps}
+/>;
+```
+
+Three values in that snippet are yours to provide. `message` is the assistant
+message being rendered. `toolLabels` is your own map from tool names to short,
+human-readable labels such as "Searching the docs". `isLastMessageStreaming` is
+whatever tells you that this message is the one still streaming, so older
+messages render as settled summaries.
+
+The same pattern works without the AI SDK. Any stream that tells you when a
+step starts and when it ends can produce the same `{ id, label, status }`
+objects.
+
+## Timer and labels
+
+The timer counts from `startedAt`, or from mount when you do not pass it. When
+`status` leaves `"thinking"`, the run ends at `endedAt`, or at that moment.
+Without a start time, for example a message that was already done when it
+mounted, the component adds up the step durations instead.
+
+```tsx
+<AgentThinking
+  status={status}
+  steps={steps}
+  startedAt={run.startedAt}
+  endedAt={run.endedAt}
+  label="Researching"
+  doneLabel={({ steps }) => `Read ${steps} sources`}
+  errorLabel="Stopped"
+/>
+```
+
+Store `startedAt` and `endedAt` with the message if you render a conversation
+history. Otherwise a reload would measure from mount and report the wrong
+duration.
+
+`doneLabel` accepts a string or a function that receives `elapsedMs` and the
+number of finished `steps`. `errorLabel` defaults to "Stopped". Times read as
+"4s", "59s", "1m 05s", and "1h 02m". Set `status="thinking"` again for a
+follow-up and the cluster wakes up, with the timer continuing or starting over
+from a new `startedAt`.
+
+## Choose a variant
+
+`variant` changes the look while the steps, timer, labels, sound, and
+announcements stay the same:
+
+| Variant | What it looks like | Good fit |
+| --- | --- | --- |
+| `"plain"` (default) | The dot cluster and a label | Above an assistant message |
+| `"pill"` | The cluster on a soft rounded background | Dense layouts that need a contained row |
+| `"shimmer"` | A line of text that reads the active step | Minimal chat UIs |
+| `"orb"` | A compact mark | Inside a chat bubble before the answer arrives |
+| `"timeline"` | A streaming step list, open by default | Agent dashboards and long tool runs |
+| `"card"` | A reasoning card that collapses into its summary | Models that stream reasoning text |
+
+The card variant shows `reasoning` in its body. Until someone toggles it, the
+card is open while thinking and closes when the run is done:
+
+```tsx
+<AgentThinking
+  variant="card"
+  status={status}
+  steps={steps}
+  startedAt={run.startedAt}
+  endedAt={run.endedAt}
+  reasoning={reasoningText}
+/>
+```
+
+Two details are worth knowing. The `orb` variant never opens a log, even with
+steps. The step count in the done label ("· 6 steps") appears only for the dot
+cluster and the timeline, where the steps are not already visible as text.
+
+For layout, `size="sm"` makes a smaller mark. The dots use `currentColor`, so a
+text color class colors the mark. The log is uncontrolled with `defaultOpen` or
+controlled with `open` and `onOpenChange`, and the root exposes `data-status`
+and `data-open` for styling.
+
+## Accessibility and reduced motion
+
+A thinking indicator changes without user input, so it must not rely on
+movement alone. Agent Thinking handles this in the component source:
+
+- A polite live region announces the label once when thinking starts, finished
+  steps such as "Searching the docs, done" (grouped within a second), and the
+  done message, such as "Thought for 14 seconds, 5 steps".
+- The dots and the ticking timer are hidden from screen readers, so assistive
+  technology does not read a number every second.
+- With steps, the row is a `button` with `aria-expanded` and `aria-controls`
+  pointing at an ordered list. Each step reads its state: done, in progress,
+  pending, or failed.
+- `Enter` or `Space` opens and closes the log, and `Esc` closes it when focus is
+  inside.
+- With reduced motion, or `animated={false}`, the cluster is still, the seeking
+  dot rests and gently pulses, and steps fade in place instead of flying. The
+  timer still ticks.
+
+Failed steps are tinted red and read out as failed, so color is not the only
+signal.
+
+## Sound, haptics, and cost
+
+Sound is off by default. With `sound`, a landed step plays a very soft tick, at
+most one every 60 ms, and finishing plays a brighter one. On touch devices,
+haptics are on by default: a light tick per landed step and a success pattern
+when done. Turn them off with `haptics={false}`. Nothing plays on mount, for
+steps that were already done, or in a hidden tab.
+
+All movement runs in one `requestAnimationFrame` loop that only runs while the
+agent is thinking on screen in a visible tab, and stops once the settle comes to
+rest. A long conversation full of finished messages does not keep animating.
+
+## When another approach fits better
+
+If your stream exposes no steps and no reasoning, you only need the status
+form, and a simple text label may be enough. If your app already uses the AI
+Elements components listed on the shadcn site, compare their Reasoning and
+Chain of Thought components before adding another one. Agent Thinking is the
+better fit when you want finished work to be the visual, a delayed timer, and
+a step log in one compact row.
+
+The input side of the same conversation has its own problems. The guide to
+[AI prompt input UX in React](/blog/ai-prompt-input-ux-react-chips-mentions)
+covers mentions, commands, and model chips with
+[Prompt Chip Input](/components/prompt-chip-input). For more on animating
+shadcn components accessibly, see
+[How to add animations to shadcn components](/blog/how-to-add-animations-to-shadcn-components).
+
+## FAQ
+
+### How do I show an AI thinking indicator while a response streams?
+
+Render a status element whose state follows the stream: `"thinking"` while the
+request is in flight, then `"done"` or `"error"` when it ends. With TentUI,
+install Agent Thinking and pass `status={isStreaming ? "thinking" : "done"}`.
+
+### How do I show agent steps or tool calls in React?
+
+Map each tool call or agent step to an object with an `id`, a `label`, and a
+`status`, in log order, and pass the list as `steps`. Agent Thinking turns each
+finished step into a dot and treats the first `"active"` step as the one in
+progress.
+
+### When should the elapsed timer appear?
+
+Only once the wait matters. Agent Thinking hides the timer until `timerDelay`,
+1500 ms by default, so short answers never show a clock, and it summarizes the
+run as "Thought for 14s · 6 steps" when it ends.
+
+### Is the thinking indicator accessible to screen reader users?
+
+Yes. A polite live region announces when thinking starts, finished steps, and
+the done message, while the dots and timer stay hidden from screen readers.
+With steps the row is a real button with `aria-expanded`.
+
+### Does Agent Thinking respect reduced motion?
+
+Yes. With the reduced-motion preference or `animated={false}`, the cluster is
+still and steps fade in place instead of flying, while the timer keeps ticking.
+
+### Is Agent Thinking free to use?
+
+Yes. Agent Thinking is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in personal and client projects
+under the [TentUI License](/license).
