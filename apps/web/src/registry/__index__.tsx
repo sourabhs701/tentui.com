@@ -291,7 +291,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["feedback"],
-		meta: {"createdAt":"2026-11-14","image":"https://cdn.tentui.com/images/components/agent-thinking?v=2","video":"https://cdn.tentui.com/videos/components/agent-thinking?v=2"},
+		meta: {"createdAt":"2026-11-14","image":"https://cdn.tentui.com/images/components/agent-thinking?v=3","video":"https://cdn.tentui.com/videos/components/agent-thinking?v=3"},
 	},
 	"liquid-glass-carousel": {
 		name: "liquid-glass-carousel",

@@ -484,8 +484,8 @@
     ],
     "meta": {
       "createdAt": "2026-11-14",
-      "image": "https://cdn.tentui.com/images/components/agent-thinking?v=2",
-      "video": "https://cdn.tentui.com/videos/components/agent-thinking?v=2"
+      "image": "https://cdn.tentui.com/images/components/agent-thinking?v=3",
+      "video": "https://cdn.tentui.com/videos/components/agent-thinking?v=3"
     },
     "dependencies": [
       "@rexa-developer/tiks",
