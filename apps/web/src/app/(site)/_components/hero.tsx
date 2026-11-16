@@ -47,7 +47,7 @@ const CAROUSEL_ITEMS = [
 const CARD_WIDTH = { mobile: 300, desktop: 360 } as const;
 const CARD_GAP = 20;
 
-export function Hero() {
+export function Hero({ blockCount }: { blockCount: number }) {
 	const reduceMotion = useReducedMotion();
 	const [isDragging, setIsDragging] = useState(false);
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -91,13 +91,19 @@ export function Hero() {
 				{/* A CSS entrance, not motion's initial state: the copy is the LCP
 				    element, and opacity 0 until hydration would delay it by seconds. */}
 				<div className="motion-safe:fade-in-25 motion-safe:slide-in-from-bottom-5 max-w-4xl motion-safe:animate-in motion-safe:duration-600 motion-safe:ease-out">
+					<p className="mb-4 font-medium text-muted-foreground sm:text-lg">
+						Landing pages that feel hand crafted.
+					</p>
 					<h1 className="font-medium text-5xl text-foreground leading-[1.05] tracking-tight sm:text-[5rem]">
-						Landing pages that feel <br className="hidden sm:block" />
-						hand crafted.
+						Animated components <br className="hidden sm:block" />
+						for shadcn/ui.
 					</h1>
 					<p className="mt-6 mb-10 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-						Production-ready components and blocks to give your site a polished,
-						designer-built feel. Copy, paste, customize.
+						TentUI is a free, source-available library of {components.length}{" "}
+						animated React and Next.js components and {blockCount} landing-page
+						blocks, built with Tailwind CSS for developers shipping production
+						UIs with shadcn/ui. Add any of them with the shadcn CLI, then
+						customize the source.
 					</p>
 					<div className="flex flex-col gap-5 sm:flex-row sm:gap-3">
 						<SoftButton href="/components">Browse Components</SoftButton>

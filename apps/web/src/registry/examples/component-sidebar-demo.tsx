@@ -12,25 +12,25 @@ const GROUPS = [
 	{
 		title: "Getting started",
 		items: [
-			{ title: "Overview", href: "/overview" },
-			{ title: "Installation", href: "/installation" },
-			{ title: "Changelog", href: "/changelog", isNew: true },
+			{ title: "Overview", href: "#overview" },
+			{ title: "Installation", href: "#installation" },
+			{ title: "Changelog", href: "#changelog", isNew: true },
 		],
 		newCount: 1,
 	},
 	{
 		title: "Components",
 		items: [
-			{ title: "Button", href: "/button", isUpdated: true },
-			{ title: "Dialog", href: "/dialog" },
-			{ title: "Tooltip", href: "/tooltip" },
-			{ title: "Tabs", href: "/tabs" },
+			{ title: "Button", href: "#button", isUpdated: true },
+			{ title: "Dialog", href: "#dialog" },
+			{ title: "Tooltip", href: "#tooltip" },
+			{ title: "Tabs", href: "#tabs" },
 		],
 	},
 ];
 
 export default function ComponentSidebarDemo() {
-	const [activeHref, setActiveHref] = useState("/overview");
+	const [activeHref, setActiveHref] = useState("#overview");
 
 	const renderLink = useCallback(
 		({ href, onClick, ...props }: ComponentSidebarLinkProps) => (

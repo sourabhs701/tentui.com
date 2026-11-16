@@ -10,6 +10,12 @@ import { cn } from "@/lib/utils";
 
 const themes = ["light", "dark"] as const;
 
+// Stills are exported from the 480×360 capture frame (COMPONENT_CAPTURE_FRAME,
+// not imported here to keep the registry out of client bundles). Explicit
+// dimensions give the img its 4:3 ratio; the classes still size it to the card.
+const STILL_WIDTH = 480;
+const STILL_HEIGHT = 360;
+
 /**
  * `<base>-<theme>.<ext>`, keeping any query on the base (e.g. `?v=2` to
  * bust caches after re-recording) at the end of the URL.
@@ -42,7 +48,8 @@ export function ComponentPreviewImage({
 			key={theme}
 			src={themedMediaUrl(image, theme, "webp")}
 			alt={`${component.title ?? component.name} ${theme} preview`}
-			fill
+			width={STILL_WIDTH}
+			height={STILL_HEIGHT}
 			sizes={sizes}
 			className={cn(
 				"absolute inset-0 size-full object-cover",

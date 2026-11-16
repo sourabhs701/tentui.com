@@ -29,11 +29,11 @@ export async function generateMetadata({
 	const ogImage = `/og/simple?title=${encodeURIComponent(item.title)}&description=${encodeURIComponent(item.description)}`;
 
 	return {
-		title: item.title,
+		title: item.seoTitle,
 		description: item.description,
 		alternates: { canonical: url },
 		openGraph: {
-			title: item.title,
+			title: item.seoTitle,
 			description: item.description,
 			url: absoluteUrl(url),
 			type: "website",
@@ -48,7 +48,7 @@ export async function generateMetadata({
 		},
 		twitter: {
 			card: "summary_large_image",
-			title: item.title,
+			title: item.seoTitle,
 			description: item.description,
 			images: [absoluteUrl(ogImage)],
 		},

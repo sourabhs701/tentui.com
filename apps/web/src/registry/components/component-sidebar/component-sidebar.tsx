@@ -326,7 +326,9 @@ export function ComponentSidebarContent({
 						}
 						key={`${group.title}-${groupIndex}`}
 					>
-						<h4 className="mb-2.5 flex w-full items-center justify-between gap-2 pr-3 font-semibold text-[12px] text-foreground/70 uppercase tracking-widest">
+						{/* A label, not a heading: the sidebar usually renders before the
+						    page's h1, and a fixed level would break its outline. */}
+						<div className="mb-2.5 flex w-full items-center justify-between gap-2 pr-3 font-semibold text-[12px] text-foreground/70 uppercase tracking-widest">
 							<span>{group.title}</span>
 							{group.newCount ? (
 								<Badge
@@ -336,7 +338,7 @@ export function ComponentSidebarContent({
 									New {group.newCount}
 								</Badge>
 							) : null}
-						</h4>
+						</div>
 
 						<div className="flex flex-col gap-2 py-2">
 							{group.items.map((item, itemIndex) => (
