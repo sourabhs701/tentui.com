@@ -291,7 +291,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["inputs"],
-		meta: {"createdAt":"2026-11-15"},
+		meta: {"createdAt":"2026-11-15","image":"https://cdn.tentui.com/images/components/upload-chip?v=1","video":"https://cdn.tentui.com/videos/components/upload-chip?v=1"},
 	},
 	"agent-thinking": {
 		name: "agent-thinking",
