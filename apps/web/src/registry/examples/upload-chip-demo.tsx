@@ -8,6 +8,7 @@ import {
 	useState,
 } from "react";
 
+import { cn } from "@/lib/utils";
 import {
 	UploadChip,
 	type UploadChipFile,
@@ -245,38 +246,103 @@ function Stalled() {
 	);
 }
 
-const SIZE_FILES: UploadChipFile[] = [
+const SIZE_ROWS = [
 	{
-		id: "size-1",
-		name: "invoice-0412.pdf",
-		size: 182_000,
-		type: "application/pdf",
+		size: "sm",
+		file: {
+			id: "size-sm",
+			name: "invoice-0412.pdf",
+			size: 182_000,
+			type: "application/pdf",
+			status: "done",
+		},
+	},
+	{
+		size: "md",
+		file: {
+			id: "size-md",
+			name: "cover-art.png",
+			size: 640_000,
+			type: "image/png",
+			status: "done",
+		},
+	},
+	{
+		size: "lg",
+		file: {
+			id: "size-lg",
+			name: "theme-song.mp3",
+			size: 6_800_000,
+			type: "audio/mpeg",
+			status: "done",
+		},
+	},
+] as const satisfies ReadonlyArray<{
+	size: "sm" | "md" | "lg";
+	file: UploadChipFile;
+}>;
+
+const INLINE_FILES: UploadChipFile[] = [
+	{
+		id: "inline-1",
+		name: "contract.docx",
+		size: 96_000,
+		type: "application/msword",
 		status: "done",
 	},
 	{
-		id: "size-2",
-		name: "cover.png",
-		size: 640_000,
-		type: "image/png",
+		id: "inline-2",
+		name: "floor-plan.jpg",
+		size: 2_300_000,
+		type: "image/jpeg",
 		status: "done",
 	},
 	{
-		id: "size-3",
-		name: "theme-song.mp3",
-		size: 6_800_000,
-		type: "audio/mpeg",
+		id: "inline-3",
+		name: "voice-memo.m4a",
+		size: 1_100_000,
+		type: "audio/mp4",
 		status: "idle",
 	},
 ];
 
-function Sizes() {
+function Row({
+	label,
+	top = false,
+	children,
+}: {
+	label: string;
+	/** Pins the label to the first line, for a row that wraps. */
+	top?: boolean;
+	children: ReactNode;
+}) {
 	return (
-		<div className="flex w-full flex-col items-center gap-4">
-			<div className="flex flex-wrap items-center justify-center gap-4">
-				<UploadChip size="sm" files={SIZE_FILES.slice(0, 1)} />
-				<UploadChip size="md" files={SIZE_FILES.slice(0, 1)} />
-			</div>
-			<UploadChip stack={false} files={SIZE_FILES} />
+		<>
+			<span
+				className={cn(
+					"font-mono text-[11px] text-muted-foreground",
+					top && "self-start leading-8",
+				)}
+			>
+				{label}
+			</span>
+			<div className="flex min-w-0">{children}</div>
+		</>
+	);
+}
+
+function Sizes() {
+	// One file per row and no attach button, so only the size differs.
+	return (
+		<div className="grid w-full max-w-md grid-cols-[auto_minmax(0,1fr)] items-center gap-x-5 gap-y-4 px-2">
+			{SIZE_ROWS.map(({ size, file }) => (
+				<Row key={size} label={size}>
+					<UploadChip size={size} multiple={false} files={[file]} />
+				</Row>
+			))}
+			<Row label="inline" top>
+				<UploadChip stack={false} maxFiles={3} files={INLINE_FILES} />
+			</Row>
 		</div>
 	);
 }

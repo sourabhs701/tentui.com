@@ -4,7 +4,7 @@ description: A React file upload chip for shadcn/ui where the Attach button beco
 seoTitle: "React File Upload Chip Component for shadcn/ui"
 seoDescription: Upload Chip is a React file upload chip for shadcn/ui. The Attach pill morphs into the file chip, fills with a liquid meniscus as progress arrives, rolls a tabular percent, and stacks extra files into a fan-out deck.
 createdAt: 2026-11-15
-updatedAt: 2026-11-15
+updatedAt: 2026-11-16
 ---
 
 <ComponentPreview name="upload-chip-preview" />
@@ -22,23 +22,26 @@ updatedAt: 2026-11-15
   up. The leading edge is a soft meniscus that ripples while progress moves
   and goes flat when it stops, and the fill springs toward each report, so
   jumpy progress still flows.
-- The percent rolls like an odometer in tabular digits, in a slot as wide as
-  "100%", so the chip never jitters.
+- The percent rolls in tabular digits: each changed digit lifts out as the
+  new one settles in, clipped to one line on a shared baseline, in a slot as
+  wide as "100%", so the chip never jitters.
 - At 100% the file-type icon (document, image thumbnail, audio, archive, or a
   plain file) turns into a drawn check, the fill fades out, and the chip
   settles to "name · 2.4 MB".
 - On error the fill drains back, the chip shakes once, the icon becomes an
   alert, and the meta turns into a real Retry button.
 - With no progress for 2 s, the percent dims and the chip says "Waiting".
-  Without a progress value at all, a band of liquid travels back and forth.
+  Without a progress value at all, a soft sheen sweeps behind the text and
+  the chip says "Uploading".
 - Extra files tuck behind the first chip as offset edges with a "+2" counter.
   Hover or focus fans the deck out into separate chips, each with its own
   fill; it folds back 400 ms after you leave, or on `Esc`.
 - Drag files anywhere over the page and the pill wakes up with "Drop to
   attach". Dragging over it pulls it a few pixels toward the pointer.
 - Long names are cut in the middle, so the extension stays: "quarterly-rep…ort.pdf".
-- Nothing runs at rest: the wave, the band, and the springs only animate
-  while something moves, and pause off screen.
+- Nothing runs at rest: the wave, the digits, and the springs only animate
+  while something moves, and pause off screen. The sheen is a CSS animation,
+  so it needs no JavaScript frames.
 
 ## Installation
 
@@ -121,7 +124,8 @@ function upload(file: File) {
 
 Pass `onCancel` to abort an upload from its remove button while it runs, and
 `onRetry` to show a Retry button on failed chips. Leave `progress` out while
-the size isn't known yet; the chip shows a travelling band and "Uploading".
+the size isn't known yet; the chip shows a soft travelling sheen and
+"Uploading".
 
 ```tsx
 <UploadChip
@@ -149,8 +153,9 @@ const composer = useRef<HTMLDivElement>(null);
 </div>
 ```
 
-Use `size="sm"` for a 28 px chip, and `stack={false}` to lay chips side by
-side, wrapping, instead of in a deck.
+Use `size="sm"` for a 28 px chip or `size="lg"` for a 40 px one (the default
+`md` is 32 px), and `stack={false}` to lay chips side by side, wrapping,
+instead of in a deck.
 
 ## Interaction
 
@@ -193,7 +198,8 @@ reads left to right.
 
 With reduced motion, or `animated={false}`, the meniscus stays flat, nothing
 shakes or leans toward the pointer, the deck fans out without springs, widths
-and fills change at once, and the check appears without being drawn.
+and fills change at once, the percent changes without rolling, the sheen
+rests as an even wash, and the check appears without being drawn.
 
 ## API reference
 

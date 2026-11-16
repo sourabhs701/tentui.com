@@ -7815,14 +7815,14 @@
 				},
 				{
 					"name": "size",
-					"description": "",
+					"description": "`sm` is 28 px tall, `md` 32 px, and `lg` 40 px.",
 					"tags": [
 						{
 							"name": "component-prop",
 							"text": ""
 						}
 					],
-					"type": "\"sm\" | \"md\" | undefined",
+					"type": "\"sm\" | \"md\" | \"lg\" | undefined",
 					"simplifiedType": "union",
 					"required": false,
 					"deprecated": false

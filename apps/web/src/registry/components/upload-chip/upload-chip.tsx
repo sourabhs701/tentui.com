@@ -34,9 +34,14 @@ import { cn } from "@/lib/utils";
 
 // Layout, in px. Chips are pills of one height; a deck tucks the extra files
 // behind the first chip as offset edges.
-const HEIGHT = { sm: 28, md: 32 } as const;
+const HEIGHT = { sm: 28, md: 32, lg: 40 } as const;
+/** The file icon's size, per chip size. */
+const ICON = { sm: 14, md: 16, lg: 18 } as const;
+type Size = keyof typeof HEIGHT;
 /** Gap between fanned chips, and before the attach button. */
 const GAP = 6;
+/** Room between a deck's last edge and its "+2" count. */
+const COUNT_GAP = 8;
 /** How far each tucked chip peeks out past the one in front. */
 const EDGE = 4;
 /** Tucked chips shrink a little per layer, from their far edge. */
@@ -67,9 +72,6 @@ const MAX_LEAN = 1.5;
 const REACH = (WAVE_AMPLITUDE + MAX_LEAN) * 2;
 /** The wave's travel speed, in cycles per second. */
 const WAVE_SPEED = 1.3;
-/** An indeterminate band is this share of the chip and crosses in this long. */
-const BAND_WIDTH = 0.3;
-const BAND_PERIOD = 1500;
 /** On error the fill drains back to empty. */
 const DRAIN_DURATION = 300;
 /** No progress for this long and the chip says it's waiting. */
@@ -80,8 +82,13 @@ const NOTE_DURATION = 1600;
 const LEAVE_DURATION = 180;
 /** Max drag pull toward the pointer, in px. */
 const MAGNET_MAX = 4;
-/** Time constant of the percent digits rolling to a new number, in ms. */
-const DIGIT_EASE = 55;
+/** How long a percent digit takes to roll to its new value, in ms. */
+const DIGIT_ROLL = 160;
+/**
+ * How far a rolling digit travels, as a share of the line. Short enough that
+ * no glyph reaches the clip, so a roll never shows half a digit.
+ */
+const DIGIT_TRAVEL = 0.4;
 /** Ms of quiet before the live region speaks. */
 const ANNOUNCE_DELAY = 350;
 /** Two cues closer than this play once. */
@@ -126,11 +133,18 @@ const STYLES =
 	"[data-slot=upload-chip] [data-fade-in]{animation:upload-chip-in .2s ease-out both}" +
 	"[data-slot=upload-chip] [data-ghost]{animation:upload-chip-out .12s ease-out both}" +
 	"[data-slot=upload-chip] [data-entering]{animation:upload-chip-enter .2s ease-out both}" +
+	// While the size is unknown a soft sheen sweeps across behind the text,
+	// rests a moment off the far end, and goes again.
+	"@keyframes upload-chip-sheen{from{transform:translateX(-100%)}70%,to{transform:translateX(100%)}}" +
+	"[data-slot=upload-chip] [data-sheen]{animation:upload-chip-sheen 2.2s cubic-bezier(.45,0,.4,1) infinite}" +
+	"[data-slot=upload-chip] [data-offscreen] [data-sheen]{animation-play-state:paused}" +
 	// Once measured, chips are placed by the layout loop. Before that (the
 	// server render) they sit side by side in the list's own flow.
 	"[data-slot=upload-chip-list][data-ready]>li{position:absolute;top:0;inset-inline-start:0}" +
 	"[data-slot=upload-chip][data-static] *{animation-duration:.12s!important;animation-delay:0s!important}" +
-	"[data-slot=upload-chip][data-static] [data-check]{transition:none!important}";
+	"[data-slot=upload-chip][data-static] [data-check]{transition:none!important}" +
+	// Without motion the sheen rests as an even wash.
+	"[data-slot=upload-chip][data-static] [data-sheen]{animation:none!important;transform:none;background:currentColor!important;opacity:.5}";
 
 export interface UploadChipFile {
 	id: string;
@@ -171,7 +185,8 @@ export interface UploadChipProps
 	label?: string;
 	/** The attach button's label while files are dragged over the page. */
 	dropLabel?: string;
-	size?: "sm" | "md";
+	/** `sm` is 28 px tall, `md` 32 px, and `lg` 40 px. */
+	size?: Size;
 	/** Tuck extra files into a deck that fans out on hover or focus. `false` lays chips side by side. */
 	stack?: boolean;
 	/** An element that also accepts dropped files, such as a whole composer. */
@@ -423,14 +438,12 @@ function wavePath(
 	return [`M0 0L${top}${curve}L0 ${r(height)}Z`, `M${top}${curve}`];
 }
 
-/** One edge of the fill, a `REACH`-wide strip that rides on `--f0` or `--f1`. */
+/** The fill's leading edge, a `REACH`-wide strip that rides on `--level`. */
 function EdgeStrip({
-	side,
 	height,
 	pathRef,
 	line = false,
 }: {
-	side: "start" | "end";
 	height: number;
 	pathRef: RefObject<SVGPathElement | null>;
 	line?: boolean;
@@ -438,20 +451,13 @@ function EdgeStrip({
 	return (
 		<svg
 			aria-hidden="true"
-			className={cn(
-				"absolute top-0 h-full overflow-visible",
-				side === "start" && "-scale-x-100",
-			)}
+			className="absolute top-0 h-full overflow-visible"
 			width={REACH}
 			viewBox={`0 0 ${REACH} ${height}`}
 			preserveAspectRatio="none"
-			style={
-				side === "start"
-					? { left: `calc(var(--f0) * (100% + ${REACH}px) - ${REACH}px)` }
-					: {
-							right: `calc((1 - var(--f1)) * (100% + ${REACH}px) - ${REACH}px)`,
-						}
-			}
+			style={{
+				right: `calc((1 - var(--level)) * (100% + ${REACH}px) - ${REACH}px)`,
+			}}
 		>
 			<path
 				ref={pathRef}
@@ -470,26 +476,59 @@ function percentOf(status: Phase, determinate: boolean, progress: number) {
 	return determinate ? Math.round(progress * 100) : 0;
 }
 
-/** Points each digit place at the number `n`, rolling the short way round. */
+/** One percent place rolling from one digit to the next; -1 is blank. */
+interface DigitRoll {
+	from: number;
+	to: number;
+	/** 0 to 1 through the roll. */
+	t: number;
+	/** 1 rolls up, for a rising number; -1 rolls down. */
+	dir: number;
+}
+
+/**
+ * Points each place at the number `n`. A changed place rolls straight to its
+ * new digit, up for a rise and down for a fall; leading places are blank.
+ */
 function rollTo(
-	e: { shown: number[]; goal: number[]; n: number },
+	e: { digits: DigitRoll[]; n: number },
 	n: number,
 	instant: boolean,
 ) {
 	if (n === e.n && !instant) return;
-	const digits = [Math.floor(n / 100) % 10, Math.floor(n / 10) % 10, n % 10];
-	for (let place = 0; place < 3; place++) {
-		const current = ((Math.round(e.goal[place]) % 10) + 10) % 10;
-		const step =
-			e.n < 0 || instant
-				? digits[place] - current
-				: n >= e.n
-					? (digits[place] - current + 10) % 10
-					: -((current - digits[place] + 10) % 10);
-		e.goal[place] = Math.round(e.goal[place]) + step;
-		if (instant || e.n < 0) e.shown[place] = e.goal[place];
+	const next = [
+		n >= 100 ? Math.floor(n / 100) % 10 : -1,
+		n >= 10 ? Math.floor(n / 10) % 10 : -1,
+		n % 10,
+	];
+	const dir = n >= e.n ? 1 : -1;
+	for (const [place, d] of e.digits.entries()) {
+		if (instant || e.n < 0) {
+			d.from = next[place];
+			d.to = next[place];
+			d.t = 1;
+		} else if (d.to !== next[place]) {
+			// From whichever digit reads more right now.
+			d.from = d.t < 0.5 ? d.from : d.to;
+			d.to = next[place];
+			d.t = 0;
+			d.dir = dir;
+		}
 	}
 	e.n = n;
+}
+
+/** Shows `digit` (blank below 0) shifted by `y` lines, at `opacity`. */
+function writeDigit(
+	node: HTMLSpanElement,
+	digit: number,
+	y: number,
+	opacity: number,
+) {
+	const text = digit < 0 ? "" : String(digit);
+	if (node.textContent !== text) node.textContent = text;
+	node.style.transform = `translateY(${(y * 100).toFixed(2)}%)`;
+	node.style.opacity = opacity.toFixed(3);
 }
 
 let measureContext: CanvasRenderingContext2D | null = null;
@@ -638,7 +677,12 @@ function ChipIcon({
 	);
 }
 
-/** Percent in three tabular places that roll like an odometer. */
+/**
+ * Percent in three tabular places, as wide as "100%", so the chip never
+ * jitters as the number grows. Each place is clipped to one line and
+ * holds an in-flow "0" for its width and baseline, so a rolling digit sits on
+ * the same baseline as the rest and nothing shows past the line.
+ */
 function PercentDigits({
 	digitsRef,
 	dim,
@@ -652,29 +696,22 @@ function PercentDigits({
 			aria-hidden="true"
 			dir="ltr"
 			className={cn(
-				"inline-flex shrink-0 justify-end tabular-nums transition-opacity duration-200",
+				"inline-flex shrink-0 tabular-nums transition-opacity duration-200",
 				dim && "opacity-50",
 			)}
 		>
 			{[0, 1, 2].map((place) => (
-				<span
-					key={place}
-					className="relative inline-block h-[1lh] overflow-hidden transition-opacity duration-150 [mask-image:linear-gradient(transparent,#000_22%,#000_78%,transparent)]"
-					ref={(node) => {
-						digitsRef.current[place * 2] = node;
-					}}
-				>
-					<span
-						className="flex flex-col"
-						ref={(node) => {
-							digitsRef.current[place * 2 + 1] = node;
-						}}
-					>
-						{/* 0 to 9 and 0 again, so 9 rolls on into 0 */}
-						{Array.from({ length: 11 }, (_, index) => (
-							<span key={index} className="block h-[1lh] text-center">
-								{index % 10}
-							</span>
+				<span key={place} className="relative">
+					<span className="invisible">0</span>
+					<span className="absolute inset-0 overflow-hidden [mask-image:linear-gradient(transparent,#000_18%,#000_82%,transparent)]">
+						{[0, 1].map((slot) => (
+							<span
+								key={slot}
+								className="absolute inset-0 text-center will-change-transform"
+								ref={(node) => {
+									digitsRef.current[place * 2 + slot] = node;
+								}}
+							/>
 						))}
 					</span>
 				</span>
@@ -686,7 +723,7 @@ function PercentDigits({
 
 interface ChipProps {
 	file: UploadChipFile;
-	size: "sm" | "md";
+	size: Size;
 	leaving: boolean;
 	behind: boolean;
 	morph: boolean;
@@ -739,23 +776,20 @@ function Chip({
 	const rowRef = useRef<HTMLDivElement>(null);
 	const shellRef = useRef<HTMLDivElement>(null);
 	const fillRef = useRef<HTMLDivElement>(null);
-	const startWaveRef = useRef<SVGPathElement>(null);
-	const endWaveRef = useRef<SVGPathElement>(null);
-	const startLipRef = useRef<SVGPathElement>(null);
-	const endLipRef = useRef<SVGPathElement>(null);
+	const waveRef = useRef<SVGPathElement>(null);
+	const lipRef = useRef<SVGPathElement>(null);
 	const digitsRef = useRef<Array<HTMLSpanElement | null>>([]);
 
 	const engine = useRef({
-		f0: spring(0),
-		f1: spring(status === "done" ? 1 : determinate ? progress : 0),
+		level: spring(status === "done" ? 1 : determinate ? progress : 0),
 		amp: 0,
 		wave: 0,
-		drain: null as null | { from0: number; from1: number; start: number },
-		band: 0,
+		drain: null as null | { from: number; start: number },
 		lean: 0,
-		/** Each place's rolled position, and where it's rolling to. */
-		shown: [0, 0, 0],
-		goal: [0, 0, 0],
+		/** Each percent place's roll. */
+		digits: [0, 1, 2].map(
+			(): DigitRoll => ({ from: -1, to: -1, t: 1, dir: 1 }),
+		),
 		n: -1,
 		onScreen: true,
 		lastMove: 0,
@@ -767,24 +801,31 @@ function Chip({
 		const e = engine.current;
 		const fill = fillRef.current;
 		if (fill) {
-			fill.style.setProperty("--f0", e.f0.value.toFixed(4));
-			fill.style.setProperty("--f1", e.f1.value.toFixed(4));
+			fill.style.setProperty("--level", e.level.value.toFixed(4));
 		}
 		const [fillPath, linePath] = wavePath(height, e.amp, e.wave, e.lean);
-		startWaveRef.current?.setAttribute("d", fillPath);
-		endWaveRef.current?.setAttribute("d", fillPath);
-		startLipRef.current?.setAttribute("d", linePath);
-		endLipRef.current?.setAttribute("d", linePath);
-		// Leading places stay in the slot, so the width never changes, but
-		// show only once the number reaches them.
-		const shownFrom = [100, 10, 0];
-		for (let place = 0; place < 3; place++) {
-			const box = digitsRef.current[place * 2];
-			const strip = digitsRef.current[place * 2 + 1];
-			if (!box || !strip) continue;
-			const shown = ((e.shown[place] % 10) + 10) % 10;
-			strip.style.transform = `translateY(${((-shown / 11) * 100).toFixed(3)}%)`;
-			box.style.opacity = Math.max(e.n, 0) >= shownFrom[place] ? "1" : "0";
+		waveRef.current?.setAttribute("d", fillPath);
+		lipRef.current?.setAttribute("d", linePath);
+		// The outgoing digit lifts away and fades out before the incoming one
+		// settles in from below, so the two never overlap. Leading places stay
+		// blank until the number reaches them.
+		for (const [place, d] of e.digits.entries()) {
+			const incoming = digitsRef.current[place * 2];
+			const outgoing = digitsRef.current[place * 2 + 1];
+			if (!incoming || !outgoing) continue;
+			const k = 1 - (1 - d.t) ** 3;
+			writeDigit(
+				incoming,
+				d.to,
+				d.dir * (1 - k) * DIGIT_TRAVEL,
+				clamp((k - 0.3) / 0.7),
+			);
+			writeDigit(
+				outgoing,
+				d.t < 1 ? d.from : -1,
+				-d.dir * k * DIGIT_TRAVEL,
+				clamp(1 - k / 0.5),
+			);
 		}
 	}, [height]);
 
@@ -792,15 +833,13 @@ function Chip({
 		(dt: number, now: number) => {
 			const e = engine.current;
 			const { status, determinate, progress, phase, still } = latest.current;
-			const indeterminate = status === "uploading" && !determinate;
 			if (!e.onScreen || still) {
 				// Off screen or without motion: land on the end state at once.
 				if (e.drain) e.drain = null;
-				const [a, b] = indeterminate
-					? [0, still ? BAND_WIDTH : 0]
-					: [0, status === "error" ? 0 : status === "done" ? 1 : progress];
-				jump(e.f0, a);
-				jump(e.f1, b);
+				jump(
+					e.level,
+					status === "error" ? 0 : status === "done" ? 1 : progress,
+				);
 				e.amp = 0;
 				e.lean = 0;
 				rollTo(e, percentOf(status, determinate, progress), true);
@@ -812,42 +851,30 @@ function Chip({
 			let moving = false;
 			if (e.drain) {
 				const t = clamp((now - e.drain.start) / DRAIN_DURATION);
-				jump(e.f1, e.drain.from1 * (1 - smoothstep(t)));
-				jump(e.f0, e.drain.from0 * (1 - smoothstep(t)));
+				jump(e.level, e.drain.from * (1 - smoothstep(t)));
 				if (t >= 1) e.drain = null;
 				else moving = true;
 			} else {
-				if (indeterminate) {
-					// The band ping-pongs across, eased at each end.
-					e.band += (dt * 1000) / BAND_PERIOD;
-					const along = 0.5 - 0.5 * Math.cos(e.band * Math.PI);
-					e.f0.target = along * (1 - BAND_WIDTH);
-					e.f1.target = e.f0.target + BAND_WIDTH;
-				} else {
-					e.f0.target = 0;
-					e.f1.target =
-						status === "done"
-							? 1
-							: status === "uploading"
-								? progress
-								: e.f1.target;
-				}
-				const a = stepSpring(e.f0, dt, fillSpring, 0.0004);
-				const b = stepSpring(
-					e.f1,
+				// While the size is unknown the fill stays empty and the sheen,
+				// a CSS animation, shows the upload is alive.
+				e.level.target =
+					status === "done"
+						? 1
+						: status === "uploading"
+							? progress
+							: e.level.target;
+				moving = stepSpring(
+					e.level,
 					dt,
 					status === "done" ? finishSpring : fillSpring,
 					0.0004,
 				);
-				moving = a || b || indeterminate;
 			}
 
 			// The wave swells while the fill moves and settles flat when it stops,
 			// and the surface leans into the direction it flows, like a slosh.
-			const velocity = indeterminate
-				? (e.f0.velocity + e.f1.velocity) / 2
-				: e.f1.velocity;
-			const flowing = moving && (Math.abs(velocity) > 0.004 || indeterminate);
+			const velocity = e.level.velocity;
+			const flowing = moving && Math.abs(velocity) > 0.004;
 			if (flowing) e.lastMove = now;
 			const targetAmp = now - e.lastMove < 250 ? WAVE_AMPLITUDE : 0;
 			const ease = 1 - Math.exp(-dt / 0.18);
@@ -858,20 +885,17 @@ function Chip({
 			if (Math.abs(e.lean - targetLean) < 0.02) e.lean = targetLean;
 			e.wave += dt * WAVE_SPEED * Math.PI * 2;
 
-			// Each digit rolls to its new value, onward for a rise, back for a fall.
+			// Each changed digit rolls to its new value.
 			rollTo(e, percentOf(status, determinate, progress), false);
 			let rolling = false;
-			for (let place = 0; place < 3; place++) {
-				const gap = e.goal[place] - e.shown[place];
-				if (Math.abs(gap) < 0.002) e.shown[place] = e.goal[place];
-				else {
-					e.shown[place] += gap * (1 - Math.exp((-dt * 1000) / DIGIT_EASE));
-					rolling = true;
-				}
+			for (const d of e.digits) {
+				if (d.t >= 1) continue;
+				d.t = Math.min(1, d.t + (dt * 1000) / DIGIT_ROLL);
+				rolling = true;
 			}
 			paint();
 
-			if (status === "done" && phase !== "done" && e.f1.value >= 0.99) {
+			if (status === "done" && phase !== "done" && e.level.value >= 0.99) {
 				setPhase("done");
 			}
 			return moving || rolling || e.amp > 0 || e.lean !== 0;
@@ -882,21 +906,17 @@ function Chip({
 
 	// Phase follows the status, except that "done" waits for the fill. Each
 	// new progress report wakes the loop.
-	// biome-ignore lint/correctness/useExhaustiveDependencies: progress changes restart the loop
 	useLayoutEffect(() => {
 		const e = engine.current;
 		if (!mountedRef.current) {
 			mountedRef.current = true;
+			rollTo(e, percentOf(status, determinate, progress), true);
 			paint();
 			return;
 		}
 		if (status === "error" && phase !== "error") {
 			setPhase("error");
-			e.drain = {
-				from0: e.f0.value,
-				from1: e.f1.value,
-				start: performance.now(),
-			};
+			e.drain = { from: e.level.value, start: performance.now() };
 			if (!still) {
 				shellRef.current?.animate(
 					[
@@ -931,12 +951,14 @@ function Chip({
 		return () => clearTimeout(timer);
 	}, [status, determinate, progress]);
 
-	// The wave and the band only run while the chip is on screen.
+	// The wave and the sheen only run while the chip is on screen.
 	useEffect(() => {
 		const node = shellRef.current;
 		if (!node || typeof IntersectionObserver === "undefined") return;
 		const observer = new IntersectionObserver(([entry]) => {
-			engine.current.onScreen = entry?.isIntersecting ?? true;
+			const onScreen = entry?.isIntersecting ?? true;
+			engine.current.onScreen = onScreen;
+			node.toggleAttribute("data-offscreen", !onScreen);
 			kick();
 		});
 		observer.observe(node);
@@ -959,10 +981,11 @@ function Chip({
 	const done = phase === "done";
 	const failed = phase === "error";
 	const uploading = !done && !failed && status !== "idle";
+	const indeterminate = uploading && !determinate;
 	const sizeText = formatFileSize(file.size ?? 0);
 	const removeLabel = uploading ? `Cancel ${file.name}` : `Remove ${file.name}`;
 	const removeHandler = uploading ? (onCancel ?? onRemove) : onRemove;
-	const iconPx = size === "sm" ? 14 : 16;
+	const iconPx = ICON[size];
 
 	let meta: ReactNode = null;
 	let metaKey = "none";
@@ -1048,7 +1071,7 @@ function Chip({
 				{/* The chip's surface and the liquid fill, clipped to the pill. */}
 				<span
 					aria-hidden="true"
-					className="absolute inset-0 overflow-hidden rounded-full bg-[color-mix(in_oklab,var(--color-muted)_60%,var(--color-background))] in-data-[wake]:ring-foreground/20 ring-1 ring-foreground/8 ring-inset transition-shadow duration-200 group-data-[behind]/chip:bg-[color-mix(in_oklab,var(--color-muted)_85%,var(--color-foreground)_4%)]"
+					className="absolute inset-0 overflow-hidden rounded-full bg-[color-mix(in_oklab,var(--color-muted)_60%,var(--color-background))] in-data-[wake]:ring-foreground/20 ring-1 ring-foreground/8 ring-inset transition-shadow duration-200 group-data-[behind]/chip:bg-[color-mix(in_oklab,var(--color-muted)_85%,var(--color-foreground)_4%)] dark:group-data-[behind]/chip:bg-[color-mix(in_oklab,var(--color-muted)_80%,var(--color-foreground)_10%)]"
 				>
 					<span
 						className={cn(
@@ -1059,43 +1082,42 @@ function Chip({
 						<div
 							ref={fillRef}
 							className="absolute inset-0 text-foreground rtl:-scale-x-100"
-							style={{ "--f0": 0, "--f1": 0 } as CSSProperties}
+							style={{ "--level": 0 } as CSSProperties}
 						>
 							{/*
-							 * The liquid: a body between two wavy edges, which overlap it by
-							 * half a px. One group opacity, so the overlap never shows.
+							 * The liquid: a body and its wavy edge, which overlap by half a
+							 * px. One group opacity, so the overlap never shows.
 							 */}
 							<div className="absolute inset-0 opacity-[.07] dark:opacity-[.12]">
 								<span
-									className="absolute inset-y-0 bg-current"
+									className="absolute inset-y-0 left-0 bg-current"
 									style={{
-										left: `calc(var(--f0) * (100% + ${REACH}px) - 0.5px)`,
-										right: `calc((1 - var(--f1)) * (100% + ${REACH}px) - 0.5px)`,
+										right: `calc((1 - var(--level)) * (100% + ${REACH}px) - 0.5px)`,
 									}}
 								/>
-								<EdgeStrip
-									side="start"
-									height={height}
-									pathRef={startWaveRef}
-								/>
-								<EdgeStrip side="end" height={height} pathRef={endWaveRef} />
+								<EdgeStrip height={height} pathRef={waveRef} />
 							</div>
 							{/* The surface line, a touch darker, like a meniscus. */}
 							<div className="absolute inset-0 opacity-[.09] dark:opacity-[.14]">
-								<EdgeStrip
-									side="start"
-									height={height}
-									pathRef={startLipRef}
-									line
-								/>
-								<EdgeStrip
-									side="end"
-									height={height}
-									pathRef={endLipRef}
-									line
-								/>
+								<EdgeStrip height={height} pathRef={lipRef} line />
 							</div>
 						</div>
+						{indeterminate ? (
+							// No size yet: a soft sheen sweeps behind the text instead.
+							<div
+								data-fade-in=""
+								className="absolute inset-0 text-foreground opacity-[.09] rtl:-scale-x-100 dark:opacity-[.13]"
+							>
+								<span
+									data-sheen=""
+									className="absolute inset-0"
+									style={{
+										backgroundImage:
+											"linear-gradient(90deg,transparent 12%,currentColor 50%,transparent 88%)",
+									}}
+								/>
+							</div>
+						) : null}
 					</span>
 				</span>
 				<div
@@ -1109,7 +1131,7 @@ function Chip({
 							onAnimationEnd={() => setGhost(false)}
 							className={cn(
 								"pointer-events-none absolute inset-y-0 start-0 flex items-center gap-1.5 whitespace-nowrap font-medium",
-								size === "sm" ? "ps-2.5" : "ps-3",
+								{ sm: "ps-2.5", md: "ps-3", lg: "gap-2 ps-3.5" }[size],
 							)}
 						>
 							<Paperclip
@@ -1127,7 +1149,11 @@ function Chip({
 						data-fade-in={morph ? "" : undefined}
 						className={cn(
 							"flex h-full w-max items-center whitespace-nowrap transition-opacity duration-150",
-							size === "sm" ? "gap-1.5 ps-2 pe-2.5" : "gap-1.5 ps-2.5 pe-3",
+							{
+								sm: "gap-1.5 ps-2 pe-2.5",
+								md: "gap-1.5 ps-2.5 pe-3",
+								lg: "gap-2 ps-3 pe-3.5",
+							}[size],
 							behind && "opacity-0",
 						)}
 						style={morph ? { animationDelay: "50ms" } : undefined}
@@ -1148,7 +1174,11 @@ function Chip({
 								dir="auto"
 								className={cn(
 									"flex min-w-0 font-medium text-foreground",
-									size === "sm" ? "max-w-[10rem]" : "max-w-[13rem]",
+									{
+										sm: "max-w-[10rem]",
+										md: "max-w-[13rem]",
+										lg: "max-w-[16rem]",
+									}[size],
 								)}
 							>
 								<MiddleName name={file.name} />
@@ -1212,7 +1242,7 @@ function AttachButton({
 	text: string | null;
 	compact: boolean;
 	wake: boolean;
-	size: "sm" | "md";
+	size: Size;
 	/** The last chip's width, when that chip collapses into this pill. */
 	fromRef: RefObject<number> | null;
 	still: boolean;
@@ -1222,7 +1252,7 @@ function AttachButton({
 	widthRef?: RefObject<number>;
 }) {
 	const height = HEIGHT[size];
-	const iconPx = size === "sm" ? 14 : 16;
+	const iconPx = ICON[size];
 	const rowRef = useRef<HTMLSpanElement>(null);
 	const clipRef = useRef<HTMLSpanElement>(null);
 	const width = useRef(spring(0));
@@ -1286,9 +1316,11 @@ function AttachButton({
 			onClick={onClick}
 			className={cn(
 				"group/attach relative shrink-0 cursor-pointer touch-manipulation select-none rounded-full font-medium text-foreground text-sm outline-none transition-[box-shadow] duration-200 pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 disabled:cursor-not-allowed data-[wake]:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-foreground)_5%,transparent),0_2px_14px_color-mix(in_oklab,var(--color-foreground)_10%,transparent)]",
-				size === "sm"
-					? "text-[13px] pointer-coarse:after:-inset-y-2"
-					: "pointer-coarse:after:-inset-y-1.5",
+				{
+					sm: "text-xs pointer-coarse:after:-inset-y-2",
+					md: "pointer-coarse:after:-inset-y-1.5",
+					lg: "text-[15px] pointer-coarse:after:-inset-y-0.5",
+				}[size],
 				compact && "text-foreground/70 hover:text-foreground",
 			)}
 			style={{ height, minWidth: height }}
@@ -1306,11 +1338,12 @@ function AttachButton({
 					data-fade-in={fromRef ? "" : undefined}
 					className={cn(
 						"flex h-full w-max items-center gap-1.5 whitespace-nowrap",
+						size === "lg" && "gap-2",
 						compact && !text
 							? "justify-center"
-							: size === "sm"
-								? "ps-2.5 pe-3"
-								: "ps-3 pe-3.5",
+							: { sm: "ps-2.5 pe-3", md: "ps-3 pe-3.5", lg: "ps-3.5 pe-4" }[
+									size
+								],
 					)}
 					style={compact && !text ? { width: height } : undefined}
 				>
@@ -1611,7 +1644,7 @@ export function UploadChip({
 		const tucked = Math.min(d.order.length - 1, MAX_EDGES);
 		const counter = countRef.current;
 		if (counter) {
-			const at = frontRight + tucked * EDGE + GAP;
+			const at = frontRight + tucked * EDGE + COUNT_GAP;
 			counter.style.transform = `translateX(${(sign * at).toFixed(2)}px)`;
 			const reach = (at + counter.offsetWidth) * (1 - d.fan.value);
 			if (d.order.length > 1 && d.stack) right = Math.max(right, reach);
@@ -1657,7 +1690,8 @@ export function UploadChip({
 			const tucked = Math.min(order.length - 1, MAX_EDGES);
 			const counterWidth = countRef.current?.offsetWidth ?? 0;
 			const collapsedRoom =
-				d.avail - (order.length > 1 ? tucked * EDGE + GAP + counterWidth : 0);
+				d.avail -
+				(order.length > 1 ? tucked * EDGE + COUNT_GAP + counterWidth : 0);
 			let x = 0;
 			let y = 0;
 			let frontTarget = 0;
@@ -2095,7 +2129,8 @@ export function UploadChip({
 			aria-disabled={disabled || undefined}
 			className={cn(
 				"relative inline-flex max-w-full align-middle text-sm data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-				size === "sm" && "text-[13px]",
+				size === "sm" && "text-xs",
+				size === "lg" && "text-[15px]",
 				className,
 			)}
 			onDragOver={onDragOver}
@@ -2175,12 +2210,22 @@ export function UploadChip({
 								data-slot="upload-chip-count"
 								aria-hidden="true"
 								className={cn(
-									"pointer-events-none absolute start-0 top-0 flex items-center px-0.5 font-medium text-foreground/60 text-xs tabular-nums transition-opacity duration-150",
+									"pointer-events-none absolute start-0 top-0 flex items-center transition-opacity duration-150",
 									fanOpen ? "opacity-0" : "opacity-100 delay-75",
 								)}
 								style={{ height }}
 							>
-								+{extra}
+								{/* A small pill of its own, so it reads as the deck's count. */}
+								<span
+									className={cn(
+										"flex items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--color-muted)_60%,var(--color-background))] font-medium text-foreground/70 tabular-nums ring-1 ring-foreground/8 ring-inset",
+										size === "lg"
+											? "h-6 min-w-6 px-2 text-xs"
+											: "h-5 min-w-5 px-1.5 text-[11px]",
+									)}
+								>
+									+{extra}
+								</span>
 							</span>
 						) : null}
 					</ul>
