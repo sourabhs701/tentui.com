@@ -5567,6 +5567,276 @@
 			]
 		}
 	],
+	"src/registry/components/scroll-accordion/scroll-accordion.tsx#ScrollAccordionItem#": [
+		{
+			"id": "scroll-accordion.tsx-ScrollAccordionItem",
+			"name": "ScrollAccordionItem",
+			"description": "",
+			"entries": [
+				{
+					"name": "id",
+					"description": "Unique id, used for `value` and `onValueChange`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "title",
+					"description": "Header text. Long titles truncate to one line.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "meta",
+					"description": "Short trailing text in the header, such as \"4 min\".",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "content",
+					"description": "The section body.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/scroll-accordion/scroll-accordion.tsx#ScrollAccordionProps#": [
+		{
+			"id": "scroll-accordion.tsx-ScrollAccordionProps",
+			"name": "ScrollAccordionProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "items",
+					"description": "The sections, in reading order.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ScrollAccordionItem[]",
+					"simplifiedType": "array",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "value",
+					"description": "Controlled id of the section being read. Changing it scrolls there.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultValue",
+					"description": "Section shown on mount when uncontrolled.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onValueChange",
+					"description": "Called once per change of the section being read, from scrolling or a header press.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((id: string) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "`\"deck\"` stacks headers as cards on a tray, narrowing the ones further\nback; `\"list\"` stacks flush rows with hairlines.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Variant | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "height",
+					"description": "Panel height, in px or any CSS length.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | number | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "spineHeight",
+					"description": "Header height, in px. Defaults to 48 for the deck and 44 for the list.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "peek",
+					"description": "Px of each stacked header left showing. The full `spineHeight` keeps\nevery title readable; less overlaps the stacks like a deck of cards, so\nthe reading band stays roomy with many sections. Defaults to 12 for the\ndeck and `spineHeight` for the list.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "snap",
+					"description": "Settle gently at the start of a section when a scroll ends near one.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "numbered",
+					"description": "Show a 01, 02… index before each title.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "headingLevel",
+					"description": "Heading level wrapping each header button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "2 | 3 | 4 | 5 | 6 | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play a soft paper flip when the section being read changes from your scroll or press.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger a selection haptic on touch devices with each flip.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "ref",
+					"description": "Exposes `scrollToItem()`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Ref<ScrollAccordionHandle> | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/search-command/search-command.tsx#SearchCommandProps#": [
 		{
 			"id": "search-command.tsx-SearchCommandProps",

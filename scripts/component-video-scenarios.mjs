@@ -7,6 +7,73 @@
 const TICK_RULER_FLICKS = [84, 137, 200];
 
 export const scenarios = {
+	"scroll-accordion": {
+		rest: { x: 458, y: 330 },
+		async run(d) {
+			const viewport = '[data-slot="scroll-accordion-viewport"]';
+			// Scroll offset at which section `index` opens: its header reaches
+			// its slot in the top stack.
+			const opensAt = (index) =>
+				d.page.evaluate((i) => {
+					const body = document.querySelectorAll(
+						'[data-slot="scroll-accordion-content"]',
+					)[i];
+					return body.offsetTop - 48 - i * 12;
+				}, index);
+			// A trackpad-like read: eased scroll, stepped with the frame clock.
+			// Snapping is paused so each step lands where it is set.
+			const read = async (to, ms) => {
+				const from = await d.page.evaluate(
+					(s) => document.querySelector(s).scrollTop,
+					viewport,
+				);
+				const frames = Math.round(ms / (1000 / 60));
+				for (let f = 1; f <= frames; f++) {
+					const t = f / frames;
+					const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+					await d.page.evaluate(
+						([s, top]) => {
+							const v = document.querySelector(s);
+							v.style.scrollSnapType = "none";
+							v.scrollTop = top;
+						},
+						[viewport, from + (to - from) * eased],
+					);
+					await d.wait(1000 / 60);
+				}
+			};
+			await d.wait(700);
+			// Rest on the panel and read down: each next card slides up over
+			// the open one and the deck builds at the top.
+			await d.move({ x: 250, y: 200 }, 700);
+			await d.wait(250);
+			await read(await opensAt(1), 900);
+			await d.wait(650);
+			await read(await opensAt(2), 800);
+			await d.wait(500);
+			// Partway through a section the ring fills as you read.
+			await read((await opensAt(2)) + 90, 700);
+			await d.wait(500);
+			await read(await opensAt(3), 700);
+			await d.wait(700);
+			// Tap the deepest card in the top stack: the panel glides back to
+			// the start, riffling through the deck.
+			await d.move('h3[data-slot="scroll-accordion-header"]', 750, {
+				x: 0.5,
+				y: 0.12,
+			});
+			await d.wait(200);
+			await d.click();
+			await d.wait(1200);
+			await d.page.evaluate(
+				(s) =>
+					document.querySelector(s).style.removeProperty("scroll-snap-type"),
+				viewport,
+			);
+			await d.move(d.rest, 800);
+			await d.wait(600);
+		},
+	},
 	"agent-thinking": {
 		async run(d) {
 			// Nothing to click: the four looks run on their own.

@@ -448,6 +448,32 @@
       "type": "registry:block"
     },
     {
+      "name": "scroll-accordion",
+      "title": "Scroll Accordion",
+      "description": "An accordion you open by scrolling. Headers you have read stack up at the top like a deck of index cards, the ones ahead wait at the bottom, and the section you are reading fills the space between, with a ring on each header that fills as you read.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/scroll-accordion/scroll-accordion.tsx",
+          "type": "registry:component",
+          "target": "@components/scroll-accordion.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-16",
+        "image": "https://cdn.tentui.com/images/components/scroll-accordion?v=1",
+        "video": "https://cdn.tentui.com/videos/components/scroll-accordion?v=1"
+      },
+      "docs": "https://tentui.com/components/scroll-accordion",
+      "categories": [
+        "lists"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "agent-thinking",
       "title": "Agent Thinking",
       "description": "An AI thinking state where every finished agent step becomes a dot that lands in a growing sunflower cluster, a seeking dot circles the edge for the step in progress, and a quiet timer shows up only once the wait matters. Open it and the dots fly out to become the bullets of the step log.",

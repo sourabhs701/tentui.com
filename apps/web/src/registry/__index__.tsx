@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"scroll-accordion": {
+		name: "scroll-accordion",
+		title: "Scroll Accordion",
+		description: "An accordion you open by scrolling. Headers you have read stack up at the top like a deck of index cards, the ones ahead wait at the bottom, and the section you are reading fills the space between, with a ring on each header that fills as you read.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/scroll-accordion/scroll-accordion.tsx","type":"registry:component","target":"@components/scroll-accordion.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/scroll-accordion/scroll-accordion")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scroll-accordion");
+			}
+			return { default: module.default };
+		}),
+		categories: ["lists"],
+		meta: {"createdAt":"2026-11-16","image":"https://cdn.tentui.com/images/components/scroll-accordion?v=1","video":"https://cdn.tentui.com/videos/components/scroll-accordion?v=1"},
+	},
 	"agent-thinking": {
 		name: "agent-thinking",
 		title: "Agent Thinking",
@@ -976,6 +994,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"scroll-accordion-preview": {
+		name: "scroll-accordion-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scroll-accordion-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scroll-accordion-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scroll-accordion-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 place-items-center content-center px-4"},
+	},
+	"scroll-accordion-demo": {
+		name: "scroll-accordion-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/scroll-accordion-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/scroll-accordion-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for scroll-accordion-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"demoClassName":"min-h-96 place-items-center content-center px-4"},
 	},
 	"agent-thinking-preview": {
 		name: "agent-thinking-preview",

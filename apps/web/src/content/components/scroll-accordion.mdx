@@ -1,0 +1,227 @@
+---
+title: Scroll Accordion
+description: A React scroll accordion for shadcn/ui where you open sections by scrolling. Headers you have read stack at the top like index cards, the ones ahead wait at the bottom, and a ring on each header fills as you read.
+seoTitle: React Scroll Accordion Component for shadcn/ui
+createdAt: 2026-11-16
+updatedAt: 2026-11-18
+---
+
+<ComponentPreview name="scroll-accordion-preview" />
+
+## Example
+
+<ComponentPreview name="scroll-accordion-demo" />
+
+## Features
+
+- An accordion you open by reading. Scroll the panel and each section's
+  header slides up and stays: read sections collect at the top edge, the
+  ones ahead wait at the bottom, and the section you're reading fills the
+  space between them.
+- No scroll-jacking and no height animation. It is native scrolling, so
+  wheel, trackpad momentum, touch, scrollbar, and keyboard all behave as
+  usual. The stacking comes from `position: sticky` with both a top and a
+  bottom offset on every header, so content never reflows while you read.
+- Two looks. `deck` overlaps the stacks like a pile of index cards, with a
+  12 px sliver of each stacked card showing and deeper cards slightly
+  smaller, so many sections still leave a roomy reading band. The next card
+  slides up over the open one, like a card dealt onto a pile. `list` keeps
+  every header as a full row, so the stacks double as a readable outline.
+- A small ring on each header fills as you read that section: read sections
+  show a full ring with a dot, the open one fills as you go, and the ones
+  ahead are empty.
+- Press any header, stacked or not, to glide to that section. Its header
+  lands exactly in its slot with the section starting just below it.
+- Gentle `snap`: a scroll that ends near the start of a section settles
+  onto it, while long sections stay free to stop anywhere.
+- The last section always has room to open, however short it is.
+- Every visual is drawn from the scroll position once per frame and writes
+  only `transform`, `opacity`, a ring's `stroke-dashoffset`, and a data
+  attribute, so scrolling never triggers layout work.
+- A header press glides on an ease-out curve, 300 to 620 ms depending on the
+  distance. Wheel, touch, or a key press stops it at once and hands the
+  scroll back to you.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/scroll-accordion
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="scroll-accordion" title="components/scroll-accordion.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ScrollAccordion } from "@/components/scroll-accordion";
+```
+
+Pass the sections as `items`, each with an `id`, a `title`, optional `meta`
+text, and its `content`. Give the panel a `height`: the sections scroll
+inside it.
+
+```tsx
+<ScrollAccordion
+  aria-label="Pour-over guide"
+  height={380}
+  items={[
+    { id: "grind", title: "Grind", meta: "0:00", content: <p>…</p> },
+    { id: "bloom", title: "Bloom", meta: "0:30", content: <p>…</p> },
+    { id: "pour", title: "Pour", meta: "1:15", content: <p>…</p> },
+  ]}
+/>
+```
+
+Use `variant="list"` for flush rows where every header stays readable, for
+example policies, settings, or docs:
+
+```tsx
+<ScrollAccordion variant="list" items={sections} height={360} />
+```
+
+Control the open section with `value` and `onValueChange`. Setting `value`
+from outside scrolls the panel there. `onValueChange` fires once per change,
+including once for a header press rather than for every section passed on
+the way:
+
+```tsx
+const [value, setValue] = useState("overview");
+
+<ScrollAccordion items={sections} value={value} onValueChange={setValue} />;
+```
+
+To scroll from your own code without a controlled value, use the ref:
+
+```tsx
+const ref = useRef<ScrollAccordionHandle>(null);
+
+ref.current?.scrollToItem("retention");
+```
+
+With a full-height `peek` (the list default) every stacked header takes a
+full row, so keep `items.length × spineHeight` well under the `height`.
+Style the parts with their data attributes: `data-slot="scroll-accordion"`
+with `data-variant`, `scroll-accordion-header` and `scroll-accordion-content`
+with `data-state` (`read`, `active`, or `upcoming`), `data-stack` (`top` or
+`bottom`) on headers, and `data-complete` on headers whose section has been
+read through.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Scroll, swipe, or drag the scrollbar | Reads through the sections; headers stack as you pass them |
+| Press a header | Glides to that section |
+| `Tab` | Moves through the headers and any links or controls in the sections |
+| `Enter` or `Space` on a header | Glides to that section |
+| `↑` `↓` `Page Up` `Page Down` `Home` `End` | Scroll the panel, as in any scroll area |
+
+## Sound and haptics
+
+When the open section changes because you scrolled or pressed a header, the
+panel plays a short, dry paper flip, at most once every 45 ms, so a long
+jump riffles through the cards like a thumb along a deck. On touch screens
+each flip also triggers a `selection` haptic. Nothing plays on mount, on
+resize, or when `value` changes from your code. Turn them off with
+`sound={false}` and `haptics={false}`.
+
+## Accessibility
+
+Each header is a real `button` inside a heading (`h3` by default, set with
+`headingLevel`), and each section is a `region` labelled by its header. The
+open section's header has `aria-current="true"`. The sections are never
+hidden, so screen readers read the whole document in order and `aria-expanded`
+isn't used. Pass `aria-label` to name the panel as a region.
+
+Focus never hides under a stack: when `Tab` moves into a link inside a
+section, the panel scrolls so the link sits in the reading band. The focus
+ring is drawn on the header's card, and a header you `Tab` to lifts above its
+stack so its whole card shows, not just its sliver. The progress rings are decorative and
+hidden from assistive technology.
+
+With reduced motion enabled, pressing a header jumps to the section instead
+of gliding. The stacking and rings follow your own scrolling, so they stay.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/scroll-accordion/scroll-accordion.tsx"
+  name="ScrollAccordionProps"
+/>
+
+### ScrollAccordionItem
+
+<AutoTypeTable
+  path="src/registry/components/scroll-accordion/scroll-accordion.tsx"
+  name="ScrollAccordionItem"
+/>
+
+## FAQ
+
+### How do I install the Scroll Accordion with shadcn?
+
+Run `npx shadcn@latest add @tentui/scroll-accordion` after adding the
+`@tentui` registry to `components.json` ([installation guide](/docs/installation)).
+The CLI copies `scroll-accordion.tsx` into your project and installs
+`@rexa-developer/tiks` and `web-haptics`.
+
+### How is a scroll accordion different from a regular accordion?
+
+A regular accordion hides closed panels and animates their height when you
+open one. The Scroll Accordion keeps every section in the page and opens them
+as you scroll: headers stick and stack at the top and bottom edges, so you
+always see where you are, and the content never jumps.
+
+### Is the Scroll Accordion accessible to keyboard and screen reader users?
+
+Yes. Headers are buttons inside headings that you reach with `Tab` and
+activate with `Enter` or `Space`, sections are labelled regions, and the open
+section's header has `aria-current`. Focused links are scrolled clear of the
+stacked headers.
+
+### Can I control which section is open?
+
+Yes. Pass `value` and `onValueChange` to keep the open section in React
+state; setting `value` scrolls the panel to that section. You can also call
+`scrollToItem(id)` on the ref.
+
+### Can I show every header title in the stacks?
+
+Yes. Use `variant="list"`, or set `peek` to the `spineHeight`, and every
+stacked header stays a full, readable row. The deck's default 12 px `peek`
+overlaps them like index cards instead, which leaves more room for reading.
+
+### Is the Scroll Accordion free to use?
+
+Yes. The Scroll Accordion is free and source-available: the shadcn CLI copies
+its source into your project, and you can use it in unlimited personal and
+client projects under the [TentUI License](/license). The license doesn't
+allow redistributing or reselling the component itself.
