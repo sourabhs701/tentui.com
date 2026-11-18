@@ -8,6 +8,7 @@ import {
 	FileImage,
 	FileMusic,
 	FileText,
+	FileVideoCamera,
 	Paperclip,
 	X,
 } from "lucide-react";
@@ -15,7 +16,6 @@ import { useReducedMotion } from "motion/react";
 import {
 	type ChangeEvent,
 	type ComponentProps,
-	type CSSProperties,
 	type DragEvent,
 	type FocusEvent,
 	type KeyboardEvent,
@@ -41,54 +41,42 @@ type Size = keyof typeof HEIGHT;
 /** Gap between fanned chips, and before the attach button. */
 const GAP = 6;
 /** Room between a deck's last edge and its "+2" count. */
-const COUNT_GAP = 8;
+const COUNT_GAP = 6;
 /** How far each tucked chip peeks out past the one in front. */
 const EDGE = 4;
 /** Tucked chips shrink a little per layer, from their far edge. */
-const EDGE_SCALE = 0.11;
+const EDGE_SCALE = 0.08;
 /** At most this many edges show behind the front chip. */
 const MAX_EDGES = 2;
 
-// Motion. Widths spring with no visible overshoot (about 1%); the fill edge
+// Motion. Widths spring with no visible overshoot (about 1%); the fill
 // springs toward the reported progress, so jumpy reports still flow.
 const widthSpring = { stiffness: 380, damping: 32 } as const;
 const fanSpring = { stiffness: 420, damping: 34 } as const;
 const fillSpring = { stiffness: 110, damping: 21 } as const;
 /** Once the upload is done the fill runs to the end a little quicker. */
 const finishSpring = { stiffness: 170, damping: 26 } as const;
-const magnetSpring = { stiffness: 300, damping: 35 } as const;
 /** Delay between chips as the deck fans out or folds back. */
 const FAN_STAGGER = 30;
 /** The deck folds back this long after the pointer or focus leaves. */
 const FAN_CLOSE_DELAY = 400;
-/** Peak height of the meniscus wave, in px, while the fill is moving. */
-const WAVE_AMPLITUDE = 2;
-/** How far the surface leans into the flow at the top, in px. */
-const MAX_LEAN = 1.5;
-/**
- * Each edge is a strip this wide centred on the fill's end. At 0 and 1 the
- * strip sits just outside the chip, so empty is empty and full is full.
- */
-const REACH = (WAVE_AMPLITUDE + MAX_LEAN) * 2;
-/** The wave's travel speed, in cycles per second. */
-const WAVE_SPEED = 1.3;
 /** On error the fill drains back to empty. */
 const DRAIN_DURATION = 300;
 /** No progress for this long and the chip says it's waiting. */
 const STALL_DELAY = 2000;
 /** How long a rejected drop shows its note on the attach button. */
 const NOTE_DURATION = 1600;
+/** The check shows this long after an upload completes, then the file icon returns. */
+const CHECK_HOLD = 1400;
 /** A chip removed from a deck fades out before it unmounts. */
 const LEAVE_DURATION = 180;
-/** Max drag pull toward the pointer, in px. */
-const MAGNET_MAX = 4;
 /** How long a percent digit takes to roll to its new value, in ms. */
-const DIGIT_ROLL = 160;
+const DIGIT_ROLL = 180;
 /**
  * How far a rolling digit travels, as a share of the line. Short enough that
  * no glyph reaches the clip, so a roll never shows half a digit.
  */
-const DIGIT_TRAVEL = 0.4;
+const DIGIT_TRAVEL = 0.3;
 /** Ms of quiet before the live region speaks. */
 const ANNOUNCE_DELAY = 350;
 /** Two cues closer than this play once. */
@@ -143,6 +131,8 @@ const STYLES =
 	"[data-slot=upload-chip-list][data-ready]>li{position:absolute;top:0;inset-inline-start:0}" +
 	"[data-slot=upload-chip][data-static] *{animation-duration:.12s!important;animation-delay:0s!important}" +
 	"[data-slot=upload-chip][data-static] [data-check]{transition:none!important}" +
+	// Icon faces only cross-fade.
+	"[data-slot=upload-chip][data-static] [data-face]{scale:none!important;filter:none!important}" +
 	// Without motion the sheen rests as an even wash.
 	"[data-slot=upload-chip][data-static] [data-sheen]{animation:none!important;transform:none;background:currentColor!important;opacity:.5}";
 
@@ -195,7 +185,7 @@ export interface UploadChipProps
 	sound?: boolean;
 	/** Haptics on attach, done, and error, on touch devices only. */
 	haptics?: boolean;
-	/** Set `false` to skip the springs, the wave, and the shake, as with reduced motion. */
+	/** Set `false` to skip the springs and the rolling digits, as with reduced motion. */
 	animated?: boolean;
 }
 
@@ -329,23 +319,29 @@ function graphemes(text: string) {
 }
 
 /**
- * Splits a name so the end survives truncation: "quarterly-rep" may be cut
- * short, "ort.pdf" always shows. Short names keep the last few characters.
+ * The ways to split a name so its end survives truncation: "quarterly-rep"
+ * may be cut short, "ort.pdf" always shows. Each split keeps the extension and
+ * a few characters before it (or the last few, with no extension); trying a
+ * few tail lengths lets the fit land closer to the room it has.
  */
-function splitName(name: string): [string, string] {
+function nameSplits(name: string): Array<[string[], string]> {
 	const chars = graphemes(name);
 	const dot = name.lastIndexOf(".");
 	const extension =
 		dot > 0 && name.length - dot <= 9 ? graphemes(name.slice(dot)).length : 0;
-	const keep = Math.min(chars.length, extension + (extension ? 3 : 5));
-	if (chars.length - keep < 2) return [name, ""];
-	return [
-		chars.slice(0, chars.length - keep).join(""),
-		chars.slice(chars.length - keep).join(""),
-	];
+	const least = extension + (extension ? 2 : 4);
+	const splits: Array<[string[], string]> = [];
+	for (let keep = least; keep <= least + 3; keep++) {
+		if (chars.length - keep < 2) break;
+		splits.push([
+			chars.slice(0, chars.length - keep),
+			chars.slice(chars.length - keep).join(""),
+		]);
+	}
+	return splits;
 }
 
-type FileKind = "image" | "audio" | "archive" | "document" | "file";
+type FileKind = "image" | "video" | "audio" | "archive" | "document" | "file";
 
 function fileKind(file: { name: string; type?: string }): FileKind {
 	const type = file.type ?? "";
@@ -355,6 +351,11 @@ function fileKind(file: { name: string; type?: string }): FileKind {
 		/^(png|jpe?g|gif|webp|avif|heic|svg|bmp|tiff?)$/.test(extension)
 	)
 		return "image";
+	if (
+		type.startsWith("video/") ||
+		/^(mp4|mov|m4v|webm|mkv|avi)$/.test(extension)
+	)
+		return "video";
 	if (
 		type.startsWith("audio/") ||
 		/^(mp3|wav|m4a|aac|flac|ogg|opus|aiff?)$/.test(extension)
@@ -400,73 +401,6 @@ function isTouchDevice() {
 	return (
 		typeof window !== "undefined" &&
 		window.matchMedia?.("(pointer: coarse)").matches
-	);
-}
-
-/**
- * The meniscus: the fill's edge as a wave `amplitude` px high that leans
- * `lean` px at the top, inside a strip `REACH` wide. Returns the filled shape
- * and the surface line alone.
- */
-function wavePath(
-	height: number,
-	amplitude: number,
-	phase: number,
-	lean: number,
-): [string, string] {
-	const center = REACH / 2;
-	const steps = 8;
-	const points: Array<[number, number]> = [];
-	for (let index = -1; index <= steps + 1; index++) {
-		const along = index / steps;
-		const t = along * Math.PI * 1.7 + phase;
-		points.push([
-			center + amplitude * Math.sin(t) + lean * (0.5 - along) * 2,
-			along * height,
-		]);
-	}
-	const r = (value: number) => Math.round(value * 100) / 100;
-	let curve = "";
-	for (let index = 1; index <= steps; index++) {
-		const [x0, y0] = points[index - 1];
-		const [x1, y1] = points[index];
-		const [x2, y2] = points[index + 1];
-		const [x3, y3] = points[index + 2];
-		curve += `C${r(x1 + (x2 - x0) / 6)} ${r(y1 + (y2 - y0) / 6)} ${r(x2 - (x3 - x1) / 6)} ${r(y2 - (y3 - y1) / 6)} ${r(x2)} ${r(y2)}`;
-	}
-	const top = `${r(points[1][0])} 0`;
-	return [`M0 0L${top}${curve}L0 ${r(height)}Z`, `M${top}${curve}`];
-}
-
-/** The fill's leading edge, a `REACH`-wide strip that rides on `--level`. */
-function EdgeStrip({
-	height,
-	pathRef,
-	line = false,
-}: {
-	height: number;
-	pathRef: RefObject<SVGPathElement | null>;
-	line?: boolean;
-}) {
-	return (
-		<svg
-			aria-hidden="true"
-			className="absolute top-0 h-full overflow-visible"
-			width={REACH}
-			viewBox={`0 0 ${REACH} ${height}`}
-			preserveAspectRatio="none"
-			style={{
-				right: `calc((1 - var(--level)) * (100% + ${REACH}px) - ${REACH}px)`,
-			}}
-		>
-			<path
-				ref={pathRef}
-				fill={line ? "none" : "currentColor"}
-				stroke={line ? "currentColor" : undefined}
-				strokeWidth={line ? 1.25 : undefined}
-				vectorEffect={line ? "non-scaling-stroke" : undefined}
-			/>
-		</svg>
 	);
 }
 
@@ -556,21 +490,39 @@ function MiddleName({ name }: { name: string }) {
 			if (!measureContext) return;
 			const style = getComputedStyle(full);
 			measureContext.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-			const [head, tail] = splitName(name);
-			const chars = graphemes(head);
-			const width = (count: number) =>
-				measureContext?.measureText(
-					`${chars.slice(0, count).join("")}\u2026${tail}`,
-				).width ?? 0;
-			// The longest start that fits, leaving a px for rounding.
-			let low = 1;
-			let high = chars.length;
-			while (low < high) {
-				const mid = Math.ceil((low + high) / 2);
-				if (width(mid) <= room - 1) low = mid;
-				else high = mid - 1;
+			// The split and the longest start that fill the room most closely,
+			// leaving a px for rounding.
+			let best = name;
+			let bestWidth = Number.POSITIVE_INFINITY;
+			let bestFits = false;
+			for (const [chars, tail] of nameSplits(name)) {
+				const text = (count: number) =>
+					`${chars
+						.slice(0, count)
+						.join("")
+						.replace(/[\s._-]+$/, "")}\u2026${tail}`;
+				const width = (count: number) =>
+					measureContext?.measureText(text(count)).width ?? 0;
+				let low = 1;
+				let high = chars.length;
+				while (low < high) {
+					const mid = Math.ceil((low + high) / 2);
+					if (width(mid) <= room - 1) low = mid;
+					else high = mid - 1;
+				}
+				const fitted = width(low);
+				const fits = fitted <= room - 1;
+				// A fit beats an overflow; then the wider fit, or the narrower overflow.
+				if (
+					(fits && (!bestFits || fitted > bestWidth)) ||
+					(!fits && !bestFits && fitted < bestWidth)
+				) {
+					best = text(low);
+					bestWidth = fitted;
+					bestFits = fits;
+				}
 			}
-			setLabel(`${chars.slice(0, low).join("").trimEnd()}\u2026${tail}`);
+			setLabel(best);
 		};
 		fit();
 		const observer = new ResizeObserver(fit);
@@ -597,14 +549,24 @@ function MiddleName({ name }: { name: string }) {
 	);
 }
 
-/** A check drawn with one stroke, for the done state. */
-function CheckGlyph({ drawn }: { drawn: boolean }) {
+/**
+ * A check drawn with one stroke as an upload completes. It fades out whole,
+ * and only rewinds once it's gone.
+ */
+function CheckGlyph({
+	drawn,
+	className,
+}: {
+	drawn: boolean;
+	className: string;
+}) {
 	return (
 		<svg
+			data-face=""
 			aria-hidden="true"
 			viewBox="0 0 16 16"
 			fill="none"
-			className="absolute inset-0 size-full overflow-visible"
+			className={className}
 		>
 			<path
 				data-check=""
@@ -619,7 +581,7 @@ function CheckGlyph({ drawn }: { drawn: boolean }) {
 					strokeDashoffset: drawn ? 0 : 1,
 					transition: drawn
 						? "stroke-dashoffset 260ms cubic-bezier(.3,.7,.2,1) 70ms"
-						: "none",
+						: "stroke-dashoffset 0s linear 200ms",
 				}}
 			/>
 		</svg>
@@ -628,13 +590,14 @@ function CheckGlyph({ drawn }: { drawn: boolean }) {
 
 const KIND_ICONS = {
 	image: FileImage,
+	video: FileVideoCamera,
 	audio: FileMusic,
 	archive: FileArchive,
 	document: FileText,
 	file: FileGlyph,
 } as const;
 
-/** The file-type glyph, which cross-morphs into a check or an alert. */
+/** The file-type glyph, which cross-fades into a check or an alert. */
 function ChipIcon({
 	file,
 	state,
@@ -645,22 +608,26 @@ function ChipIcon({
 	px: number;
 }) {
 	const Glyph = KIND_ICONS[fileKind(file)];
+	// A thumbnail that fails to load falls back to the file-type glyph.
+	const [broken, setBroken] = useState<string | null>(null);
+	const thumbnail = file.previewUrl && file.previewUrl !== broken;
 	const face =
-		"absolute inset-0 transition-[opacity,scale,filter] duration-200 ease-out";
-	const hidden = "scale-50 opacity-0 blur-[1px]";
+		"absolute inset-0 transition-[opacity,scale,filter] duration-200 ease-[cubic-bezier(.23,1,.32,1)]";
+	const hidden = "scale-75 opacity-0 blur-[2px]";
 	return (
 		<span
 			aria-hidden="true"
 			className="relative shrink-0"
 			style={{ width: px, height: px }}
 		>
-			<span className={cn(face, state !== "file" && hidden)}>
-				{file.previewUrl ? (
+			<span data-face="" className={cn(face, state !== "file" && hidden)}>
+				{thumbnail ? (
 					// biome-ignore lint/performance/noImgElement: a 16 px thumbnail from any URL
 					<img
 						src={file.previewUrl}
 						alt=""
 						draggable={false}
+						onError={() => setBroken(file.previewUrl ?? null)}
 						className="size-full rounded-[4px] object-cover ring-1 ring-foreground/10"
 					/>
 				) : (
@@ -668,42 +635,53 @@ function ChipIcon({
 				)}
 			</span>
 			<span
+				data-face=""
 				className={cn(face, state !== "alert" && hidden, "text-destructive")}
 			>
 				<CircleAlert className="size-full" strokeWidth={1.75} />
 			</span>
-			<CheckGlyph drawn={state === "check"} />
+			<CheckGlyph
+				drawn={state === "check"}
+				className={cn(
+					face,
+					"size-full overflow-visible",
+					state !== "check" && hidden,
+				)}
+			/>
 		</span>
 	);
 }
 
 /**
- * Percent in three tabular places, as wide as "100%", so the chip never
- * jitters as the number grows. Each place is clipped to one line and
- * holds an in-flow "0" for its width and baseline, so a rolling digit sits on
- * the same baseline as the rest and nothing shows past the line.
+ * Percent in tabular places. Each place is clipped to one line and holds an
+ * in-flow "0" for its width and baseline, so a rolling digit sits on the same
+ * baseline as the rest and nothing shows past the line. A leading place takes
+ * no room until the number reaches it, and the chip's width springs to fit.
  */
 function PercentDigits({
+	placesRef,
 	digitsRef,
-	dim,
 }: {
+	placesRef: RefObject<Array<HTMLSpanElement | null>>;
 	digitsRef: RefObject<Array<HTMLSpanElement | null>>;
-	dim: boolean;
 }) {
 	return (
 		// Numbers read left to right in right-to-left text too.
 		<span
 			aria-hidden="true"
 			dir="ltr"
-			className={cn(
-				"inline-flex shrink-0 tabular-nums transition-opacity duration-200",
-				dim && "opacity-50",
-			)}
+			className="inline-flex shrink-0 tabular-nums"
 		>
 			{[0, 1, 2].map((place) => (
-				<span key={place} className="relative">
+				<span
+					key={place}
+					className="relative"
+					ref={(node) => {
+						placesRef.current[place] = node;
+					}}
+				>
 					<span className="invisible">0</span>
-					<span className="absolute inset-0 overflow-hidden [mask-image:linear-gradient(transparent,#000_18%,#000_82%,transparent)]">
+					<span className="absolute inset-0 overflow-hidden [mask-image:linear-gradient(transparent,#000_20%,#000_80%,transparent)]">
 						{[0, 1].map((slot) => (
 							<span
 								key={slot}
@@ -716,7 +694,7 @@ function PercentDigits({
 					</span>
 				</span>
 			))}
-			<span>%</span>
+			<span className="-ms-[0.04em]">%</span>
 		</span>
 	);
 }
@@ -771,28 +749,26 @@ function Chip({
 	const [phase, setPhase] = useState<Phase>(status);
 	const [stalled, setStalled] = useState(false);
 	const [ghost, setGhost] = useState(morph);
+	// The check shows for a beat after an upload completes, then the file icon
+	// returns, so a row of finished files still reads by type.
+	const [checked, setChecked] = useState(false);
 	const mountedRef = useRef(false);
 
 	const rowRef = useRef<HTMLDivElement>(null);
 	const shellRef = useRef<HTMLDivElement>(null);
-	const fillRef = useRef<HTMLDivElement>(null);
-	const waveRef = useRef<SVGPathElement>(null);
-	const lipRef = useRef<SVGPathElement>(null);
+	const fillRef = useRef<HTMLSpanElement>(null);
+	const placesRef = useRef<Array<HTMLSpanElement | null>>([]);
 	const digitsRef = useRef<Array<HTMLSpanElement | null>>([]);
 
 	const engine = useRef({
 		level: spring(status === "done" ? 1 : determinate ? progress : 0),
-		amp: 0,
-		wave: 0,
 		drain: null as null | { from: number; start: number },
-		lean: 0,
 		/** Each percent place's roll. */
 		digits: [0, 1, 2].map(
 			(): DigitRoll => ({ from: -1, to: -1, t: 1, dir: 1 }),
 		),
 		n: -1,
 		onScreen: true,
-		lastMove: 0,
 	});
 	const latest = useRef({ status, determinate, progress, phase, still });
 	latest.current = { status, determinate, progress, phase, still };
@@ -800,19 +776,16 @@ function Chip({
 	const paint = useCallback(() => {
 		const e = engine.current;
 		const fill = fillRef.current;
-		if (fill) {
-			fill.style.setProperty("--level", e.level.value.toFixed(4));
-		}
-		const [fillPath, linePath] = wavePath(height, e.amp, e.wave, e.lean);
-		waveRef.current?.setAttribute("d", fillPath);
-		lipRef.current?.setAttribute("d", linePath);
+		if (fill) fill.style.transform = `scaleX(${e.level.value.toFixed(4)})`;
 		// The outgoing digit lifts away and fades out before the incoming one
-		// settles in from below, so the two never overlap. Leading places stay
-		// blank until the number reaches them.
+		// settles in from below, so the two never overlap. Leading places take
+		// no room until the number reaches them.
 		for (const [place, d] of e.digits.entries()) {
 			const incoming = digitsRef.current[place * 2];
 			const outgoing = digitsRef.current[place * 2 + 1];
 			if (!incoming || !outgoing) continue;
+			const box = placesRef.current[place];
+			if (box) box.style.display = d.to < 0 && d.t >= 1 ? "none" : "";
 			const k = 1 - (1 - d.t) ** 3;
 			writeDigit(
 				incoming,
@@ -827,7 +800,7 @@ function Chip({
 				clamp(1 - k / 0.5),
 			);
 		}
-	}, [height]);
+	}, []);
 
 	const step = useCallback(
 		(dt: number, now: number) => {
@@ -840,8 +813,6 @@ function Chip({
 					e.level,
 					status === "error" ? 0 : status === "done" ? 1 : progress,
 				);
-				e.amp = 0;
-				e.lean = 0;
 				rollTo(e, percentOf(status, determinate, progress), true);
 				paint();
 				if (status === "done" && phase !== "done") setPhase("done");
@@ -871,20 +842,6 @@ function Chip({
 				);
 			}
 
-			// The wave swells while the fill moves and settles flat when it stops,
-			// and the surface leans into the direction it flows, like a slosh.
-			const velocity = e.level.velocity;
-			const flowing = moving && Math.abs(velocity) > 0.004;
-			if (flowing) e.lastMove = now;
-			const targetAmp = now - e.lastMove < 250 ? WAVE_AMPLITUDE : 0;
-			const ease = 1 - Math.exp(-dt / 0.18);
-			e.amp += (targetAmp - e.amp) * ease;
-			if (Math.abs(e.amp - targetAmp) < 0.02) e.amp = targetAmp;
-			const targetLean = flowing ? clamp(velocity * 6, -1, 1) * MAX_LEAN : 0;
-			e.lean += (targetLean - e.lean) * ease;
-			if (Math.abs(e.lean - targetLean) < 0.02) e.lean = targetLean;
-			e.wave += dt * WAVE_SPEED * Math.PI * 2;
-
 			// Each changed digit rolls to its new value.
 			rollTo(e, percentOf(status, determinate, progress), false);
 			let rolling = false;
@@ -898,7 +855,7 @@ function Chip({
 			if (status === "done" && phase !== "done" && e.level.value >= 0.99) {
 				setPhase("done");
 			}
-			return moving || rolling || e.amp > 0 || e.lean !== 0;
+			return moving || rolling;
 		},
 		[paint],
 	);
@@ -917,23 +874,11 @@ function Chip({
 		if (status === "error" && phase !== "error") {
 			setPhase("error");
 			e.drain = { from: e.level.value, start: performance.now() };
-			if (!still) {
-				shellRef.current?.animate(
-					[
-						{ transform: "translateX(0)" },
-						{ transform: "translateX(-3px)" },
-						{ transform: "translateX(3px)" },
-						{ transform: "translateX(-1.5px)" },
-						{ transform: "translateX(0)" },
-					],
-					{ duration: 320, easing: "ease-out" },
-				);
-			}
 		} else if (status !== "done" && status !== "error" && phase !== status) {
 			setPhase(status);
 		}
 		kick();
-	}, [status, progress, determinate, phase, still, kick, paint]);
+	}, [status, progress, determinate, phase, kick, paint]);
 
 	// Cues for the outcome, only for changes seen after mount.
 	const settledRef = useRef<Phase>(phase);
@@ -943,6 +888,20 @@ function Chip({
 		if (phase === "done" || phase === "error") onSettle(file, phase);
 	}, [phase, file, onSettle]);
 
+	// Only for a chip that finishes while you watch, not one that mounts done.
+	const checkFromRef = useRef(phase);
+	useEffect(() => {
+		const from = checkFromRef.current;
+		checkFromRef.current = phase;
+		if (phase !== "done" || from === "done") return;
+		setChecked(true);
+		const timer = window.setTimeout(() => setChecked(false), CHECK_HOLD);
+		return () => {
+			clearTimeout(timer);
+			setChecked(false);
+		};
+	}, [phase]);
+
 	// No progress for a while reads as waiting.
 	useEffect(() => {
 		setStalled(false);
@@ -951,7 +910,7 @@ function Chip({
 		return () => clearTimeout(timer);
 	}, [status, determinate, progress]);
 
-	// The wave and the sheen only run while the chip is on screen.
+	// The fill and the sheen only run while the chip is on screen.
 	useEffect(() => {
 		const node = shellRef.current;
 		if (!node || typeof IntersectionObserver === "undefined") return;
@@ -992,19 +951,22 @@ function Chip({
 	if (failed) {
 		metaKey = "error";
 		meta = onRetry ? (
-			<button
-				type="button"
-				data-slot="upload-chip-retry"
-				disabled={disabled}
-				aria-label={`Retry ${file.name}`}
-				onClick={(event) => {
-					onAction(event, file.id);
-					onRetry(file.id);
-				}}
-				className="relative cursor-pointer rounded-full px-1 font-medium text-foreground underline-offset-2 outline-none pointer-coarse:after:absolute pointer-coarse:after:-inset-x-2 pointer-coarse:after:-inset-y-3 hover:underline focus-visible:outline-2 focus-visible:outline-foreground"
-			>
-				Retry
-			</button>
+			<span className="flex items-center whitespace-nowrap text-foreground/65">
+				<span aria-hidden="true">·&nbsp;</span>
+				<button
+					type="button"
+					data-slot="upload-chip-retry"
+					disabled={disabled}
+					aria-label={`Retry ${file.name}`}
+					onClick={(event) => {
+						onAction(event, file.id);
+						onRetry(file.id);
+					}}
+					className="relative -mx-0.5 cursor-pointer rounded-sm px-0.5 font-medium text-foreground underline-offset-2 outline-none pointer-coarse:after:absolute pointer-coarse:after:-inset-x-2 pointer-coarse:after:-inset-y-3 hover:underline focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-solid"
+				>
+					Retry
+				</button>
+			</span>
 		) : (
 			<span className="text-foreground/65">Failed</span>
 		);
@@ -1012,7 +974,7 @@ function Chip({
 		metaKey = "size";
 		meta = sizeText ? (
 			<span className="whitespace-nowrap text-foreground/65 tabular-nums">
-				<span aria-hidden="true">· </span>
+				<span aria-hidden="true">·&nbsp;</span>
 				{sizeText}
 			</span>
 		) : null;
@@ -1027,7 +989,7 @@ function Chip({
 		meta = (
 			<span className="inline-flex items-center gap-1.5 text-foreground/65">
 				{stalled ? <span data-fade-in="">Waiting</span> : null}
-				<PercentDigits digitsRef={digitsRef} dim={stalled} />
+				<PercentDigits placesRef={placesRef} digitsRef={digitsRef} />
 			</span>
 		);
 	}
@@ -1068,10 +1030,18 @@ function Chip({
 				className="relative rounded-full"
 				style={{ height }}
 			>
-				{/* The chip's surface and the liquid fill, clipped to the pill. */}
+				{/* The chip's surface and its progress fill, clipped to the pill. */}
 				<span
 					aria-hidden="true"
-					className="absolute inset-0 overflow-hidden rounded-full bg-[color-mix(in_oklab,var(--color-muted)_60%,var(--color-background))] in-data-[wake]:ring-foreground/20 ring-1 ring-foreground/8 ring-inset transition-shadow duration-200 group-data-[behind]/chip:bg-[color-mix(in_oklab,var(--color-muted)_85%,var(--color-foreground)_4%)] dark:group-data-[behind]/chip:bg-[color-mix(in_oklab,var(--color-muted)_80%,var(--color-foreground)_10%)]"
+					className={cn(
+						"absolute inset-0 overflow-hidden rounded-full ring-1 ring-inset transition-[background-color,box-shadow] duration-200",
+						// A failed chip is tinted, except as a tucked edge: the deck's
+						// count says so instead.
+						failed && !behind
+							? "bg-[color-mix(in_oklab,var(--color-destructive)_5%,var(--color-background))] ring-destructive/25 dark:bg-[color-mix(in_oklab,var(--color-destructive)_10%,var(--color-background))] dark:ring-destructive/30"
+							: "bg-[color-mix(in_oklab,var(--color-muted)_60%,var(--color-background))] in-data-[wake]:ring-foreground/20 ring-foreground/8",
+						behind && "ring-foreground/12",
+					)}
 				>
 					<span
 						className={cn(
@@ -1079,34 +1049,16 @@ function Chip({
 							done ? "opacity-0 duration-500" : "opacity-100 duration-150",
 						)}
 					>
-						<div
+						<span
 							ref={fillRef}
-							className="absolute inset-0 text-foreground rtl:-scale-x-100"
-							style={{ "--level": 0 } as CSSProperties}
-						>
-							{/*
-							 * The liquid: a body and its wavy edge, which overlap by half a
-							 * px. One group opacity, so the overlap never shows.
-							 */}
-							<div className="absolute inset-0 opacity-[.07] dark:opacity-[.12]">
-								<span
-									className="absolute inset-y-0 left-0 bg-current"
-									style={{
-										right: `calc((1 - var(--level)) * (100% + ${REACH}px) - 0.5px)`,
-									}}
-								/>
-								<EdgeStrip height={height} pathRef={waveRef} />
-							</div>
-							{/* The surface line, a touch darker, like a meniscus. */}
-							<div className="absolute inset-0 opacity-[.09] dark:opacity-[.14]">
-								<EdgeStrip height={height} pathRef={lipRef} line />
-							</div>
-						</div>
+							className="absolute inset-0 origin-left bg-foreground/[.06] rtl:origin-right dark:bg-foreground/[.08]"
+							style={{ transform: "scaleX(0)" }}
+						/>
 						{indeterminate ? (
 							// No size yet: a soft sheen sweeps behind the text instead.
 							<div
 								data-fade-in=""
-								className="absolute inset-0 text-foreground opacity-[.09] rtl:-scale-x-100 dark:opacity-[.13]"
+								className="absolute inset-0 text-foreground opacity-[.08] rtl:-scale-x-100 dark:opacity-[.1]"
 							>
 								<span
 									data-sheen=""
@@ -1149,19 +1101,27 @@ function Chip({
 						data-fade-in={morph ? "" : undefined}
 						className={cn(
 							"flex h-full w-max items-center whitespace-nowrap transition-opacity duration-150",
-							{
-								sm: "gap-1.5 ps-2 pe-2.5",
-								md: "gap-1.5 ps-2.5 pe-3",
-								lg: "gap-2 ps-3 pe-3.5",
-							}[size],
-							behind && "opacity-0",
+							// The remove button sits in the pill's end cap, concentric with it.
+							removeHandler
+								? {
+										sm: "gap-1.5 ps-2 pe-1.5",
+										md: "gap-1.5 ps-2.5 pe-1.5",
+										lg: "gap-2 ps-3 pe-2",
+									}[size]
+								: {
+										sm: "gap-1.5 ps-2 pe-2.5",
+										md: "gap-1.5 ps-2.5 pe-3",
+										lg: "gap-2 ps-3 pe-3.5",
+									}[size],
+							// Folding, the content fades as the chip tucks in, not before.
+							behind && "opacity-0 delay-100",
 						)}
 						style={morph ? { animationDelay: "50ms" } : undefined}
 					>
 						<ChipIcon
 							file={file}
 							px={iconPx}
-							state={failed ? "alert" : done ? "check" : "file"}
+							state={failed ? "alert" : done && checked ? "check" : "file"}
 						/>
 						<span
 							{...progressProps}
@@ -1194,24 +1154,26 @@ function Chip({
 							) : null}
 						</span>
 						{removeHandler ? (
-							<span
-								data-slot="upload-chip-remove-slot"
-								className="pointer-events-none pointer-coarse:pointer-events-auto -ms-1.5 pointer-coarse:ms-0 flex pointer-coarse:w-4 w-0 shrink-0 justify-end overflow-hidden pointer-coarse:overflow-visible opacity-0 pointer-coarse:opacity-100 transition-opacity duration-150 group-hover/chip:pointer-events-auto group-hover/chip:ms-0 group-hover/chip:w-4 group-hover/chip:overflow-visible group-hover/chip:opacity-100 group-has-[:focus-visible]/chip:pointer-events-auto group-has-[:focus-visible]/chip:ms-0 group-has-[:focus-visible]/chip:w-4 group-has-[:focus-visible]/chip:overflow-visible group-has-[:focus-visible]/chip:opacity-100"
+							<button
+								type="button"
+								data-slot="upload-chip-remove"
+								disabled={disabled}
+								aria-label={removeLabel}
+								onClick={(event) => {
+									onAction(event, file.id);
+									removeHandler(file.id);
+								}}
+								className={cn(
+									"relative flex shrink-0 cursor-pointer items-center justify-center rounded-full text-foreground/55 outline-none transition-[color,background-color] duration-150 pointer-coarse:after:absolute hover:bg-foreground/8 hover:text-foreground focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-solid",
+									{
+										sm: "size-4 pointer-coarse:after:-inset-3.5 [&_svg]:size-3",
+										md: "size-5 pointer-coarse:after:-inset-3 [&_svg]:size-3.5",
+										lg: "size-6 pointer-coarse:after:-inset-2.5 [&_svg]:size-4",
+									}[size],
+								)}
 							>
-								<button
-									type="button"
-									data-slot="upload-chip-remove"
-									disabled={disabled}
-									aria-label={removeLabel}
-									onClick={(event) => {
-										onAction(event, file.id);
-										removeHandler(file.id);
-									}}
-									className="relative -me-0.5 flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-full text-foreground/55 outline-none transition-colors pointer-coarse:after:absolute pointer-coarse:after:-inset-3.5 hover:text-foreground focus-visible:outline-2 focus-visible:outline-foreground"
-								>
-									<X className="size-3.5" strokeWidth={2} />
-								</button>
-							</span>
+								<X strokeWidth={2} />
+							</button>
 						) : null}
 					</div>
 				</div>
@@ -1315,19 +1277,20 @@ function AttachButton({
 			aria-label={ariaLabel}
 			onClick={onClick}
 			className={cn(
-				"group/attach relative shrink-0 cursor-pointer touch-manipulation select-none rounded-full font-medium text-foreground text-sm outline-none transition-[box-shadow] duration-200 pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 disabled:cursor-not-allowed data-[wake]:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-foreground)_5%,transparent),0_2px_14px_color-mix(in_oklab,var(--color-foreground)_10%,transparent)]",
+				"group/attach relative shrink-0 cursor-pointer touch-manipulation select-none rounded-full font-medium text-foreground text-sm outline-none transition-[scale] duration-150 ease-out pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-solid focus-visible:outline-offset-2 active:scale-[0.97] disabled:cursor-not-allowed",
 				{
 					sm: "text-xs pointer-coarse:after:-inset-y-2",
 					md: "pointer-coarse:after:-inset-y-1.5",
 					lg: "text-[15px] pointer-coarse:after:-inset-y-0.5",
 				}[size],
-				compact && "text-foreground/70 hover:text-foreground",
+				compact &&
+					"text-foreground/65 transition-[scale,color] hover:text-foreground data-[wake]:text-foreground",
 			)}
 			style={{ height, minWidth: height }}
 		>
 			<span
 				aria-hidden="true"
-				className="absolute inset-0 rounded-full bg-[color-mix(in_oklab,var(--color-muted)_60%,var(--color-background))] ring-1 ring-foreground/8 ring-inset transition-[background-color,box-shadow] duration-200 group-hover/attach:bg-[color-mix(in_oklab,var(--color-muted)_100%,var(--color-foreground)_2%)] group-data-[wake]/attach:ring-foreground/20"
+				className="absolute inset-0 rounded-full bg-[color-mix(in_oklab,var(--color-muted)_60%,var(--color-background))] ring-1 ring-foreground/8 ring-inset transition-[background-color,box-shadow] duration-150 group-hover/attach:bg-muted group-data-[wake]/attach:bg-muted group-data-[wake]/attach:ring-foreground/25"
 			/>
 			<span
 				ref={clipRef}
@@ -1366,8 +1329,8 @@ function AttachButton({
 
 /**
  * An attach button that becomes the upload itself. Pick or drop a file and the
- * pill springs into a chip that fills with liquid as bytes go up, rolls its
- * percent, and turns its file icon into a check. More files tuck into a deck.
+ * pill springs into a chip that fills as bytes go up, rolls its percent, and
+ * turns its file icon into a check. More files tuck into a deck.
  */
 export function UploadChip({
 	files = [],
@@ -1458,9 +1421,12 @@ export function UploadChip({
 	const [fanned, setFanned] = useState(false);
 	const [announcement, setAnnouncement] = useState("");
 	const fanOpen = !stack || (fanned && live.length > 1);
+	/** A tucked file failed, which the count shows with a dot. */
+	const hiddenError = live
+		.slice(1)
+		.some((item) => item.file.status === "error");
 
 	const rootRef = useRef<HTMLDivElement>(null);
-	const stageRef = useRef<HTMLDivElement>(null);
 	const listRef = useRef<HTMLUListElement>(null);
 	const countRef = useRef<HTMLSpanElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -1504,7 +1470,12 @@ export function UploadChip({
 				else if (kind === "done") playDone();
 				else playError();
 			}
-			if (haptics && isTouchDevice()) {
+			// Browsers block vibration until the page has had a tap.
+			if (
+				haptics &&
+				isTouchDevice() &&
+				(navigator.userActivation?.hasBeenActive ?? true)
+			) {
 				void haptic(
 					kind === "attach" ? "light" : kind === "done" ? "success" : "error",
 				);
@@ -1651,7 +1622,9 @@ export function UploadChip({
 		}
 		const ul = listRef.current;
 		if (ul) {
-			ul.style.width = `${Math.ceil(right)}px`;
+			// Never wider than the room, so the attach button beside it stays on
+			// its line while the deck folds.
+			ul.style.width = `${Math.ceil(Math.min(right, d.avail))}px`;
 			ul.style.height = `${Math.ceil(bottom)}px`;
 		}
 	}, []);
@@ -1853,6 +1826,12 @@ export function UploadChip({
 		current.morphId,
 	]);
 
+	// The count's failure dot changes its width.
+	// biome-ignore lint/correctness/useExhaustiveDependencies: re-runs when the dot shows or hides
+	useLayoutEffect(() => {
+		if (deck.current.ready) relayout();
+	}, [hiddenError, relayout]);
+
 	// A deck down to one chip forgets it was fanned.
 	useEffect(() => {
 		if (live.length <= 1 && fanned) setFanned(false);
@@ -1939,6 +1918,8 @@ export function UploadChip({
 	// Fan out on hover (mouse) or focus, fold back a beat after leaving.
 	const closeTimer = useRef(0);
 	const suppressRef = useRef(false);
+	const hoverRef = useRef(false);
+	const movingFocusRef = useRef(false);
 	const openFan = useCallback(() => {
 		clearTimeout(closeTimer.current);
 		if (!suppressRef.current) setFanned(true);
@@ -1993,61 +1974,22 @@ export function UploadChip({
 		};
 	}, [disabled]);
 
-	// Dragging over the chip pulls it toward the pointer, a few px at most.
-	const magnet = useRef({ x: spring(0), y: spring(0) });
-	const kickMagnet = useFrameLoop((dt) => {
-		const m = magnet.current;
-		const a = stepSpring(m.x, dt, magnetSpring, 0.02);
-		const b = stepSpring(m.y, dt, magnetSpring, 0.02);
-		const stage = stageRef.current;
-		if (stage) {
-			stage.style.transform =
-				m.x.value === 0 && m.y.value === 0
-					? ""
-					: `translate(${m.x.value.toFixed(2)}px,${m.y.value.toFixed(2)}px)`;
-		}
-		return a || b;
-	});
-	const pull = useCallback(
-		(clientX: number | null, clientY = 0) => {
-			const m = magnet.current;
-			const stage = stageRef.current;
-			if (clientX === null || !stage || latest.current.still) {
-				m.x.target = 0;
-				m.y.target = 0;
-			} else {
-				const box = stage.getBoundingClientRect();
-				const dx = clientX - (box.left + box.width / 2) + m.x.value;
-				const dy = clientY - (box.top + box.height / 2) + m.y.value;
-				const length = Math.hypot(dx, dy) || 1;
-				const reach = Math.min(MAGNET_MAX, length * 0.08);
-				m.x.target = (dx / length) * reach;
-				m.y.target = (dy / length) * reach;
-			}
-			kickMagnet();
-		},
-		[kickMagnet],
-	);
-
 	const [over, setOver] = useState(false);
 	const onDragOver = (event: DragEvent<HTMLDivElement>) => {
 		if (!hasFiles(event) || !latest.current.canAdd) return;
 		event.preventDefault();
 		event.dataTransfer.dropEffect = "copy";
 		setOver(true);
-		pull(event.clientX, event.clientY);
 	};
 	const onDragLeave = (event: DragEvent<HTMLDivElement>) => {
 		if (event.currentTarget.contains(event.relatedTarget as Node | null))
 			return;
 		setOver(false);
-		pull(null);
 	};
 	const onDrop = (event: DragEvent<HTMLDivElement>) => {
 		if (!hasFiles(event)) return;
 		event.preventDefault();
 		setOver(false);
-		pull(null);
 		addFiles(Array.from(event.dataTransfer.files));
 	};
 
@@ -2087,22 +2029,40 @@ export function UploadChip({
 
 	const listPointer = {
 		onPointerEnter: (event: PointerEvent<HTMLUListElement>) => {
-			if (event.pointerType !== "touch") openFan();
+			if (event.pointerType === "touch") return;
+			hoverRef.current = true;
+			openFan();
 		},
 		onPointerLeave: (event: PointerEvent<HTMLUListElement>) => {
 			suppressRef.current = false;
-			if (event.pointerType !== "touch") closeFanSoon();
+			if (event.pointerType === "touch") return;
+			hoverRef.current = false;
+			closeFanSoon();
 		},
 		onClick: () => {
 			// A tap on a folded deck fans it out, so tucked chips can be reached.
 			if (!fanned && live.length > 1) openFan();
 		},
-		onFocus: () => openFan(),
+		onFocus: (event: FocusEvent<HTMLUListElement>) => {
+			// Focus moving on after Escape (a Tab, not the Escape itself)
+			// fans the deck out again, so the focused chip shows.
+			if (movingFocusRef.current) return;
+			if (
+				suppressRef.current &&
+				event.relatedTarget &&
+				event.currentTarget.contains(event.relatedTarget as Node)
+			) {
+				suppressRef.current = false;
+			}
+			openFan();
+		},
 		onBlur: (event: FocusEvent<HTMLUListElement>) => {
 			if (event.currentTarget.contains(event.relatedTarget as Node | null))
 				return;
 			suppressRef.current = false;
-			closeFanSoon();
+			// A clicked remove button loses focus as its chip leaves; the pointer
+			// is still over the deck, so it stays fanned.
+			if (!hoverRef.current) closeFanSoon();
 		},
 	};
 
@@ -2113,6 +2073,19 @@ export function UploadChip({
 		clearTimeout(closeTimer.current);
 		suppressRef.current = true;
 		setFanned(false);
+		// Focus on a chip about to tuck away moves to the front chip, or to the
+		// attach button, so it never sits on a hidden control.
+		const active = document.activeElement;
+		const chip = active?.closest("[data-slot=upload-chip-item]");
+		const frontChip = front ? geos.current.get(front)?.li : null;
+		if (chip && chip !== frontChip) {
+			const next =
+				frontChip?.querySelector<HTMLElement>("button:not(:disabled)") ??
+				compactRef.current;
+			movingFocusRef.current = true;
+			next?.focus({ preventScroll: true });
+			movingFocusRef.current = false;
+		}
 	};
 
 	const front = live[0]?.file.id;
@@ -2155,7 +2128,6 @@ export function UploadChip({
 				data-slot="upload-chip-input"
 			/>
 			<div
-				ref={stageRef}
 				className="flex max-w-full flex-wrap items-start"
 				style={{ gap: GAP }}
 			>
@@ -2210,22 +2182,20 @@ export function UploadChip({
 								data-slot="upload-chip-count"
 								aria-hidden="true"
 								className={cn(
-									"pointer-events-none absolute start-0 top-0 flex items-center transition-opacity duration-150",
+									"pointer-events-none absolute start-0 top-0 flex items-center font-medium text-foreground/60 tabular-nums transition-opacity duration-150",
+									size === "lg" ? "text-[13px]" : "text-xs",
 									fanOpen ? "opacity-0" : "opacity-100 delay-75",
 								)}
 								style={{ height }}
 							>
-								{/* A small pill of its own, so it reads as the deck's count. */}
-								<span
-									className={cn(
-										"flex items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--color-muted)_60%,var(--color-background))] font-medium text-foreground/70 tabular-nums ring-1 ring-foreground/8 ring-inset",
-										size === "lg"
-											? "h-6 min-w-6 px-2 text-xs"
-											: "h-5 min-w-5 px-1.5 text-[11px]",
-									)}
-								>
-									+{extra}
-								</span>
+								+{extra}
+								{hiddenError ? (
+									// A tucked file failed.
+									<span
+										data-fade-in=""
+										className="ms-[3px] size-[5px] -translate-y-[0.35em] rounded-full bg-destructive"
+									/>
+								) : null}
 							</span>
 						) : null}
 					</ul>

@@ -23,8 +23,8 @@ export const components: Registry["items"] = [
 		categories: ["inputs"],
 		meta: {
 			createdAt: "2026-11-15",
-			image: "https://cdn.tentui.com/images/components/upload-chip?v=1",
-			video: "https://cdn.tentui.com/videos/components/upload-chip?v=1",
+			image: "https://cdn.tentui.com/images/components/upload-chip?v=2",
+			video: "https://cdn.tentui.com/videos/components/upload-chip?v=2",
 		},
 		docs: "https://tentui.com/components/upload-chip",
 	},

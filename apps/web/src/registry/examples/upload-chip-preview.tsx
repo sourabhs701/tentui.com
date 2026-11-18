@@ -114,7 +114,7 @@ function useActive(ref: RefObject<HTMLElement | null>) {
 	return active;
 }
 
-/** A synthetic file drag over the chip: it wakes and leans toward the pointer. */
+/** A synthetic file drag over the chip, which wakes it. */
 function dragOver(root: HTMLElement | null, files: string[], drop: boolean) {
 	const target = root?.querySelector<HTMLElement>(
 		"[data-slot=upload-chip-attach]",
@@ -128,8 +128,8 @@ function dragOver(root: HTMLElement | null, files: string[], drop: boolean) {
 			bubbles: true,
 			cancelable: true,
 			dataTransfer,
-			clientX: box.left + box.width / 2 - 40,
-			clientY: box.top + box.height / 2 - 18,
+			clientX: box.left + box.width / 2,
+			clientY: box.top + box.height / 2,
 		}),
 	);
 }

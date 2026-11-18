@@ -7885,7 +7885,7 @@
 				},
 				{
 					"name": "animated",
-					"description": "Set `false` to skip the springs, the wave, and the shake, as with reduced motion.",
+					"description": "Set `false` to skip the springs and the rolling digits, as with reduced motion.",
 					"tags": [
 						{
 							"name": "component-prop",

@@ -128,9 +128,9 @@ function TryIt() {
 	return (
 		<div
 			ref={box}
-			className="flex w-full max-w-sm flex-col gap-3 rounded-2xl border bg-background p-3"
+			className="flex w-full max-w-sm flex-col gap-3 rounded-2xl border bg-background p-2.5 shadow-xs"
 		>
-			<p className="px-1 text-muted-foreground text-sm">
+			<p className="px-1.5 pt-1 text-muted-foreground text-sm">
 				Pick a file, or drop one anywhere in this box.
 			</p>
 			<UploadChip
@@ -211,6 +211,7 @@ function Indeterminate() {
 	}, [run]);
 	return (
 		<UploadChip
+			multiple={false}
 			files={[
 				done
 					? {
@@ -232,6 +233,7 @@ function Indeterminate() {
 function Stalled() {
 	return (
 		<UploadChip
+			multiple={false}
 			files={[
 				{
 					id: "stalled",
@@ -334,7 +336,7 @@ function Row({
 function Sizes() {
 	// One file per row and no attach button, so only the size differs.
 	return (
-		<div className="grid w-full max-w-md grid-cols-[auto_minmax(0,1fr)] items-center gap-x-5 gap-y-4 px-2">
+		<div className="grid w-full max-w-lg grid-cols-[auto_minmax(0,1fr)] items-center gap-x-5 gap-y-4 px-2">
 			{SIZE_ROWS.map(({ size, file }) => (
 				<Row key={size} label={size}>
 					<UploadChip size={size} multiple={false} files={[file]} />
