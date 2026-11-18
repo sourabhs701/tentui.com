@@ -53,6 +53,8 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"ripple-reveal": { zoom: 1.2 },
 	"rotary-knob": { zoom: 1.5 },
 	"scratch-card": { zoom: 1.3 },
+	// A tall panel; framed at 1:1 so the reading band keeps its proportions.
+	"scroll-accordion": { className: "place-items-center content-center px-8" },
 	"search-command": { zoom: 2 },
 	"snap-sheet": {},
 	"star-rating": { zoom: 1.5 },

@@ -4,6 +4,34 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "scroll-accordion-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scroll-accordion")],
+		files: [
+			{
+				path: "examples/scroll-accordion-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "scroll-accordion-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("scroll-accordion")],
+		files: [
+			{
+				path: "examples/scroll-accordion-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			demoClassName: "min-h-96 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "agent-thinking-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("agent-thinking")],

@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "scroll-accordion",
+		type: "registry:component",
+		title: "Scroll Accordion",
+		description:
+			"An accordion you open by scrolling. Headers you have read stack up at the top like a deck of index cards, the ones ahead wait at the bottom, and the section you are reading fills the space between, with a ring on each header that fills as you read.",
+		dependencies: ["@rexa-developer/tiks", "web-haptics"],
+		files: [
+			{
+				path: "components/scroll-accordion/scroll-accordion.tsx",
+				type: "registry:component",
+				target: "@components/scroll-accordion.tsx",
+			},
+		],
+		categories: ["lists"],
+		meta: {
+			createdAt: "2026-11-16",
+			image: "https://cdn.tentui.com/images/components/scroll-accordion?v=1",
+			video: "https://cdn.tentui.com/videos/components/scroll-accordion?v=1",
+		},
+		docs: "https://tentui.com/components/scroll-accordion",
+	},
+	{
 		name: "agent-thinking",
 		type: "registry:component",
 		title: "Agent Thinking",
