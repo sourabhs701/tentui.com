@@ -1,12 +1,19 @@
 ---
 title: Star Rating
-description: A 1–5 star input you tap, sweep across, or arrow through, with a tick per star, half stars, and a pop when a pick lands.
-seoDescription: Star Rating is a React 1–5 star input for shadcn/ui you tap, sweep, or arrow through, with half stars, a tick per star, and a pop when a pick lands.
+description: A React star rating input with 1–5 stars you tap, sweep across, or arrow through, with a tick per star, half stars, and a pop when a pick lands.
+seoTitle: Star Rating React Component for shadcn/ui
+seoDescription: Star Rating is a React star rating input for shadcn/ui. Tap, sweep, or arrow through 1–5 stars, with half stars, a read-only mode, and native form support.
 createdAt: 2026-10-25
-updatedAt: 2026-11-12
+updatedAt: 2026-11-19
 ---
 
 <ComponentPreview name="star-rating-preview" />
+
+Star Rating is a star rating component for React and shadcn/ui: an accessible
+`radiogroup` you tap, sweep across, or arrow through, with half stars through
+`allowHalf` and a read-only mode for review cards. It submits with native forms
+through `name` and works with React Hook Form through `value` and
+`onValueChange`.
 
 ## Example
 
@@ -129,7 +136,7 @@ rather than decorate movement; turn them off with `sound={false}` and
 
 ## FAQ
 
-### How do I install the Star Rating with shadcn?
+### How do I install the React star rating with shadcn?
 
 Run `npx shadcn@latest add @tentui/star-rating` after adding the `@tentui`
 registry to `components.json` ([installation guide](/docs/installation)), or run
@@ -143,7 +150,7 @@ Yes. Set `allowHalf` and the left half of each star rates x.5, while the arrow
 keys move half a star at a time. Read-only ratings show any fraction, so a
 `value` of 4.3 fills 30% of the fifth star.
 
-### Is the Star Rating accessible and keyboard navigable?
+### Is this React star rating accessible and keyboard navigable?
 
 Yes. It is a `radiogroup`, named "Rating" unless you pass `aria-label`, with one
 radio per step such as "3 stars". The arrow keys move one step, `Home` and `End`

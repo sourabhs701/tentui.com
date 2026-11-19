@@ -1,13 +1,21 @@
 ---
 title: OTP Field
-description: A one-time code input with a slot per digit, a tick per keystroke, a cascade on paste, and a shake when the code is wrong.
-seoTitle: React OTP Input Component for shadcn/ui
-seoDescription: OTP Field is a React one-time code input for shadcn/ui with a slot per digit, a tick per keystroke, a cascade on paste, and a shake when the code is wrong.
+description: A React OTP input for shadcn/ui with a slot per digit over one native input, SMS autofill, a tick per keystroke, a cascade on paste, and a shake when the code is wrong.
+seoTitle: "OTP Field: React OTP Input Component for shadcn/ui"
+seoDescription: OTP Field is a React OTP input for shadcn/ui. One native input with SMS autofill and paste, a slot per digit, a tick per keystroke, and a shake on a wrong code.
 createdAt: 2026-10-26
-updatedAt: 2026-11-11
+updatedAt: 2026-11-19
 ---
 
 <ComponentPreview name="otp-field-preview" />
+
+OTP Field is a React OTP input for shadcn/ui: one real `<input>` with
+`autocomplete="one-time-code"`, drawn as a slot per digit, so SMS autofill,
+paste, and password managers work natively while each digit springs into
+place. Install it with `npx shadcn@latest add @tentui/otp-field` and drive the
+verifying, success, and error states with one `status` prop. If an existing
+OTP field's cursor stays in one box on mobile, see
+[how to fix an OTP input cursor on mobile](/blog/fix-otp-input-cursor-mobile).
 
 ## Example
 
@@ -171,7 +179,7 @@ decorate movement; turn them off with `sound={false}` and `haptics={false}`.
 
 ## FAQ
 
-### How do I install the OTP Field with shadcn?
+### How do I install this shadcn OTP input?
 
 Run `npx shadcn@latest add @tentui/otp-field` after adding the `@tentui`
 registry to `components.json` ([installation guide](/docs/installation)), or run
@@ -179,20 +187,22 @@ registry to `components.json` ([installation guide](/docs/installation)), or run
 copies `otp-field.tsx` into your project and installs `motion`, `lucide-react`,
 `web-haptics`, and `@rexa-developer/tiks`.
 
-### Does the OTP Field support SMS autofill and paste?
+### Does the OTP input support SMS autofill and paste?
 
 Yes. It is a single input with `autocomplete="one-time-code"`, so iOS and
 Android can offer codes from incoming messages, and pasting a code fills the
-slots from the first one. Digit-only fields open the numeric keypad on mobile.
+slots from the first one. Because there is one input rather than one per digit,
+typing, `Backspace`, and paste never hand focus between boxes, and digit-only
+fields open the numeric keypad on mobile.
 
-### Is the OTP Field accessible to screen readers?
+### Is the OTP field accessible to screen readers?
 
 Yes. Screen readers announce one labeled textbox, named "One-time code" by
 default, instead of one box per digit. The input sets `aria-invalid` while
 `status` is `error`, and a polite live region announces verifying, success, and
 error states.
 
-### How do I use it with React Hook Form or a native form?
+### How do I use the OTP input with React Hook Form or a native form?
 
 Control it with `value` and `onValueChange`; with React Hook Form, pass
 `field.value` and `field.onChange` from a `Controller`. For a native form or a

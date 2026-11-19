@@ -1,13 +1,19 @@
 ---
 title: Search Command
-description: Search pages and run actions from a polished, keyboard-first command menu.
-seoTitle: React Search Command Menu for shadcn/ui
-seoDescription: Search Command is a keyboard-first React command menu for shadcn/ui. Open it with Cmd+K or / to search pages and run actions, styled with Tailwind CSS.
+description: A keyboard-first command palette for React and shadcn/ui that searches pages and runs actions from a polished dialog, with optional Cmd+K and / shortcuts.
+seoTitle: "Shadcn Command Palette for React: Search Command"
+seoDescription: Search Command is a shadcn command palette for React. A keyboard-first cmdk dialog searches pages and runs actions, with optional Cmd+K and / shortcuts.
 createdAt: 2026-07-30
-updatedAt: 2026-11-12
+updatedAt: 2026-11-19
 ---
 
 <ComponentPreview name="search-command-preview" />
+
+Search Command is a shadcn command palette for React: a compact trigger that
+opens a dialog where people search pages, run actions, and change settings
+from the keyboard. It is built on the shadcn `command` component (cmdk), keeps
+routing framework-agnostic through selection callbacks, and opens with
+`Mod+K` or `/` once you pass `enabledHotkeys`.
 
 ## Example
 
@@ -183,7 +189,7 @@ The trigger exposes its dialog state and `Meta+K`, `Control+K`, and `/` shortcut
 
 ## FAQ
 
-### How do I install the Search Command with shadcn?
+### How do I install this shadcn command palette?
 
 Run `npx shadcn@latest add @tentui/search-command` after adding the `@tentui`
 registry to `components.json` ([installation guide](/docs/installation)), or run
@@ -192,7 +198,7 @@ The CLI copies `search-command.tsx` into your project, installs `lucide-react`
 and `react-hotkeys-hook`, and adds the shadcn `button`, `command`, and `kbd`
 components.
 
-### Why doesn't Cmd+K open the Search Command?
+### Why doesn't Cmd+K open the command palette?
 
 The shortcuts are off by default, so pass `enabledHotkeys` to turn on `Mod+K`
 and `/`, and set `shortcutKey` to use another letter. To open it from your own
@@ -211,7 +217,7 @@ Give each item a `value` such as its path and call your router in
 `onItemSelect`, for example `router.push(item.value)`. Items can also run their
 own `onSelect`, and both callbacks run after the dialog closes.
 
-### Is the Search Command keyboard accessible?
+### Is the React command palette keyboard accessible?
 
 Yes. It is built on the shadcn `command` component (cmdk) inside a dialog, so
 arrow keys move through results, `Enter` runs the highlighted one, and `Escape`
