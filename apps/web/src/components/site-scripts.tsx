@@ -3,6 +3,11 @@
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 
+// Queue stub from the official tkit snippet: calls made before the loader runs
+// are pushed to tkit.q, which the loader drains on startup.
+const tkitQueueStub =
+	"window.tkit=window.tkit||function(){(window.tkit.q=window.tkit.q||[]).push(arguments)};";
+
 export function SiteScripts() {
 	const pathname = usePathname();
 
@@ -19,9 +24,12 @@ export function SiteScripts() {
 				src="https://co.srb.codes/script.js"
 				strategy="lazyOnload"
 			/>
+			<Script id="tkit-queue" strategy="afterInteractive">
+				{tkitQueueStub}
+			</Script>
 			<Script
-				src="https://cdn.tkit.ai/widget.js"
-				data-widget-id="aVokg3U3"
+				src="https://widget.tkit.ai/loader.js"
+				data-widget-id="BZc0bJ1oNSqU"
 				strategy="lazyOnload"
 			/>
 		</>
