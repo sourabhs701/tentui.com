@@ -1,12 +1,19 @@
 ---
 title: Wheel Picker
-description: An iOS-style scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.
-seoDescription: Wheel Picker is an iOS-style React scroll wheel for shadcn/ui that coasts with inertia and settles on a row, with a detent tick and haptic tap per row.
+description: An iOS-style React wheel picker, a scroll wheel that coasts with inertia and settles on a row, with a detent tick and a haptic tap for every row that passes the centre.
+seoTitle: "React Wheel Picker: iOS-Style Picker for shadcn/ui"
+seoDescription: Wheel Picker is an iOS-style React wheel picker for shadcn/ui. It coasts with inertia, settles on a row, and ticks with a haptic tap for every row it passes.
 createdAt: 2026-10-31
-updatedAt: 2026-11-11
+updatedAt: 2026-11-19
 ---
 
 <ComponentPreview name="wheel-picker-preview" />
+
+Wheel Picker is a React wheel picker for shadcn/ui: an iOS-style scroll wheel
+for times, durations, and short option lists that you drag, flick, scroll, or
+arrow through. Each wheel is an accessible `listbox`, and `WheelPickerGroup`
+lines several wheels up under one selection band to build a time or date
+picker.
 
 ## Example
 
@@ -218,7 +225,7 @@ rather than decorate movement.
 
 ## FAQ
 
-### How do I install the Wheel Picker with shadcn?
+### How do I install the React wheel picker with shadcn?
 
 Run `npx shadcn@latest add @tentui/wheel-picker` after adding the `@tentui`
 registry to `components.json` ([installation guide](/docs/installation)), or run
@@ -226,7 +233,7 @@ registry to `components.json` ([installation guide](/docs/installation)), or run
 CLI copies `wheel-picker.tsx` into your project and installs `motion`,
 `web-haptics`, and `@rexa-developer/tiks`.
 
-### Can I build an iOS-style time or date picker with it?
+### Can I build an iOS-style time or date picker in React with it?
 
 Yes. Put one `WheelPicker` per column inside `WheelPickerGroup`, which lines the
 wheels up under one shared selection band, and set `loop` on columns such as
@@ -239,7 +246,7 @@ Yes. Each wheel is a `listbox` with one tab stop: arrow keys move one row,
 typing jumps to a matching label. Name each wheel with `aria-label` or
 `aria-labelledby` so screen readers announce it with the selected option.
 
-### Does it work as a controlled component or with React Hook Form?
+### Does the wheel picker work as a controlled component or with React Hook Form?
 
 Yes. Pass `value` and `onValueChange`, which fires once when the wheel settles
 on a new value rather than for every row it passes. With React Hook Form, render

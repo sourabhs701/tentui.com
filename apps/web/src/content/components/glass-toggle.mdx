@@ -1,12 +1,21 @@
 ---
 title: Glass Toggle
-description: An on/off switch with a thumb of thick frosted glass. Flip it and the thumb springs across, a pixel moon scatters and reassembles as a pixel sun, and a rim light runs round the glass from cool lilac to warm amber.
-seoDescription: Glass Toggle is a React switch for shadcn/ui with a frosted glass thumb that springs across as a pixel moon reassembles into a pixel sun under a warm rim light.
+description: A liquid glass toggle switch for React with a thumb of thick frosted glass. Flip it and the thumb springs across, a pixel moon scatters and reassembles as a pixel sun, and a rim light runs round the glass from cool lilac to warm amber.
+seoTitle: Liquid Glass Toggle Switch for React and shadcn/ui
+seoDescription: Glass Toggle is a liquid glass toggle switch for React and shadcn/ui. Its frosted thumb springs across as a pixel moon becomes a sun under a warm rim light.
 createdAt: 2026-11-11
-updatedAt: 2026-11-12
+updatedAt: 2026-11-19
 ---
 
 <ComponentPreview name="glass-toggle-preview" />
+
+Glass Toggle is a liquid glass toggle switch for React and shadcn/ui: an
+accessible `role="switch"` button whose frosted glass thumb springs across
+while a pixel moon reassembles as a pixel sun. The glass is stacked CSS and SVG
+layers, with no WebGL, canvas, or `backdrop-filter`, so it looks the same in
+every browser. For how it compares with the refracting
+[Liquid Glass Menu](/components/liquid-glass-menu), read the guide to
+[liquid glass in React](/blog/liquid-glass-react).
 
 ## Example
 
@@ -172,7 +181,7 @@ stay on because they confirm the switch rather than decorate movement.
 
 ## FAQ
 
-### How do I install the Glass Toggle with shadcn?
+### How do I install the liquid glass toggle with shadcn?
 
 Run `npx shadcn@latest add @tentui/glass-toggle` after adding the `@tentui`
 registry to `components.json` ([installation guide](/docs/installation)), or run
@@ -180,7 +189,7 @@ registry to `components.json` ([installation guide](/docs/installation)), or run
 CLI copies `glass-toggle.tsx` into your project and installs `motion`,
 `web-haptics`, and `@rexa-developer/tiks`.
 
-### Is the Glass Toggle accessible?
+### Is the glass toggle switch accessible?
 
 Yes. It is a `button` with `role="switch"` and `aria-checked`, named by `label`,
 `aria-label`, or `aria-labelledby`, and `Space` or `Enter` flips it. The state
@@ -202,10 +211,10 @@ Yes, though it knows nothing about themes on its own. Pass
 with `next-themes`; for a ready-made button, use the
 [Theme Toggle](/components/theme-toggle).
 
-### Does it use WebGL, and can I change the light colors?
+### Does the liquid glass toggle use WebGL or backdrop-filter?
 
-No WebGL or canvas: the glass is stacked CSS and SVG layers, and nothing renders
-per frame at rest. Set the `--glass-toggle-off` and `--glass-toggle-on` CSS
+No. The glass is stacked CSS and SVG layers with no WebGL, canvas, or
+`backdrop-filter`, and nothing renders per frame at rest. Set the `--glass-toggle-off` and `--glass-toggle-on` CSS
 variables through `className` to retheme the rim light, and `size="sm"` for
 dense lists.
 

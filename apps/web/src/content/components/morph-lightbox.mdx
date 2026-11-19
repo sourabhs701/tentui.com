@@ -1,13 +1,20 @@
 ---
 title: Morph Lightbox
 description: A React image lightbox for shadcn/ui that grows out of the thumbnail you clicked, uncrops to the photo's true aspect ratio, scrolls natively between slides, and pulls down to dismiss back into the photo you are on.
-seoTitle: React Morph Lightbox Component for shadcn/ui
-seoDescription: Morph Lightbox is a React image lightbox for shadcn/ui. The photo morphs out of its thumbnail, slides snap natively, and a pull down shrinks it back into its cell.
+seoTitle: React Lightbox with Thumbnail Morph for shadcn/ui
+seoDescription: Morph Lightbox is a React lightbox for image galleries. Photos morph out of their thumbnails, slides snap natively, and a pull down returns them to the grid.
 createdAt: 2026-11-12
-updatedAt: 2026-11-12
+updatedAt: 2026-11-19
 ---
 
 <ComponentPreview name="morph-lightbox-preview" />
+
+Morph Lightbox is a React lightbox for image galleries: each photo opens out of
+the thumbnail you clicked, swipes between slides with native scroll snapping,
+and closes back into the grid. It installs with the shadcn CLI, but it is a
+general React lightbox rather than a wrapper around a shadcn component: it
+brings its own accessible modal dialog, and beyond the usual `cn` helper its
+only dependencies are `motion`, `web-haptics`, and `@rexa-developer/tiks`.
 
 ## Example
 
@@ -199,7 +206,7 @@ and the filmstrip mirror. Pinch zoom and browser zoom keep working.
 
 ## FAQ
 
-### How does the Morph Lightbox animate from the thumbnail?
+### How does this React lightbox animate from the thumbnail?
 
 On open it measures the thumbnail and the slide, then flies a copy of the photo
 between the two rects on a spring. Its frame animates size and corner radius
@@ -207,7 +214,7 @@ while the image inside stays `object-fit: cover`, so the crop opens up to the
 true aspect ratio rather than a cropped bitmap being scaled. On close it does
 the same in reverse, into the thumbnail of the current slide.
 
-### Is the Morph Lightbox accessible with a keyboard and screen readers?
+### Is the React lightbox accessible with a keyboard and screen readers?
 
 Yes. Thumbnails are buttons, and the viewer is a modal dialog labelled "Image
 viewer" with a focus trap, an inert background, `Esc` to close, arrow keys,
@@ -221,7 +228,7 @@ scrim, then closes past 120 px or on a fast flick and springs back otherwise.
 On a trackpad, a vertical two-finger swipe does the same, while sideways swipes
 stay with the native scroll snapping.
 
-### Can I use my own images or Next.js images?
+### Can I use the lightbox with my own images or Next.js images?
 
 Yes. Items take plain URLs, so point `src` and `thumbnailSrc` at your CDN, or
 at the `src` that Next.js `getImageProps()` returns if you want the Next image

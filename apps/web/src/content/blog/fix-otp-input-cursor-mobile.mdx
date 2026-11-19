@@ -1,26 +1,29 @@
 ---
-title: Fix an OTP Input Cursor That Stays in One Place on Mobile
-description: Fix a stuck mobile OTP cursor with one native input, mirrored slots, a fake caret, one-time-code autofill, and paste-safe React state.
+title: Fix a Stuck OTP Input Cursor on Mobile in React
+description: Fix an OTP input cursor stuck in one box on mobile with one native input, mirrored slots, a fake caret, one-time-code autofill, and paste-safe React state.
 author: Sourabh Soni
 authorImage: https://cdn.tentui.com/srb.avif
 category: Engineering
 createdAt: "2026-07-29"
-updatedAt: "2026-07-29"
+updatedAt: "2026-11-19"
 ---
 
-An OTP input can accept every digit correctly while its cursor appears to stay
-in the first box on mobile. That usually means the real input state and the
-visible slots have drifted apart. The browser is editing one control, but the
-interface is drawing several boxes and a caret independently.
+To fix an OTP input whose cursor stays in one box on mobile, keep one native
+input as the source of truth. Mirror its value, focus, and selection into
+visual slots, and render a fake caret only in the active empty slot. This
+preserves the browser behavior that mobile keyboards, paste, selection, and
+one-time-code autofill expect.
 
-The reliable fix is to keep one native input as the source of truth. Mirror its
-value, focus, and selection into visual slots, and render a fake caret only in
-the active empty slot. This preserves the browser behavior that mobile
-keyboards, paste, selection, and one-time-code autofill expect.
+The bug itself usually means the real input state and the visible slots have
+drifted apart: an OTP field can accept every digit correctly while the browser
+edits one control and the interface draws several boxes and a caret
+independently.
 
-The current shadcn/ui Input OTP already follows this model. This guide shows how
-to use it without reintroducing the stuck-cursor bug in local styling or
-controlled React state.
+The current shadcn/ui Input OTP already follows the single-input model. This
+guide shows how to use it without reintroducing the stuck-cursor bug in local
+styling or controlled React state. TentUI's [OTP Field](/components/otp-field)
+is a separate, animated React OTP input built on the same model; the note near
+the end explains how it differs.
 
 There are also two different mobile symptoms that look similar. A fake caret
 that never advances is usually an integration bug. A thin native line that
@@ -318,10 +321,68 @@ For most React and shadcn applications, adopting the maintained single-input
 primitive is less code and fewer mobile edge cases. It also keeps the segmented
 visual treatment editable in your repository.
 
-Input OTP is an official shadcn/ui component, not a Tent UI registry item. If an
+Input OTP is an official shadcn/ui component, not a TentUI registry item. If an
 old third-party command for a similar component no longer works, follow the
 [missing shadcn components guide](/blog/shadcn-missing-components) to inspect
 the current registry source instead of forcing a stale install.
+
+## Where TentUI's OTP Field fits
+
+TentUI's [OTP Field](/components/otp-field) is a different component that uses
+the same single-input model. It renders one native text input with
+`autocomplete="one-time-code"`, uses `inputMode="numeric"` for digit codes,
+makes the native text and caret transparent, hides the slots from screen
+readers, and draws a blinking caret only in the active empty slot. On top of
+that it animates digits into place, cascades pasted codes, and drives
+verifying, success, and error states from one `status` prop.
+
+It does not use `input-otp`, so the version notes above are specific to the
+shadcn component. OTP Field keeps its own caret index, writes it back to the
+native selection on clicks and selection changes, and handles paste itself
+after stripping spaces and dashes. Test it on real iOS and Android devices the
+same way as any other OTP field. To try it in a shadcn project:
+
+```bash
+npx shadcn@latest add @tentui/otp-field
+```
+
+Use the shadcn Input OTP when you want the minimal official primitive, and OTP
+Field when you want the animated states without building them yourself. The
+debugging checklist in this article applies to either.
+
+## FAQ
+
+### Why does my OTP input cursor stay in the first box on mobile?
+
+Usually the visible slots and the native input have drifted apart through
+duplicate slot indexes, stale controlled state, or a remount on every digit.
+Keep one native input as the source of truth and draw the caret from its
+selection.
+
+### Should an OTP field use one input or one input per digit?
+
+Use one input. A single native input lets the browser handle typing,
+Backspace, selection, paste, and one-time-code autofill, while the slots are
+only a visual projection of its value.
+
+### How do I enable SMS code autofill for an OTP input?
+
+Set `autoComplete="one-time-code"` on the single input and
+`inputMode="numeric"` for digit codes, keeping it a text input rather than
+`type="number"`. Autofill is still a platform decision, so typing and paste must
+keep working.
+
+### Why is a thin line left on my OTP input on iPhone?
+
+That is usually the hidden native input's selection being painted by iOS, not a
+broken fake caret. Check your installed `input-otp` version and its upstream iOS
+notes instead of adding more `focus()` calls.
+
+### Is there a ready-made React OTP input that uses this model?
+
+Yes. shadcn/ui's Input OTP, built on `input-otp`, uses it, and TentUI's
+[OTP Field](/components/otp-field) is a separate animated OTP input for
+shadcn/ui that also renders one native input behind per-digit slots.
 
 ## The durable model
 

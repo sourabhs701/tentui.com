@@ -1,32 +1,38 @@
 ---
-title: "Shadcn Landing Page: Build One with Copy-Paste Blocks"
-description: Build a shadcn landing page from editable hero, testimonial, pricing, FAQ, CTA, and footer blocks without adding a Tent UI runtime package.
+title: "Build a shadcn Landing Page with Copy-Paste Blocks"
+description: Build a shadcn landing page from copy-paste hero, pricing, FAQ, CTA, and footer blocks with the shadcn CLI, then ship it with a pre-launch checklist.
 author: Sourabh Soni
 authorImage: https://cdn.tentui.com/srb.avif
 category: Engineering
 createdAt: "2026-07-28"
-updatedAt: "2026-07-28"
+updatedAt: "2026-11-19"
 ---
+
+To build a shadcn landing page, install a hero, social proof, pricing, FAQ,
+CTA, and footer block with the shadcn CLI, render them in order from one page
+component, and then replace the demo copy, links, prices, and images before
+launch. TentUI's free, source-available
+[shadcn hero](/blocks/hero), [pricing](/blocks/pricing), [FAQ](/blocks/faq), and
+[footer](/blocks/footer) blocks are built for exactly that: the CLI copies each
+one into your project as editable source.
 
 A shadcn landing page rarely fails because it is missing a button or card. The
 hard part is turning those primitives into a coherent sequence: a hero that
 states the promise, proof that makes it credible, pricing that answers the
 commercial question, and a clear final action.
 
-Tent UI provides those larger sections as shadcn-compatible blocks built for
-Base UI and Tailwind CSS 4. The CLI copies each block into your project,
-installs its declared dependencies, and leaves the source open for the changes
-every real landing page needs.
-
-This guide assembles six blocks into one page and, more importantly, identifies
-what to change before that page goes live.
+TentUI provides those larger sections as shadcn-compatible blocks built for
+Base UI and Tailwind CSS 4. The CLI installs each block's declared dependencies
+and leaves the source open for the changes every real landing page needs. This
+guide assembles six blocks into one page and, more importantly, identifies what
+to change before that page goes live.
 
 ## Choose a complete page sequence
 
 A useful landing page gives each section one job. For this example, the page
 uses the following sequence:
 
-| Job | Tent UI block | Why it is here |
+| Job | TentUI block | Why it is here |
 | --- | --- | --- |
 | State the promise | [Hero 02](/blocks/hero#hero-02) | Headline, primary actions, navigation, and a product screenshot |
 | Establish proof | [Testimonials 01](/blocks/testimonials#testimonials-01) | A visual collection of customer quotes |
@@ -40,7 +46,29 @@ option in the [block library](/blocks), or omit a section when the page does not
 need it. A short waitlist page may only need a hero, proof, and footer. A
 self-serve product usually needs pricing and answers to purchase objections.
 
-## Configure the Tent UI registry
+## Pick shadcn hero, pricing, FAQ, and footer blocks
+
+Each block category page shows every variant with a live preview and its
+install command, so compare them there before you commit to one:
+
+| Section | Category page | Variants today |
+| --- | --- | --- |
+| Hero | [Shadcn hero section blocks](/blocks/hero) | Hero 01, an animated hero with availability, service CTAs, and a technology carousel; Hero 02, an editorial hero with a pricing CTA and dashboard preview |
+| Pricing | [Shadcn pricing blocks](/blocks/pricing) | Pricing 01 with a billing toggle and usage comparison; Pricing 02 with tabbed project pricing and a retainer; Pricing 03, a focused two-plan section with an ambient fluid treatment |
+| FAQ | [Shadcn FAQ blocks](/blocks/faq) | FAQ 01, a split layout; FAQ 02, numbered editorial rows; FAQ 03, chat bubbles with a contact prompt |
+| Footer | [Shadcn footer blocks](/blocks/footer) | Footer 01 with newsletter, status, and theme controls; Footer 02, grain-textured with an oversized wordmark; Footer 03, a rounded dark footer with centered calls to action |
+
+The [testimonial](/blocks/testimonials) and [CTA](/blocks/cta) categories cover
+the proof and final-action sections. Any variant installs the same way as the
+commands below; only the registry name changes.
+
+If you were looking for a single shadcn landing page template, this is the
+closest equivalent TentUI offers: a set of sections you assemble, rather than
+one pre-built page. The trade-off is control: a template tends to fix the
+order and copy of every section, while separate blocks let you keep the hero
+you like and replace the pricing section that does not fit your plans.
+
+## Configure the TentUI registry
 
 This composition targets a Next.js App Router project with Tailwind CSS 4 and a
 Base UI shadcn setup. It expects a `components.json` file at the project root.
@@ -50,7 +78,7 @@ If shadcn is not initialized, run the setup and select Base UI when prompted:
 npx shadcn@latest init
 ```
 
-Then add the Tent UI namespace to `components.json`:
+Then add the TentUI namespace to `components.json`:
 
 ```json title="components.json"
 {
@@ -62,7 +90,7 @@ Then add the Tent UI namespace to `components.json`:
 
 Keep any registry entries already present in the file. The namespace follows
 the official shadcn [registry namespace](https://ui.shadcn.com/docs/registry/namespace)
-model; it is a shorter address for individual registry items, not a Tent UI
+model; it is a shorter address for individual registry items, not a TentUI
 runtime dependency.
 
 If your existing shadcn project uses Radix or Tailwind CSS 3, treat the block
@@ -88,7 +116,7 @@ block as opaque markup:
 
 | Block | Files | Key additions |
 | --- | ---: | --- |
-| Hero 02 | 2 | Motion, Button, Peeping Button, Brand Context Menu, Context Menu, and Sonner |
+| Hero 02 | 2 | Motion, Button, Peeping Button, and Brand Context Menu, which adds Context Menu and Copy Button |
 | Testimonials 01 | 1 | `react-tweet`, Avatar, and Card |
 | Pricing 01 | 1 | Motion, Lucide icons, Badge, Button, and Animated Tabs |
 | FAQ 01 | 1 | Lucide icons and Accordion |
@@ -144,10 +172,8 @@ In Hero 02, replace the logo, headline, supporting sentence, CTA labels, links,
 background art, product screenshot, screenshot dimensions, and `alt` text. The
 component accepts `backgroundImageSrc` and `dashboardImageSrc`, but the copy and
 navigation live in the installed source so they can match your product exactly.
-Its logo also opens a Brand Context Menu with Tent UI mark, logotype, and ZIP
-downloads. Replace those asset URLs or remove that menu. If you retain its copy
-and download feedback, mount the installed `Toaster` once in your application
-layout.
+Its logo also opens a Brand Context Menu with TentUI mark, logotype, and ZIP
+downloads. Replace those asset URLs or remove that menu.
 
 Testimonials 01 accepts a custom title, description, and testimonial source
 list. Its default sources resolve posts from X and retain fallback content when
@@ -247,20 +273,35 @@ shipping:
 | Interaction | Keyboard use, focus states, reduced motion, loading, and failure paths |
 | Responsive layout | Real copy at mobile widths, zoom, and supported locales |
 
-The current [Tent UI license](/license) permits modification and use in unlimited
+The current [TentUI license](/license) permits modification and use in unlimited
 end products for you or your clients. It prohibits redistributing the source as
 a stock item, reselling it on a marketplace, or using it to create templates for
 marketplace sale. Review the complete terms and the licenses of installed
 third-party dependencies for your intended use.
 
-## Frequently asked questions
+## FAQ
 
 ### Is a shadcn landing page a package or a template?
 
 It can be either, but this guide uses source-owned blocks. shadcn provides the
-registry and foundational component model, while Tent UI supplies larger page
-sections. The result becomes a landing page when you compose and adapt those
-sections in your application; there is no permanent Tent UI runtime package.
+registry and foundational component model, while TentUI supplies larger page
+sections that you compose and adapt in your application, with no permanent
+TentUI runtime package.
+
+### Is there a free shadcn landing page template?
+
+TentUI does not ship one fixed template, but its hero, pricing, FAQ, CTA,
+testimonial, and footer blocks are free and source-available, so you can
+assemble a full landing page from them. The [TentUI License](/license) allows
+unlimited end products but not reselling the blocks as a template.
+
+### Where can I find shadcn footer and pricing blocks?
+
+Browse [shadcn footer blocks](/blocks/footer) and
+[shadcn pricing blocks](/blocks/pricing) on TentUI, where each variant has a
+live preview and an install command such as
+`npx shadcn@latest add @tentui/footer-03`. The [hero](/blocks/hero) and
+[FAQ](/blocks/faq) categories work the same way.
 
 ### Can I install all the blocks and publish immediately?
 
@@ -270,10 +311,10 @@ product content, connect real routes and actions, and test the assembled page.
 
 ### Can I use these shadcn landing page blocks outside Next.js?
 
-Yes, with adaptation. The pricing, FAQ, and footer blocks mainly rely on React,
-Tailwind, and installed primitives. Hero 02 and CTA 01 use Next.js image or
-navigation APIs, and Testimonials 01 resolves data on the server. Replace those
-boundaries with equivalents from your framework.
+Yes, with adaptation. The pricing, FAQ, and footer blocks used here mainly rely
+on React, Tailwind, and installed primitives, while Hero 02 and CTA 01 use
+Next.js image or navigation APIs and Testimonials 01 resolves data on the
+server. Replace those boundaries with equivalents from your framework.
 
 ### How is a block different from a component?
 
@@ -288,6 +329,10 @@ The fastest useful shadcn landing page is not the one with the most sections. It
 is the one whose sections tell one story, use one visual system, and lead to one
 clear next step.
 
-[Browse the Tent UI landing page blocks](/blocks), choose the sections that fit
-your product, and use the registry commands above or the Manual tab on each
-block page to bring the source into your project.
+[Browse the TentUI landing page blocks](/blocks), starting with the
+[hero](/blocks/hero), [pricing](/blocks/pricing), [FAQ](/blocks/faq), and
+[footer](/blocks/footer) categories, choose the sections that fit your product,
+and use the registry commands above or the Manual tab on each block page to
+bring the source into your project. If you want a glass-style menu or toggle in
+the page header, the guide to [liquid glass in React](/blog/liquid-glass-react)
+covers the components and their browser fallbacks.

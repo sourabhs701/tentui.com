@@ -1,13 +1,19 @@
 ---
 title: Stateful Button
-description: Communicate async loading, success, and error states without leaving the button.
-seoDescription: Stateful Button is a React button for shadcn/ui that shows async loading, success, and error states in place, prevents duplicate clicks, and announces status.
+description: A stateful button for React and shadcn/ui that communicates async loading, success, and error states without leaving the button.
+seoTitle: "Stateful Button: React Loading Button for shadcn/ui"
+seoDescription: Stateful Button is a React loading button for shadcn/ui. It shows async loading, success, and error states in place, blocks double clicks, and announces them.
 image: https://cdn.tentui.com/images/components/animated-save-button-light.webp
 createdAt: 2026-07-19
-updatedAt: 2026-11-11
+updatedAt: 2026-11-19
 ---
 
 <ComponentPreview name="stateful-button-preview" />
+
+Stateful Button is a stateful button for React and shadcn/ui: return a promise
+from `onClick` and the button shows a loading state while it runs, then success
+or error, before returning to idle. It ignores clicks while an action is
+running and announces each state to screen readers.
 
 ## Example
 
@@ -16,6 +22,7 @@ updatedAt: 2026-11-11
 Read the complete implementation guide to learn how the component models a
 [shadcn loading button with success and error states](/blog/shadcn-loading-button),
 prevents rapid duplicate actions, announces status, and handles reduced motion.
+It also covers when a plain spinner inside a shadcn `Button` is enough.
 
 ## Features
 
@@ -129,13 +136,13 @@ registry to `components.json` ([installation guide](/docs/installation)), or run
 The CLI copies `stateful-button.tsx` into your project and installs `motion` and
 `lucide-react`.
 
-### How does the Stateful Button know when loading is done?
+### How does a stateful button know when loading is done?
 
 Return a promise from `onClick`. The button shows its loading state until the
 promise settles, then shows success if it resolves or error if it throws, and
 returns to idle after 2 seconds.
 
-### Does it prevent double submits?
+### Does the stateful button prevent double submits?
 
 Yes. Clicks are ignored while an action is running, and the button stays
 disabled until it returns to idle.

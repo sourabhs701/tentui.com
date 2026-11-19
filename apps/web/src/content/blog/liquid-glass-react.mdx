@@ -1,0 +1,394 @@
+---
+title: "Liquid Glass in React: Apple-Style UI with shadcn"
+description: Build Apple-style liquid glass in React and shadcn/ui with backdrop-filter, SVG displacement, and honest fallbacks, from a menu to a liquid glass toggle.
+author: Sourabh Soni
+authorImage: https://cdn.tentui.com/srb.avif
+category: Engineering
+createdAt: "2026-11-19"
+updatedAt: "2026-11-19"
+---
+
+To build liquid glass in React, put a translucent fill over
+`backdrop-filter: blur() saturate()`, add a thin specular edge and a soft
+shadow, and bend the backdrop at the rim with an SVG `feDisplacementMap` where
+the browser can draw it. Today that bend only renders in Chromium, so every
+other browser needs a clean-blur fallback, and people who ask for reduced
+transparency should get an opaque frosted surface instead.
+
+TentUI ships three free and source-available liquid glass React components
+that you install with the shadcn CLI:
+[Liquid Glass Menu](/components/liquid-glass-menu),
+[Liquid Glass Carousel](/components/liquid-glass-carousel), and
+[Glass Toggle](/components/glass-toggle). Each one takes a different route to
+the same look. This guide walks through how they work, quoting their source,
+and covers the accessibility, performance, and browser-support trade-offs that
+come with glass on the web.
+
+<ComponentPreview name="liquid-glass-menu-preview" />
+
+## What liquid glass means on the web
+
+Apple's Liquid Glass material looks like a physical lens: the content behind it
+is blurred, brightened, and bent near the edges, a highlight runs along the
+rim, and the shape flows as controls appear and disappear. There is no CSS
+property called "liquid glass". On the web you assemble it from separate
+pieces:
+
+| Piece | What it does | Web technique |
+| --- | --- | --- |
+| Frost | Softens and saturates whatever is behind the surface | `backdrop-filter: blur() saturate()` over a translucent fill |
+| Edge | Makes the surface read as a thick, lit object | Inset hairline shadows, gradients, and a soft drop shadow |
+| Refraction | Bends the backdrop near the rim, like a lens | An SVG `feDisplacementMap` driven by a generated map |
+| Motion | Lets one glass shape grow into another | Animating the shape, not the blur |
+
+You do not need all four. The frost and edge carry most of the effect, work in
+every current browser, and are cheap compared with refraction. Treat
+refraction as progressive enhancement.
+
+## Install the liquid glass components
+
+Add the TentUI registry to `components.json` once:
+
+```json title="components.json"
+{
+  "registries": {
+    "@tentui": "https://tentui.com/r/{name}.json"
+  }
+}
+```
+
+Then install the components you need:
+
+```bash
+npx shadcn@latest add @tentui/liquid-glass-menu
+npx shadcn@latest add @tentui/liquid-glass-carousel
+npx shadcn@latest add @tentui/glass-toggle
+```
+
+The CLI copies each file into your project. All three install `motion`,
+`web-haptics`, and `@rexa-developer/tiks`; the menu also installs
+`@base-ui/react`, and the carousel adds `lucide-react`. The
+[installation guide](/docs/installation) covers direct registry URLs and manual
+setup. Because the source lands in your repository, every constant quoted below
+is yours to tune.
+
+## Layer 1: frost with backdrop-filter
+
+The Liquid Glass Menu defines its frost and fill as two constants:
+
+```tsx title="components/liquid-glass-menu.tsx"
+/** The frost behind the glass: a calm blur and a little saturation. */
+const GLASS_BLUR = "blur(24px) saturate(150%)";
+
+/** Clear enough to show the backdrop, opaque enough for AA text over it. */
+const GLASS_FILL = "bg-[rgb(255_255_255/0.6)] dark:bg-[rgb(36_36_42/0.76)]";
+```
+
+The blur hides detail so text stays readable, and the saturation keeps colors
+behind the glass lively instead of washing them out to grey. The fill opacity
+is the important accessibility number: the menu's docs state it is opaque
+enough to keep text at a 4.5:1 contrast ratio over any backdrop. Light and dark
+fills are tuned separately rather than inverted, because a dark panel needs
+more fill to hold the same contrast.
+
+The menu applies the blur with both `backdropFilter` and
+`WebkitBackdropFilter`, and checks for support before turning the glass on:
+
+```tsx
+function supportsBackdrop() {
+  return (
+    CSS.supports("backdrop-filter", "blur(1px)") ||
+    CSS.supports("-webkit-backdrop-filter", "blur(1px)")
+  );
+}
+```
+
+One trap is worth knowing before you write your own. A comment in the source
+explains why, without the morph, the menu fades its children rather than the
+popup itself: opacity on the popup would cut the glass off from the page behind
+it. If your glass suddenly looks flat during a fade, check whether an ancestor
+has opacity, a filter, or a mask applied while it animates.
+
+## Layer 2: the edge
+
+Frost alone looks like a blurry rectangle. What makes it read as glass is the
+rim. The menu draws a 0.5 px specular hairline that is brightest along the top,
+a faint contour to hold the edge on light pages, and a small, soft lift, all as
+stacked `box-shadow` values in one Tailwind class. A wider ambient shadow grows
+in with the panel.
+
+None of this needs new browser features, so the edge looks the same everywhere.
+When the glass falls back to a solid surface, the menu keeps the same hairline,
+radii, and shadow, which is why the fallback still looks deliberate.
+
+## Layer 3: refraction with SVG displacement
+
+Real lenses bend light most at their edges. The menu imitates that with an SVG
+filter applied inside `backdrop-filter`. It generates a displacement map for
+the panel's rounded rectangle on a 2D canvas: within a 16 px band at the rim,
+each pixel points inward by up to 6 px, eased with a smoothstep so there is no
+crease where the band starts, and flat everywhere else. Red stores the
+horizontal offset and green the vertical one, with 128 meaning no movement.
+
+That map feeds a small filter:
+
+```tsx
+<filter
+  id={panelFilterId}
+  x={0}
+  y={0}
+  filterUnits="userSpaceOnUse"
+  primitiveUnits="userSpaceOnUse"
+  colorInterpolationFilters="sRGB"
+>
+  <feImage x={0} y={0} preserveAspectRatio="none" result="map" />
+  <feDisplacementMap
+    in="SourceGraphic"
+    in2="map"
+    scale={0}
+    xChannelSelector="R"
+    yChannelSelector="G"
+  />
+</filter>
+```
+
+The panel then sets its `backdrop-filter` to the same blur followed by
+`url(#id)`, pointing at that filter, and writes the generated map into
+`feImage` at the panel's measured width and height.
+
+Browser support is the catch. Only Chromium draws SVG filters inside
+`backdrop-filter`. The source notes that Safari and Firefox parse `url()` there
+but drop the whole filter, blur included, so a `CSS.supports` check alone is
+not enough. The menu also requires `navigator.userAgentData`, which only
+Chromium exposes, before it turns refraction on:
+
+```tsx
+const glass = supportsBackdrop() && !transparency.matches;
+const refract =
+  glass &&
+  refraction === "auto" &&
+  CSS.supports("backdrop-filter", "url(#a)") &&
+  "userAgentData" in navigator;
+```
+
+Two more details from the source are worth copying. The rim only bends once the
+panel is at rest, because Chromium feeds `url()` filters a stale backdrop while
+their element is changing; during the morph the menu uses the plain blur, then
+swells the displacement scale in over 0.24 s. And `refraction="off"` gives you
+a clean blur everywhere if you prefer consistency across browsers.
+
+## A liquid glass menu that stays accessible
+
+The [Liquid Glass Menu](/components/liquid-glass-menu) is a real Base UI menu
+under the glass. Roles, focus management, typeahead, `Esc`, outside clicks, and
+radio and checkbox items come from Base UI, so the effect does not cost you
+keyboard or screen-reader support.
+
+```tsx
+<LiquidGlassMenu>
+  <LiquidGlassMenuTrigger aria-label="Add" />
+  <LiquidGlassMenuContent side="top" align="end">
+    <LiquidGlassMenuItem icon={<CameraIcon />} onClick={openCamera}>
+      Camera
+    </LiquidGlassMenuItem>
+    <LiquidGlassMenuItem icon={<MicIcon />}>Audio</LiquidGlassMenuItem>
+  </LiquidGlassMenuContent>
+</LiquidGlassMenu>
+```
+
+The default trigger is a 44 px round glass button with a plus and no text,
+which is why it needs an `aria-label`. On open, the glass grows out of the
+button on a critically damped spring, and the rows sharpen from a slight blur.
+A faint glass lens glides to the highlighted row, and that row's label also
+turns full strength, so the lens is never the only cue. The glass and lens
+layers are hidden from assistive technology.
+
+If you want the look without the blob, `morph={false}` swaps it for a plain
+scale-and-fade popover:
+
+```tsx
+<LiquidGlassMenu morph={false} sound={false}>
+```
+
+## Refracting content instead of the backdrop
+
+The [Liquid Glass Carousel](/components/liquid-glass-carousel) takes the other
+path. It does not use `backdrop-filter` at all. Instead it applies
+`filter: url(#lens)` to the track that holds the slides, so the lens distorts
+the cards themselves as they reach the edges of the frame.
+
+<ComponentPreview name="liquid-glass-carousel-preview" />
+
+The lens filter displaces the track three times, once per color channel, each
+through its own map. Blue bends slightly further than green and red slightly
+less, so where one channel's card reaches past the others a thin rainbow fringe
+appears. The maps are drawn on a canvas once per size and cached; the slides
+themselves are ordinary DOM, so images, video, and text all work, and there is
+no WebGL. The band between the two melt zones is passed through untouched, so
+the centred card stays pixel-crisp.
+
+```tsx
+<LiquidGlassCarousel aria-label="Featured artists">
+  {artists.map((artist) => (
+    <LiquidGlassCarouselSlide key={artist.id} aria-label={artist.name}>
+      <img src={artist.portrait} alt="" className="size-full object-cover" />
+    </LiquidGlassCarouselSlide>
+  ))}
+</LiquidGlassCarousel>
+```
+
+The carousel turns the lens on only when `navigator.userAgentData.brands`
+includes Chromium, because the source notes that Safari draws SVG filters on
+HTML unreliably and Firefox rasterises them on the CPU. Those browsers get a
+CSS fallback in which cards stretch toward the edge, flare a little, and soften
+with a small blur. `meltZone` sets how deep the melt reaches (0.28 of the
+viewport length by default), and `melt="off"` keeps only the soft edge fade.
+
+## Building a liquid glass toggle
+
+A switch thumb is small, and the [Glass Toggle](/components/glass-toggle) does
+not refract anything. It has no `backdrop-filter`, no displacement map, no
+WebGL, and no canvas. The glass is stacked CSS and SVG layers: a recessed tray,
+a contact shadow, a caustic of light focused onto the tray, a milky or smoked
+glass body, a sheen that leans toward the pointer, a bevel band cut out with a
+CSS mask, and a crisp specular line along the top rim. A neon rim light floats
+just outside the thumb, softened with SVG `feGaussianBlur` for its bloom and
+halo.
+
+<ComponentPreview name="glass-toggle-preview" />
+
+That makes it the simplest liquid glass toggle to drop into a settings list:
+
+```tsx
+<GlassToggle label="Lamp" />
+```
+
+It is a `button` with `role="switch"` and `aria-checked`, and you control it
+like any switch:
+
+```tsx
+const [enabled, setEnabled] = useState(false);
+
+<GlassToggle label="Night light" checked={enabled} onCheckedChange={setEnabled} />
+```
+
+The two light colors are CSS variables, so you can retheme the glass toggle
+without a prop:
+
+```tsx
+<GlassToggle
+  label="Lamp"
+  className="[--glass-toggle-off:#7dd3fc] [--glass-toggle-on:#fb7185]"
+/>
+```
+
+The lesson carries over to your own components: at small sizes, lighting,
+bevels, and shadow sell glass more than true refraction does, and they render
+the same in every browser.
+
+## Accessibility checklist for glass UI
+
+Glass is a decorative material, so most of the work is making sure it never
+gets in the way:
+
+- **Contrast over any backdrop.** You cannot know what will sit behind the
+  glass. Pick a fill opacity that keeps text at 4.5:1 over both white and black,
+  and test on busy photos. Darken secondary text such as shortcuts and labels
+  rather than using a pale muted color.
+- **Reduced transparency.** Listen to `prefers-reduced-transparency` and swap
+  to an opaque surface. The menu does this with the same hairline, radii, and
+  shadow, so the layout does not change.
+- **Reduced motion.** The menu skips the morph and blur and fades its panel
+  over 150 ms; the carousel never melts and moves with a 150 ms fade; the
+  toggle moves its thumb at once with no overshoot or scatter.
+- **Hide decoration.** Mark glass, lens, glyph, and light layers `aria-hidden`
+  so screen readers only meet the real control.
+- **Never rely on the glass for state.** A highlight lens, a rim-light color, or
+  a tint should always be paired with a label change, a position change, or a
+  shape change.
+
+## Performance notes
+
+`backdrop-filter` asks the browser to sample and filter whatever is behind an
+element, so it is not free. A few habits keep glass smooth:
+
+- Keep glass surfaces small and few. A menu panel or a switch is a better
+  candidate than a full-screen overlay over video.
+- Animate shape and opacity, not the blur radius. During the morph the menu
+  only changes the glass's shape and the rows' opacity, and the panel itself
+  never moves.
+- Stop work at rest. All three components run no animation frame when idle,
+  and the menu sets no `will-change`.
+- Generate displacement maps once per size, not per frame. The carousel caches
+  its maps by size, and the menu creates its map for the panel's measured size.
+
+Profile on the slowest device you support. These components avoid per-frame
+work at rest, but how much a blur costs depends on the size of the surface and
+what is behind it.
+
+## Browser support at a glance
+
+This table describes what the TentUI source does in each engine, based on the
+feature checks quoted above:
+
+| Effect | Chromium (Chrome, Edge, Arc, Opera) | Safari | Firefox |
+| --- | --- | --- | --- |
+| Menu frost, edge, and shadow | Yes | Yes | Yes |
+| Menu rim refraction | Yes | Clean blur | Clean blur |
+| Carousel lens melt and fringe | Yes | CSS stretch, flare, and blur | CSS stretch, flare, and blur |
+| Glass Toggle | Same layers everywhere | Same layers everywhere | Same layers everywhere |
+
+Browsers without `backdrop-filter`, or users with reduced transparency, get the
+menu's opaque frosted surface.
+
+## When not to use liquid glass
+
+Glass works best on small, floating, short-lived surfaces: menus, toolbars,
+switches, and media carousels. It is a poor fit for long-form reading, dense
+forms, and data tables, where a solid surface is easier to scan. If you are
+unsure whether a piece of motion or material earns its place, the standard in
+[Motion that earns its place](/blog/motion-that-earns-its-place) applies, and
+the [animated shadcn/ui components guide](/blog/best-animated-shadcn-ui-components-2026)
+lists other components by the job they do.
+
+## FAQ
+
+### How do I make a liquid glass effect in React?
+
+Layer a translucent fill over `backdrop-filter: blur() saturate()`, add an inset
+hairline highlight and a soft shadow, and optionally bend the backdrop at the
+rim with an SVG `feDisplacementMap` in Chromium. TentUI's Liquid Glass Menu,
+Liquid Glass Carousel, and Glass Toggle ship this as editable React source
+through the shadcn CLI.
+
+### Does liquid glass work in Safari and Firefox?
+
+The frosted blur, edge, and shadow do, because they use `backdrop-filter` and
+ordinary CSS. SVG refraction inside `backdrop-filter` only renders in Chromium,
+so TentUI's menu falls back to a clean blur and its carousel to a CSS stretch
+in Safari and Firefox.
+
+### How do I build a liquid glass toggle in React?
+
+Install TentUI's Glass Toggle with `npx shadcn@latest add @tentui/glass-toggle`
+and render `<GlassToggle label="Lamp" />`. It is a `role="switch"` button whose
+glass thumb is built from stacked CSS and SVG layers, so it looks the same in
+every browser.
+
+### Does liquid glass need WebGL or canvas?
+
+Not for these components. The menu and carousel use SVG filters, drawing their
+displacement maps on a canvas once per size, and the Glass Toggle uses CSS and
+SVG layers with no WebGL or canvas at all.
+
+### Is a liquid glass menu accessible?
+
+It can be, if the glass is purely visual. TentUI's Liquid Glass Menu is a Base
+UI menu with full keyboard and screen-reader semantics, keeps text at 4.5:1
+contrast, and becomes an opaque surface under reduced transparency.
+
+### Are TentUI's liquid glass components free?
+
+Yes. They are free and source-available: the shadcn CLI copies the source into
+your project, and you can use it in unlimited personal and client projects
+under the [TentUI License](/license).
