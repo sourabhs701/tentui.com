@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"morph-dialog": {
+		name: "morph-dialog",
+		title: "Morph Dialog",
+		description: "A card or button that grows into its own dialog. The surface stretches out of the trigger without scaling its text, the image uncrops, the title glides into place, and pulling the open dialog rewinds the morph back into its card.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/morph-dialog/morph-dialog.tsx","type":"registry:component","target":"@components/morph-dialog.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/morph-dialog/morph-dialog")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for morph-dialog");
+			}
+			return { default: module.default };
+		}),
+		categories: ["overlays"],
+		meta: {"createdAt":"2026-11-19","image":"https://cdn.tentui.com/images/components/morph-dialog?v=1","video":"https://cdn.tentui.com/videos/components/morph-dialog?v=1"},
+	},
 	"scroll-accordion": {
 		name: "scroll-accordion",
 		title: "Scroll Accordion",
@@ -994,6 +1012,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"morph-dialog-preview": {
+		name: "morph-dialog-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/morph-dialog-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/morph-dialog-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for morph-dialog-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 place-items-center content-center px-4"},
+	},
+	"morph-dialog-demo": {
+		name: "morph-dialog-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/morph-dialog-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/morph-dialog-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for morph-dialog-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"demoClassName":"min-h-96 place-items-center content-center px-4"},
 	},
 	"scroll-accordion-preview": {
 		name: "scroll-accordion-preview",

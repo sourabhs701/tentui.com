@@ -448,6 +448,34 @@
       "type": "registry:block"
     },
     {
+      "name": "morph-dialog",
+      "title": "Morph Dialog",
+      "description": "A card or button that grows into its own dialog. The surface stretches out of the trigger without scaling its text, the image uncrops, the title glides into place, and pulling the open dialog rewinds the morph back into its card.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "lucide-react",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/morph-dialog/morph-dialog.tsx",
+          "type": "registry:component",
+          "target": "@components/morph-dialog.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-19",
+        "image": "https://cdn.tentui.com/images/components/morph-dialog?v=1",
+        "video": "https://cdn.tentui.com/videos/components/morph-dialog?v=1"
+      },
+      "docs": "https://tentui.com/components/morph-dialog",
+      "categories": [
+        "overlays"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "scroll-accordion",
       "title": "Scroll Accordion",
       "description": "An accordion you open by scrolling. Headers you have read stack up at the top like a deck of index cards, the ones ahead wait at the bottom, and the section you are reading fills the space between, with a ring on each header that fills as you read.",

@@ -127,6 +127,43 @@ export const scenarios = {
 		},
 	},
 
+	"morph-dialog": {
+		rest: { x: 440, y: 330 },
+		async run(d) {
+			const card = '[data-slot="morph-dialog-trigger"]';
+			const photo =
+				'[data-slot="morph-dialog-content"] [data-slot="morph-dialog-media"]';
+			// The dialog takes focus and hands it back to the card, and both draw
+			// their ring and shadow with box-shadow, which the recorder's
+			// focus-hiding style strips. Nothing here shows a focus ring (a
+			// pointer close returns focus without one), so drop that style.
+			await d.page.evaluate(() => {
+				for (const style of document.querySelectorAll("style")) {
+					if (style.textContent?.startsWith("*:focus,*:focus-visible{")) {
+						style.remove();
+					}
+				}
+			});
+			await d.wait(500);
+			// The card grows into its dialog: the photo uncrops, the title glides.
+			await d.move(card, 700, { x: 0.55, y: 0.5 });
+			await d.wait(150);
+			await d.click();
+			await d.wait(1300);
+			// Pull the photo down: the dialog rewinds under the cursor and lands
+			// back in its card.
+			await d.move(photo, 500, { x: 0.45, y: 0.55 });
+			await d.wait(200);
+			const from = await d.point(photo, { x: 0.45, y: 0.55 });
+			await d.down();
+			await d.move({ x: from.x - 20, y: from.y + 130 }, 600);
+			await d.up();
+			await d.wait(900);
+			await d.move(d.rest, 700);
+			await d.wait(400);
+		},
+	},
+
 	"morph-lightbox": {
 		rest: { x: 440, y: 330 },
 		async run(d) {

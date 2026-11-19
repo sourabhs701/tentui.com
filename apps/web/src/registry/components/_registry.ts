@@ -2,6 +2,33 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "morph-dialog",
+		type: "registry:component",
+		title: "Morph Dialog",
+		description:
+			"A card or button that grows into its own dialog. The surface stretches out of the trigger without scaling its text, the image uncrops, the title glides into place, and pulling the open dialog rewinds the morph back into its card.",
+		dependencies: [
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/morph-dialog/morph-dialog.tsx",
+				type: "registry:component",
+				target: "@components/morph-dialog.tsx",
+			},
+		],
+		categories: ["overlays"],
+		meta: {
+			createdAt: "2026-11-19",
+			image: "https://cdn.tentui.com/images/components/morph-dialog?v=1",
+			video: "https://cdn.tentui.com/videos/components/morph-dialog?v=1",
+		},
+		docs: "https://tentui.com/components/morph-dialog",
+	},
+	{
 		name: "scroll-accordion",
 		type: "registry:component",
 		title: "Scroll Accordion",
