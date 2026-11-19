@@ -1,0 +1,252 @@
+---
+title: Morph Dialog
+description: A React morphing dialog for shadcn/ui that grows out of the card or button you clicked without stretching its text, uncrops the image, and lets you pull the open dialog to rewind the morph back into its card.
+seoTitle: React Morph Dialog Component for shadcn/ui
+seoDescription: Morph Dialog is a React dialog for shadcn/ui that grows out of its trigger card. Text never stretches, the image uncrops, and a pull rewinds it home.
+createdAt: 2026-11-19
+updatedAt: 2026-11-19
+---
+
+<ComponentPreview name="morph-dialog-preview" />
+
+## Example
+
+<ComponentPreview name="morph-dialog-demo" />
+
+## Features
+
+- The dialog grows out of the card you clicked. Its surface is resized and
+  clipped instead of scaled, so text, borders, corner radius, and shadow stay
+  crisp at every frame of the morph. Its fill and shadow blend from the
+  card's to the dialog's, so it lands back without a pop.
+- Shared parts travel on their own. The image's frame resizes, so its crop
+  opens up from the card's thumbnail to the dialog's hero. The title and
+  subtitle glide and grow into place, cross-fading with the card's own copy.
+- The body fades and rises in only as the surface lands, and the close button
+  rides the surface's top-right corner.
+- Pull the image or title to rewind the morph. The dialog shrinks back toward
+  its card under your finger or cursor while the scrim thins. Let go past the
+  line and it lands in the card; otherwise it springs open again.
+- Two placements: `center` flies to the middle of the screen, App Store style.
+  `anchor` grows in place from the trigger's nearest corner, for a button that
+  becomes a form.
+- Interruptible. Closing mid-open reverses from the current frame, and you can
+  grab the dialog while it is still opening.
+- A soft lift on open, a settle when it lands back, and a haptic tick when a
+  pull crosses the close line. They play only for user input.
+- A modal dialog with a focus trap, an inert page, `Esc` to close, and focus
+  returned to the trigger. Page scroll is locked without layout shift.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/morph-dialog
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="morph-dialog" title="components/morph-dialog.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  MorphDialog,
+  MorphDialogClose,
+  MorphDialogContent,
+  MorphDialogDescription,
+  MorphDialogMedia,
+  MorphDialogSubtitle,
+  MorphDialogTitle,
+  MorphDialogTrigger,
+} from "@/components/morph-dialog";
+```
+
+```tsx
+<MorphDialog>
+  <MorphDialogTrigger className="w-56 rounded-2xl bg-card p-2 ring-1 ring-foreground/10">
+    <MorphDialogMedia src={photo} alt="Snowy peaks" className="aspect-[4/3] w-full rounded-lg" />
+    <span className="block px-1.5 pt-2.5">
+      <MorphDialogTitle>Above the cloud line</MorphDialogTitle>
+      <MorphDialogSubtitle>A slow week in the Dolomites</MorphDialogSubtitle>
+    </span>
+  </MorphDialogTrigger>
+  <MorphDialogContent className="w-[min(calc(100vw-2rem),24rem)]">
+    <div className="p-2">
+      <MorphDialogMedia src={photo} alt="Snowy peaks" className="aspect-[2/1] w-full rounded-2xl" />
+    </div>
+    <div className="px-5 pt-2 pb-5">
+      <MorphDialogTitle>Above the cloud line</MorphDialogTitle>
+      <MorphDialogSubtitle>A slow week in the Dolomites</MorphDialogSubtitle>
+      <MorphDialogDescription className="mt-4">…</MorphDialogDescription>
+    </div>
+    <MorphDialogClose />
+  </MorphDialogContent>
+</MorphDialog>
+```
+
+`MorphDialogMedia`, `MorphDialogTitle`, and `MorphDialogSubtitle` are shared
+parts: use each once in the trigger and once in the content, and it travels
+between the two. A part that only appears in the content fades in with the
+body. Use the same `src` for both images, so the dialog's copy is already
+loaded when the morph starts.
+
+`MorphDialogContent` is the dialog surface, portaled to the body. Its
+`className` sets the width, corner radius, and background. Put padding on the
+children rather than on the surface. Anything that isn't a shared part belongs
+in `MorphDialogDescription`, which fades in late. Long content scrolls inside
+the surface, which is at most the viewport height minus 32 px.
+
+### Anchored
+
+```tsx
+<MorphDialog placement="anchor">
+  <MorphDialogTrigger className="h-10 rounded-full bg-card px-4 ring-1 ring-foreground/10">
+    <MorphDialogTitle className="text-sm">Feedback</MorphDialogTitle>
+  </MorphDialogTrigger>
+  <MorphDialogContent className="w-80 rounded-[1.25rem]">
+    <div className="px-4 pt-3.5">
+      <MorphDialogTitle className="text-base">Feedback</MorphDialogTitle>
+    </div>
+    <MorphDialogDescription className="p-3">{/* form */}</MorphDialogDescription>
+    <MorphDialogClose />
+  </MorphDialogContent>
+</MorphDialog>
+```
+
+With `placement="anchor"` the dialog lines up with the trigger's corner that
+is nearest the middle of the screen, then grows from it, staying 16 px inside
+the viewport. Without an image, the title is the drag handle. Add
+`<MorphDialogDrag />` for a visible grabber.
+
+### Controlled
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<MorphDialog open={open} onOpenChange={setOpen}>
+  {/* … */}
+</MorphDialog>
+```
+
+Opening or closing through `open` still morphs, but stays silent. A form can
+close the dialog on submit by setting `open` to `false`. `defaultOpen` starts
+open without the morph.
+
+## Interaction
+
+- **Open:** click or press `Enter` on the trigger. The morph is a spring
+  (stiffness 320, damping 34). The trigger's snapshot fades out over the first
+  40% and the body fades in over the last half.
+- **Pull to rewind:** drag the image, title, subtitle, or a
+  `MorphDialogDrag` handle in any direction. The pull rewinds up to 55% of the
+  morph, easing off with distance, and keeps the point you grabbed under the
+  pointer. A release past 90 px, or faster than 650 px/s away from where you
+  grabbed, closes it. Anything less springs back. The body scrolls natively.
+- **Close:** `Esc`, the close button, or a click on the backdrop. The dialog
+  flies back into its trigger in 340 ms. If the body was scrolled, the scroll
+  rewinds with it.
+
+## Accessibility
+
+The trigger is a button with `aria-haspopup="dialog"` and `aria-expanded`. The
+content is a modal dialog (`role="dialog"`, `aria-modal`) labelled by its
+`MorphDialogTitle` and described by its `MorphDialogSubtitle`. Without a title,
+pass `aria-label` to `MorphDialogContent`.
+
+Focus moves to the dialog on open and is trapped there, the rest of the page is
+made `inert`, and `Esc` closes it. On close, focus returns to the trigger. After
+a pointer close it shows no focus ring; after `Esc` it does. The trigger's
+snapshot used during the morph is `aria-hidden` and inert. Every
+`MorphDialogMedia` needs an `alt`.
+
+With reduced motion there's no morph: the dialog cross-fades in and out over
+150 ms where it lands. Pulling still moves it with your pointer, but it doesn't
+shrink, and a release past the line fades it out.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/morph-dialog/morph-dialog.tsx"
+  name="MorphDialogProps"
+/>
+
+### MorphDialogMedia
+
+<AutoTypeTable
+  path="src/registry/components/morph-dialog/morph-dialog.tsx"
+  name="MorphDialogMediaProps"
+/>
+
+`MorphDialogTrigger` takes button props, `MorphDialogContent` and
+`MorphDialogDescription` take div props, `MorphDialogTitle` takes `h2` props,
+`MorphDialogSubtitle` takes `p` props, and `MorphDialogClose` takes button
+props with an `X` icon as its default content.
+
+## FAQ
+
+### How do I install the Morph Dialog with shadcn?
+
+Run `npx shadcn@latest add @tentui/morph-dialog` after adding the `@tentui`
+registry to `components.json`. The CLI copies `morph-dialog.tsx` into your
+project and installs `motion`, `lucide-react`, `web-haptics`, and
+`@rexa-developer/tiks`.
+
+### How is this different from a Motion layoutId dialog?
+
+Layout animations morph by scaling, which can distort text and borders. The
+Morph Dialog resizes and clips its surface instead, while the content stays
+laid out at its final size. Only the shared title, subtitle, and image move,
+and the image's frame resizes, so its crop opens up rather than stretching.
+
+### Is the Morph Dialog accessible with a keyboard and screen readers?
+
+Yes. The trigger is a button, and the content is a modal dialog labelled by
+its title, with a focus trap, an inert background, `Esc` to close, and focus
+returned to the trigger. Reduced motion swaps the morph for a 150 ms
+cross-fade.
+
+### Can I put a form in the Morph Dialog, or control it with state?
+
+Yes. Put the form in `MorphDialogDescription` and pass `open` and
+`onOpenChange` to close it on submit, as the anchored feedback example does.
+It works with React Hook Form or any other form library, because the content
+is ordinary React children.
+
+### Can I turn off pull to close, sound, and haptics?
+
+Yes. Set `drag={false}` to turn off pulling, and `sound={false}` and
+`haptics={false}` to silence it. Sound and haptics play only for user input,
+never on mount or for controlled changes.
+
+### Is the Morph Dialog free to use?
+
+Yes. The Morph Dialog is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license).

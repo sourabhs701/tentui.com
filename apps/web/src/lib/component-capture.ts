@@ -40,6 +40,8 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 		zoom: 0.82,
 		className: "place-items-center content-center",
 	},
+	// The dialog is portaled out of the zoomed stage, so it is framed at 1:1.
+	"morph-dialog": {},
 	// The viewer is portaled out of the zoomed stage, so it is framed at 1:1.
 	"morph-lightbox": {},
 	// The menu is portaled out of the zoomed stage, so it is framed at 1:1.
