@@ -1,10 +1,10 @@
 "use client";
 
 import { CheckIcon } from "lucide-react";
-import { MotionConfig, motion } from "motion/react";
-import { useState } from "react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import { useId, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
 	type AnimatedTab,
@@ -22,7 +22,6 @@ type PricingPlan = {
 	tagline: string;
 	monthly: number;
 	annual: number;
-	unit: string;
 	popular?: boolean;
 	limits: PlanLimits;
 	features: readonly string[];
@@ -43,7 +42,6 @@ const PLANS: readonly PricingPlan[] = [
 		tagline: "For small businesses and startups.",
 		monthly: 12,
 		annual: 9,
-		unit: "/mo.",
 		limits: {
 			workspaces: 3,
 			ticketsPerMonth: 1_000,
@@ -63,7 +61,6 @@ const PLANS: readonly PricingPlan[] = [
 		tagline: "For growing support teams.",
 		monthly: 19,
 		annual: 15,
-		unit: "/mo.",
 		popular: true,
 		limits: {
 			workspaces: 5,
@@ -84,7 +81,6 @@ const PLANS: readonly PricingPlan[] = [
 		tagline: "For established organizations.",
 		monthly: 39,
 		annual: 31,
-		unit: "/mo.",
 		limits: {
 			workspaces: UNLIMITED,
 			ticketsPerMonth: 50_000,
@@ -117,14 +113,16 @@ const BILLING_TABS: readonly AnimatedTab[] = [
 		label: (
 			<span className="flex items-center gap-1.5">
 				Annual
-				<Badge variant="secondary">Save {MAX_SAVINGS_PERCENT}%</Badge>
+				<Badge
+					className="in-data-[state=active]:bg-primary-foreground/15 in-data-[state=active]:text-primary-foreground"
+					variant="secondary"
+				>
+					Save {MAX_SAVINGS_PERCENT}%
+				</Badge>
 			</span>
 		),
 	},
 ];
-
-const CTA_CLASS_NAME =
-	"touch-manipulation transition-[transform,background-color,color,box-shadow] duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]";
 
 function isUnlimited(value: number) {
 	return !Number.isFinite(value);
@@ -158,50 +156,200 @@ function GridTick({ className }: { className?: string }) {
 				className,
 			)}
 		>
-			<span className="absolute h-px w-full bg-foreground/20" />
-			<span className="absolute h-full w-px bg-foreground/20" />
+			<span className="absolute h-px w-full bg-foreground/25" />
+			<span className="absolute h-full w-px bg-foreground/25" />
 		</span>
 	);
 }
 
-function GridRect({ className }: { className?: string }) {
+function PlanPrice({
+	plan,
+	cycle,
+}: {
+	plan: PricingPlan;
+	cycle: BillingCycle;
+}) {
+	const price = cycle === "annual" ? plan.annual : plan.monthly;
+
 	return (
-		<span
-			aria-hidden="true"
-			className={cn("pointer-events-none absolute z-20 size-1", className)}
-		>
-			<span className="block size-full bg-foreground/20" />
-		</span>
+		<div className="flex flex-col gap-1.5">
+			<p className="flex items-baseline gap-1.5">
+				<span className="relative inline-flex overflow-hidden">
+					<AnimatePresence initial={false} mode="popLayout">
+						<motion.span
+							animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+							className="font-normal text-4xl text-foreground tabular-nums tracking-tight"
+							exit={{ opacity: 0, y: -12, filter: "blur(2px)" }}
+							initial={{ opacity: 0, y: 12, filter: "blur(2px)" }}
+							key={price}
+							transition={{ duration: 0.25, ease: EASE_OUT }}
+						>
+							{formatPrice(price)}
+						</motion.span>
+					</AnimatePresence>
+				</span>
+				<span className="text-muted-foreground text-sm">/ month</span>
+			</p>
+			<p className="text-muted-foreground text-xs">
+				{cycle === "annual"
+					? `${formatPrice(plan.annual * 12)} billed yearly`
+					: "Billed monthly"}
+			</p>
+		</div>
 	);
 }
 
-function PricingHeading({ level }: { level: "h1" | "h2" }) {
-	const className =
-		"text-balance font-normal text-[2.4rem] leading-[1.05] tracking-[-0.02em] sm:text-6xl";
-	const animation = {
-		initial: { opacity: 0, transform: "translateY(18px)" },
-		animate: { opacity: 1, transform: "translateY(0px)" },
-		transition: { duration: 0.55, ease: EASE_OUT },
-	};
-
-	if (level === "h1") {
-		return (
-			<motion.h1 className={className} {...animation}>
-				Choose your <em className="italic">pricing plan</em>
-			</motion.h1>
-		);
-	}
+function PlanCard({
+	plan,
+	cycle,
+	headingLevel,
+}: {
+	plan: PricingPlan;
+	cycle: BillingCycle;
+	headingLevel: "h2" | "h3";
+}) {
+	const PlanHeading = headingLevel;
+	const headingId = useId();
 
 	return (
-		<motion.h2
-			className={className}
-			initial={animation.initial}
-			transition={animation.transition}
-			viewport={{ once: true }}
-			whileInView={animation.animate}
+		<article
+			aria-labelledby={headingId}
+			className={cn(
+				"relative flex flex-col border-border not-last:border-b lg:not-last:border-r lg:not-last:border-b-0",
+				plan.popular && "bg-card",
+			)}
 		>
-			Choose your <em className="italic">pricing plan</em>
-		</motion.h2>
+			{plan.popular ? (
+				<div
+					aria-hidden="true"
+					className="pointer-events-none absolute inset-0 bg-[radial-gradient(125%_125%_at_50%_10%,transparent_40%,color-mix(in_oklch,var(--primary)_22%,transparent)_100%)]"
+				/>
+			) : null}
+
+			<div className="relative flex flex-1 flex-col gap-6 p-6 sm:p-8">
+				<div className="flex flex-col gap-2">
+					<div className="flex items-center justify-between gap-3">
+						<PlanHeading
+							className="font-normal text-2xl text-foreground tracking-tight"
+							id={headingId}
+						>
+							{plan.name}
+						</PlanHeading>
+						{plan.popular ? <Badge>Popular</Badge> : null}
+					</div>
+					<p className="text-muted-foreground text-sm leading-relaxed">
+						{plan.tagline}
+					</p>
+				</div>
+
+				<PlanPrice cycle={cycle} plan={plan} />
+
+				<Button
+					aria-label={`Get started with the ${plan.name} plan`}
+					className="w-full touch-manipulation active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100"
+					nativeButton={false}
+					render={<a href={checkoutHref(plan, cycle)} />}
+					size="lg"
+					variant={plan.popular ? "default" : "secondary"}
+				>
+					Get started
+				</Button>
+
+				<ul className="flex flex-col gap-3 border-border border-t pt-6">
+					{plan.features.map((feature) => (
+						<li
+							className="flex items-start gap-2.5 text-foreground/80 text-sm"
+							key={feature}
+						>
+							<CheckIcon
+								aria-hidden="true"
+								className={cn(
+									"mt-0.5 size-4 shrink-0",
+									plan.popular ? "text-primary" : "text-muted-foreground",
+								)}
+							/>
+							<span>{feature}</span>
+						</li>
+					))}
+				</ul>
+			</div>
+		</article>
+	);
+}
+
+function LimitsTable() {
+	return (
+		<div className="relative border border-border bg-background text-foreground">
+			<GridTick className="-bottom-2 -left-2" />
+			<GridTick className="-right-2 -bottom-2" />
+
+			<div className="w-full overflow-x-auto">
+				<table className="w-full min-w-[20rem] table-fixed border-collapse text-sm">
+					<caption className="sr-only">Usage limits by plan</caption>
+					<colgroup>
+						<col className="w-[31%] md:w-1/4" />
+						<col />
+						<col />
+						<col />
+					</colgroup>
+					<thead className="bg-muted/40">
+						<tr>
+							<th
+								className="px-3 py-3 text-left font-medium text-muted-foreground text-xs uppercase tracking-wide sm:px-4"
+								scope="col"
+							>
+								Limits
+							</th>
+							{PLANS.map((plan) => (
+								<th
+									className="border-border border-l px-1 py-3 text-center font-medium text-foreground sm:px-4"
+									key={plan.id}
+									scope="col"
+								>
+									{plan.name}
+								</th>
+							))}
+						</tr>
+					</thead>
+					<tbody>
+						{LIMIT_ROWS.map((row) => (
+							<tr className="border-border border-t" key={row.key}>
+								<th
+									className="px-3 py-3 text-left font-normal text-foreground/80 sm:px-4 sm:py-4"
+									scope="row"
+								>
+									{row.label}
+								</th>
+								{PLANS.map((plan) => {
+									const value = plan.limits[row.key];
+
+									return (
+										<td
+											className="border-border border-l px-1 py-3 text-center tabular-nums sm:px-4 sm:py-4"
+											key={plan.id}
+										>
+											{isUnlimited(value) ? (
+												<span className="inline-flex items-center justify-center gap-1.5 text-foreground">
+													<CheckIcon
+														aria-hidden="true"
+														className="hidden size-3.5 text-primary sm:block"
+													/>
+													Unlimited
+												</span>
+											) : (
+												<span className="text-foreground/80">
+													{formatLimit(value)}
+												</span>
+											)}
+										</td>
+									);
+								})}
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+		</div>
 	);
 }
 
@@ -215,28 +363,32 @@ export function Pricing01({
 	showLimits = true,
 }: Pricing01Props) {
 	const [cycle, setCycle] = useState<BillingCycle>("monthly");
-	const PlanHeading = headingLevel === "h1" ? "h2" : "h3";
+	const titleId = useId();
+	const Heading = headingLevel;
 
 	return (
 		<MotionConfig reducedMotion="user">
-			<section className="relative w-full bg-background px-4 py-20 text-foreground sm:px-6 lg:px-8">
+			<section
+				aria-labelledby={titleId}
+				className="relative w-full bg-background px-4 py-16 text-foreground sm:px-6 sm:py-20 lg:px-8"
+			>
 				<div className="mx-auto flex w-full max-w-6xl flex-col gap-10">
-					<div className="mx-auto flex max-w-2xl flex-col gap-5 text-center">
-						<PricingHeading level={headingLevel} />
-						<motion.p
-							animate={{ opacity: 1, transform: "translateY(0px)" }}
-							className="mx-auto max-w-md text-balance text-base text-muted-foreground leading-relaxed"
-							initial={{ opacity: 0, transform: "translateY(14px)" }}
-							transition={{ duration: 0.55, delay: 0.08, ease: EASE_OUT }}
+					<header className="mx-auto flex max-w-2xl flex-col gap-4 text-center">
+						<Heading
+							className="text-balance font-normal text-[2.5rem] text-foreground leading-[1.05] tracking-[-0.02em] sm:text-6xl"
+							id={titleId}
 						>
+							Choose your <em className="italic">pricing plan</em>
+						</Heading>
+						<p className="mx-auto max-w-md text-balance text-base text-muted-foreground leading-relaxed">
 							Flexible plans designed to scale with your support needs.
-						</motion.p>
-					</div>
+						</p>
+					</header>
 
 					<div className="flex justify-center">
 						<AnimatedTabs
 							aria-label="Billing cycle"
-							className="[&_[data-slot=animated-tabs-trigger]]:h-10 [&_[data-slot=animated-tabs-trigger]]:px-5"
+							className="[&_[data-slot=animated-tabs-trigger]]:h-9 [&_[data-slot=animated-tabs-trigger]]:px-4 sm:[&_[data-slot=animated-tabs-trigger]]:px-5"
 							layoutId="pricing-01-billing-indicator"
 							onValueChange={(value) => {
 								if (value === "monthly" || value === "annual") setCycle(value);
@@ -247,7 +399,7 @@ export function Pricing01({
 					</div>
 
 					<div className="flex flex-col gap-4">
-						<div className="relative grid grid-cols-1 border border-border bg-background text-foreground lg:grid-cols-3">
+						<div className="relative grid grid-cols-1 border border-border bg-background lg:grid-cols-3">
 							<GridTick className="-top-2 -left-2" />
 							<GridTick className="-top-2 -right-2" />
 							{showLimits ? null : (
@@ -257,167 +409,17 @@ export function Pricing01({
 								</>
 							)}
 
-							{PLANS.map((plan, index) => {
-								const price = cycle === "annual" ? plan.annual : plan.monthly;
-
-								return (
-									<motion.article
-										className={cn(
-											"relative flex flex-col overflow-hidden border-border py-4",
-											index < PLANS.length - 1 && "border-b lg:border-b-0",
-											index < 2 && "lg:border-r",
-										)}
-										initial={{ opacity: 0, transform: "translateY(12px)" }}
-										key={plan.id}
-										transition={{
-											duration: 0.4,
-											delay: index * 0.06,
-											ease: EASE_OUT,
-										}}
-										viewport={{ once: true, amount: 0.12 }}
-										whileInView={{
-											opacity: 1,
-											transform: "translateY(0px)",
-										}}
-									>
-										{plan.popular ? (
-											<div
-												aria-hidden="true"
-												className="pointer-events-none absolute inset-0"
-												style={{
-													background:
-														"radial-gradient(125% 125% at 50% 10%, var(--background) 40%, var(--primary) 100%)",
-												}}
-											/>
-										) : null}
-
-										<div className="relative z-10 flex flex-1 flex-col gap-5 p-6">
-											<div className="flex flex-col gap-5">
-												<div className="flex min-w-0 flex-1 flex-col gap-2">
-													<div className="flex w-full items-center justify-between gap-2.5">
-														<PlanHeading className="font-normal text-2xl text-foreground tracking-tight">
-															{plan.name}
-														</PlanHeading>
-														{plan.popular ? <Badge>Popular</Badge> : null}
-													</div>
-													<p className="text-muted-foreground text-sm leading-relaxed">
-														{plan.tagline}
-													</p>
-												</div>
-											</div>
-
-											<div className="flex items-baseline gap-1.5">
-												<span className="font-normal text-4xl text-foreground tracking-tight">
-													{formatPrice(price)}
-												</span>
-												<span className="text-muted-foreground text-sm">
-													{plan.unit}
-												</span>
-											</div>
-											<p className="h-4 text-muted-foreground text-xs">
-												{cycle === "annual" ? "billed annually" : ""}
-											</p>
-											<a
-												aria-label={`Get started with the ${plan.name} plan`}
-												className={cn(
-													buttonVariants({
-														variant: plan.popular ? "default" : "secondary",
-													}),
-													CTA_CLASS_NAME,
-													"my-4 w-full",
-												)}
-												href={checkoutHref(plan, cycle)}
-											>
-												Get Started
-											</a>
-
-											<ul className="flex flex-col gap-3">
-												{plan.features.map((feature) => (
-													<li
-														className="flex items-start gap-2.5 text-foreground/80 text-sm"
-														key={feature}
-													>
-														<CheckIcon
-															aria-hidden="true"
-															className={cn(
-																"mt-0.5 size-4 shrink-0",
-																plan.popular
-																	? "text-primary"
-																	: "text-foreground",
-															)}
-														/>
-														<span>{feature}</span>
-													</li>
-												))}
-											</ul>
-										</div>
-									</motion.article>
-								);
-							})}
+							{PLANS.map((plan) => (
+								<PlanCard
+									cycle={cycle}
+									headingLevel={headingLevel === "h1" ? "h2" : "h3"}
+									key={plan.id}
+									plan={plan}
+								/>
+							))}
 						</div>
 
-						{showLimits ? (
-							<div className="relative border border-border bg-background text-foreground">
-								<GridTick className="-bottom-2 -left-2" />
-								<GridTick className="-right-2 -bottom-2" />
-
-								<div className="relative grid grid-cols-1 bg-muted/30 md:grid-cols-4">
-									<GridRect className="-top-[2px] -left-[2px]" />
-									<GridRect className="-top-[2px] -right-[3px]" />
-									<GridRect className="-bottom-[2px] -left-[2px]" />
-									<GridRect className="-right-[3px] -bottom-[2px]" />
-									<div className="p-4 font-medium text-muted-foreground text-xs uppercase tracking-wide">
-										Limits
-									</div>
-									{PLANS.map((plan) => (
-										<div
-											className="hidden border-border border-l p-4 text-center font-medium text-foreground text-sm md:block"
-											key={plan.id}
-										>
-											{plan.name}
-										</div>
-									))}
-								</div>
-
-								{LIMIT_ROWS.map((row) => (
-									<div
-										className="grid grid-cols-2 border-border border-t md:grid-cols-4"
-										key={row.key}
-									>
-										<div className="col-span-2 p-4 text-foreground/80 text-sm md:col-span-1">
-											{row.label}
-										</div>
-										{PLANS.map((plan) => {
-											const value = plan.limits[row.key];
-
-											return (
-												<div
-													className="flex items-center justify-between border-border p-4 text-sm md:justify-center md:border-l"
-													key={plan.id}
-												>
-													<span className="text-muted-foreground text-xs uppercase tracking-wide md:hidden">
-														{plan.name}
-													</span>
-													{isUnlimited(value) ? (
-														<span className="flex items-center gap-1.5 text-foreground">
-															<CheckIcon
-																aria-hidden="true"
-																className="size-3.5"
-															/>
-															Unlimited
-														</span>
-													) : (
-														<span className="text-foreground/80">
-															{formatLimit(value)}
-														</span>
-													)}
-												</div>
-											);
-										})}
-									</div>
-								))}
-							</div>
-						) : null}
+						{showLimits ? <LimitsTable /> : null}
 					</div>
 				</div>
 			</section>

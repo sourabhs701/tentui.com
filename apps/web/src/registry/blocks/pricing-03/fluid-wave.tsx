@@ -98,15 +98,19 @@ export default function FluidWave({ color = "#FC4C01" }: { color?: string }) {
 			...hexToRgb(color),
 		);
 
-		const reduceMotion = window.matchMedia(
-			"(prefers-reduced-motion: reduce)",
-		).matches;
-		const startedAt = performance.now();
-		const elapsed = () => (performance.now() - startedAt) / 1000;
+		const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+		let reduceMotion = motionQuery.matches;
+		let isVisible = false;
+		// The clock starts paused so the field only advances while it is animating.
+		let startedAt = performance.now();
+		let pausedAt = startedAt;
 		let frame = 0;
 
+		const elapsed = () => ((pausedAt || performance.now()) - startedAt) / 1000;
+
 		const draw = () => {
-			gl.uniform1f(time, TIME_OFFSET + (reduceMotion ? 0 : elapsed()));
+			if (gl.isContextLost()) return;
+			gl.uniform1f(time, TIME_OFFSET + elapsed());
 			gl.drawArrays(gl.TRIANGLES, 0, 6);
 		};
 
@@ -116,26 +120,39 @@ export default function FluidWave({ color = "#FC4C01" }: { color?: string }) {
 		};
 
 		const play = () => {
-			if (frame || reduceMotion) return;
+			if (frame || reduceMotion || !isVisible) return;
+			if (pausedAt) {
+				startedAt += performance.now() - pausedAt;
+				pausedAt = 0;
+			}
 			frame = requestAnimationFrame(loop);
 		};
 
 		const pause = () => {
+			if (!frame) return;
 			cancelAnimationFrame(frame);
 			frame = 0;
+			pausedAt = performance.now();
 		};
 
+		// Track the size locally rather than comparing against the canvas attributes:
+		// on a remount (React Strict Mode, HMR, colour change) the canvas keeps its
+		// previous size, but the freshly linked program still needs its uniforms set.
+		let width = 0;
+		let height = 0;
 		const resize = () => {
-			const width = Math.max(
+			const nextWidth = Math.max(
 				1,
 				Math.round(canvas.clientWidth * RESOLUTION_SCALE),
 			);
-			const height = Math.max(
+			const nextHeight = Math.max(
 				1,
 				Math.round(canvas.clientHeight * RESOLUTION_SCALE),
 			);
-			if (canvas.width === width && canvas.height === height) return;
+			if (nextWidth === width && nextHeight === height) return;
 
+			width = nextWidth;
+			height = nextHeight;
 			canvas.width = width;
 			canvas.height = height;
 			gl.viewport(0, 0, width, height);
@@ -144,23 +161,42 @@ export default function FluidWave({ color = "#FC4C01" }: { color?: string }) {
 		};
 
 		resize();
-		draw();
 
 		const resizeObserver = new ResizeObserver(resize);
 		resizeObserver.observe(canvas);
 
 		const visibilityObserver = new IntersectionObserver(([entry]) => {
-			if (entry?.isIntersecting) play();
+			isVisible = Boolean(entry?.isIntersecting);
+			if (isVisible) play();
 			else pause();
 		});
 		visibilityObserver.observe(canvas);
+
+		const onMotionChange = (event: MediaQueryListEvent) => {
+			reduceMotion = event.matches;
+			if (reduceMotion) pause();
+			else play();
+		};
+		motionQuery.addEventListener("change", onMotionChange);
+
+		// If the GPU drops the context, stop drawing; the CSS gradient behind the
+		// canvas remains as the fallback treatment.
+		const onContextLost = (event: Event) => {
+			event.preventDefault();
+			pause();
+		};
+		canvas.addEventListener("webglcontextlost", onContextLost);
 
 		return () => {
 			pause();
 			resizeObserver.disconnect();
 			visibilityObserver.disconnect();
-			gl.deleteBuffer(quad);
-			compiled.dispose();
+			motionQuery.removeEventListener("change", onMotionChange);
+			canvas.removeEventListener("webglcontextlost", onContextLost);
+			if (!gl.isContextLost()) {
+				gl.deleteBuffer(quad);
+				compiled.dispose();
+			}
 		};
 	}, [color]);
 

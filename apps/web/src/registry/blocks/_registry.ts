@@ -10,6 +10,7 @@ export const blocks: Registry["items"] = [
 			"A focused two-plan pricing section with an ambient fluid treatment for the popular plan.",
 		type: "registry:block",
 		dependencies: ["lucide-react"],
+		registryDependencies: ["badge", "button", "card", "separator"],
 		files: [
 			{
 				path: "blocks/pricing-03/pricing-03.tsx",
@@ -40,6 +41,8 @@ export const blocks: Registry["items"] = [
 		description:
 			"A rounded dark footer with an overlapping brand mark, centered calls to action, and compact navigation.",
 		type: "registry:block",
+		dependencies: ["lucide-react"],
+		registryDependencies: ["button"],
 		files: [
 			{
 				path: "blocks/footer-03/footer-03.tsx",
@@ -90,6 +93,7 @@ export const blocks: Registry["items"] = [
 			"Tabbed project pricing paired with a highlighted ongoing retainer.",
 		type: "registry:block",
 		dependencies: ["lucide-react", "motion"],
+		registryDependencies: ["button", "card", "tabs"],
 		files: [
 			{
 				path: "blocks/pricing-02/pricing-02.tsx",
@@ -115,7 +119,6 @@ export const blocks: Registry["items"] = [
 		description:
 			"An editorial hero with a playful pricing CTA and support dashboard preview.",
 		type: "registry:block",
-		dependencies: ["motion"],
 		registryDependencies: [
 			"button",
 			getRegistryItemUrl("brand-context-menu"),
@@ -224,7 +227,7 @@ export const blocks: Registry["items"] = [
 		categories: ["footer"],
 		meta: {
 			createdAt: "2026-07-21",
-			iframeHeight: 720,
+			iframeHeight: 560,
 			previewClassName: "flex min-h-svh items-end",
 		},
 	},
@@ -232,7 +235,7 @@ export const blocks: Registry["items"] = [
 		name: "footer-01",
 		title: "Footer 01",
 		description:
-			"A structured product footer with newsletter, navigation, status, and theme controls.",
+			"A structured product footer with newsletter signup, link navigation, legal links, and a theme toggle.",
 		type: "registry:block",
 		dependencies: ["lucide-react", "next-themes"],
 		registryDependencies: ["button", "input-group", "separator"],
@@ -271,7 +274,7 @@ export const blocks: Registry["items"] = [
 		categories: ["pricing"],
 		meta: {
 			createdAt: "2026-07-21",
-			iframeHeight: 1040,
+			iframeHeight: 1160,
 			previewClassName: "min-h-screen",
 		},
 	},
@@ -293,7 +296,7 @@ export const blocks: Registry["items"] = [
 		categories: ["faq"],
 		meta: {
 			createdAt: "2026-07-21",
-			iframeHeight: 860,
+			iframeHeight: 1140,
 			previewClassName: "min-h-screen",
 		},
 	},
@@ -302,7 +305,6 @@ export const blocks: Registry["items"] = [
 		title: "FAQ 01",
 		description: "A split-layout FAQ section with subtle grid detailing.",
 		type: "registry:block",
-		dependencies: ["lucide-react"],
 		registryDependencies: ["accordion"],
 		files: [
 			{
@@ -324,7 +326,8 @@ export const blocks: Registry["items"] = [
 		description:
 			"An animated hero with availability, service CTAs, and a technology carousel.",
 		type: "registry:block",
-		dependencies: ["motion", "react-fast-marquee"],
+		dependencies: ["lucide-react", "react-fast-marquee"],
+		registryDependencies: ["badge", "button"],
 		files: [
 			{
 				path: "blocks/hero-01/hero-01.tsx",

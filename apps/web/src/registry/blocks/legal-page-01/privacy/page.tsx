@@ -1,13 +1,15 @@
 import type { ReactNode } from "react";
 import { Separator } from "@/components/ui/separator";
 
-export interface LegalClause {
+interface LegalClause {
 	id: string;
 	title: string;
 	body: ReactNode;
 }
 
-export const PRIVACY_CLAUSES = [
+const LAST_UPDATED = { iso: "2026-07-21", label: "July 21, 2026" };
+
+const PRIVACY_CLAUSES = [
 	{
 		id: "information-we-collect",
 		title: "Information we collect",
@@ -76,45 +78,61 @@ export const PRIVACY_CLAUSES = [
 	},
 ] satisfies readonly LegalClause[];
 
+/**
+ * Headings marked with `data-toc` (and an `id`) are picked up by the legal
+ * layout's table of contents. `data-toc` holds the label shown in the TOC.
+ */
+const headingClassName =
+	"scroll-mt-24 font-semibold text-base text-foreground tracking-tight outline-none md:scroll-mt-12";
+
 export default function PrivacyPolicyPage() {
 	return (
 		<article className="max-w-2xl">
-			<h1 className="text-balance font-semibold text-3xl text-foreground tracking-tight md:text-4xl">
-				Privacy Policy
-			</h1>
-			<p className="mt-3 text-[12px] text-muted-foreground">
-				Last updated July 21, 2026
-			</p>
-			<p className="mt-6 text-[14px] text-muted-foreground leading-relaxed">
-				How we handle analytics and basic usage data on this website.
-			</p>
+			<header>
+				<h1 className="text-balance font-semibold text-3xl text-foreground tracking-tight md:text-4xl">
+					Privacy Policy
+				</h1>
+				<p className="mt-3 text-muted-foreground text-xs">
+					Last updated{" "}
+					<time dateTime={LAST_UPDATED.iso}>{LAST_UPDATED.label}</time>
+				</p>
+				<p className="mt-6 text-pretty text-[15px] text-muted-foreground leading-7">
+					How we handle analytics and basic usage data on this website.
+				</p>
+			</header>
 
 			<ol className="mt-10 flex flex-col gap-10">
 				{PRIVACY_CLAUSES.map((clause, index) => (
-					<li className="scroll-mt-20" id={clause.id} key={clause.id}>
-						<h2 className="font-semibold text-[15px] text-foreground tracking-tight">
-							<span className="mr-3 text-muted-foreground tabular-nums">
-								{String(index + 1).padStart(2, "0")}
-							</span>
-							{clause.title}
-						</h2>
-						<div className="mt-3 ml-9 flex flex-col gap-3 text-[14px] text-muted-foreground leading-relaxed [&_strong]:font-medium [&_strong]:text-foreground [&_ul]:flex [&_ul]:list-disc [&_ul]:flex-col [&_ul]:gap-1.5 [&_ul]:pl-5">
-							{clause.body}
-						</div>
+					<li key={clause.id}>
+						<section aria-labelledby={clause.id}>
+							<h2
+								className={headingClassName}
+								data-toc={clause.title}
+								id={clause.id}
+							>
+								<span className="mr-3 font-mono text-muted-foreground text-sm tabular-nums">
+									{String(index + 1).padStart(2, "0")}
+								</span>
+								{clause.title}
+							</h2>
+							<div className="mt-3 flex max-w-prose flex-col gap-3 text-pretty text-[15px] text-muted-foreground leading-7 sm:pl-9 [&_strong]:font-medium [&_strong]:text-foreground [&_ul]:flex [&_ul]:list-disc [&_ul]:flex-col [&_ul]:gap-1.5 [&_ul]:pl-5 [&_ul]:marker:text-border">
+								{clause.body}
+							</div>
+						</section>
 					</li>
 				))}
 			</ol>
 
 			<Separator className="mt-16" />
-			<section className="pt-8">
-				<h2 className="font-semibold text-[15px] text-foreground tracking-tight">
+			<section aria-labelledby="contact" className="pt-8">
+				<h2 className={headingClassName} data-toc="Contact" id="contact">
 					Contact
 				</h2>
-				<p className="mt-3 max-w-2xl text-[14px] text-muted-foreground leading-relaxed">
+				<p className="mt-3 max-w-prose text-pretty text-[15px] text-muted-foreground leading-7">
 					For privacy-related questions, exports, or deletion requests, contact
 					us at{" "}
 					<a
-						className="rounded-sm font-medium text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+						className="rounded-sm font-medium text-foreground underline decoration-border underline-offset-4 outline-none transition-colors hover:decoration-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50"
 						href="mailto:privacy@example.com"
 					>
 						privacy@example.com

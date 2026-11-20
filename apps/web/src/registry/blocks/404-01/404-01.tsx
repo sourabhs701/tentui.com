@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowLeft, RotateCcw } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, PenTool, RotateCcw } from "lucide-react";
+import { useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { parsePath } from "./parse";
 import { type EditorStyle, VectorEditor } from "./vector-editor";
@@ -15,42 +15,57 @@ const NOT_FOUND_PATH = `
 	M 473 125 L 473 82 L 438 125 Z
 `;
 
+const INITIAL_PATH = parsePath(NOT_FOUND_PATH);
+
+/** Figma's selection blue, kept as the editor's signature accent. */
+const ACCENT = "#0d99ff";
+
 const EDITOR_STYLE: EditorStyle = {
-	accent: "#0d99ff",
-	arm: "#8dbce0",
+	accent: ACCENT,
+	arm: `color-mix(in oklab, ${ACCENT} 45%, var(--background))`,
 	anchorR: 4,
-	handleR: 3.2,
+	handleR: 3.25,
+	hitR: 12,
 	pointFill: "var(--background)",
-	fill: "none",
-	fillOpacity: 0,
-	stroke: "#0d99ff",
+	fill: ACCENT,
+	fillOpacity: 0.04,
+	stroke: ACCENT,
 	strokeWidth: 1.25,
 	showRig: true,
 	fillRule: "evenodd",
 };
 
 export default function NotFound01() {
-	const [path, setPath] = useState(() => parsePath(NOT_FOUND_PATH));
+	const [path, setPath] = useState(INITIAL_PATH);
+	const hintId = useId();
+	const edited = path !== INITIAL_PATH;
 
 	return (
 		<section className="relative isolate flex min-h-svh flex-col overflow-hidden bg-background text-foreground">
 			<div
 				aria-hidden="true"
-				className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[24px_24px] opacity-35 [mask-image:radial-gradient(ellipse_70%_62%_at_50%_40%,black,transparent)]"
+				className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[24px_24px] opacity-50 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,black,transparent)]"
 			/>
 
-			<main className="flex flex-1 flex-col items-center justify-center px-5 py-16 sm:px-8 sm:py-20">
-				<div className="relative w-full max-w-[40rem] px-4 sm:px-10">
-					<Button
-						className="absolute top-0 right-0 text-muted-foreground"
-						variant="ghost"
-						size="icon-sm"
-						aria-label="Reset vector"
-						title="Reset vector"
-						onClick={() => setPath(parsePath(NOT_FOUND_PATH))}
-					>
-						<RotateCcw />
-					</Button>
+			<div className="flex flex-1 flex-col items-center justify-center px-4 py-16 sm:px-8 sm:py-24">
+				<figure className="w-full max-w-[40rem] px-2 sm:px-10">
+					<div className="mb-4 flex h-6 items-center justify-between gap-3">
+						<span className="inline-flex items-center gap-1.5 font-mono text-muted-foreground text-xs">
+							<PenTool aria-hidden="true" className="size-3.5" />
+							404.svg
+						</span>
+						<Button
+							variant="ghost"
+							size="xs"
+							className="text-muted-foreground"
+							disabled={!edited}
+							onClick={() => setPath(INITIAL_PATH)}
+						>
+							<RotateCcw data-icon="inline-start" />
+							Reset
+						</Button>
+					</div>
+
 					<VectorEditor
 						path={path}
 						onChange={setPath}
@@ -60,19 +75,32 @@ export default function NotFound01() {
 						height={235}
 						className="h-auto w-full"
 						ariaLabel="Editable 404 vector"
+						ariaDescribedBy={hintId}
 					/>
-				</div>
 
-				<div className="mt-14 flex max-w-xl flex-col items-center text-center sm:mt-16">
-					<h1 className="text-balance font-medium text-3xl tracking-[-0.04em] sm:text-5xl">
+					<figcaption
+						id={hintId}
+						className="mt-5 text-balance text-center text-muted-foreground text-xs"
+					>
+						Drag any point to reshape the 404.
+						<span className="hidden sm:inline">
+							{" "}
+							Arrow keys nudge, Shift moves by 10, [ and ] switch points, Alt
+							breaks a curve handle.
+						</span>
+					</figcaption>
+				</figure>
+
+				<div className="mt-12 flex max-w-xl flex-col items-center text-center sm:mt-14">
+					<h1 className="text-balance font-medium text-3xl tracking-tight sm:text-5xl sm:tracking-[-0.04em]">
 						This page slipped off the canvas.
 					</h1>
-					<p className="mt-4 max-w-md text-pretty text-muted-foreground leading-6">
+					<p className="mt-4 max-w-md text-pretty text-base text-muted-foreground leading-relaxed">
 						The layer you were looking for was moved, renamed, or never made it
 						past the first draft.
 					</p>
 					<Button
-						className="mt-7 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:transition-none"
+						className="mt-8 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
 						size="lg"
 						nativeButton={false}
 						render={<a href="/" />}
@@ -81,7 +109,7 @@ export default function NotFound01() {
 						Back to home
 					</Button>
 				</div>
-			</main>
+			</div>
 		</section>
 	);
 }

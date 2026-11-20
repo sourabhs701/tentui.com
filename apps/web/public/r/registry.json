@@ -10,6 +10,12 @@
       "dependencies": [
         "lucide-react"
       ],
+      "registryDependencies": [
+        "badge",
+        "button",
+        "card",
+        "separator"
+      ],
       "files": [
         {
           "path": "src/registry/blocks/pricing-03/pricing-03.tsx",
@@ -41,6 +47,12 @@
       "name": "footer-03",
       "title": "Footer 03",
       "description": "A rounded dark footer with an overlapping brand mark, centered calls to action, and compact navigation.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button"
+      ],
       "files": [
         {
           "path": "src/registry/blocks/footer-03/footer-03.tsx",
@@ -98,6 +110,11 @@
         "lucide-react",
         "motion"
       ],
+      "registryDependencies": [
+        "button",
+        "card",
+        "tabs"
+      ],
       "files": [
         {
           "path": "src/registry/blocks/pricing-02/pricing-02.tsx",
@@ -124,9 +141,6 @@
       "name": "hero-02",
       "title": "Hero 02",
       "description": "An editorial hero with a playful pricing CTA and support dashboard preview.",
-      "dependencies": [
-        "motion"
-      ],
       "registryDependencies": [
         "button",
         "https://tentui.com/r/brand-context-menu.json",
@@ -251,7 +265,7 @@
       ],
       "meta": {
         "createdAt": "2026-07-21",
-        "iframeHeight": 720,
+        "iframeHeight": 560,
         "previewClassName": "flex min-h-svh items-end"
       },
       "categories": [
@@ -262,7 +276,7 @@
     {
       "name": "footer-01",
       "title": "Footer 01",
-      "description": "A structured product footer with newsletter, navigation, status, and theme controls.",
+      "description": "A structured product footer with newsletter signup, link navigation, legal links, and a theme toggle.",
       "dependencies": [
         "lucide-react",
         "next-themes"
@@ -311,7 +325,7 @@
       ],
       "meta": {
         "createdAt": "2026-07-21",
-        "iframeHeight": 1040,
+        "iframeHeight": 1160,
         "previewClassName": "min-h-screen"
       },
       "categories": [
@@ -338,7 +352,7 @@
       ],
       "meta": {
         "createdAt": "2026-07-21",
-        "iframeHeight": 860,
+        "iframeHeight": 1140,
         "previewClassName": "min-h-screen"
       },
       "categories": [
@@ -350,9 +364,6 @@
       "name": "faq-01",
       "title": "FAQ 01",
       "description": "A split-layout FAQ section with subtle grid detailing.",
-      "dependencies": [
-        "lucide-react"
-      ],
       "registryDependencies": [
         "accordion"
       ],
@@ -378,8 +389,12 @@
       "title": "Hero 01",
       "description": "An animated hero with availability, service CTAs, and a technology carousel.",
       "dependencies": [
-        "motion",
+        "lucide-react",
         "react-fast-marquee"
+      ],
+      "registryDependencies": [
+        "badge",
+        "button"
       ],
       "files": [
         {
