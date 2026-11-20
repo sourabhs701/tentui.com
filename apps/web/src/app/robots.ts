@@ -7,7 +7,9 @@ export default function robots(): MetadataRoute.Robots {
 		rules: {
 			userAgent: "*",
 			allow: "/",
-			disallow: ["/preview/", "/workbench/"],
+			// /preview/ stays crawlable so the noindex tag on previews is seen
+			// and the iframes on /blocks and /components pages render.
+			disallow: ["/workbench/"],
 		},
 		sitemap: `${SITE_INFO.url}/sitemap.xml`,
 	};

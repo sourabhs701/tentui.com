@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { type ComponentType, cache } from "react";
 
+import { previewRobots } from "@/app/(preview)/preview/preview-robots";
 import { absoluteUrl } from "@/lib/json-ld";
 import { getRegistryItem } from "@/lib/registry";
 import { cn } from "@/lib/utils";
@@ -47,7 +48,6 @@ export async function generateMetadata({
 	return {
 		title,
 		description,
-		alternates: { canonical: url },
 		openGraph: {
 			title,
 			description,
@@ -63,7 +63,7 @@ export async function generateMetadata({
 			description,
 			images: [absoluteUrl(ogImage)],
 		},
-		robots: { index: false, follow: false },
+		robots: previewRobots,
 	};
 }
 
