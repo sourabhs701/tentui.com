@@ -165,12 +165,12 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["footer"],
-		meta: {"createdAt":"2026-07-21","iframeHeight":720,"previewClassName":"flex min-h-svh items-end"},
+		meta: {"createdAt":"2026-07-21","iframeHeight":560,"previewClassName":"flex min-h-svh items-end"},
 	},
 	"footer-01": {
 		name: "footer-01",
 		title: "Footer 01",
-		description: "A structured product footer with newsletter, navigation, status, and theme controls.",
+		description: "A structured product footer with newsletter signup, link navigation, legal links, and a theme toggle.",
 		type: "registry:block",
 		files: [{"path":"src/registry/blocks/footer-01/footer-01.tsx","type":"registry:component","target":"@components/footer-01.tsx"}],
 		component: React.lazy(async () => {
@@ -201,7 +201,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["pricing"],
-		meta: {"createdAt":"2026-07-21","iframeHeight":1040,"previewClassName":"min-h-screen"},
+		meta: {"createdAt":"2026-07-21","iframeHeight":1160,"previewClassName":"min-h-screen"},
 	},
 	"faq-02": {
 		name: "faq-02",
@@ -219,7 +219,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["faq"],
-		meta: {"createdAt":"2026-07-21","iframeHeight":860,"previewClassName":"min-h-screen"},
+		meta: {"createdAt":"2026-07-21","iframeHeight":1140,"previewClassName":"min-h-screen"},
 	},
 	"faq-01": {
 		name: "faq-01",

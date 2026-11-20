@@ -1,21 +1,18 @@
-import { Fragment, type ReactNode } from "react";
+import { ArrowUpRightIcon } from "lucide-react";
+import { useId } from "react";
+
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export interface Footer03Link {
 	label: string;
 	href: string;
 	external?: boolean;
 }
+
 const SOCIAL_LINKS: Footer03Link[] = [
-	{
-		label: "GitHub",
-		href: "#",
-		external: true,
-	},
-	{
-		label: "X / Twitter",
-		href: "#",
-		external: true,
-	},
+	{ label: "GitHub", href: "#", external: true },
+	{ label: "X / Twitter", href: "#", external: true },
 ];
 
 const EXPLORE_LINKS: Footer03Link[] = [
@@ -28,28 +25,34 @@ const LEGAL_LINKS: Footer03Link[] = [
 	{ label: "Privacy", href: "#" },
 ];
 
-function ArrowIcon() {
-	return (
-		<svg
-			aria-hidden="true"
-			className="size-3 text-blue-500 transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none"
-			fill="none"
-			stroke="currentColor"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth="2"
-			viewBox="0 0 24 24"
-		>
-			<path d="M7 17 17 7M8 7h9v9" />
-		</svg>
-	);
+const PRIMARY_ACTION: Footer03Link = { label: "Browse components", href: "#" };
+
+const SECONDARY_ACTION: Footer03Link = {
+	label: "Star on GitHub",
+	href: "#",
+	external: true,
+};
+
+const linkFocus =
+	"rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50";
+
+function externalProps(link: Footer03Link) {
+	return link.external
+		? { rel: "noreferrer noopener", target: "_blank" as const }
+		: {};
 }
 
-function Mark() {
+function ExternalHint({ link }: { link: Footer03Link }) {
+	return link.external ? (
+		<span className="sr-only"> (opens in a new tab)</span>
+	) : null;
+}
+
+function Mark({ className }: { className?: string }) {
 	return (
 		<svg
 			aria-hidden="true"
-			className="size-full text-blue-500"
+			className={cn("size-full text-primary", className)}
 			viewBox="0 0 24 23"
 		>
 			<path
@@ -63,116 +66,139 @@ function Mark() {
 function FooterLink({ link }: { link: Footer03Link }) {
 	return (
 		<a
-			className="group flex w-fit items-center gap-1.5 font-medium text-sm text-white/60 transition-colors duration-150 ease-out hover:text-white sm:text-base"
+			className={cn(
+				"group inline-flex w-fit items-center gap-1 font-medium text-muted-foreground text-sm transition-colors duration-150 ease-out hover:text-foreground focus-visible:text-foreground motion-reduce:transition-none sm:text-base",
+				linkFocus,
+			)}
 			href={link.href}
-			rel={link.external ? "noreferrer" : undefined}
-			target={link.external ? "_blank" : undefined}
+			{...externalProps(link)}
 		>
 			{link.label}
-			{link.external ? <ArrowIcon /> : null}
+			{link.external ? (
+				<ArrowUpRightIcon
+					aria-hidden="true"
+					className="size-3.5 text-primary transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
+				/>
+			) : null}
+			<ExternalHint link={link} />
 		</a>
 	);
 }
 
-function ActionLink({
-	link,
-	primary = false,
+function FooterNav({
+	title,
+	links,
+	className,
 }: {
-	link: Footer03Link;
-	primary?: boolean;
+	title: string;
+	links: Footer03Link[];
+	className?: string;
 }) {
+	const headingId = useId();
+
 	return (
-		<a
-			className={
-				primary
-					? "flex h-12 items-center rounded-full bg-blue-500 px-6 font-semibold text-sm text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25)] transition-colors duration-150 ease-out hover:bg-blue-600"
-					: "flex h-12 items-center rounded-full bg-white/[0.08] px-6 font-semibold text-sm text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.14),inset_0_-1px_2px_0_rgba(0,0,0,0.3)] backdrop-blur-2xl transition-colors duration-150 ease-out hover:bg-white/[0.12]"
-			}
-			href={link.href}
-			rel={link.external ? "noreferrer" : undefined}
-			target={link.external ? "_blank" : undefined}
-		>
-			{link.label}
-		</a>
+		<nav aria-labelledby={headingId} className={cn("flex flex-col", className)}>
+			<h2
+				className="mb-3 font-semibold text-base text-foreground tracking-tight sm:text-lg"
+				id={headingId}
+			>
+				{title}
+			</h2>
+			<ul className="flex flex-col gap-2 [align-items:inherit]">
+				{links.map((link) => (
+					<li key={`${link.label}-${link.href}`}>
+						<FooterLink link={link} />
+					</li>
+				))}
+			</ul>
+		</nav>
 	);
 }
 
 export default function Footer03() {
 	return (
-		<footer className="relative w-full p-2.5 pt-20">
-			<div className="relative w-full overflow-visible rounded-[45px] bg-neutral-950 px-8 pt-28 pb-10 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] sm:px-12">
-				<div className="absolute top-0 left-1/2 size-28 -translate-x-1/2 -translate-y-1/2 sm:size-36">
+		<footer className="relative w-full bg-background p-2.5 pt-20 text-foreground">
+			{/* The `dark` class scopes dark theme tokens to the panel so it stays dark in both themes. */}
+			<div className="dark relative w-full rounded-[2.5rem] border border-border bg-card px-6 pt-24 pb-8 text-card-foreground shadow-[inset_0_1px_0_0_rgb(255_255_255/0.06)] sm:rounded-[2.8rem] sm:px-12 sm:pt-28 sm:pb-10">
+				<div className="pointer-events-none absolute top-0 left-1/2 size-24 -translate-x-1/2 -translate-y-1/2 sm:size-36">
 					<Mark />
 				</div>
 
-				<div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 md:grid-cols-[1fr_auto_1fr] md:items-start">
-					<nav
-						aria-label="Social links"
-						className="order-2 flex flex-col gap-2 md:order-1 md:pt-4"
-					>
-						<h2 className="mb-1 font-bold text-lg text-white tracking-tight">
-							Socials
-						</h2>
-						{SOCIAL_LINKS.map((link) => (
-							<FooterLink key={`${link.label}-${link.href}`} link={link} />
-						))}
-					</nav>
-
-					<div className="order-1 flex flex-col items-center gap-4 text-center md:order-2">
-						<h2 className="font-bold text-5xl tracking-tight sm:text-6xl">
+				<div className="mx-auto grid w-full max-w-6xl grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-[1fr_auto_1fr] md:items-start">
+					<div className="col-span-2 flex flex-col items-center gap-4 text-center md:col-span-1 md:col-start-2 md:row-start-1">
+						<p className="font-bold text-5xl text-foreground tracking-tight sm:text-6xl">
 							Tent UI
-						</h2>
-						<p className="max-w-xl text-balance font-medium text-white/60 sm:text-lg">
+						</p>
+						<p className="max-w-md text-balance font-medium text-muted-foreground sm:text-lg">
 							A collection of beautifully crafted components and blocks for your
 							next project.
 						</p>
-						<div className="mt-2 flex flex-wrap items-center justify-center gap-3">
-							<ActionLink
-								link={{ label: "Browse components", href: "#" }}
-								primary
-							/>
-							<ActionLink
-								link={{
-									label: "Star on GitHub",
-									href: "#",
-									external: true,
-								}}
-							/>
+						<div className="mt-3 flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:justify-center">
+							<a
+								className={cn(
+									buttonVariants({ size: "lg" }),
+									"h-12 rounded-full px-6 font-semibold shadow-[inset_0_1px_0_0_rgb(255_255_255/0.25)] hover:bg-primary/90 motion-reduce:transition-none",
+								)}
+								href={PRIMARY_ACTION.href}
+								{...externalProps(PRIMARY_ACTION)}
+							>
+								{PRIMARY_ACTION.label}
+								<ExternalHint link={PRIMARY_ACTION} />
+							</a>
+							<a
+								className={cn(
+									buttonVariants({ size: "lg", variant: "outline" }),
+									"h-12 rounded-full px-6 font-semibold motion-reduce:transition-none",
+								)}
+								href={SECONDARY_ACTION.href}
+								{...externalProps(SECONDARY_ACTION)}
+							>
+								{SECONDARY_ACTION.label}
+								<ArrowUpRightIcon
+									aria-hidden="true"
+									className="text-muted-foreground"
+								/>
+								<ExternalHint link={SECONDARY_ACTION} />
+							</a>
 						</div>
 					</div>
 
-					<nav
-						aria-label="Explore"
-						className="order-3 flex flex-col gap-2 md:items-end md:pt-4"
-					>
-						<h2 className="mb-1 font-bold text-lg text-white tracking-tight">
-							Explore
-						</h2>
-						{EXPLORE_LINKS.map((link) => (
-							<FooterLink key={`${link.label}-${link.href}`} link={link} />
-						))}
-					</nav>
+					<FooterNav
+						className="items-start md:col-start-1 md:row-start-1 md:pt-4"
+						links={SOCIAL_LINKS}
+						title="Socials"
+					/>
+
+					<FooterNav
+						className="items-end text-right md:col-start-3 md:row-start-1 md:pt-4"
+						links={EXPLORE_LINKS}
+						title="Explore"
+					/>
 				</div>
 
-				<div className="mx-auto mt-12 flex w-full max-w-6xl flex-wrap items-center justify-end gap-2.5">
-					{LEGAL_LINKS.map((link) => (
-						<Fragment key={`${link.label}-${link.href}`}>
-							<a
-								className="font-medium text-white/50 text-xs transition-colors duration-150 ease-out hover:text-white"
-								href={link.href}
-								rel={link.external ? "noreferrer" : undefined}
-								target={link.external ? "_blank" : undefined}
-							>
-								{link.label}
-							</a>
-							<span aria-hidden="true" className="text-white/25 text-xs">
-								·
-							</span>
-						</Fragment>
-					))}
-					<span className="font-medium text-white/50 text-xs">
-						© {new Date().getFullYear()} Tent UI
-					</span>
+				<div className="mx-auto mt-12 flex w-full max-w-6xl flex-col-reverse items-center gap-3 border-border border-t pt-6 sm:mt-14 sm:flex-row sm:justify-between">
+					<p className="font-medium text-muted-foreground text-xs">
+						© {new Date().getFullYear()} Tent UI. All rights reserved.
+					</p>
+					<nav aria-label="Legal">
+						<ul className="flex items-center gap-4 text-xs">
+							{LEGAL_LINKS.map((link) => (
+								<li key={`${link.label}-${link.href}`}>
+									<a
+										className={cn(
+											"font-medium text-muted-foreground text-xs transition-colors duration-150 ease-out hover:text-foreground focus-visible:text-foreground motion-reduce:transition-none",
+											linkFocus,
+										)}
+										href={link.href}
+										{...externalProps(link)}
+									>
+										{link.label}
+										<ExternalHint link={link} />
+									</a>
+								</li>
+							))}
+						</ul>
+					</nav>
 				</div>
 			</div>
 		</footer>
