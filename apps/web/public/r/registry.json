@@ -463,6 +463,31 @@
       "type": "registry:block"
     },
     {
+      "name": "before-after-compare",
+      "title": "Before After Compare",
+      "description": "A draggable comparison slider that reveals one image or live UI theme over another with hardware-accelerated clip-path, gentle release physics, and full keyboard and touch support.",
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/before-after-compare/before-after-compare.tsx",
+          "type": "registry:component",
+          "target": "@components/before-after-compare.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-20",
+        "image": "https://cdn.tentui.com/images/components/before-after-compare?v=1",
+        "video": "https://cdn.tentui.com/videos/components/before-after-compare?v=1"
+      },
+      "docs": "https://tentui.com/components/before-after-compare",
+      "categories": [
+        "media"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "morph-dialog",
       "title": "Morph Dialog",
       "description": "A card or button that grows into its own dialog. The surface stretches out of the trigger without scaling its text, the image uncrops, the title glides into place, and pulling the open dialog rewinds the morph back into its card.",

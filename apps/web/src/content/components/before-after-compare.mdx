@@ -1,0 +1,257 @@
+---
+title: Before After Compare
+description: A React before and after comparison slider for shadcn/ui that reveals one image or live UI theme over another with hardware-accelerated clip-path, gentle spring release physics, and full keyboard and touch support.
+seoTitle: React Before After Compare Component for shadcn/ui
+seoDescription: Before After Compare is a React comparison slider for shadcn/ui. Drag, click, or use the keyboard to compare photos or live UI themes with zero layout shift.
+createdAt: 2026-11-20
+updatedAt: 2026-11-20
+---
+
+<ComponentPreview name="before-after-compare-preview" />
+
+Before After Compare is a React comparison slider for shadcn/ui that layers any
+two images, videos, or live React UI trees in a single CSS Grid cell and
+reveals the top layer with hardware-accelerated `clip-path`. TentUI is free and
+source-available: drag anywhere, click or tap to jump, arrow through on a
+keyboard, and restyle every slot with Tailwind CSS.
+
+## Example
+
+<ComponentPreview name="before-after-compare-demo" />
+
+## Features
+
+- Compares anything, not just bitmaps: pass live React components for Light vs
+  Dark UI themes, wireframe vs finished screens, or photos of mismatched
+  aspect ratios framed cleanly with `object-cover`.
+- Drives the reveal with one `motion/react` `MotionValue` and CSS
+  `clip-path: inset(...)` over an unclipped base layer, eliminating React
+  re-renders during drag and preventing any 1 px subpixel seam along the split.
+- Renders a 1.5 px high-contrast hairline inside the rounded stage and places
+  the frosted grip pill in an unclipped sibling layer above it, so neither the
+  handle nor its `focus-visible` ring is ever sliced at `0%` or `100%`.
+- Measures corner `beforeLabel` and `afterLabel` badges with `ResizeObserver`
+  and fades each smoothly before the divider reaches it, instead of clipping
+  label text mid-character.
+- Preserves grab offset on handle drag, supports click-to-jump and
+  double-click reset, applies a subtle damped edge nudge past `0%` or `100%`,
+  and adds a gentle, bounded glide on fast flicks.
+- Yields perpendicular swipes to native page scrolling on touch screens so
+  horizontal sliders never fight vertical scrolling.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/before-after-compare
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="before-after-compare"
+  title="components/before-after-compare.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { BeforeAfterCompare } from "@/components/before-after-compare";
+```
+
+Pass any React nodes to `before` and `after`. Direct `<img>`, `<picture>`, and
+`<video>` children are automatically sized with `object-cover` inside the stage
+so images with different aspect ratios never stretch or shift the layout.
+
+```tsx
+<BeforeAfterCompare
+  aria-label="Compare original and graded photos"
+  beforeLabel="Original"
+  afterLabel="Graded"
+  before={<img src="/before.jpg" alt="Original photo" />}
+  after={<img src="/after.jpg" alt="Graded photo" />}
+/>
+```
+
+### Live UI themes
+
+Because both layers share the same grid cell, you can compare two interactive
+React trees at exact pixel alignment, such as Light and Dark surfaces.
+
+```tsx
+<BeforeAfterCompare
+  aria-label="Compare light and dark dashboard themes"
+  beforeLabel="Light"
+  afterLabel="Dark"
+  before={<DashboardPreview theme="light" />}
+  after={<DashboardPreview theme="dark" />}
+/>
+```
+
+### Vertical orientation
+
+Set `orientation="vertical"` to split from top to bottom. Corner labels move to
+the top-left and bottom-left corners, and touch gestures switch to yielding
+horizontal swipes.
+
+```tsx
+<BeforeAfterCompare
+  orientation="vertical"
+  beforeLabel="Wireframe"
+  afterLabel="Interface"
+  before={<WireframeCard />}
+  after={<RenderedCard />}
+/>
+```
+
+### Controlled state
+
+Pass `value` and `onValueChange` to drive the split position from React state
+or preset buttons. External updates glide smoothly with a critically damped
+spring, while `onValueCommit` fires once a drag, click, or key press finishes.
+
+```tsx
+const [position, setPosition] = useState(35);
+
+<BeforeAfterCompare
+  value={position}
+  onValueChange={setPosition}
+  before={<BeforeView />}
+  after={<AfterView />}
+/>
+```
+
+### Custom handle
+
+Pass a React node or a render function to `handle`. The render callback
+receives `{ position, orientation, isDragging }`, rendered inside the
+accessible `role="slider"` focus target.
+
+```tsx
+<BeforeAfterCompare
+  before={<BeforeView />}
+  after={<AfterView />}
+  handle={({ position, isDragging }) => (
+    <span className="flex h-8 min-w-8 items-center justify-center rounded-full bg-zinc-950 px-2 font-mono text-xs text-white ring-1 ring-white/25">
+      {isDragging ? `${position}%` : "‹ ›"}
+    </span>
+  )}
+/>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Drag handle | Moves the divider 1:1 from the exact point grabbed |
+| Drag anywhere | Jumps on press (mouse) or commits after crossing the drag axis slop (touch) |
+| Click or tap stage | Glides the divider to that position with a critically damped spring |
+| Double-click handle | Resets the divider back to `defaultValue` |
+| Fast flick | Adds a gentle momentum glide clamped to at most 8 percentage points |
+| `←` / `→` / `↑` / `↓` | Moves by `step` (defaults to 5 percentage points); add `Shift` for `largeStep` |
+| `PageUp` / `PageDown` | Moves by `largeStep` (defaults to 10 percentage points) |
+| `Home` / `End` | Jumps immediately to `0%` or `100%` |
+
+## Accessibility
+
+The handle uses `role="slider"` with `aria-valuemin={0}`,
+`aria-valuemax={100}`, `aria-valuenow`, `aria-valuetext`, and
+`aria-orientation`, named by `aria-labelledby`, `aria-label`, or `label`
+(defaulting to `"Before and after comparison"`). Corner labels set
+`aria-hidden="true"` and feed into the default `aria-valuetext` (for example,
+`"50% Light, 50% Dark"`), or you can supply a custom `formatValueText`
+formatter.
+
+Keyboard focus shows a `focus-visible` ring around the handle pill that stays
+unclipped even at `0%` and `100%`. Arrow, `PageUp`, `PageDown`, `Home`, and
+`End` keys prevent page scroll and update the split immediately without waiting
+for an animation.
+
+With `prefers-reduced-motion: reduce`, springs, momentum glides, press scales,
+and edge overdrag resistance are replaced with direct updates while keeping
+subtle label opacity transitions. With `prefers-reduced-transparency: reduce`,
+the translucent handle and label pills fall back to solid backgrounds without
+backdrop blur.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/before-after-compare/before-after-compare.tsx"
+  name="BeforeAfterCompareProps"
+/>
+
+### BeforeAfterCompareHandleRenderState
+
+<AutoTypeTable
+  path="src/registry/components/before-after-compare/before-after-compare.tsx"
+  name="BeforeAfterCompareHandleRenderState"
+/>
+
+### BeforeAfterCompareClassNames
+
+<AutoTypeTable
+  path="src/registry/components/before-after-compare/before-after-compare.tsx"
+  name="BeforeAfterCompareClassNames"
+/>
+
+## FAQ
+
+### How do I install the Before After Compare component with shadcn?
+
+Run `npx shadcn@latest add @tentui/before-after-compare` after adding the
+`@tentui` registry to `components.json` ([installation guide](/docs/installation)),
+or copy the component source directly. The CLI copies `before-after-compare.tsx`
+into your project and installs `motion`.
+
+### Can I compare live React components instead of images?
+
+Yes. Both `before` and `after` accept any `ReactNode`, layered inside the same
+CSS Grid cell so live Light and Dark UI surfaces align pixel-for-pixel. When
+you pass `<img>`, `<picture>`, or `<video>` children directly, they are styled
+with `object-cover` to fill the frame without stretching.
+
+### Is Before After Compare keyboard and touch accessible?
+
+Yes. The handle exposes `role="slider"` with full ARIA slider attributes,
+keyboard navigation via arrow keys, `Shift` + arrows, `PageUp`, `PageDown`,
+`Home`, and `End`, and a `focus-visible` ring that stays unclipped at both
+ends. On touch screens, perpendicular swipes yield to native page scrolling.
+
+### How do I control the split position in React state?
+
+Pass `value` (0 to 100) and `onValueChange`, or use `defaultValue` for
+uncontrolled usage. You can also pass `onValueCommit` to save only once a drag,
+click-to-jump, or keyboard adjustment finishes, which pairs cleanly with React
+Hook Form `Controller` or external preset buttons.
+
+### Is the Before After Compare component free to use?
+
+Yes. The Before After Compare component is free and source-available: the
+shadcn CLI copies its source into your project, and you can use it in unlimited
+personal and client projects under the [TentUI License](/license). The license
+doesn't allow redistributing or reselling the component itself.
