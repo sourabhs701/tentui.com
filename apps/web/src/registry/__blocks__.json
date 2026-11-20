@@ -64,7 +64,7 @@
   },
   {
     "name": "footer-01",
-    "description": "A structured product footer with newsletter signup, link navigation, legal links, and a theme toggle.",
+    "description": "A structured product footer with newsletter, navigation, status, and theme controls.",
     "categories": [
       "footer"
     ]

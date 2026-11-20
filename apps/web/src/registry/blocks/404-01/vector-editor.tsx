@@ -3,27 +3,20 @@
 import {
 	type KeyboardEvent as ReactKeyboardEvent,
 	type PointerEvent as ReactPointerEvent,
-	useEffect,
 	useRef,
-	useState,
 } from "react";
-import { cn } from "@/lib/utils";
+
 import { serializePath } from "./parse";
 import type { Anchor, Vec, VectorPath } from "./types";
 import { add, sub, v } from "./types";
 
 export type Mirror = "none" | "angle" | "angle-length";
 
-/**
- * Colors accept any CSS color, including `var(--token)` and `color-mix()`.
- * Sizes are in screen pixels and stay constant however the canvas scales.
- */
 export interface EditorStyle {
 	accent: string;
 	arm: string;
 	anchorR: number;
 	handleR: number;
-	hitR: number;
 	pointFill: string;
 	fill: string;
 	fillOpacity: number;
@@ -35,10 +28,9 @@ export interface EditorStyle {
 
 export const DEFAULT_EDITOR: EditorStyle = {
 	accent: "#0d99ff",
-	arm: "color-mix(in oklab, #0d99ff 45%, var(--background))",
+	arm: "#9bb7d4",
 	anchorR: 4,
 	handleR: 3.2,
-	hitR: 12,
 	pointFill: "var(--background)",
 	fill: "#0d99ff",
 	fillOpacity: 0.08,
@@ -48,19 +40,15 @@ export const DEFAULT_EDITOR: EditorStyle = {
 	fillRule: "evenodd",
 };
 
-type Side = "in" | "out";
-
 type Drag =
 	| { kind: "anchor"; index: number; offset: Vec }
 	| {
 			kind: "handle";
 			index: number;
-			side: Side;
+			side: "in" | "out";
 			mirror: Mirror;
 			offset: Vec;
 	  };
-
-type PointKey = `a${number}` | `in${number}` | `out${number}`;
 
 function arrowDelta(key: string, amount: number): Vec | null {
 	switch (key) {
@@ -76,20 +64,6 @@ function arrowDelta(key: string, amount: number): Vec | null {
 			return null;
 	}
 }
-
-/** Every editable point in reading order: anchor, then its handles. */
-function pointKeys(path: VectorPath, showRig: boolean): PointKey[] {
-	if (!showRig) return [];
-	const keys: PointKey[] = [];
-	path.anchors.forEach((anchor, index) => {
-		if (anchor.in) keys.push(`in${index}`);
-		keys.push(`a${index}`);
-		if (anchor.out) keys.push(`out${index}`);
-	});
-	return keys;
-}
-
-const round = (value: number) => Math.round(value);
 
 export function VectorEditor({
 	path,
@@ -120,38 +94,6 @@ export function VectorEditor({
 	pathRef.current = path;
 	const pending = useRef<Vec | null>(null);
 	const animationFrame = useRef(0);
-	const [active, setActive] = useState<PointKey | null>(null);
-	const [dragging, setDragging] = useState(false);
-	const [scale, setScale] = useState(1);
-
-	// Keep points and hit areas a constant on-screen size as the canvas scales.
-	useEffect(() => {
-		const svg = svgRef.current;
-		if (!svg) return;
-		const update = () => {
-			const rendered = svg.getBoundingClientRect().width;
-			if (rendered > 0) setScale(rendered / viewBox[2]);
-		};
-		update();
-		const observer = new ResizeObserver(update);
-		observer.observe(svg);
-		return () => observer.disconnect();
-	}, [viewBox[2]]);
-
-	useEffect(
-		() => () => {
-			if (animationFrame.current) cancelAnimationFrame(animationFrame.current);
-		},
-		[],
-	);
-
-	const unit = 1 / (scale || 1);
-	const anchorR = style.anchorR * unit;
-	const handleR = style.handleR * unit;
-	const hitR = style.hitR * unit;
-
-	const keys = pointKeys(path, style.showRig);
-	const tabStop = active && keys.includes(active) ? active : keys[0];
 
 	function toUser(event: { clientX: number; clientY: number }): Vec {
 		const svg = svgRef.current;
@@ -164,42 +106,36 @@ export function VectorEditor({
 		return v(transformed.x, transformed.y);
 	}
 
-	function beginDrag(event: ReactPointerEvent, next: Drag, key: PointKey) {
-		event.stopPropagation();
-		event.preventDefault();
-		const target = event.currentTarget as SVGGElement;
-		target.setPointerCapture(event.pointerId);
-		target.focus({ preventScroll: true });
-		drag.current = next;
-		setActive(key);
-		setDragging(true);
-	}
-
 	function startAnchor(event: ReactPointerEvent, index: number) {
-		if (drag.current || event.button !== 0) return;
+		if (drag.current) return;
+		event.stopPropagation();
+		(event.currentTarget as Element).setPointerCapture(event.pointerId);
 		const position = pathRef.current.anchors[index].p;
-		beginDrag(
-			event,
-			{ kind: "anchor", index, offset: sub(position, toUser(event)) },
-			`a${index}`,
-		);
+		drag.current = {
+			kind: "anchor",
+			index,
+			offset: sub(position, toUser(event)),
+		};
 	}
 
-	function startHandle(event: ReactPointerEvent, index: number, side: Side) {
-		if (drag.current || event.button !== 0) return;
-		const position = pathRef.current.anchors[index][side];
+	function startHandle(
+		event: ReactPointerEvent,
+		index: number,
+		side: "in" | "out",
+	) {
+		if (drag.current) return;
+		event.stopPropagation();
+		(event.currentTarget as Element).setPointerCapture(event.pointerId);
+		const anchor = pathRef.current.anchors[index];
+		const position = anchor[side];
 		if (!position) return;
-		beginDrag(
-			event,
-			{
-				kind: "handle",
-				index,
-				side,
-				mirror: event.altKey ? "none" : mirror,
-				offset: sub(position, toUser(event)),
-			},
-			`${side}${index}`,
-		);
+		drag.current = {
+			kind: "handle",
+			index,
+			side,
+			mirror: event.altKey ? "none" : mirror,
+			offset: sub(position, toUser(event)),
+		};
 	}
 
 	function applyDrag(activeDrag: Drag, pointer: Vec): VectorPath {
@@ -273,33 +209,9 @@ export function VectorEditor({
 		}
 		drag.current = null;
 		pending.current = null;
-		setDragging(false);
 	}
 
-	function focusPoint(key: PointKey) {
-		setActive(key);
-		svgRef.current
-			?.querySelector<SVGGElement>(`[data-point="${key}"]`)
-			?.focus({ preventScroll: true });
-	}
-
-	function onPointKeyDown(
-		event: ReactKeyboardEvent,
-		key: PointKey,
-		activeDrag: Drag,
-		position: Vec,
-	) {
-		if (event.key === "]" || event.key === "[") {
-			event.preventDefault();
-			const index = keys.indexOf(key);
-			const step = event.key === "]" ? 1 : -1;
-			focusPoint(keys[(index + step + keys.length) % keys.length]);
-			return;
-		}
-		if (event.key === "Escape") {
-			(event.currentTarget as SVGGElement).blur();
-			return;
-		}
+	function nudge(event: ReactKeyboardEvent, activeDrag: Drag, position: Vec) {
 		const delta = arrowDelta(event.key, event.shiftKey ? 10 : 1);
 		if (!delta) return;
 		event.preventDefault();
@@ -307,236 +219,228 @@ export function VectorEditor({
 	}
 
 	const d = serializePath(path);
-	const arms: {
-		key: string;
-		ax: number;
-		ay: number;
-		hx: number;
-		hy: number;
-	}[] = [];
+	const arms: { ax: number; ay: number; hx: number; hy: number }[] = [];
 	if (style.showRig) {
-		path.anchors.forEach((anchor, index) => {
-			for (const side of ["in", "out"] as const) {
-				const handle = anchor[side];
-				if (!handle) continue;
+		for (const anchor of path.anchors) {
+			if (anchor.out) {
 				arms.push({
-					key: `${side}${index}`,
 					ax: anchor.p.x,
 					ay: anchor.p.y,
-					hx: handle.x,
-					hy: handle.y,
+					hx: anchor.out.x,
+					hy: anchor.out.y,
 				});
 			}
-		});
+			if (anchor.in) {
+				arms.push({
+					ax: anchor.p.x,
+					ay: anchor.p.y,
+					hx: anchor.in.x,
+					hy: anchor.in.y,
+				});
+			}
+		}
 	}
-
-	const pointProps = (key: PointKey) => ({
-		point: key,
-		active: active === key,
-		tabIndex: key === tabStop ? 0 : -1,
-		onFocus: () => setActive(key),
-		hitR,
-		accent: style.accent,
-		fill: style.pointFill,
-	});
 
 	return (
 		<svg
 			ref={svgRef}
-			role="group"
-			aria-roledescription="vector editor"
+			role="application"
 			aria-label={ariaLabel}
 			aria-describedby={ariaDescribedBy}
 			viewBox={viewBox.join(" ")}
 			width={width ?? viewBox[2]}
 			height={height ?? viewBox[3]}
-			className={cn(
-				"block select-none overflow-visible",
-				dragging && "cursor-grabbing",
-				className,
-			)}
+			className={className}
+			style={{
+				display: "block",
+				overflow: "visible",
+				touchAction: "none",
+				userSelect: "none",
+			}}
 			onPointerMove={onMove}
 			onPointerUp={endDrag}
 			onPointerCancel={endDrag}
-			onLostPointerCapture={endDrag}
 		>
 			<path
 				d={d}
+				fill={style.fill}
 				fillRule={style.fillRule}
-				vectorEffect="non-scaling-stroke"
-				style={{
-					fill: style.fill,
-					fillOpacity: style.fillOpacity,
-					stroke: style.stroke,
-					strokeWidth: style.strokeWidth,
-				}}
+				fillOpacity={style.fillOpacity}
+				stroke={style.stroke}
+				strokeWidth={style.strokeWidth}
 			/>
 
 			{style.showRig ? (
 				<g>
 					<g
-						style={{
-							stroke: style.arm,
-							strokeWidth: Math.max(0.75, style.strokeWidth * 0.75),
-						}}
+						stroke={style.arm}
+						strokeWidth={Math.max(0.75, style.strokeWidth * 0.6)}
 					>
-						{arms.map((arm) => (
+						{arms.map((arm, index) => (
 							<line
-								key={arm.key}
+								key={`${arm.ax}-${arm.ay}-${arm.hx}-${arm.hy}-${index}`}
 								x1={arm.ax}
 								y1={arm.ay}
 								x2={arm.hx}
 								y2={arm.hy}
-								vectorEffect="non-scaling-stroke"
 							/>
 						))}
 					</g>
 
-					{path.anchors.map((anchor, index) =>
-						(["in", "out"] as const).map((side) => {
-							const handle = anchor[side];
-							if (!handle) return null;
-							const key: PointKey = `${side}${index}`;
-							return (
-								<Point
-									key={key}
-									{...pointProps(key)}
-									shape="diamond"
-									cx={handle.x}
-									cy={handle.y}
-									r={handleR}
-									label={`${side === "in" ? "Incoming" : "Outgoing"} handle of anchor ${index + 1}, at ${round(handle.x)}, ${round(handle.y)}`}
-									onPointerDown={(event) => startHandle(event, index, side)}
+					{path.anchors.map((anchor, index) => (
+						<g key={`handles-${index}`}>
+							{anchor.out ? (
+								<Diamond
+									cx={anchor.out.x}
+									cy={anchor.out.y}
+									r={style.handleR}
+									fill={style.pointFill}
+									stroke={style.accent}
+									label={`Outgoing handle ${index + 1}. Use arrow keys to move.`}
+									onPointerDown={(event) => startHandle(event, index, "out")}
 									onKeyDown={(event) =>
-										onPointKeyDown(
+										nudge(
 											event,
-											key,
 											{
 												kind: "handle",
 												index,
-												side,
+												side: "out",
 												mirror: event.altKey ? "none" : mirror,
 												offset: v(0, 0),
 											},
-											handle,
+											anchor.out as Vec,
 										)
 									}
 								/>
-							);
-						}),
-					)}
+							) : null}
+							{anchor.in ? (
+								<Diamond
+									cx={anchor.in.x}
+									cy={anchor.in.y}
+									r={style.handleR}
+									fill={style.pointFill}
+									stroke={style.accent}
+									label={`Incoming handle ${index + 1}. Use arrow keys to move.`}
+									onPointerDown={(event) => startHandle(event, index, "in")}
+									onKeyDown={(event) =>
+										nudge(
+											event,
+											{
+												kind: "handle",
+												index,
+												side: "in",
+												mirror: event.altKey ? "none" : mirror,
+												offset: v(0, 0),
+											},
+											anchor.in as Vec,
+										)
+									}
+								/>
+							) : null}
+						</g>
+					))}
 
-					{path.anchors.map((anchor, index) => {
-						const key: PointKey = `a${index}`;
-						return (
-							<Point
-								key={key}
-								{...pointProps(key)}
-								shape="circle"
+					{path.anchors.map((anchor, index) => (
+						<g
+							key={`anchor-${index}`}
+							role="button"
+							tabIndex={0}
+							aria-label={`Anchor ${index + 1}. Use arrow keys to move.`}
+							className="group outline-none"
+							style={{ cursor: "grab" }}
+							onPointerDown={(event) => startAnchor(event, index)}
+							onKeyDown={(event) =>
+								nudge(
+									event,
+									{ kind: "anchor", index, offset: v(0, 0) },
+									anchor.p,
+								)
+							}
+						>
+							<circle
 								cx={anchor.p.x}
 								cy={anchor.p.y}
-								r={anchorR}
-								label={`Anchor ${index + 1} of ${path.anchors.length}, at ${round(anchor.p.x)}, ${round(anchor.p.y)}`}
-								onPointerDown={(event) => startAnchor(event, index)}
-								onKeyDown={(event) =>
-									onPointKeyDown(
-										event,
-										key,
-										{ kind: "anchor", index, offset: v(0, 0) },
-										anchor.p,
-									)
-								}
+								r={style.anchorR * 3}
+								fill="transparent"
 							/>
-						);
-					})}
+							<circle
+								cx={anchor.p.x}
+								cy={anchor.p.y}
+								r={style.anchorR * 1.8}
+								fill="none"
+								stroke={style.accent}
+								strokeWidth={1}
+								className="opacity-0 group-focus-visible:opacity-100"
+							/>
+							<circle
+								cx={anchor.p.x}
+								cy={anchor.p.y}
+								r={style.anchorR}
+								fill={style.pointFill}
+								stroke={style.accent}
+								strokeWidth={1.25}
+							/>
+						</g>
+					))}
 				</g>
 			) : null}
 		</svg>
 	);
 }
 
-function Point({
-	shape,
-	point,
+function Diamond({
 	cx,
 	cy,
 	r,
-	hitR,
-	accent,
 	fill,
-	active,
-	tabIndex,
+	stroke,
 	label,
-	onFocus,
 	onPointerDown,
 	onKeyDown,
 }: {
-	shape: "circle" | "diamond";
-	point: PointKey;
 	cx: number;
 	cy: number;
 	r: number;
-	hitR: number;
-	accent: string;
 	fill: string;
-	active: boolean;
-	tabIndex: number;
+	stroke: string;
 	label: string;
-	onFocus: () => void;
 	onPointerDown: (event: ReactPointerEvent<SVGGElement>) => void;
 	onKeyDown: (event: ReactKeyboardEvent<SVGGElement>) => void;
 }) {
-	const visual = {
-		fill: active ? accent : fill,
-		stroke: accent,
-		strokeWidth: 1.25,
-	};
-
 	return (
 		<g
 			role="button"
-			aria-roledescription="draggable point"
+			tabIndex={0}
 			aria-label={label}
-			data-point={point}
-			tabIndex={tabIndex}
-			className="group cursor-grab touch-none outline-none"
-			onFocus={onFocus}
+			className="group outline-none"
+			style={{ cursor: "grab" }}
 			onPointerDown={onPointerDown}
 			onKeyDown={onKeyDown}
 		>
-			<circle cx={cx} cy={cy} r={hitR} fill="transparent" />
+			<circle cx={cx} cy={cy} r={r * 3.5} fill="transparent" />
 			<circle
 				cx={cx}
 				cy={cy}
-				r={r * 2}
+				r={r * 1.8}
 				fill="none"
-				vectorEffect="non-scaling-stroke"
-				style={{ stroke: accent, strokeWidth: 1.5 }}
-				className="opacity-0 transition-opacity duration-150 group-hover:opacity-40 group-focus-visible:opacity-100 motion-reduce:transition-none"
+				stroke={stroke}
+				strokeWidth={1}
+				className="opacity-0 group-focus-visible:opacity-100"
 			/>
-			{shape === "circle" ? (
-				<circle
-					cx={cx}
-					cy={cy}
-					r={r}
-					vectorEffect="non-scaling-stroke"
-					style={visual}
-				/>
-			) : (
-				<rect
-					x={cx - r}
-					y={cy - r}
-					width={r * 2}
-					height={r * 2}
-					vectorEffect="non-scaling-stroke"
-					style={{
-						...visual,
-						transform: "rotate(45deg)",
-						transformBox: "fill-box",
-						transformOrigin: "50% 50%",
-					}}
-				/>
-			)}
+			<rect
+				x={cx - r}
+				y={cy - r}
+				width={r * 2}
+				height={r * 2}
+				fill={fill}
+				stroke={stroke}
+				strokeWidth={1.1}
+				style={{
+					transform: "rotate(45deg)",
+					transformBox: "fill-box",
+					transformOrigin: "50% 50%",
+				}}
+			/>
 		</g>
 	);
 }

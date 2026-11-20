@@ -1,7 +1,14 @@
 import type { ReactNode } from "react";
 import { getTweet, type Tweet } from "react-tweet/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+
 import { cn } from "@/lib/utils";
 
 export interface TestimonialAuthor {
@@ -19,7 +26,7 @@ export interface TestimonialData {
 
 export interface TestimonialSource {
 	id: string;
-	/** Placement in the bento grid (2 columns at `md`, 4 at `lg`), e.g. `md:col-span-2`. */
+	/** Controls this testimonial's placement in the bento grid. */
 	className?: string;
 	fallback?: Omit<TestimonialData, "id">;
 }
@@ -130,21 +137,8 @@ const DEFAULT_TESTIMONIALS = [
 	},
 ] as const satisfies readonly TestimonialSource[];
 
-const HTML_ENTITIES: Record<string, string> = {
-	"&amp;": "&",
-	"&lt;": "<",
-	"&gt;": ">",
-	"&quot;": '"',
-	"&#39;": "'",
-};
-
-/** Strips leading @-replies, trailing t.co links and HTML entities from tweet text. */
 function cleanText(text: string) {
-	return text
-		.replace(/^(@\w+\s+)+/, "")
-		.replace(/(\s*https:\/\/t\.co\/\w+)+\s*$/, "")
-		.replace(/&(amp|lt|gt|quot|#39);/g, (entity) => HTML_ENTITIES[entity])
-		.trim();
+	return text.replace(/^(@\w+\s+)+/, "").trim();
 }
 
 function normalizeTweet(tweet: Tweet): TestimonialData {
@@ -193,10 +187,9 @@ function XLogo({ className }: { className?: string }) {
 function VerifiedMark() {
 	return (
 		<svg
-			aria-label="Verified account"
+			aria-label="Verified"
 			className="size-3.5 shrink-0 text-[#1d9bf0]"
 			fill="currentColor"
-			role="img"
 			viewBox="0 0 22 22"
 		>
 			<path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44C12.275 1.819 11.647 1.62 11 1.604c-.646.017-1.275.213-1.815.568s-.972.854-1.246 1.44c-.608-.223-1.264-.27-1.898-.14-.633.13-1.217.437-1.687.882-.445.47-.751 1.053-.882 1.687-.13.633-.083 1.29.14 1.897-.586.274-1.086.705-1.44 1.246-.354.54-.55 1.17-.569 1.816.018.646.215 1.275.57 1.816.354.54.853.972 1.439 1.246-.223.607-.27 1.264-.14 1.897.131.634.437 1.218.882 1.687.47.445 1.053.751 1.687.882.633.131 1.29.083 1.897-.14.274.587.705 1.086 1.246 1.44.54.354 1.17.551 1.816.569.646-.018 1.275-.215 1.816-.57.54-.354.972-.852 1.246-1.439.607.223 1.264.27 1.897.14.634-.131 1.218-.437 1.687-.882.445-.47.751-1.053.882-1.687.13-.633.083-1.29-.14-1.897.587-.274 1.086-.705 1.44-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z" />
@@ -206,27 +199,20 @@ function VerifiedMark() {
 
 function initials(name: string) {
 	return name
-		.split(/\s+/)
-		.map((part) => part.match(/[\p{L}\p{N}]/u)?.[0] ?? "")
+		.split(" ")
+		.map((part) => part[0])
 		.join("")
 		.slice(0, 2)
 		.toUpperCase();
 }
 
-/** X serves `_normal` (48px) avatars by default; request a sharper 200px variant. */
-function avatarSrc(url?: string) {
-	return url?.replace(/_(normal|bigger|mini)(\.\w+)$/, "_200x200$2");
-}
-
 function AuthorAvatar({ author }: { author: TestimonialAuthor }) {
-	const src = avatarSrc(author.avatarUrl);
+	const avatarUrl = author.avatarUrl?.replace("_normal.", "_bigger.");
 
 	return (
-		<Avatar size="lg">
-			{src ? (
-				<AvatarImage alt="" referrerPolicy="no-referrer" src={src} />
-			) : null}
-			<AvatarFallback className="font-medium text-xs">
+		<Avatar className="size-9">
+			{avatarUrl ? <AvatarImage alt={author.name} src={avatarUrl} /> : null}
+			<AvatarFallback className="bg-foreground font-mono text-[11px] text-background">
 				{initials(author.name)}
 			</AvatarFallback>
 		</Avatar>
@@ -234,71 +220,68 @@ function AuthorAvatar({ author }: { author: TestimonialAuthor }) {
 }
 
 function Quote({ text }: { text: string }) {
-	const length = [...text].length;
+	const wordCount = text.split(/\s+/).length;
+	const isShort = wordCount <= 2;
+	const isLong = wordCount > 18;
+	const punctuated = /[.!?]$/.test(text) ? text : `${text}.`;
 
 	return (
-		<blockquote
-			className={cn(
-				"mt-auto text-pretty break-words -indent-[0.4em] font-serif text-foreground tracking-tight",
-				length <= 14 && "text-[clamp(1.75rem,12cqi,2.25rem)] leading-[1.1]",
-				length > 14 &&
-					length <= 120 &&
-					"text-[clamp(1.375rem,6.5cqi,2.25rem)] leading-[1.15]",
-				length > 120 && "text-[clamp(1.125rem,4.5cqi,1.75rem)] leading-snug",
-			)}
-			data-slot="testimonial-quote"
+		<div
+			className="flex flex-1 items-center py-2"
+			data-slot="testimonial-quote-wrapper"
 		>
-			<p>&ldquo;{text}&rdquo;</p>
-		</blockquote>
+			<blockquote
+				className={cn(
+					"text-pretty font-serif text-foreground tracking-tight",
+					isShort &&
+						"mx-auto text-center text-[clamp(3rem,12cqi,4.5rem)] italic leading-none",
+					!isShort &&
+						!isLong &&
+						"text-[clamp(1.0625rem,5cqi,3rem)] leading-[1.12]",
+					isLong && "text-[clamp(1.0625rem,3.5cqi,2rem)] leading-[1.2]",
+				)}
+				data-slot="testimonial-quote"
+			>
+				{isShort ? punctuated : <>&ldquo;{text}&rdquo;</>}
+			</blockquote>
+		</div>
 	);
 }
 
-function TestimonialCard({
-	testimonial,
-	className,
-}: {
-	testimonial: TestimonialData;
-	className?: string;
-}) {
+function TestimonialCard({ testimonial }: { testimonial: TestimonialData }) {
 	const { author } = testimonial;
 	const url = `https://x.com/${author.handle}/status/${testimonial.id}`;
 
 	return (
-		<Card
-			className={cn(
-				"group/testimonial @container/testimonial relative h-full min-h-44 transition-[box-shadow] duration-200 ease-out hover:ring-foreground/20 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring motion-reduce:transition-none md:min-h-56",
-				className,
-			)}
+		<a
+			aria-label={`Read @${author.handle}'s post on X`}
+			className="group/card block h-full rounded-xl transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.995] motion-reduce:transition-none"
+			href={url}
+			rel="noreferrer"
+			target="_blank"
 		>
-			<CardContent className="flex flex-1 flex-col">
-				<figure className="flex flex-1 flex-col gap-6">
-					<figcaption className="flex items-start justify-between gap-3">
-						<div className="flex min-w-0 items-center gap-3">
-							<AuthorAvatar author={author} />
-							<div className="flex min-w-0 flex-col gap-0.5">
-								<span className="flex min-w-0 items-center gap-1 font-medium text-foreground text-sm leading-tight">
-									<span className="truncate">{author.name}</span>
-									{author.verified ? <VerifiedMark /> : null}
-								</span>
-								<span className="truncate text-muted-foreground text-xs leading-tight">
-									@{author.handle}
-								</span>
-							</div>
+			<Card className="@container/testimonial h-full gap-5 bg-card py-0">
+				<CardHeader className="flex flex-row items-start justify-between gap-3 px-5 pt-5 sm:px-6 sm:pt-6">
+					<div className="flex min-w-0 items-center gap-3">
+						<AuthorAvatar author={author} />
+						<div className="flex min-w-0 flex-col leading-tight">
+							<CardTitle className="flex items-center gap-1 font-medium font-sans text-sm leading-tight">
+								<span className="truncate">{author.name}</span>
+								{author.verified ? <VerifiedMark /> : null}
+							</CardTitle>
+							<CardDescription className="truncate font-mono text-[11px] leading-tight">
+								@{author.handle}
+							</CardDescription>
 						</div>
-						<a
-							aria-label={`View @${author.handle}'s post on X (opens in a new tab)`}
-							className="-m-1.5 shrink-0 rounded-md p-1.5 text-muted-foreground outline-none transition-colors duration-200 ease-out after:absolute after:inset-0 after:rounded-xl hover:text-foreground focus-visible:text-foreground motion-reduce:transition-none [@media(hover:hover)_and_(pointer:fine)]:group-hover/testimonial:text-foreground"
-							href={url}
-							rel="noopener noreferrer"
-							target="_blank"
-						>
-							<XLogo className="size-4" />
-						</a>
-					</figcaption>
+					</div>
+					<XLogo className="size-4 shrink-0 text-muted-foreground/70 transition-colors duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/card:text-foreground" />
+				</CardHeader>
+
+				<CardContent className="flex flex-1 flex-col px-5 pb-5 sm:px-6 sm:pb-6">
 					<Quote text={testimonial.text} />
-				</figure>
-			</CardContent>
-		</Card>
+				</CardContent>
+			</Card>
+		</a>
 	);
 }
 
@@ -330,18 +313,14 @@ export default async function Testimonials01({
 
 	return (
 		<section
-			aria-labelledby="testimonials-01-title"
 			className={cn(
-				"w-full bg-background px-4 py-16 font-sans text-foreground sm:px-6 sm:py-24 md:py-28",
+				"w-full bg-background px-2 py-20 font-sans sm:py-24 md:px-6 md:py-28",
 				className,
 			)}
 		>
 			<div className="mx-auto w-full max-w-6xl">
-				<header className="mb-10 md:mb-14">
-					<h2
-						className="max-w-2xl text-balance font-serif text-4xl leading-[1.05] tracking-tight sm:text-5xl md:text-6xl"
-						id="testimonials-01-title"
-					>
+				<header className="px-4 pb-12 md:px-2">
+					<h2 className="max-w-2xl text-balance font-serif text-4xl text-foreground leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
 						{title}
 					</h2>
 					<p className="mt-4 max-w-xl text-pretty text-base text-muted-foreground leading-relaxed sm:text-lg">
@@ -349,18 +328,18 @@ export default async function Testimonials01({
 					</p>
 				</header>
 
-				<ul
+				<div
 					className={cn(
-						"grid grid-cols-1 gap-3 md:auto-rows-fr md:grid-cols-2 md:gap-4 lg:grid-cols-4",
+						"grid grid-cols-1 gap-2 px-2 md:auto-rows-[minmax(220px,1fr)] md:grid-cols-4 md:gap-1",
 						gridClassName,
 					)}
 				>
 					{available.map(({ source, testimonial }) => (
-						<li className={source.className} key={source.id}>
+						<div className={source.className} key={source.id}>
 							<TestimonialCard testimonial={testimonial} />
-						</li>
+						</div>
 					))}
-				</ul>
+				</div>
 			</div>
 		</section>
 	);

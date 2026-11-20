@@ -1,27 +1,8 @@
 "use client";
 
 import { ArrowUpRight, Check } from "lucide-react";
-import type { CSSProperties } from "react";
-import { useId } from "react";
-
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
-import {
-	Card,
-	CardAction,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 
 import FluidWave from "./fluid-wave";
-
-// Brand accent for the featured plan's fluid treatment. Exposed as a CSS variable
-// so the WebGL wave, the fallback gradient and the glow all stay in sync.
-const ACCENT = "#FC4C01";
 
 type Plan = {
 	name: string;
@@ -63,123 +44,120 @@ const PLANS: readonly Plan[] = [
 	},
 ];
 
-function FeaturedBackdrop() {
-	return (
-		<div aria-hidden="true" className="absolute inset-0 -z-10">
-			{/* Static glow: always painted, and the full treatment when WebGL is unavailable. */}
-			<div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_100%,color-mix(in_oklab,var(--pricing-accent)_66%,transparent),transparent_66%)]" />
-			<FluidWave color={ACCENT} />
-			{/* Keeps the upper half calm so the copy stays legible over the wave. */}
-			<div className="absolute inset-0 bg-gradient-to-b from-8% from-background via-38% via-background/90 to-background/10" />
-		</div>
-	);
-}
-
 function PlanCard({ plan }: { plan: Plan }) {
-	const titleId = useId();
-	const { popular } = plan;
-
 	return (
-		<Card
-			aria-labelledby={titleId}
-			className={cn(
-				"relative isolate h-full gap-0 rounded-[2rem] text-base shadow-none [--card-spacing:--spacing(7)] lg:min-h-[34rem] sm:[--card-spacing:--spacing(9)]",
-				popular
-					? // Scope the dark palette to this card so tokens resolve to the inverted
-						// surface in both themes.
-						"dark bg-background text-foreground shadow-[0_24px_70px_-32px_color-mix(in_oklab,var(--pricing-accent)_45%,transparent)] ring-foreground/10"
-					: "bg-card text-card-foreground shadow-[0_24px_70px_-42px_rgb(15_23_42/0.3)] dark:shadow-none",
-			)}
-			role="group"
-			style={
-				popular ? ({ "--pricing-accent": ACCENT } as CSSProperties) : undefined
-			}
+		<article
+			aria-label={`${plan.name} plan`}
+			className={`relative isolate flex min-h-[34rem] overflow-hidden rounded-[2rem] border p-7 sm:p-9 ${
+				plan.popular
+					? "border-white/10 bg-[#0a0a0a] text-white shadow-[0_24px_70px_-32px_rgba(252,76,1,0.42)]"
+					: "border-border bg-card text-card-foreground shadow-[0_24px_70px_-42px_rgba(15,23,42,0.3)]"
+			}`}
 		>
-			{popular ? <FeaturedBackdrop /> : null}
+			{plan.popular ? (
+				<>
+					<div
+						aria-hidden="true"
+						className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_70%_100%,rgba(252,76,1,0.66),transparent_66%)]"
+					/>
+					<div aria-hidden="true" className="absolute inset-0 -z-10">
+						<FluidWave />
+					</div>
+					<div
+						aria-hidden="true"
+						className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,#0a0a0a_8%,rgba(10,10,10,0.9)_38%,rgba(10,10,10,0.36)_72%,rgba(10,10,10,0.08))]"
+					/>
+				</>
+			) : null}
 
-			<CardHeader className="gap-3">
-				<h3
-					className="font-medium text-2xl leading-tight tracking-tight"
-					id={titleId}
-				>
-					{plan.name}
-				</h3>
-				{popular ? (
-					<CardAction className="row-span-1 self-center">
-						<Badge
-							className="h-6 border-foreground/15 bg-foreground/10 px-2.5 text-[0.6875rem] text-foreground/90 uppercase tracking-[0.14em] backdrop-blur-md"
-							variant="outline"
+			<div className="flex w-full flex-col">
+				<div className="flex items-start justify-between gap-4">
+					<div>
+						<h3 className="font-medium text-2xl tracking-[-0.03em]">
+							{plan.name}
+						</h3>
+						<p
+							className={`mt-3 max-w-sm text-sm leading-6 ${
+								plan.popular ? "text-white/62" : "text-muted-foreground"
+							}`}
 						>
-							Most popular
-						</Badge>
-					</CardAction>
-				) : null}
-				<CardDescription className="col-span-full max-w-sm text-pretty leading-6 lg:min-h-12">
-					{plan.description}
-				</CardDescription>
-			</CardHeader>
+							{plan.description}
+						</p>
+					</div>
 
-			<CardContent className="mt-10 flex flex-1 flex-col">
-				<p className="flex items-baseline gap-2">
-					<span className="font-medium text-5xl tabular-nums tracking-tighter">
+					{plan.popular ? (
+						<span className="shrink-0 whitespace-nowrap rounded-full border border-white/15 bg-white/10 px-3 py-1 font-medium text-[0.68rem] text-white/90 uppercase tracking-[0.14em] backdrop-blur-md">
+							Most popular
+						</span>
+					) : null}
+				</div>
+
+				<div className="mt-10 flex items-end gap-2">
+					<span className="font-medium text-5xl tracking-[-0.055em]">
 						${plan.price}
 					</span>
-					<span className="text-muted-foreground text-sm">per month</span>
-				</p>
+					<span
+						className={`pb-1 text-sm ${
+							plan.popular ? "text-white/58" : "text-muted-foreground"
+						}`}
+					>
+						per month
+					</span>
+				</div>
 
-				<Separator className="my-8" />
+				<div
+					className={`my-8 h-px ${plan.popular ? "bg-white/12" : "bg-border"}`}
+				/>
 
-				<ul className="flex flex-col gap-4 text-sm">
+				<ul className="space-y-4">
 					{plan.features.map((feature) => (
-						<li className="flex items-center gap-3" key={feature}>
+						<li className="flex items-center gap-3 text-sm" key={feature}>
 							<span
-								aria-hidden="true"
-								className="flex size-5 shrink-0 items-center justify-center rounded-full bg-foreground/10"
+								className={`flex size-5 shrink-0 items-center justify-center rounded-full ${
+									plan.popular ? "bg-white/14" : "bg-muted"
+								}`}
 							>
-								<Check className="size-3" strokeWidth={2.5} />
+								<Check
+									aria-hidden="true"
+									className="size-3"
+									strokeWidth={2.5}
+								/>
 							</span>
-							<span className="text-foreground/85">{feature}</span>
+							<span className={plan.popular ? "text-white/82" : undefined}>
+								{feature}
+							</span>
 						</li>
 					))}
 				</ul>
-			</CardContent>
 
-			<CardFooter className="pt-10">
 				<a
-					className={cn(
-						buttonVariants({ size: "lg" }),
-						"group/cta h-12 w-full touch-manipulation justify-between rounded-full bg-foreground pr-2.5 pl-5 text-background hover:bg-foreground/85 motion-reduce:transition-none",
-					)}
+					className={`group mt-auto inline-flex h-12 touch-manipulation items-center justify-between rounded-full px-5 font-medium text-sm outline-none transition-[transform,background-color,color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.97] motion-reduce:transition-none ${
+						plan.popular
+							? "bg-white text-[#111217] [@media(hover:hover)_and_(pointer:fine)]:hover:bg-white/88"
+							: "bg-foreground text-background [@media(hover:hover)_and_(pointer:fine)]:hover:bg-foreground/86"
+					}`}
 					href={plan.href}
 				>
 					{plan.cta}
-					<span className="flex size-7 items-center justify-center rounded-full bg-background/15 transition-transform duration-200 ease-out group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5 motion-reduce:transition-none">
+					<span className="flex size-7 items-center justify-center rounded-full bg-current/10">
 						<ArrowUpRight aria-hidden="true" className="size-3.5" />
 					</span>
 				</a>
-			</CardFooter>
-		</Card>
+			</div>
+		</article>
 	);
 }
 
 export function Pricing03() {
-	const headingId = useId();
-
 	return (
-		<section
-			aria-labelledby={headingId}
-			className="relative overflow-hidden bg-background px-4 py-20 text-foreground sm:px-6 sm:py-28 lg:px-8"
-		>
+		<section className="relative overflow-hidden bg-background px-4 py-20 text-foreground sm:px-6 sm:py-28 lg:px-8">
 			<div
 				aria-hidden="true"
 				className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"
 			/>
 			<div className="mx-auto max-w-5xl">
-				<div className="mb-12 grid gap-6 md:mb-16 md:grid-cols-[1fr_0.72fr] md:items-end">
-					<h2
-						className="max-w-xl text-balance font-medium text-4xl tracking-tight sm:text-5xl sm:leading-[1.05]"
-						id={headingId}
-					>
+				<div className="mb-12 grid gap-7 md:mb-16 md:grid-cols-[1fr_0.72fr] md:items-end">
+					<h2 className="max-w-xl text-balance font-medium text-4xl tracking-[-0.045em] sm:text-5xl sm:leading-[1.02]">
 						Plans that scale with the work.
 					</h2>
 					<p className="max-w-md text-pretty text-muted-foreground text-sm leading-6 md:justify-self-end">
@@ -188,15 +166,13 @@ export function Pricing03() {
 					</p>
 				</div>
 
-				<ul className="grid gap-5 lg:grid-cols-2">
+				<div className="grid gap-5 lg:grid-cols-2">
 					{PLANS.map((plan) => (
-						<li key={plan.name}>
-							<PlanCard plan={plan} />
-						</li>
+						<PlanCard key={plan.name} plan={plan} />
 					))}
-				</ul>
+				</div>
 
-				<p className="mt-8 text-center text-muted-foreground text-xs">
+				<p className="mt-7 text-center text-muted-foreground text-xs">
 					Prices are in USD. Cancel or change your plan at any time.
 				</p>
 			</div>

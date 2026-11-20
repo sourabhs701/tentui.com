@@ -4,8 +4,6 @@ import type { HTMLMotionProps, Variants } from "motion/react";
 import { motion, useAnimation, useReducedMotion } from "motion/react";
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
-import { cn } from "@/lib/utils";
-
 const EASE_IN_OUT: [number, number, number, number] = [0.77, 0, 0.175, 1];
 const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
@@ -91,7 +89,7 @@ const RocketIcon = forwardRef<RocketHandle, RocketProps>(
 
 		return (
 			<motion.div
-				className={cn("inline-flex items-center justify-center", className)}
+				className={`inline-flex items-center justify-center ${className ?? ""}`}
 				{...props}
 			>
 				<motion.svg
@@ -242,7 +240,7 @@ const DashboardIcon = forwardRef<DashboardIconHandle, DashboardIconProps>(
 
 		return (
 			<motion.div
-				className={cn("inline-flex items-center justify-center", className)}
+				className={`inline-flex items-center justify-center ${className ?? ""}`}
 				{...props}
 			>
 				<motion.svg
@@ -422,7 +420,7 @@ const MousePointerClick01Icon = forwardRef<
 
 		return (
 			<motion.div
-				className={cn("inline-flex items-center justify-center", className)}
+				className={`inline-flex items-center justify-center ${className ?? ""}`}
 				{...props}
 			>
 				<motion.svg
