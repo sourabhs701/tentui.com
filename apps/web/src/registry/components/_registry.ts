@@ -2,6 +2,27 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "variable-font-hover",
+		type: "registry:component",
+		title: "Variable Font Hover",
+		description:
+			"Typography whose weight, width, or custom OpenType axes swell smoothly toward the pointer on per-glyph springs, then ease back to rest with zero layout shift while keeping the text real and selectable.",
+		files: [
+			{
+				path: "components/variable-font-hover/variable-font-hover.tsx",
+				type: "registry:component",
+				target: "@components/variable-font-hover.tsx",
+			},
+		],
+		categories: ["typography"],
+		meta: {
+			createdAt: "2026-11-20",
+			image: "https://cdn.tentui.com/images/components/variable-font-hover?v=1",
+			video: "https://cdn.tentui.com/videos/components/variable-font-hover?v=1",
+		},
+		docs: "https://tentui.com/components/variable-font-hover",
+	},
+	{
 		name: "before-after-compare",
 		type: "registry:component",
 		title: "Before After Compare",

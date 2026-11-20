@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"variable-font-hover": {
+		name: "variable-font-hover",
+		title: "Variable Font Hover",
+		description: "Typography whose weight, width, or custom OpenType axes swell smoothly toward the pointer on per-glyph springs, then ease back to rest with zero layout shift while keeping the text real and selectable.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/variable-font-hover/variable-font-hover.tsx","type":"registry:component","target":"@components/variable-font-hover.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/variable-font-hover/variable-font-hover")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for variable-font-hover");
+			}
+			return { default: module.default };
+		}),
+		categories: ["typography"],
+		meta: {"createdAt":"2026-11-20","image":"https://cdn.tentui.com/images/components/variable-font-hover?v=1","video":"https://cdn.tentui.com/videos/components/variable-font-hover?v=1"},
+	},
 	"before-after-compare": {
 		name: "before-after-compare",
 		title: "Before After Compare",
@@ -1030,6 +1048,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"variable-font-hover-preview": {
+		name: "variable-font-hover-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/variable-font-hover-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/variable-font-hover-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for variable-font-hover-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"variable-font-hover-demo": {
+		name: "variable-font-hover-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/variable-font-hover-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/variable-font-hover-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for variable-font-hover-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[34rem] place-items-center content-center px-4"},
 	},
 	"before-after-compare-preview": {
 		name: "before-after-compare-preview",

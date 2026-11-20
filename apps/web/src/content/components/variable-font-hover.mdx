@@ -1,0 +1,205 @@
+---
+title: Variable Font Hover
+description: A React variable font hover component for shadcn/ui whose weight, width, or custom OpenType axes swell smoothly toward the pointer on per-glyph springs and ease back with zero layout shift.
+seoTitle: "React Variable Font Hover Component for shadcn/ui"
+seoDescription: Variable Font Hover is a React typography component for shadcn/ui that smoothly swells variable font weight, width, or custom axes toward the pointer on damped springs with zero layout shift.
+createdAt: 2026-11-20
+updatedAt: 2026-11-20
+---
+
+<ComponentPreview name="variable-font-hover-preview" />
+
+Variable Font Hover is a React typography component for shadcn/ui whose weight,
+width, or custom OpenType axes swell smoothly toward the pointer on per-glyph
+springs and ease back to rest. The real text stays unbroken in normal document
+flow, so surrounding content never shifts, line breaks stay locked, and
+selection and screen readers work like plain text.
+
+## Example
+
+<ComponentPreview name="variable-font-hover-demo" />
+
+## Features
+
+- Smooth per-unit spring physics. Each character or word integrates its own
+  second-order spring inside one shared, idle-stopping `requestAnimationFrame`
+  loop. Fast sweeps leave a fluid trailing wake and settle cleanly to rest with
+  zero CPU usage when untouched.
+- Zero layout shift and zero line reflow. The real text remains unbroken in
+  document flow to lock bounding boxes, kerning, and line breaks. An
+  `aria-hidden` visual layer overlays each grapheme or word at its exact
+  `Range.getClientRects()` anchor.
+- Local elastic breathing. As letters swell in weight or width, a subtle,
+  clamped per-line horizontal offset parts immediate neighbors just enough to
+  keep letterforms airy without colliding or pushing surrounding layout.
+- Weight, width, both, or custom OpenType axes. Works out of the box with
+  single-axis variable fonts like Inter or Geist (`axis="weight"`), multi-axis
+  fonts like Mona Sans or Roboto Flex (`axis="width"` or `axis="both"`), and
+  any custom axis via `axes` (such as `GRAD`, `opsz`, or `slnt`).
+- Per-character or per-word granularity. Uses `Intl.Segmenter` so emoji,
+  accents, and combining marks stay intact when `granularity="character"`, or
+  swells whole words across multi-line copy with `granularity="word"`.
+- Zero external runtime dependencies beyond React and Tailwind utilities.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/variable-font-hover
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="variable-font-hover"
+  title="components/variable-font-hover.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { VariableFontHover } from "@/components/variable-font-hover";
+```
+
+```tsx
+<VariableFontHover>Type with weight</VariableFontHover>
+```
+
+`children` must be a plain string so the component can measure each grapheme or
+word from the browser's own layout. By default it renders an `h2` using the
+inherited variable font, swelling `"wght"` from `400` to `850` with a `140` px
+Gaussian falloff. Change the element with `as`, the display scale with `size`
+(`sm`, `md`, `lg`, `xl`), and any other styling with `className`.
+
+### Weight, width, and custom axes
+
+Use `axis="weight"` (default) with any variable font that supports `wght` (such
+as Inter or Geist). Use `axis="width"` or `axis="both"` with a multi-axis
+variable font that exposes a `wdth` axis (such as Mona Sans, Roboto Flex, or
+Archivo). For other OpenType axes like `GRAD` or `slnt`, pass `axes` directly.
+
+```tsx
+<VariableFontHover axis="both" weightRange={[350, 850]} widthRange={[95, 125]}>
+  Fluid optical weight
+</VariableFontHover>
+```
+
+```tsx
+<VariableFontHover axes={{ wght: [400, 800], slnt: [0, -8] }}>
+  Custom axes
+</VariableFontHover>
+```
+
+### Per-word granularity and falloff
+
+Set `granularity="word"` to swell whole words cleanly across longer sentences,
+and tune the feel with `radius`, `intensity`, `falloff` (`gaussian`, `cosine`,
+or `linear`), `stiffness`, `damping`, and `breathing`.
+
+```tsx
+<VariableFontHover
+  as="p"
+  size="sm"
+  granularity="word"
+  falloff="cosine"
+  radius={150}
+  intensity={0.85}
+>
+  Whole words swell cleanly without re-wrapping the paragraph.
+</VariableFontHover>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Move mouse or pen across the text | Swells nearby characters or words on per-unit springs |
+| Leave the text | Springs ease smoothly back to the resting axis values |
+| Press and drag with a mouse | Steps the visual overlay aside so native text selection works cleanly |
+| Drag sideways on touch | Tracks the finger across the text while `touch-pan-y` preserves vertical scroll |
+| Tap on touch | Plays a brief 180 ms swell under the tap and eases back with no sticky hover |
+| Focus via keyboard (`tabIndex={0}`) | Shows a `focus-visible` ring and gently illuminates the centre of the text |
+
+## Accessibility
+
+The real text always stays in the DOM as a single unbroken text node inside the
+semantic element you choose (`h1` through `h4`, `p`, `span`, or `div`), so
+screen readers announce one clean string rather than split letters, find-in-page
+works normally, and text remains selectable and copyable. The visual animation
+layer is marked `aria-hidden="true"`, `pointer-events-none`, and `select-none`.
+
+Because the real text locks the box dimensions and line breaks in document flow,
+surrounding elements experience zero layout shift at any viewport width. With
+`prefers-reduced-motion: reduce` or `animated={false}`, no spring loop runs, no
+overlay spans are created, and the text renders statically at its resting font
+variation settings.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/variable-font-hover/variable-font-hover.tsx"
+  name="VariableFontHoverProps"
+/>
+
+## FAQ
+
+### How do I install Variable Font Hover with shadcn?
+
+Run `npx shadcn@latest add @tentui/variable-font-hover` after adding the
+`@tentui` registry to `components.json` ([installation guide](/docs/installation)).
+The CLI copies `variable-font-hover.tsx` into your project with no extra npm
+dependencies to install.
+
+### Which fonts work with Variable Font Hover?
+
+Any variable font that supports the axes you target works out of the box. The
+default `axis="weight"` works with common variable fonts like Inter and Geist,
+while `axis="width"` and `axis="both"` require a multi-axis variable font with a
+`wdth` axis such as Mona Sans, Roboto Flex, or Archivo.
+
+### Does the hover effect cause layout shift or line reflow?
+
+No. The real text stays unbroken in document flow to lock its width, height, and
+line breaks, while an `aria-hidden` overlay animates each measured grapheme or
+word in place, so neighboring elements never move and multi-line text never
+re-wraps.
+
+### Is the text still selectable and readable by screen readers?
+
+Yes. Assistive technologies read the single unbroken text node inside the
+semantic element, the animated layer is marked `aria-hidden`, and pressing with
+a mouse to drag-select immediately steps the overlay aside so native selection
+works cleanly.
+
+### Does Variable Font Hover respect reduced motion and touch devices?
+
+Yes. Under `prefers-reduced-motion: reduce` or `animated={false}`, no animation
+loop or overlay runs and the text stays static. On touch devices, vertical
+swipes continue scrolling the page via `touch-pan-y`, sideways drags track your
+finger, and lifting your finger eases the text back to rest with no stuck hover
+state.
+
+### Is Variable Font Hover free to use?
+
+Yes. Variable Font Hover is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license).

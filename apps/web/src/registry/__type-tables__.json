@@ -8365,6 +8365,225 @@
 			]
 		}
 	],
+	"src/registry/components/variable-font-hover/variable-font-hover.tsx#VariableFontHoverProps#": [
+		{
+			"id": "variable-font-hover.tsx-VariableFontHoverProps",
+			"name": "VariableFontHoverProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "children",
+					"description": "Plain text string to render.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "as",
+					"description": "Semantic HTML element for the text.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "VariableFontHoverElement | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "Display scale preset with size-appropriate leading and tracking.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "axis",
+					"description": "Variable font axis preset to swell toward the pointer.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "VariableFontHoverAxis | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "axes",
+					"description": "Custom OpenType axis `[from, to]` ranges; overrides `axis` when set.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "VariableFontHoverAxes | undefined",
+					"simplifiedType": "VariableFontHoverAxes",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "weightRange",
+					"description": "Resting and peak `\"wght\"` values when `axis` is `\"weight\"` or `\"both\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "[number, number] | undefined",
+					"simplifiedType": "tuple",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "widthRange",
+					"description": "Resting and peak `\"wdth\"` values when `axis` is `\"width\"` or `\"both\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "[number, number] | undefined",
+					"simplifiedType": "tuple",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "radius",
+					"description": "Pointer influence radius in CSS pixels.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "intensity",
+					"description": "Peak swell multiplier (`0` to `1.5`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "granularity",
+					"description": "Whether the swell applies per character (grapheme) or per word.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "VariableFontHoverGranularity | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "falloff",
+					"description": "Spatial falloff curve from the pointer out to `radius`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "VariableFontHoverFalloff | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "stiffness",
+					"description": "Spring stiffness controlling response speed.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "damping",
+					"description": "Spring damping controlling settle smoothness.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "breathing",
+					"description": "Subtle per-line horizontal breathing factor (`0` disables).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "animated",
+					"description": "Set `false` to disable hover animation, matching reduced motion.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/wheel-picker/wheel-picker.tsx#WheelPickerGroupProps#": [
 		{
 			"id": "wheel-picker.tsx-WheelPickerGroupProps",

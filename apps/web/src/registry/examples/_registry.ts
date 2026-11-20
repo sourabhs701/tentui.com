@@ -4,6 +4,34 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "variable-font-hover-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("variable-font-hover")],
+		files: [
+			{
+				path: "examples/variable-font-hover-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "variable-font-hover-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("variable-font-hover")],
+		files: [
+			{
+				path: "examples/variable-font-hover-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[34rem] place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "before-after-compare-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("before-after-compare")],
