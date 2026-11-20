@@ -90,6 +90,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"scratch-card",
 			"scribbled-text",
 			"tile-field",
+			"variable-font-hover",
 		],
 	},
 ];
