@@ -39,8 +39,15 @@ const SLOT_TOLERANCE = 2;
 const SETTLE_MS = 140;
 /** Least ms between two flip ticks, so a long jump riffles instead of buzzing. */
 const TICK_THROTTLE_MS = 45;
-/** Height of the soft fades along each stack's band edge, in px (`h-3`). */
-const EDGE_FADE = 12;
+/** Height of the soft fades along each stack's band edge, in px (`h-5`). */
+const EDGE_FADE = 20;
+/**
+ * Px of overlap over which a covered card's label fades out, so a card
+ * sliding over another never cuts its title mid-glyph. The label stays until
+ * the cover nears its glyphs, so a card mostly showing keeps its title.
+ */
+const LABEL_FADE_FROM = 12;
+const LABEL_FADE_TO = 22;
 /** Px kept between focused content and either stack. */
 const FOCUS_MARGIN = 12;
 /**
@@ -51,6 +58,13 @@ const GLIDE_MIN_MS = 300;
 const GLIDE_MAX_MS = 620;
 const GLIDE_MS_PER_SQRT_PX = 12;
 const easeOutQuart = (t: number) => 1 - (1 - t) ** 4;
+/**
+ * A scroll that comes to rest this many px short of a section's start
+ * carries on to it. Only ever forward, in the direction of the scroll, so a
+ * single wheel notch or arrow key is never pulled back.
+ */
+const SNAP_RANGE = 48;
+const SNAP_MS = 240;
 /** Ring radius and circumference, in the 16 px viewBox. */
 const RING_RADIUS = 6.25;
 const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
@@ -130,7 +144,10 @@ export interface ScrollAccordionProps
 	 * deck and `spineHeight` for the list.
 	 */
 	peek?: number;
-	/** Settle gently at the start of a section when a scroll ends near one. */
+	/**
+	 * When a scroll comes to rest just short of a section's start, carry on
+	 * to it. It only ever moves forward, so it never fights a wheel or key.
+	 */
 	snap?: boolean;
 	/** Show a 01, 02… index before each title. */
 	numbered?: boolean;
@@ -199,6 +216,7 @@ export function ScrollAccordion({
 	const cardRefs = useRef<Array<HTMLElement | null>>([]);
 	const ringRefs = useRef<Array<SVGCircleElement | null>>([]);
 	const fadeRefs = useRef<Array<HTMLElement | null>>([]);
+	const labelRefs = useRef<Array<HTMLElement | null>>([]);
 	const edgeRef = useRef<HTMLSpanElement>(null);
 	const edgeFadeRef = useRef(-1);
 	const bodyRefs = useRef<Array<HTMLElement | null>>([]);
@@ -207,9 +225,15 @@ export function ScrollAccordion({
 	const frameRef = useRef(0);
 	const glideRef = useRef(0);
 	const settleRef = useRef(0);
-	/** Last painted scale, ring fill, fade, and done flag per header. */
+	/** Last painted scale, ring fill, fades, and done flag per header. */
 	const paintedRef = useRef<
-		Array<{ scale: number; fill: number; fade: number; done: boolean }>
+		Array<{
+			scale: number;
+			fill: number;
+			fade: number;
+			label: number;
+			done: boolean;
+		}>
 	>([]);
 
 	const initialIndex = Math.max(
@@ -226,8 +250,10 @@ export function ScrollAccordion({
 	const intentRef = useRef(false);
 	const touchRef = useRef(false);
 	const lastTickRef = useRef(0);
-	/** Snapping paused after a focus nudge, until the person scrolls again. */
-	const snapPausedRef = useRef(false);
+	/** A finger or mouse button is down on the panel: nothing settles yet. */
+	const heldRef = useRef(false);
+	/** scrollTop where the last scroll came to rest, for its direction. */
+	const restRef = useRef(0);
 
 	const { trigger: haptic } = useWebHaptics();
 	const { click: playFlip } = useTiks({
@@ -314,6 +340,23 @@ export function ScrollAccordion({
 			if (scroll >= naturals[i] - i * peek - SLOT_TOLERANCE) next = i;
 		}
 
+		// How far each card is covered by its neighbour, in px. Up to the open
+		// card, the later card lies on top; below it, the earlier one does.
+		const covered: number[] = new Array(n).fill(0);
+		let previous = 0;
+		for (let i = 0; i < n; i++) {
+			const at = Math.min(
+				Math.max(free[i], i * peek),
+				height - (n - 1 - i) * peek - spine,
+			);
+			if (i > 0) {
+				const overlap = Math.max(0, previous + spine - at);
+				if (i <= next + 1) covered[i - 1] = Math.max(covered[i - 1], overlap);
+				else covered[i] = overlap;
+			}
+			previous = at;
+		}
+
 		let below = 0;
 		const depthTop: number[] = new Array(n).fill(0);
 		for (let i = n - 1; i >= 0; i--) {
@@ -338,7 +381,7 @@ export function ScrollAccordion({
 
 			let painted = paintedRef.current[i];
 			if (!painted) {
-				painted = { scale: -1, fill: -1, fade: -1, done: false };
+				painted = { scale: -1, fill: -1, fade: -1, label: -1, done: false };
 				paintedRef.current[i] = painted;
 			}
 			const card = cardRefs.current[i];
@@ -361,6 +404,14 @@ export function ScrollAccordion({
 			if (fadeNode && Math.abs(painted.fade - fade) > 0.01) {
 				painted.fade = fade;
 				fadeNode.style.opacity = fade.toFixed(2);
+			}
+			const label = clamp01(
+				1 - (covered[i] - LABEL_FADE_FROM) / (LABEL_FADE_TO - LABEL_FADE_FROM),
+			);
+			const labelNode = labelRefs.current[i];
+			if (labelNode && Math.abs(painted.label - label) > 0.01) {
+				painted.label = label;
+				labelNode.style.opacity = label === 1 ? "" : label.toFixed(2);
 			}
 			const header = headerRefs.current[i];
 			if (header && painted.done !== done) {
@@ -401,39 +452,32 @@ export function ScrollAccordion({
 		if (!glideRef.current) return;
 		cancelAnimationFrame(glideRef.current);
 		glideRef.current = 0;
-		const scroller = scrollerRef.current;
-		if (scroller) scroller.style.scrollSnapType = "";
 	}, []);
 
 	// Driven by rAF timestamps rather than native smooth scrolling, so it
 	// follows the page's frame clock and stops the moment the person takes
-	// over. Snapping is paused on the way, or each step would snap.
+	// over.
 	const glide = useCallback(
-		(scroller: HTMLElement, target: number) => {
+		(scroller: HTMLElement, target: number, ms?: number) => {
 			stopGlide();
 			const from = scroller.scrollTop;
 			const distance = target - from;
-			const duration = Math.min(
-				GLIDE_MAX_MS,
-				Math.max(
-					GLIDE_MIN_MS,
-					GLIDE_MIN_MS + Math.sqrt(Math.abs(distance)) * GLIDE_MS_PER_SQRT_PX,
-				),
-			);
-			scroller.style.scrollSnapType = "none";
-			snapPausedRef.current = false;
+			const duration =
+				ms ??
+				Math.min(
+					GLIDE_MAX_MS,
+					Math.max(
+						GLIDE_MIN_MS,
+						GLIDE_MIN_MS + Math.sqrt(Math.abs(distance)) * GLIDE_MS_PER_SQRT_PX,
+					),
+				);
 			let start = -1;
 			const step = (now: number) => {
 				if (start < 0) start = now;
 				const t = Math.min(1, (now - start) / duration);
 				scroller.scrollTop = from + distance * easeOutQuart(t);
 				paint();
-				if (t < 1) {
-					glideRef.current = requestAnimationFrame(step);
-				} else {
-					glideRef.current = 0;
-					scroller.style.scrollSnapType = "";
-				}
+				glideRef.current = t < 1 ? requestAnimationFrame(step) : 0;
 			};
 			glideRef.current = requestAnimationFrame(step);
 		},
@@ -467,24 +511,47 @@ export function ScrollAccordion({
 		[glide, schedule, stopGlide],
 	);
 
+	// Where a scroll of the person's own that came to rest should carry on
+	// to: the next section start ahead, if it is within reach.
+	const snapTarget = useCallback((scroll: number) => {
+		const geometry = geometryRef.current;
+		if (!geometry || !latest.current.snap) return null;
+		const direction = Math.sign(scroll - restRef.current);
+		if (direction === 0) return null;
+		const { peek } = latest.current;
+		for (let i = 0; i < geometry.naturals.length; i++) {
+			const start = Math.min(
+				geometry.max,
+				Math.max(0, geometry.naturals[i] - i * peek),
+			);
+			const ahead = (start - scroll) * direction;
+			if (ahead >= 1 && ahead <= SNAP_RANGE) return start;
+		}
+		return null;
+	}, []);
+
 	const onSettle = useCallback(() => {
 		settleRef.current = 0;
-		// A glide can idle on a slow frame; it settles when it lands.
+		const scroller = scrollerRef.current;
+		// A glide can idle on a slow frame; it settles when it lands. A held
+		// finger or scrollbar settles once it lets go.
 		if (glideRef.current) {
 			settleRef.current = window.setTimeout(onSettle, SETTLE_MS);
 			return;
 		}
-		// Turning snapping back on snaps at once, so wait until a scroll of
-		// the person's own ends, where snapping would act anyway.
-		if (snapPausedRef.current && intentRef.current) {
-			snapPausedRef.current = false;
-			const scroller = scrollerRef.current;
-			if (scroller) scroller.style.scrollSnapType = "";
+		if (!scroller || heldRef.current) return;
+		const scroll = scroller.scrollTop;
+		const target = intentRef.current ? snapTarget(scroll) : null;
+		restRef.current = target ?? scroll;
+		if (target !== null) {
+			if (prefersReducedMotion()) scroller.scrollTop = target;
+			else glide(scroller, target, SNAP_MS);
+			return;
 		}
 		pendingRef.current = null;
 		intentRef.current = false;
 		emit(activeRef.current);
-	}, [emit]);
+	}, [emit, glide, snapTarget]);
 
 	const onScroll = useCallback(() => {
 		schedule();
@@ -501,6 +568,27 @@ export function ScrollAccordion({
 			stopGlide();
 		},
 		[stopGlide],
+	);
+
+	// While a finger or the scrollbar holds the panel, it doesn't settle.
+	// Touch listens for the touch ending: its pointer is cancelled as soon
+	// as the browser takes over the pan, with the finger still down.
+	const onHold = useCallback(
+		(touch: boolean) => {
+			if (heldRef.current) return;
+			heldRef.current = true;
+			const ends = touch
+				? (["touchend", "touchcancel"] as const)
+				: (["pointerup", "pointercancel"] as const);
+			const release = () => {
+				heldRef.current = false;
+				for (const end of ends) window.removeEventListener(end, release);
+				window.clearTimeout(settleRef.current);
+				settleRef.current = window.setTimeout(onSettle, SETTLE_MS);
+			};
+			for (const end of ends) window.addEventListener(end, release);
+		},
+		[onSettle],
 	);
 
 	useImperativeHandle(
@@ -597,11 +685,6 @@ export function ScrollAccordion({
 			if (scroll < lowest) next = Math.min(lowest, highest);
 			else if (scroll > highest) next = Math.max(highest, 0);
 			if (Math.abs(next - scroll) >= 1) {
-				// Snapping would pull the panel back to the section start.
-				if (latest.current.snap) {
-					snapPausedRef.current = true;
-					scroller.style.scrollSnapType = "none";
-				}
 				scroller.scrollTo({ top: next, behavior: "instant" });
 			}
 		});
@@ -623,9 +706,10 @@ export function ScrollAccordion({
 			className={cn(
 				"relative w-full overflow-hidden rounded-2xl bg-(--sa-tray) text-sm",
 				// The deck's hairline is drawn above the scroller; under it, the
-				// stacked headers would cover it in pieces.
+				// stacked headers would cover it in pieces. Its 3 px of padding plus
+				// each header's 3 px inset keep the cards 6 px from every edge.
 				variant === "deck"
-					? "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:shadow-[inset_0_0_0_1px_rgb(0_0_0/0.05)] dark:after:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.07)]"
+					? "py-[3px] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:shadow-[inset_0_0_0_1px_rgb(0_0_0/0.05)] dark:after:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.07)]"
 					: "border border-border",
 				tray,
 				className,
@@ -646,16 +730,19 @@ export function ScrollAccordion({
 				data-slot="scroll-accordion-viewport"
 				onScroll={onScroll}
 				onWheel={() => onUserInput(false)}
-				onTouchStart={() => onUserInput(true)}
-				onPointerDown={(event) => onUserInput(event.pointerType === "touch")}
+				onTouchStart={() => {
+					onUserInput(true);
+					onHold(true);
+				}}
+				onPointerDown={(event) => {
+					onUserInput(event.pointerType === "touch");
+					if (event.pointerType !== "touch") onHold(false);
+				}}
 				onKeyDown={(event) => {
 					if (event.key !== "Tab") onUserInput(false);
 				}}
 				onFocus={onFocusIn}
-				className={cn(
-					"relative isolate h-full overflow-y-auto overflow-x-hidden [scrollbar-color:color-mix(in_oklab,var(--color-foreground)_18%,transparent)_transparent] [scrollbar-width:thin]",
-					snap && "snap-y snap-proximity",
-				)}
+				className="relative isolate h-full overflow-y-auto overflow-x-hidden [scrollbar-color:color-mix(in_oklab,var(--color-foreground)_18%,transparent)_transparent] [scrollbar-width:thin]"
 			>
 				{items.map((item, index) => {
 					const section: Section =
@@ -667,13 +754,6 @@ export function ScrollAccordion({
 					const last = index === count - 1;
 					return (
 						<Fragment key={item.id}>
-							{snap && (
-								<span
-									aria-hidden="true"
-									className="block h-0 snap-start"
-									style={{ scrollMarginTop: index * peek }}
-								/>
-							)}
 							<Heading
 								ref={(node: HTMLElement | null) => {
 									headerRefs.current[index] = node;
@@ -710,7 +790,7 @@ export function ScrollAccordion({
 									}}
 									className={cn(
 										"group/button relative flex size-full cursor-pointer select-none items-center text-left outline-none",
-										variant === "deck" ? "px-2 py-[3px]" : "",
+										variant === "deck" ? "px-1.5 py-[3px]" : "",
 									)}
 								>
 									<span
@@ -719,9 +799,9 @@ export function ScrollAccordion({
 										}}
 										data-slot="scroll-accordion-card"
 										className={cn(
-											"relative flex size-full min-w-0 items-center gap-3 transition-[box-shadow,background-color] duration-150 group-data-[stack=bottom]/header:origin-bottom group-data-[stack=top]/header:origin-top motion-reduce:transition-none",
+											"relative flex size-full min-w-0 items-center transition-[box-shadow,background-color] duration-150 group-data-[stack=bottom]/header:origin-bottom group-data-[stack=top]/header:origin-top motion-reduce:transition-none",
 											variant === "deck"
-												? "rounded-xl bg-white px-3.5 shadow-[0_0_0_1px_rgb(0_0_0/0.06),0_1px_2px_rgb(0_0_0/0.05)] group-hover/button:shadow-[0_0_0_1px_rgb(0_0_0/0.1),0_2px_6px_rgb(0_0_0/0.07)] group-focus-visible/button:shadow-[0_0_0_2px_var(--color-ring)] dark:bg-neutral-800 dark:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.07),0_1px_2px_rgb(0_0_0/0.3)] dark:group-focus-visible/button:shadow-[inset_0_0_0_2px_var(--color-ring)] dark:group-hover/button:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.12),0_2px_6px_rgb(0_0_0/0.35)]"
+												? "rounded-[10px] bg-white px-3.5 shadow-[0_0_0_1px_rgb(0_0_0/0.06),0_1px_2px_rgb(0_0_0/0.05)] group-hover/button:shadow-[0_0_0_1px_rgb(0_0_0/0.1),0_2px_6px_rgb(0_0_0/0.07)] group-focus-visible/button:shadow-[0_0_0_2px_var(--color-ring)] dark:bg-neutral-800 dark:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.07),0_1px_2px_rgb(0_0_0/0.3)] dark:group-focus-visible/button:shadow-[inset_0_0_0_2px_var(--color-ring)] dark:group-hover/button:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.12),0_2px_6px_rgb(0_0_0/0.35)]"
 												: // A hairline on the band side of each row: under read rows, over upcoming ones.
 													"px-4 before:pointer-events-none before:absolute before:inset-x-0 before:h-px before:bg-border/70 group-hover/button:bg-foreground/[0.03] group-focus-visible/button:shadow-[inset_0_0_0_2px_var(--color-ring)] group-data-[stack=bottom]/header:before:top-0 group-data-[stack=top]/header:before:bottom-0",
 										)}
@@ -731,84 +811,92 @@ export function ScrollAccordion({
 												: undefined
 										}
 									>
-										{numbered && (
-											<span
-												aria-hidden="true"
-												className="w-5 shrink-0 font-mono text-[11px] text-muted-foreground tabular-nums tracking-tight"
-											>
-												{String(index + 1).padStart(2, "0")}
-											</span>
-										)}
 										<span
-											className={cn(
-												// No colour transition: the open section follows the
-												// scroll, and a fade would lag behind a quick riffle.
-												"min-w-0 flex-1 truncate font-medium",
-												section === "active"
-													? "text-foreground"
-													: "text-muted-foreground group-hover/button:text-foreground",
+											ref={(node) => {
+												labelRefs.current[index] = node;
+											}}
+											// A focused card shows its label even deep in a stack.
+											className="flex min-w-0 flex-1 items-center gap-3 group-focus-visible/button:opacity-100!"
+										>
+											{numbered && (
+												<span
+													aria-hidden="true"
+													className="min-w-[2ch] shrink-0 text-muted-foreground/70 text-xs tabular-nums"
+												>
+													{String(index + 1).padStart(2, "0")}
+												</span>
 											)}
-										>
-											{item.title}
-										</span>
-										{item.meta != null && (
-											<span className="shrink-0 text-muted-foreground text-xs tabular-nums">
-												{item.meta}
-											</span>
-										)}
-										<svg
-											aria-hidden="true"
-											viewBox="0 0 16 16"
-											className="size-4 shrink-0 -rotate-90"
-										>
-											<circle
-												cx="8"
-												cy="8"
-												r={RING_RADIUS}
-												fill="none"
-												strokeWidth="1.5"
-												className="stroke-foreground/12"
-											/>
-											<circle
-												ref={(node) => {
-													ringRefs.current[index] = node;
-												}}
-												cx="8"
-												cy="8"
-												r={RING_RADIUS}
-												fill="none"
-												strokeWidth="1.5"
-												strokeLinecap="round"
-												strokeDasharray={RING_LENGTH.toFixed(2)}
-												strokeDashoffset={RING_LENGTH.toFixed(2)}
+											<span
 												className={cn(
+													// No colour transition: the open section follows the
+													// scroll, and a fade would lag behind a quick riffle.
+													"min-w-0 flex-1 truncate font-medium",
 													section === "active"
-														? "stroke-foreground"
-														: "stroke-muted-foreground",
+														? "text-foreground"
+														: "text-muted-foreground group-hover/button:text-foreground",
 												)}
-											/>
-											<circle
-												cx="8"
-												cy="8"
-												r="2.75"
-												className="origin-center scale-0 fill-muted-foreground transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-data-[complete]/header:scale-100 motion-reduce:transition-none"
-											/>
-										</svg>
+											>
+												{item.title}
+											</span>
+											{item.meta != null && (
+												<span className="shrink-0 text-muted-foreground text-xs tabular-nums">
+													{item.meta}
+												</span>
+											)}
+											<svg
+												aria-hidden="true"
+												viewBox="0 0 16 16"
+												className="size-4 shrink-0 -rotate-90"
+											>
+												<circle
+													cx="8"
+													cy="8"
+													r={RING_RADIUS}
+													fill="none"
+													strokeWidth="1.5"
+													className="stroke-foreground/12"
+												/>
+												<circle
+													ref={(node) => {
+														ringRefs.current[index] = node;
+													}}
+													cx="8"
+													cy="8"
+													r={RING_RADIUS}
+													fill="none"
+													strokeWidth="1.5"
+													strokeLinecap="round"
+													strokeDasharray={RING_LENGTH.toFixed(2)}
+													strokeDashoffset={RING_LENGTH.toFixed(2)}
+													className={cn(
+														section === "active"
+															? "stroke-foreground"
+															: "stroke-muted-foreground",
+													)}
+												/>
+												<circle
+													cx="8"
+													cy="8"
+													r="2.75"
+													className="origin-center scale-0 fill-muted-foreground transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-data-[complete]/header:scale-100 motion-reduce:transition-none"
+												/>
+											</svg>
+										</span>
 									</span>
 								</button>
 								<span
 									aria-hidden="true"
-									className="pointer-events-none absolute inset-x-0 top-full h-3 bg-linear-to-b from-(--sa-tray) to-transparent opacity-0 group-data-[stack=top]/header:opacity-100"
+									className="pointer-events-none absolute inset-x-0 top-full h-5 bg-linear-to-b from-(--sa-tray) from-20% to-transparent opacity-0 group-has-focus-visible/header:hidden group-data-[stack=top]/header:opacity-100"
 								/>
 								<span
 									aria-hidden="true"
-									className="pointer-events-none absolute inset-x-0 bottom-full h-3 opacity-0 group-data-[stack=bottom]/header:opacity-100"
+									className="pointer-events-none absolute inset-x-0 bottom-full h-5 opacity-0 group-has-focus-visible/header:hidden group-data-[stack=bottom]/header:opacity-100"
 								>
 									<span
 										ref={(node) => {
 											fadeRefs.current[index] = node;
 										}}
-										className="absolute inset-0 bg-linear-to-t from-(--sa-tray) to-transparent"
+										className="absolute inset-0 bg-linear-to-t from-(--sa-tray) from-20% to-transparent"
 									/>
 								</span>
 							</Heading>
@@ -823,7 +911,7 @@ export function ScrollAccordion({
 								data-state={section}
 								className={cn(
 									"py-4 text-neutral-600 leading-relaxed [overflow-wrap:anywhere] dark:text-neutral-300",
-									variant === "deck" ? "px-[22px]" : "px-4",
+									variant === "deck" ? "px-5" : "px-4",
 								)}
 								style={
 									last
@@ -843,7 +931,7 @@ export function ScrollAccordion({
 			<span
 				ref={edgeRef}
 				aria-hidden="true"
-				className="pointer-events-none absolute inset-x-0 bottom-0 h-4 bg-linear-to-t from-(--sa-tray) to-transparent opacity-0"
+				className="pointer-events-none absolute inset-x-0 bottom-0 h-5 bg-linear-to-t from-(--sa-tray) to-transparent opacity-0"
 			/>
 		</div>
 	);

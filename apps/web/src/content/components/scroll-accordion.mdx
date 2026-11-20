@@ -3,7 +3,7 @@ title: Scroll Accordion
 description: A React scroll accordion for shadcn/ui where you open sections by scrolling. Headers you have read stack at the top like index cards, the ones ahead wait at the bottom, and a ring on each header fills as you read.
 seoTitle: React Scroll Accordion Component for shadcn/ui
 createdAt: 2026-11-16
-updatedAt: 2026-11-18
+updatedAt: 2026-11-20
 ---
 
 <ComponentPreview name="scroll-accordion-preview" />
@@ -25,15 +25,18 @@ updatedAt: 2026-11-18
 - Two looks. `deck` overlaps the stacks like a pile of index cards, with a
   12 px sliver of each stacked card showing and deeper cards slightly
   smaller, so many sections still leave a roomy reading band. The next card
-  slides up over the open one, like a card dealt onto a pile. `list` keeps
+  slides up over the open one, like a card dealt onto a pile, and a card's
+  label fades as another covers it, so no title is ever cut in half. `list` keeps
   every header as a full row, so the stacks double as a readable outline.
 - A small ring on each header fills as you read that section: read sections
   show a full ring with a dot, the open one fills as you go, and the ones
   ahead are empty.
 - Press any header, stacked or not, to glide to that section. Its header
   lands exactly in its slot with the section starting just below it.
-- Gentle `snap`: a scroll that ends near the start of a section settles
-  onto it, while long sections stay free to stop anywhere.
+- Gentle `snap`: a scroll that comes to rest just short of a section's start
+  carries on to it in 240 ms. It only moves the way you were already
+  scrolling, so a single wheel notch or arrow key is never pulled back, and
+  it waits until your finger or the scrollbar lets go.
 - The last section always has room to open, however short it is.
 - Every visual is drawn from the scroll position once per frame and writes
   only `transform`, `opacity`, a ring's `stroke-dashoffset`, and a data

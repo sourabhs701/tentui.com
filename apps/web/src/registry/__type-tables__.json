@@ -5924,7 +5924,7 @@
 				},
 				{
 					"name": "snap",
-					"description": "Settle gently at the start of a section when a scroll ends near one.",
+					"description": "When a scroll comes to rest just short of a section's start, carry on\nto it. It only ever moves forward, so it never fights a wheel or key.",
 					"tags": [
 						{
 							"name": "component-prop",

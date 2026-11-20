@@ -309,7 +309,7 @@ export const Index = {
 			return { default: module.default };
 		}),
 		categories: ["lists"],
-		meta: {"createdAt":"2026-11-16","image":"https://cdn.tentui.com/images/components/scroll-accordion?v=1","video":"https://cdn.tentui.com/videos/components/scroll-accordion?v=1"},
+		meta: {"createdAt":"2026-11-16","image":"https://cdn.tentui.com/images/components/scroll-accordion?v=2","video":"https://cdn.tentui.com/videos/components/scroll-accordion?v=2"},
 	},
 	"agent-thinking": {
 		name: "agent-thinking",

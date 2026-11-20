@@ -45,8 +45,8 @@ export const components: Registry["items"] = [
 		categories: ["lists"],
 		meta: {
 			createdAt: "2026-11-16",
-			image: "https://cdn.tentui.com/images/components/scroll-accordion?v=1",
-			video: "https://cdn.tentui.com/videos/components/scroll-accordion?v=1",
+			image: "https://cdn.tentui.com/images/components/scroll-accordion?v=2",
+			video: "https://cdn.tentui.com/videos/components/scroll-accordion?v=2",
 		},
 		docs: "https://tentui.com/components/scroll-accordion",
 	},

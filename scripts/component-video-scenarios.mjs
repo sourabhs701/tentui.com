@@ -8,7 +8,9 @@ const TICK_RULER_FLICKS = [84, 137, 200];
 
 export const scenarios = {
 	"scroll-accordion": {
-		rest: { x: 458, y: 330 },
+		// Level with the open body, so the cursor's way in and out crosses
+		// text, not a card it would light up.
+		rest: { x: 458, y: 200 },
 		async run(d) {
 			const viewport = '[data-slot="scroll-accordion-viewport"]';
 			// Scroll offset at which section `index` opens: its header reaches

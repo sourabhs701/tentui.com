@@ -52,6 +52,10 @@ const STEPS = [
 					A level bed is the goal. If one side sinks faster, aim the next spiral
 					there.
 				</p>
+				<p className="mt-3">
+					Keep the spout low, a few centimetres above the bed, so the stream
+					stirs the grounds without digging a crater.
+				</p>
 			</>
 		),
 	},
@@ -92,13 +96,15 @@ const STEPS = [
 
 function ScrollAccordionPreview({ defaultValue }: { defaultValue?: string }) {
 	return (
-		<ScrollAccordion
-			aria-label="Pour-over guide"
-			items={STEPS}
-			defaultValue={defaultValue}
-			height={340}
-			className="max-w-sm"
-		/>
+		<div className="w-full max-w-sm py-8">
+			<ScrollAccordion
+				aria-label="Pour-over guide"
+				items={STEPS}
+				defaultValue={defaultValue}
+				height={320}
+				numbered={false}
+			/>
+		</div>
 	);
 }
 

@@ -46,7 +46,7 @@ const SECTIONS = [
 	},
 	{
 		id: "sharing",
-		title: "Sharing links, guests, and what happens when a link is forwarded",
+		title: "Sharing and guests",
 		content: (
 			<>
 				<p>
