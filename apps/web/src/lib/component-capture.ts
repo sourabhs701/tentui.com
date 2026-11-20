@@ -46,6 +46,8 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"morph-lightbox": {},
 	// The menu is portaled out of the zoomed stage, so it is framed at 1:1.
 	"liquid-glass-menu": {},
+	// Positioned slightly above center so the anchored popover fits inside 480x360 with shadow room.
+	"live-save-status": { zoom: 1.25, className: "items-start pt-[108px]" },
 	"number-stepper": { zoom: 1.6 },
 	"otp-field": { zoom: 1.2 },
 	"peeping-button": { zoom: 1.35 },

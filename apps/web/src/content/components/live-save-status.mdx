@@ -1,0 +1,233 @@
+---
+title: Live Save Status
+description: A React live save status indicator for shadcn/ui with a morphing geometric seal, spring-measured capsule width, blurred vertical label swaps, minimum saving floor, offline awareness, inline Save and Retry chips, and an anchored sync details popover.
+seoTitle: React Live Save Status Component for shadcn/ui
+seoDescription: Live Save Status is a React autosave and sync indicator for shadcn/ui. A single SVG seal morphs across unsaved, saving, saved, offline, and error states with zero layout jitter.
+createdAt: 2026-11-20
+updatedAt: 2026-11-20
+---
+
+<ComponentPreview name="live-save-status-preview" />
+
+Live Save Status is a React autosave and sync status indicator for shadcn/ui
+editors, forms, and settings headers. A single geometric SVG seal morphs across
+`unsaved`, `saving`, `saved`, `offline`, and `error` states while the capsule
+springs smoothly to fit each label and inline action without stretching text or
+borders.
+
+## Example
+
+<ComponentPreview name="live-save-status-demo" />
+
+## Features
+
+- **Continuous morphing SVG seal:** Every state lives in the same 16 px circle —
+  a warm breathing amber dot for unsaved edits, a taut 240-degree rotating ink
+  arc while saving, a drawn checkmark with a subtle confirmation ring ripple on
+  save, a dashed slashed ring when offline, and a rose exclamation seal with a
+  damped 3 px shake on error.
+- **Zero-jitter spring width:** Inner content width is observed with
+  `ResizeObserver` and animated on a damped spring (`stiffness: 380`,
+  `damping: 32`) instead of `scaleX`, keeping the 1 px hairline ring and
+  typography razor-sharp on every frame.
+- **Blurred vertical label swap:** Outgoing labels lift out with a 2 px blur
+  while incoming labels rise cleanly into focus, preventing overlapping words.
+- **Minimum saving floor:** Sub-second autosaves stay legible for at least
+  `minSavingMs` (450 ms by default) before settling to `saved`, while `error`,
+  `offline`, and `unsaved` interrupt immediately.
+- **Live relative timestamps:** When `lastSavedAt` is passed, fresh saves hold
+  a clean "Saved" label for 2.4 s before folding in a `tabular-nums` relative
+  timestamp ("· just now", "· 1m ago") that only ticks while the tab is visible.
+- **Inline Save and Retry actions:** Pass `onSave` or `onRetry` to unfold crisp
+  action chips inside the capsule right when the user needs manual control or
+  recovery.
+- **Anchored sync details popover:** Pass `showPopover`, `details`, or
+  `history` to let users inspect the exact timestamp, storage promise, failure
+  reason, and recent save checkpoints with optional `onRestore`.
+- **Three variants and two sizes:** Choose `pill` (elevated capsule), `ghost`
+  (borderless document header badge), or `minimal` (compact icon-first badge)
+  in `sm` or `md`.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/live-save-status
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="live-save-status"
+  title="components/live-save-status.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { LiveSaveStatus } from "@/components/live-save-status";
+```
+
+Connect your document or form's save lifecycle directly to `status`:
+
+```tsx
+<LiveSaveStatus
+  status={saveState}
+  lastSavedAt={lastSavedAt}
+  pendingCount={dirtyCount}
+  onSave={handleSaveNow}
+  onRetry={handleRetry}
+/>
+```
+
+### With sync details and checkpoint history
+
+Pass `history` or `showPopover` to make the badge interactive, revealing the
+storage promise, exact save timestamp, failure reason, and recent checkpoints:
+
+```tsx
+<LiveSaveStatus
+  status={saveState}
+  lastSavedAt={lastSavedAt}
+  errorMessage={error?.message}
+  onSave={handleSaveNow}
+  onRetry={handleRetry}
+  shortcut="⌘S"
+  popoverAlign="end"
+  history={checkpoints}
+  onRestore={(item) => restoreCheckpoint(item.id)}
+/>
+```
+
+### Variants
+
+Use `variant="ghost"` inside a document title bar, or `variant="minimal"` in a
+dense toolbar where space is tight:
+
+```tsx
+<LiveSaveStatus variant="ghost" status="saving" />
+<LiveSaveStatus variant="minimal" status="unsaved" pendingCount={3} showPopover />
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Click / tap `Save` or `Retry` | Runs `onSave` in `unsaved` or `onRetry` in `error` |
+| Click / tap badge (when popover enabled) | Opens or closes the sync details popover |
+| `Tab` | Moves keyboard focus to the badge trigger and inline action chip |
+| `Enter` / `Space` | Activates the focused trigger or inline action |
+| `Esc` | Closes the sync details popover and returns focus to the trigger |
+
+## Sound and haptics
+
+Pass `sound` to enable soft synthesized audio feedback via `@rexa-developer/tiks`
+(off by default): a bright confirmation tick when settling from `saving` to
+`saved`, a low muted tap on entering `error`, and a light click when pressing
+`Save` or `Retry`. Sounds never play on initial mount or in a hidden tab.
+
+On touch devices, `web-haptics` fires `success` on confirmed save, `error` on
+failure, and `light` on action taps. Disable with `haptics={false}`.
+
+## Accessibility
+
+A visually hidden polite live region (`role="status"`, `aria-live="polite"`)
+announces meaningful lifecycle changes without announcing periodic timestamp
+ticks. Errors announce through an assertive `role="alert"` region including
+`errorMessage` when present.
+
+Without `showPopover`, `details`, or `history`, the badge renders as a plain
+status element rather than a button, while inline `Save` and `Retry` remain real
+`<button>` elements. When the popover is enabled, the trigger sets
+`aria-expanded`, `aria-haspopup="dialog"`, and `aria-controls`, and the popover
+clamps inside viewport edges on narrow screens.
+
+With `prefers-reduced-motion` (or `animated={false}`), arc rotation, breathing
+halos, confirmation ripples, error shakes, and vertical blur slides are replaced
+with static state glyphs and short opacity crossfades.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/live-save-status/live-save-status.tsx"
+  name="LiveSaveStatusProps"
+/>
+
+### LiveSaveStatusHistoryItem
+
+<AutoTypeTable
+  path="src/registry/components/live-save-status/live-save-status.tsx"
+  name="LiveSaveStatusHistoryItem"
+/>
+
+## FAQ
+
+### How do I install Live Save Status with shadcn?
+
+Run `npx shadcn@latest add @tentui/live-save-status` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or
+run `npx shadcn@latest add https://tentui.com/r/live-save-status.json` directly.
+The CLI copies `live-save-status.tsx` into your project and installs `motion`,
+`web-haptics`, and `@rexa-developer/tiks`.
+
+### How do I connect it to autosave or React Hook Form?
+
+Pass your debounced save status to `status` (`"saved"`, `"unsaved"`, `"saving"`,
+`"offline"`, or `"error"`), update `lastSavedAt` when a save resolves, and pass
+`onSave` or `onRetry` for manual save and error recovery. In React Hook Form,
+derive `"unsaved"` from `formState.isDirty` and `"saving"` while your submit or
+autosave handler is in flight.
+
+### Why does it have a minimum saving duration?
+
+Fast local or cached saves can finish in under 50 ms, which makes a spinner
+flash briefly and look broken. `minSavingMs` defaults to 450 ms so every save
+registers smoothly before settling to `"saved"`, while `"error"`, `"offline"`,
+and `"unsaved"` interrupt immediately; set `minSavingMs={0}` to disable it.
+
+### How does Live Save Status handle offline mode versus errors?
+
+`offline` uses a calm amber slashed ring and messaging that edits are saved
+locally and queued to sync on reconnect, while `error` uses destructive styling,
+a subtle horizontal shake, and an inline `Retry` button so genuine failures
+stand out clearly.
+
+### Is Live Save Status accessible and reduced-motion friendly?
+
+Yes. Meaningful status changes announce through a polite `role="status"` live
+region, errors announce through `role="alert"`, periodic timestamp updates stay
+silent, and keyboard focus rings only appear on keyboard navigation. When
+`prefers-reduced-motion` is enabled or `animated={false}` is set, all rotation,
+ripples, shakes, and slides become calm opacity transitions.
+
+### Is Live Save Status free to use?
+
+Yes. Live Save Status is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

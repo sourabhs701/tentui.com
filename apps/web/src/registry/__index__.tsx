@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"live-save-status": {
+		name: "live-save-status",
+		title: "Live Save Status",
+		description: "A live autosave and sync indicator with a morphing geometric SVG seal across unsaved, saving, saved, offline, and error states, spring-measured capsule width, blurred label swaps, inline Save and Retry chips, and an anchored sync details popover.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/live-save-status/live-save-status.tsx","type":"registry:component","target":"@components/live-save-status.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/live-save-status/live-save-status")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for live-save-status");
+			}
+			return { default: module.default };
+		}),
+		categories: ["feedback"],
+		meta: {"createdAt":"2026-11-20","image":"https://cdn.tentui.com/images/components/live-save-status?v=1","video":"https://cdn.tentui.com/videos/components/live-save-status?v=1"},
+	},
 	"morph-dialog": {
 		name: "morph-dialog",
 		title: "Morph Dialog",
@@ -1012,6 +1030,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"live-save-status-preview": {
+		name: "live-save-status-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/live-save-status-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/live-save-status-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for live-save-status-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-64 place-items-center content-center px-4"},
+	},
+	"live-save-status-demo": {
+		name: "live-save-status-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/live-save-status-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/live-save-status-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for live-save-status-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"demoClassName":"min-h-96 place-items-center content-center px-4"},
 	},
 	"morph-dialog-preview": {
 		name: "morph-dialog-preview",

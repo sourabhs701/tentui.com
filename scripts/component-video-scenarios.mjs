@@ -7,6 +7,56 @@
 const TICK_RULER_FLICKS = [84, 137, 200];
 
 export const scenarios = {
+	"live-save-status": {
+		rest: { x: 430, y: 315 },
+		async run(d) {
+			const dispatch = (detail) =>
+				d.page.evaluate(
+					(payload) =>
+						window.dispatchEvent(
+							new CustomEvent("live-save-status-capture", { detail: payload }),
+						),
+					detail,
+				);
+			const action = '[data-slot="live-save-status-action"]';
+			const trigger = '[data-slot="live-save-status-trigger"]';
+
+			// Calm resting "Saved · 2m ago" start frame.
+			await d.wait(650);
+
+			// Unsaved edits arrive; capsule springs wider to unfold the inline Save chip.
+			await dispatch({ status: "unsaved", pendingCount: 2 });
+			await d.wait(450);
+
+			// Cursor glides onto the Save chip and clicks -> Saving arc -> drawn check + ripple.
+			await d.move(action, 550);
+			await d.wait(140);
+			await d.click(100);
+			await d.move(d.rest, 500);
+			await d.wait(1150);
+
+			// Simulate a save failure -> damped shake + inline Retry chip unfolds.
+			await dispatch({ status: "error" });
+			await d.wait(500);
+
+			// Click Retry -> Saving arc -> Saved seal settles cleanly.
+			await d.move(action, 550);
+			await d.wait(140);
+			await d.click(100);
+			await d.move(d.rest, 500);
+			await d.wait(1200);
+
+			// Click the pill trigger to reveal the anchored sync details popover, then dismiss outside.
+			await d.move(trigger, 550);
+			await d.wait(120);
+			await d.click(100);
+			await d.wait(1050);
+			await d.move({ x: 452, y: 72 }, 450);
+			await d.click(90);
+			await d.move(d.rest, 400);
+			await d.wait(450);
+		},
+	},
 	"scroll-accordion": {
 		rest: { x: 458, y: 330 },
 		async run(d) {

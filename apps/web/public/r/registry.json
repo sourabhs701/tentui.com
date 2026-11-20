@@ -463,6 +463,33 @@
       "type": "registry:block"
     },
     {
+      "name": "live-save-status",
+      "title": "Live Save Status",
+      "description": "A live autosave and sync indicator with a morphing geometric SVG seal across unsaved, saving, saved, offline, and error states, spring-measured capsule width, blurred label swaps, inline Save and Retry chips, and an anchored sync details popover.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/live-save-status/live-save-status.tsx",
+          "type": "registry:component",
+          "target": "@components/live-save-status.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-20",
+        "image": "https://cdn.tentui.com/images/components/live-save-status?v=1",
+        "video": "https://cdn.tentui.com/videos/components/live-save-status?v=1"
+      },
+      "docs": "https://tentui.com/components/live-save-status",
+      "categories": [
+        "feedback"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "morph-dialog",
       "title": "Morph Dialog",
       "description": "A card or button that grows into its own dialog. The surface stretches out of the trigger without scaling its text, the image uncrops, the title glides into place, and pulling the open dialog rewinds the morph back into its card.",

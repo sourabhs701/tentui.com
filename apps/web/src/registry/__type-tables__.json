@@ -3157,6 +3157,474 @@
 			]
 		}
 	],
+	"src/registry/components/live-save-status/live-save-status.tsx#LiveSaveStatusHistoryItem#": [
+		{
+			"id": "live-save-status.tsx-LiveSaveStatusHistoryItem",
+			"name": "LiveSaveStatusHistoryItem",
+			"description": "A past save checkpoint rendered inside the optional details popover.",
+			"entries": [
+				{
+					"name": "id",
+					"description": "Stable unique identifier for the checkpoint.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "label",
+					"description": "Short summary of what was saved (e.g., \"Updated introduction\").",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "savedAt",
+					"description": "When this checkpoint was saved.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | number | Date",
+					"simplifiedType": "union",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "author",
+					"description": "Optional collaborator or device name.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/live-save-status/live-save-status.tsx#LiveSaveStatusProps#": [
+		{
+			"id": "live-save-status.tsx-LiveSaveStatusProps",
+			"name": "LiveSaveStatusProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "status",
+					"description": "Current save lifecycle state.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "\"saved\""
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "LiveSaveStatusState | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "Surface presentation: elevated `pill`, borderless `ghost`, or compact icon-first `minimal`.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "\"pill\""
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "LiveSaveStatusVariant | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "Size preset for the status badge.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "\"md\""
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "LiveSaveStatusSize | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "lastSavedAt",
+					"description": "Timestamp of the most recent completed save.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | number | Date | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showTimestamp",
+					"description": "Whether to show the live relative timestamp alongside the saved label.\nDefaults to `true` when `lastSavedAt` is provided.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "pendingCount",
+					"description": "Number of pending unsaved or offline-queued edits.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "errorMessage",
+					"description": "Optional failure reason shown in the tooltip and details popover.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "minSavingMs",
+					"description": "Minimum milliseconds to keep the visual `saving` state before settling to `saved`,\npreventing jarring sub-second flashes. Set to `0` to disable.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "450"
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "labels",
+					"description": "Override the default label for any status.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Partial<Record<LiveSaveStatusState, string>> | undefined",
+					"simplifiedType": "Partial<Record<LiveSaveStatusState, string>>",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "saveLabel",
+					"description": "Label for the inline save button shown in the `unsaved` state when `onSave` is provided.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "\"Save\""
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "retryLabel",
+					"description": "Label for the inline retry button shown in the `error` state when `onRetry` is provided.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "\"Retry\""
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "shortcut",
+					"description": "Optional keyboard shortcut hint rendered inside the details popover (e.g., `\"⌘S\"`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onSave",
+					"description": "Triggered when the user clicks the inline Save action in `unsaved` state.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void | Promise<void>) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onRetry",
+					"description": "Triggered when the user clicks the inline Retry action in `error` state.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void | Promise<void>) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "details",
+					"description": "Extra custom content displayed inside the anchored details popover.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "history",
+					"description": "Optional list of recent save checkpoints shown inside the details popover.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "LiveSaveStatusHistoryItem[] | undefined",
+					"simplifiedType": "array",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onRestore",
+					"description": "Called when the user clicks Restore on a history checkpoint.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((item: LiveSaveStatusHistoryItem) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showPopover",
+					"description": "Enable the anchored sync details popover even without `details` or `history`.\nAutomatically enabled whenever `details` or `history` is provided.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "false"
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "popoverAlign",
+					"description": "Preferred horizontal alignment of the details popover relative to the badge.\nAutomatically clamped inside the viewport on narrow screens.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "\"start\""
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "LiveSaveStatusPopoverAlign | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "open",
+					"description": "Controlled open state of the details popover.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultOpen",
+					"description": "Initial uncontrolled open state of the details popover.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onOpenChange",
+					"description": "Called whenever the details popover opens or closes.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((open: boolean) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play subtle synthesized confirmation and error clicks via `@rexa-developer/tiks`.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "false"
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Play subtle haptic feedback on touch devices via `web-haptics`.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "true"
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "animated",
+					"description": "Toggle spring and motion transitions. `false` matches `prefers-reduced-motion`.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "true"
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/morph-dialog/morph-dialog.tsx#MorphDialogMediaProps#": [
 		{
 			"id": "morph-dialog.tsx-MorphDialogMediaProps",

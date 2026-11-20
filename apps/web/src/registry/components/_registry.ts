@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "live-save-status",
+		type: "registry:component",
+		title: "Live Save Status",
+		description:
+			"A live autosave and sync indicator with a morphing geometric SVG seal across unsaved, saving, saved, offline, and error states, spring-measured capsule width, blurred label swaps, inline Save and Retry chips, and an anchored sync details popover.",
+		dependencies: ["@rexa-developer/tiks", "motion", "web-haptics"],
+		files: [
+			{
+				path: "components/live-save-status/live-save-status.tsx",
+				type: "registry:component",
+				target: "@components/live-save-status.tsx",
+			},
+		],
+		categories: ["feedback"],
+		meta: {
+			createdAt: "2026-11-20",
+			image: "https://cdn.tentui.com/images/components/live-save-status?v=1",
+			video: "https://cdn.tentui.com/videos/components/live-save-status?v=1",
+		},
+		docs: "https://tentui.com/components/live-save-status",
+	},
+	{
 		name: "morph-dialog",
 		type: "registry:component",
 		title: "Morph Dialog",

@@ -4,6 +4,34 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "live-save-status-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("live-save-status")],
+		files: [
+			{
+				path: "examples/live-save-status-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-64 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "live-save-status-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("live-save-status")],
+		files: [
+			{
+				path: "examples/live-save-status-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			demoClassName: "min-h-96 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "morph-dialog-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("morph-dialog")],

@@ -8,6 +8,7 @@ import { ComponentCaptureStage } from "@/components/capture/component-capture-st
 import { FluidTooltipCapture } from "@/components/capture/fluid-tooltip-capture";
 import { InkFilterBarCapture } from "@/components/capture/ink-filter-bar-capture";
 import { LiquidGlassMenuCapture } from "@/components/capture/liquid-glass-menu-capture";
+import { LiveSaveStatusCapture } from "@/components/capture/live-save-status-capture";
 import { MorphDialogCapture } from "@/components/capture/morph-dialog-capture";
 import { MorphLightboxCapture } from "@/components/capture/morph-lightbox-capture";
 import { PromptChipInputCapture } from "@/components/capture/prompt-chip-input-capture";
@@ -39,6 +40,7 @@ const captureScenes: Record<string, ComponentType> = {
 	"morph-lightbox": MorphLightboxCapture,
 	"prompt-chip-input": PromptChipInputCapture,
 	"liquid-glass-menu": LiquidGlassMenuCapture,
+	"live-save-status": LiveSaveStatusCapture,
 	"scroll-accordion": ScrollAccordionCapture,
 };
 
