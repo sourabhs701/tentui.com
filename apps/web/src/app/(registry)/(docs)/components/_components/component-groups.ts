@@ -42,6 +42,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"number-stepper",
 			"otp-field",
 			"prompt-chip-input",
+			"range-span",
 			"rotary-knob",
 			"star-rating",
 			"tick-ruler",

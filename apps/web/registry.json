@@ -463,6 +463,34 @@
       "type": "registry:block"
     },
     {
+      "name": "range-span",
+      "title": "Range Span",
+      "description": "A two-handle range control with a stretchy selected fill, draggable span panning, rubber-band limits, and live min and max labels that merge before colliding.",
+      "dependencies": [
+        "@number-flow/react",
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/range-span/range-span.tsx",
+          "type": "registry:component",
+          "target": "@components/range-span.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-20",
+        "image": "https://cdn.tentui.com/images/components/range-span?v=1",
+        "video": "https://cdn.tentui.com/videos/components/range-span?v=1"
+      },
+      "docs": "https://tentui.com/components/range-span",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "variable-font-hover",
       "title": "Variable Font Hover",
       "description": "Typography whose weight, width, or custom OpenType axes swell smoothly toward the pointer on per-glyph springs, then ease back to rest with zero layout shift while keeping the text real and selectable.",
