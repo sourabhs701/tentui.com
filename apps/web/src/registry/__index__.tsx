@@ -293,6 +293,24 @@ export const Index = {
 		categories: ["typography"],
 		meta: {"createdAt":"2026-11-20","image":"https://cdn.tentui.com/images/components/variable-font-hover?v=1","video":"https://cdn.tentui.com/videos/components/variable-font-hover?v=1"},
 	},
+	"before-after-compare": {
+		name: "before-after-compare",
+		title: "Before After Compare",
+		description: "A draggable comparison slider that reveals one image or live UI theme over another with hardware-accelerated clip-path, gentle release physics, and full keyboard and touch support.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/before-after-compare/before-after-compare.tsx","type":"registry:component","target":"@components/before-after-compare.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/before-after-compare/before-after-compare")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for before-after-compare");
+			}
+			return { default: module.default };
+		}),
+		categories: ["media"],
+		meta: {"createdAt":"2026-11-20","image":"https://cdn.tentui.com/images/components/before-after-compare?v=1","video":"https://cdn.tentui.com/videos/components/before-after-compare?v=1"},
+	},
 	"morph-dialog": {
 		name: "morph-dialog",
 		title: "Morph Dialog",
@@ -1066,6 +1084,42 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"previewClassName":"min-h-[34rem] place-items-center content-center px-4"},
+	},
+	"before-after-compare-preview": {
+		name: "before-after-compare-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/before-after-compare-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/before-after-compare-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for before-after-compare-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 place-items-center content-center px-4"},
+	},
+	"before-after-compare-demo": {
+		name: "before-after-compare-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/before-after-compare-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/before-after-compare-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for before-after-compare-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 place-items-center content-center px-4"},
 	},
 	"morph-dialog-preview": {
 		name: "morph-dialog-preview",

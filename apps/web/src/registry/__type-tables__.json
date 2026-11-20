@@ -753,6 +753,397 @@
 			]
 		}
 	],
+	"src/registry/components/before-after-compare/before-after-compare.tsx#BeforeAfterCompareClassNames#": [
+		{
+			"id": "before-after-compare.tsx-BeforeAfterCompareClassNames",
+			"name": "BeforeAfterCompareClassNames",
+			"description": "",
+			"entries": [
+				{
+					"name": "stage",
+					"description": "Clipped inner viewport frame wrapping both compared layers.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "before",
+					"description": "Clipped top comparison layer (`before`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "after",
+					"description": "Unclipped base comparison layer (`after`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "divider",
+					"description": "Hairline divider centered along the split boundary.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "handle",
+					"description": "Interactive `role=\"slider\"` handle wrapper.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "beforeLabel",
+					"description": "Corner badge for the `before` layer.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "afterLabel",
+					"description": "Corner badge for the `after` layer.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/before-after-compare/before-after-compare.tsx#BeforeAfterCompareHandleRenderState#": [
+		{
+			"id": "before-after-compare.tsx-BeforeAfterCompareHandleRenderState",
+			"name": "BeforeAfterCompareHandleRenderState",
+			"description": "",
+			"entries": [
+				{
+					"name": "position",
+					"description": "Current split position from 0 to 100.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "orientation",
+					"description": "Active slider orientation.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "BeforeAfterCompareOrientation",
+					"simplifiedType": "BeforeAfterCompareOrientation",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "isDragging",
+					"description": "Whether the user is actively dragging the comparison handle or stage.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean",
+					"simplifiedType": "union",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/before-after-compare/before-after-compare.tsx#BeforeAfterCompareProps#": [
+		{
+			"id": "before-after-compare.tsx-BeforeAfterCompareProps",
+			"name": "BeforeAfterCompareProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "before",
+					"description": "Content revealed from the start edge (left in horizontal, top in vertical).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "after",
+					"description": "Base content revealed from the end edge (right in horizontal, bottom in vertical).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "value",
+					"description": "Controlled split position from 0 to 100.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultValue",
+					"description": "Initial split position when uncontrolled. Defaults to 50.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onValueChange",
+					"description": "Called continuously when the split position changes.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((value: number) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onValueCommit",
+					"description": "Called once a drag settles, a click-to-jump lands, or a keyboard change finishes.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((value: number) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "orientation",
+					"description": "Split direction. Defaults to `\"horizontal\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "BeforeAfterCompareOrientation | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "beforeLabel",
+					"description": "Optional corner badge rendered on the `before` side.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "afterLabel",
+					"description": "Optional corner badge rendered on the `after` side.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "handle",
+					"description": "Custom handle node or render prop inside the accessible `role=\"slider\"` control.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode | ((state: BeforeAfterCompareHandleRenderState) => ReactNode)",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "step",
+					"description": "Keyboard arrow increment in percentage points. Defaults to 5.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "largeStep",
+					"description": "Large step for `Shift` + Arrow and `PageUp` / `PageDown`. Defaults to 10.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "label",
+					"description": "Accessible label applied to the `role=\"slider\"` handle when `aria-label` is omitted.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "formatValueText",
+					"description": "Formats the `aria-valuetext` announced by screen readers.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((value: number) => string) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "Disables pointer and keyboard interaction.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "classNames",
+					"description": "Optional class overrides for inner slots.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "BeforeAfterCompareClassNames | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/brand-context-menu/brand-context-menu.tsx#BrandContextMenuProps#": [
 		{
 			"id": "brand-context-menu.tsx-BrandContextMenuProps",

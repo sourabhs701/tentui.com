@@ -83,6 +83,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"Annotate and decode text, reveal content, and add pointer-reactive visuals.",
 		components: [
 			"ascii-decode-text",
+			"before-after-compare",
 			"bubble-wrap",
 			"email-dock",
 			"interactive-sprite",

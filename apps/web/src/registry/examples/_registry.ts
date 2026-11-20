@@ -32,6 +32,34 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "before-after-compare-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("before-after-compare")],
+		files: [
+			{
+				path: "examples/before-after-compare-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "before-after-compare-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("before-after-compare")],
+		files: [
+			{
+				path: "examples/before-after-compare-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "morph-dialog-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("morph-dialog")],
