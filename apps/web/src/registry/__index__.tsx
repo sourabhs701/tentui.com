@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"chart-brush": {
+		name: "chart-brush",
+		title: "Chart Brush",
+		description: "An area or line chart with two draggable handles for picking a time range. The selected stretch is inked in while the rest fades back, the change rolls in the header, and every point the handles cross ticks.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/chart-brush/chart-brush.tsx","type":"registry:component","target":"@components/chart-brush.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/chart-brush/chart-brush")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for chart-brush");
+			}
+			return { default: module.default };
+		}),
+		categories: ["charts"],
+		meta: {"createdAt":"2026-11-20","image":"https://cdn.tentui.com/images/components/chart-brush?v=1","video":"https://cdn.tentui.com/videos/components/chart-brush?v=1"},
+	},
 	"variable-font-hover": {
 		name: "variable-font-hover",
 		title: "Variable Font Hover",
@@ -1048,6 +1066,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"chart-brush-preview": {
+		name: "chart-brush-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/chart-brush-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/chart-brush-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for chart-brush-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 place-items-center content-center px-4"},
+	},
+	"chart-brush-demo": {
+		name: "chart-brush-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/chart-brush-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/chart-brush-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for chart-brush-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"demoClassName":"min-h-96 place-items-center content-center px-4"},
 	},
 	"variable-font-hover-preview": {
 		name: "variable-font-hover-preview",
