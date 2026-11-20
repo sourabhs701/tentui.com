@@ -56,7 +56,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
 	const blockCategoriesUrls = blockCategories.map((category) => ({
 		url: `${SITE_INFO.url}/blocks/${category.name}`,
-		lastModified: getBlocksUpdatedAt(category.name),
+		lastModified: latestDate([
+			category.updatedAt,
+			getBlocksUpdatedAt(category.name),
+		]),
 	}));
 
 	const componentsUpdatedAt = latestDate(

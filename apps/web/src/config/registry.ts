@@ -5,67 +5,90 @@ export const registryConfig = {
 	namespaceUrl: "https://tentui.com/r/{name}.json",
 } as const;
 
+/**
+ * Block category pages (`/blocks/<name>`). `noun` fills the answer-first intro
+ * and FAQ ("shadcn <noun> blocks"), and `updatedAt` is the last edit to the
+ * page copy, which the sitemap `lastmod` takes alongside the blocks' dates.
+ */
 export const blockCategories = [
 	{
 		name: "testimonials",
 		title: "Testimonials",
-		seoTitle: "Shadcn Testimonial Blocks for React Landing Pages",
+		noun: "testimonial",
+		seoTitle: "shadcn Testimonial Blocks for React & Next.js",
 		heading: "Shadcn testimonial blocks",
 		description:
-			"Testimonial sections for credible, visually engaging customer proof.",
+			"Free, source-available shadcn testimonial block for React and Next.js: a copy-paste shadcn/ui + Tailwind CSS mosaic of live X posts with fallbacks.",
+		updatedAt: "2026-11-20",
 	},
 	{
 		name: "cta",
 		title: "CTA",
-		seoTitle: "Shadcn CTA Blocks for React Landing Pages",
+		noun: "CTA",
+		seoTitle: "shadcn CTA Section Blocks for React & Next.js",
 		heading: "Shadcn CTA blocks",
-		description: "Call-to-action sections that turn interest into momentum.",
+		description:
+			"Free, source-available shadcn CTA block for React and Next.js: a copy-paste shadcn/ui + Tailwind CSS call-to-action with a wide landscape image.",
+		updatedAt: "2026-11-20",
 	},
 	{
 		name: "legal",
 		title: "Legal",
-		seoTitle: "Shadcn Legal Page Blocks for Privacy Policies",
+		noun: "legal page",
+		seoTitle: "shadcn Legal Page Blocks for Privacy & Terms",
 		heading: "Shadcn legal page blocks",
 		description:
-			"Legal pages for presenting policies, terms, licenses, and notices clearly.",
+			"Free, source-available shadcn legal page block for Next.js: a copy-paste App Router route group for privacy policies, terms, and notices.",
+		updatedAt: "2026-11-20",
 	},
 	{
 		name: "404",
 		title: "404 Pages",
-		seoTitle: "Shadcn 404 Page Blocks for React and Next.js",
+		noun: "404 page",
+		seoTitle: "shadcn 404 Page Blocks for React & Next.js",
 		heading: "Shadcn 404 page blocks",
 		description:
-			"404 pages that turn a dead end into a useful, memorable way back.",
+			"Free, source-available shadcn 404 page block for React and Next.js: a copy-paste shadcn/ui + Tailwind CSS not-found page with editable vector controls.",
+		updatedAt: "2026-11-20",
 	},
 	{
 		name: "footer",
 		title: "Footer",
-		seoTitle: "Shadcn Footer Blocks for React and Next.js Sites",
+		noun: "footer",
+		seoTitle: "shadcn Footer Blocks for React & Next.js",
 		heading: "Shadcn footer blocks",
 		description:
-			"Footer sections for product navigation, trust, and conversion.",
+			"Free, source-available shadcn footer blocks for React and Next.js. Copy-paste shadcn/ui + Tailwind CSS footers with link columns, newsletter signup, and CTAs.",
+		updatedAt: "2026-11-20",
 	},
 	{
 		name: "pricing",
 		title: "Pricing",
-		seoTitle: "Shadcn Pricing Section Blocks for React SaaS Pages",
+		noun: "pricing",
+		seoTitle: "shadcn Pricing Section Blocks for React & Next.js",
 		heading: "Shadcn pricing blocks",
 		description:
-			"Pricing sections for clear plan selection and feature comparison.",
+			"Free, source-available shadcn pricing blocks for React and Next.js. Copy-paste shadcn/ui + Tailwind CSS pricing sections with billing toggles and plan tabs.",
+		updatedAt: "2026-11-20",
 	},
 	{
 		name: "faq",
 		title: "FAQ",
-		seoTitle: "Shadcn FAQ Section Blocks for React and Tailwind",
+		noun: "FAQ",
+		seoTitle: "shadcn FAQ Section Blocks for React & Next.js",
 		heading: "Shadcn FAQ blocks",
 		description:
-			"FAQ sections for clear, approachable answers to common customer questions.",
+			"Free, source-available shadcn FAQ blocks for React and Next.js. Copy-paste shadcn/ui + Tailwind CSS FAQ sections built on the shadcn/ui accordion.",
+		updatedAt: "2026-11-20",
 	},
 	{
 		name: "hero",
 		title: "Hero",
-		seoTitle: "Shadcn Hero Section Blocks for React Landing Pages",
+		noun: "hero section",
+		seoTitle: "shadcn Hero Section Blocks for React & Next.js",
 		heading: "Shadcn hero section blocks",
-		description: "Hero sections for polished, production-ready landing pages.",
+		description:
+			"Free, source-available shadcn hero section blocks for React and Next.js. Copy-paste shadcn/ui + Tailwind CSS animated heroes with CTAs and a dashboard preview.",
+		updatedAt: "2026-11-20",
 	},
 ] as const;

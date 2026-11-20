@@ -1,3 +1,4 @@
+import { blockCategories } from "@/config/registry";
 import { SITE_INFO } from "@/config/site";
 import { getAllBlocks } from "@/lib/blocks";
 import { getBlogPosts, getComponentDocs, getDocs } from "@/lib/documents";
@@ -32,6 +33,10 @@ ${docs.map((item) => `- [${item.metadata.title}](${SITE_INFO.url}/docs/${item.sl
 ## Components
 
 ${components.map((item) => `- [${item.metadata.title}](${SITE_INFO.url}/components/${item.slug}.mdx): ${item.metadata.description} Install: \`npx shadcn@latest add ${getRegistryItemNamespace(item.slug)}\``).join("\n")}
+
+## Block categories
+
+${blockCategories.map((category) => `- [${category.heading}](${SITE_INFO.url}/blocks/${category.name}): ${category.description}`).join("\n")}
 
 ## Blocks
 
