@@ -2,6 +2,30 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "before-after-compare",
+		type: "registry:component",
+		title: "Before After Compare",
+		description:
+			"A draggable comparison slider that reveals one image or live UI theme over another with hardware-accelerated clip-path, gentle release physics, and full keyboard and touch support.",
+		dependencies: ["motion"],
+		files: [
+			{
+				path: "components/before-after-compare/before-after-compare.tsx",
+				type: "registry:component",
+				target: "@components/before-after-compare.tsx",
+			},
+		],
+		categories: ["media"],
+		meta: {
+			createdAt: "2026-11-20",
+			image:
+				"https://cdn.tentui.com/images/components/before-after-compare?v=1",
+			video:
+				"https://cdn.tentui.com/videos/components/before-after-compare?v=1",
+		},
+		docs: "https://tentui.com/components/before-after-compare",
+	},
+	{
 		name: "morph-dialog",
 		type: "registry:component",
 		title: "Morph Dialog",
