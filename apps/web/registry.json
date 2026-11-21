@@ -463,6 +463,35 @@
       "type": "registry:block"
     },
     {
+      "name": "chart-brush",
+      "title": "Chart Brush",
+      "description": "An area or line chart with two draggable handles for picking a time range. The selected stretch is inked in while the rest fades back, the change rolls in the header, and every point the handles cross ticks.",
+      "dependencies": [
+        "@number-flow/react",
+        "@rexa-developer/tiks",
+        "lucide-react",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/chart-brush/chart-brush.tsx",
+          "type": "registry:component",
+          "target": "@components/chart-brush.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-20",
+        "image": "https://cdn.tentui.com/images/components/chart-brush?v=1",
+        "video": "https://cdn.tentui.com/videos/components/chart-brush?v=1"
+      },
+      "docs": "https://tentui.com/components/chart-brush",
+      "categories": [
+        "charts"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "variable-font-hover",
       "title": "Variable Font Hover",
       "description": "Typography whose weight, width, or custom OpenType axes swell smoothly toward the pointer on per-glyph springs, then ease back to rest with zero layout shift while keeping the text real and selectable.",

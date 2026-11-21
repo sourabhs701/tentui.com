@@ -33,6 +33,11 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"fluid-tooltip": { zoom: 1.7, className: "pt-[58px]" },
 	"brand-context-menu": { zoom: 2 },
 	"bubble-wrap": { zoom: 1.2 },
+	// The docs preview's min-h-96 is taller than the frame; center the chart instead.
+	"chart-brush": {
+		zoom: 1.05,
+		className: "place-items-center content-center px-6",
+	},
 	"hold-to-confirm": { zoom: 1.6 },
 	"ink-filter-bar": { zoom: 1.3 },
 	// The preview is a tall column; scaled down so all three capsules fit.
