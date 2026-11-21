@@ -1,0 +1,280 @@
+---
+title: Range Span
+description: A React two-handle range slider for shadcn/ui with a stretchy selected fill, draggable span panning, rubber-band limits, and collision-free live min and max labels.
+seoTitle: React Range Span Slider Component for shadcn/ui
+seoDescription: Range Span is a React dual-thumb range slider for shadcn/ui with an elastic selected fill, span dragging, rubber-band boundaries, and auto-merging live min and max labels.
+createdAt: 2026-11-20
+updatedAt: 2026-11-20
+---
+
+<ComponentPreview name="range-span-preview" />
+
+Range Span is a React two-handle range slider for shadcn/ui with a stretchy
+selected fill, draggable span panning, and live min and max value labels that
+merge automatically when handles converge. TentUI is free and source-available:
+drag either thumb, pan the selected bar as one interval, pull past either limit
+for rubber-band feedback, or step through values with a keyboard.
+
+## Example
+
+<ComponentPreview name="range-span-demo" />
+
+## Features
+
+- Stretches like rubber past `min` and `max`: dragging a handle or panning the
+  selected span past either limit extends the track and fill with square-root
+  resistance up to `maxStretch` px, then springs back cleanly on release.
+- Pushes back softly at `minGap`: pulling one handle into the other applies a
+  subtle damped resistance nudge and muted thunk instead of feeling frozen.
+- Drags the whole interval at once: with `draggableSpan` (on by default), grab
+  the selected fill between handles to pan the `[min, max]` window while keeping
+  its width constant.
+- Keeps live min and max labels legible at every width: `ResizeObserver` tracks
+  both floating pills, clamps them inside the track bounds, and merges them into
+  one centered `min – max` pill with hysteresis before they ever collide.
+- Handles overlapped thumbs cleanly: when `low === high` (even at `0` or `100`),
+  dragging left immediately claims the lower handle and dragging right claims
+  the upper handle so neither thumb can ever get trapped.
+- Drives handles, fill `clip-path`, track stretch, and pill coordinates through
+  `motion/react` `MotionValue`s on GPU-composited transforms, rolling unformatted
+  digits with NumberFlow and playing optional tiks sound and haptics.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/range-span
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @number-flow/react @rexa-developer/tiks motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="range-span" title="components/range-span.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { RangeSpan } from "@/components/range-span";
+```
+
+```tsx
+<RangeSpan
+  label="Price range"
+  min={0}
+  max={600}
+  step={10}
+  defaultValue={[140, 440]}
+  format={(value) => `$${value}`}
+/>
+```
+
+### Controlled state
+
+Pass a `[min, max]` tuple to `value` along with `onValueChange` to drive the
+range from React state or preset buttons. External updates glide smoothly on a
+spring, while `onValueCommit` fires once a drag, click, mark selection, or key
+press lands. While a drag is active, the pointer takes precedence over `value`
+and reconciles on release.
+
+```tsx
+const [span, setSpan] = useState<[number, number]>([25, 75]);
+
+<RangeSpan
+  label="Exposure window"
+  value={span}
+  onValueChange={setSpan}
+  onValueCommit={saveWindow}
+  step={5}
+/>
+```
+
+### Minimum gap and marks
+
+Set `minGap` to prevent the handles from getting closer than a given distance.
+Pass `marks` as numbers or `{ value, label }` entries: handles gently stick to
+marks within 6 px while dragging, and clicking a mark label moves the nearest
+handle there.
+
+```tsx
+<RangeSpan
+  label="Budget"
+  min={0}
+  max={1000}
+  step={25}
+  minGap={50}
+  defaultValue={[200, 750]}
+  marks={[
+    { value: 0, label: "$0" },
+    { value: 250, label: "$250" },
+    { value: 500, label: "$500" },
+    { value: 750, label: "$750" },
+    { value: 1000, label: "$1k" },
+  ]}
+  format={(value) => `$${value}`}
+/>
+```
+
+### Live label modes
+
+Choose `liveLabels` to match your layout density:
+
+- `"floating"` (default): renders live min and max pills directly above each
+  handle and merges them automatically when handles converge.
+- `"auto"`: shows the live `min – max` readout in the header row at rest and
+  reveals floating pills on hover, keyboard focus, or drag.
+- `"header"`: keeps the live min and max readout exclusively in the header row
+  with no floating pills.
+
+```tsx
+<RangeSpan
+  label="Active hours"
+  liveLabels="auto"
+  min={0}
+  max={24}
+  step={0.5}
+  minGap={2}
+  defaultValue={[9, 17]}
+  format={(v) => `${String(Math.floor(v)).padStart(2, "0")}:${v % 1 ? "30" : "00"}`}
+/>
+```
+
+### Native forms
+
+Pass `name` to render two hidden `<input type="hidden" name={name} />` elements
+for the lower and upper bounds, readable via `formData.getAll(name)` in native
+forms or Server Actions.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Drag a handle | Moves that handle 1:1 from the exact point grabbed |
+| Drag the selected fill | Pans the entire `[min, max]` span while preserving its width (`draggableSpan`) |
+| Click or tap track | Jumps the nearest handle to that point and begins dragging |
+| Drag past `min` or `max` | Stretches the track and fill with resistance; springs back on release |
+| Push into `minGap` | Applies subtle resistance nudge and muted thunk without crossing |
+| Click a mark label | Moves the nearest handle to that mark |
+| `→` / `↑` | Increases the focused handle by `step` |
+| `←` / `↓` | Decreases the focused handle by `step` |
+| `Shift` + arrow, `PageUp` / `PageDown` | Moves the focused handle by `largeStep` (defaults to a tenth of the range) |
+| `Home` / `End` | Jumps the focused handle to its legal lower or upper limit |
+
+On touch screens the root uses `touch-action: pan-y` and waits for horizontal
+travel before claiming a drag, so vertical page scrolling is never interrupted.
+Right-to-left layouts mirror drag coordinates, stretch direction, and arrow
+keys. Multi-touch second fingers are ignored while a drag is active.
+
+## Sound and haptics
+
+Crossing a step or mark plays a soft tiks click paired with a `selection`
+haptic, throttled to one cue per 35 ms so fast sweeps never buzz. Ranges with
+more than 40 steps tick every 10% instead of every step, and when `marks` are
+provided only marks tick. Reaching `min` or `max` plays a slightly brighter
+click, and pulling past an outer limit or pushing into `minGap` plays a single
+muted thunk with a `rigid` haptic.
+
+Sound and haptics fire only on user interaction — never on initial mount,
+server rendering, controlled prop updates, or while the tab is hidden. Pass
+`sound={false}` or `haptics={false}` to turn each off independently.
+
+## Accessibility
+
+Range Span wraps both handles in `role="group"` labelled by the visible `label`
+(or visually hidden via `hideLabel`). Each handle is an independent
+`role="slider"` button with `aria-label` (defaulting to `"Minimum <label>"` and
+`"Maximum <label>"`, customizable via `minLabel` and `maxLabel`), dynamic
+`aria-valuemin` and `aria-valuemax` bounds respecting `minGap`, `aria-valuenow`,
+and `aria-valuetext` formatted through `format`.
+
+Both handles provide a 44×44 px hit target and render in an unclipped sibling
+layer so the `focus-visible` ring is never clipped at `0%` or `100%`. Keyboard
+adjustments update immediately with zero animation lag.
+
+With `prefers-reduced-motion: reduce`, track stretching, thickening springs,
+collision nudges, spring glides, and rolling digits are disabled in favor of
+direct updates while keeping subtle opacity and color feedback. With
+`prefers-reduced-transparency: reduce`, floating pills drop backdrop blur for
+opaque backgrounds.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/range-span/range-span.tsx"
+  name="RangeSpanProps"
+/>
+
+### RangeSpanMark
+
+<AutoTypeTable
+  path="src/registry/components/range-span/range-span.tsx"
+  name="RangeSpanMark"
+/>
+
+## FAQ
+
+### How do I install the Range Span component with shadcn?
+
+Run `npx shadcn@latest add @tentui/range-span` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/range-span.json` directly. The CLI
+copies `range-span.tsx` into your project and installs `motion`,
+`@number-flow/react`, `web-haptics`, and `@rexa-developer/tiks`.
+
+### How do the floating min and max labels avoid overlapping?
+
+Range Span observes the track and label widths with `ResizeObserver` and clamps
+each pill within the track bounds so neither overflows at the edges. When the
+two pills get within 6 px of each other, they crossfade into a single centered
+`min – max` pill and split back apart once they clear 12 px of separation.
+
+### Is Range Span keyboard and screen-reader accessible?
+
+Yes. It follows the WAI-ARIA multi-thumb slider pattern with a `role="group"`
+wrapper and two independent `role="slider"` handles named by `minLabel` and
+`maxLabel` (defaulting to `"Minimum <label>"` and `"Maximum <label>"`). Both
+handles support arrow keys, `Shift` + arrows, `PageUp`, `PageDown`, `Home`, and
+`End`, with instant keyboard updates and unclipped `focus-visible` rings.
+
+### How do I use Range Span with React Hook Form or native forms?
+
+Pass `field.value` and `field.onChange` from a React Hook Form `Controller` to
+`value` and `onValueChange`, or pass `onValueCommit` to update form state only
+when a drag or key press settles. For native forms or Server Actions, pass
+`name` to emit two hidden inputs for the lower and upper bounds.
+
+### Can I disable span panning, rubber-band stretch, or sound and haptics?
+
+Yes. Pass `draggableSpan={false}` to turn off dragging the selected fill bar,
+`maxStretch={0}` to disable rubber-band overdrag, and `sound={false}` or
+`haptics={false}` to turn off audio and haptic cues independently.
+
+### Is the Range Span component free to use?
+
+Yes. Range Span is free and source-available: the shadcn CLI copies its source
+into your project, and you can use it in unlimited personal and client projects
+under the [TentUI License](/license). The license doesn't allow redistributing
+or reselling the component itself.
