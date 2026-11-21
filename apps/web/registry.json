@@ -463,6 +463,32 @@
       "type": "registry:block"
     },
     {
+      "name": "pagination-rail",
+      "title": "Pagination Rail",
+      "description": "Page numbers on a constant-width rail with a spring-driven sliding current-page pill, edge-masked peeks into hidden pages, interactive peek trays, and horizontal drag scrubbing.",
+      "dependencies": [
+        "lucide-react",
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/pagination-rail/pagination-rail.tsx",
+          "type": "registry:component",
+          "target": "@components/pagination-rail.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-21",
+        "image": "https://cdn.tentui.com/images/components/pagination-rail?v=1",
+        "video": "https://cdn.tentui.com/videos/components/pagination-rail?v=1"
+      },
+      "docs": "https://tentui.com/components/pagination-rail",
+      "categories": [
+        "navigation"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "variable-font-hover",
       "title": "Variable Font Hover",
       "description": "Typography whose weight, width, or custom OpenType axes swell smoothly toward the pointer on per-glyph springs, then ease back to rest with zero layout shift while keeping the text real and selectable.",
