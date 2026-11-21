@@ -854,6 +854,44 @@ export const scenarios = {
 		},
 	},
 
+	"pagination-rail": {
+		rest: { x: 420, y: 315 },
+		async run(d) {
+			const pageBtn = (n) => `[data-pagination-page="${n}"]`;
+			const endPeek = '[data-peek-side="end"]';
+			const trayPage = (n) =>
+				`[data-slot="pagination-rail-peek-page"]:has-text("${n}")`;
+
+			await d.wait(450);
+			// Hover page 4 so the floating preview card appears, then slide the pill over.
+			await d.move(pageBtn(4), 620, { x: 0.5, y: 0.55 });
+			await d.wait(320);
+			await d.click();
+			await d.wait(650);
+
+			// Rest on the edge-masked peek slot to open the Peek Tray into upcoming pages.
+			await d.move(endPeek, 520, { x: 0.5, y: 0.55 });
+			await d.wait(500);
+			// Glide up into the tray, preview page 8, and jump straight to it.
+			await d.move(trayPage(8), 420, { x: 0.5, y: 0.55 });
+			await d.wait(480);
+			await d.click();
+			await d.wait(780);
+
+			// Slide back to page 1, then settle onto page 2 so the clip loops on frame 1.
+			await d.move(pageBtn(1), 580, { x: 0.5, y: 0.55 });
+			await d.wait(180);
+			await d.click();
+			await d.wait(520);
+			await d.move(pageBtn(2), 360, { x: 0.5, y: 0.55 });
+			await d.wait(160);
+			await d.click();
+			await d.wait(280);
+			await d.move(d.rest, 620);
+			await d.wait(500);
+		},
+	},
+
 	"variable-font-hover": {
 		rest: { x: 400, y: 320 },
 		async run(d) {
