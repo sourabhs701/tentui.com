@@ -591,22 +591,25 @@ export function PaginationRail({
 
 		const rootRect = rootEl.getBoundingClientRect();
 		const triggerRect = triggerEl.getBoundingClientRect();
-		const anchorX = triggerRect.left - rootRect.left + triggerRect.width / 2;
+		const scale =
+			rootEl.offsetWidth > 0 ? rootRect.width / rootEl.offsetWidth : 1;
+		const anchorX =
+			(triggerRect.left - rootRect.left + triggerRect.width / 2) / scale;
 		setTrayAnchorX(anchorX);
 
 		const trayEl = trayRef.current;
 		if (!trayEl) return;
 
-		const trayWidth = trayEl.offsetWidth;
+		const trayWidth = trayEl.offsetWidth * scale;
 		const viewportWidth = window.innerWidth;
-		const idealLeft = rootRect.left + anchorX - trayWidth / 2;
+		const idealLeft = rootRect.left + anchorX * scale - trayWidth / 2;
 		const minLeft = VIEWPORT_MARGIN_PX;
 		const maxLeft = Math.max(
 			minLeft,
 			viewportWidth - VIEWPORT_MARGIN_PX - trayWidth,
 		);
 		const clampedLeft = Math.min(maxLeft, Math.max(minLeft, idealLeft));
-		setTrayShiftX(clampedLeft - idealLeft);
+		setTrayShiftX((clampedLeft - idealLeft) / scale);
 	}, [activePeekItem, peekPageOffset, peekTrayHoveredPage, size]);
 
 	// Position and viewport-clamp the optional `renderPagePeek` floating card.
@@ -629,16 +632,19 @@ export function PaginationRail({
 		if (!rootEl || !cardEl) return;
 
 		const rootRect = rootEl.getBoundingClientRect();
-		const cardWidth = cardEl.offsetWidth;
+		const scale =
+			rootEl.offsetWidth > 0 ? rootRect.width / rootEl.offsetWidth : 1;
+		const cardWidth = cardEl.offsetWidth * scale;
 		const viewportWidth = window.innerWidth;
-		const idealLeft = rootRect.left + cardTarget.centerX - cardWidth / 2;
+		const idealLeft =
+			rootRect.left + cardTarget.centerX * scale - cardWidth / 2;
 		const minLeft = VIEWPORT_MARGIN_PX;
 		const maxLeft = Math.max(
 			minLeft,
 			viewportWidth - VIEWPORT_MARGIN_PX - cardWidth,
 		);
 		const clampedLeft = Math.min(maxLeft, Math.max(minLeft, idealLeft));
-		setCardShiftX(clampedLeft - idealLeft);
+		setCardShiftX((clampedLeft - idealLeft) / scale);
 	}, [cardTarget, renderPagePeek, openPeekId, cardX, shouldReduceMotion]);
 
 	// Fine-pointer hover highlight helper.
@@ -690,9 +696,12 @@ export function PaginationRail({
 			) {
 				return;
 			}
-			const rootRect = rootRef.current.getBoundingClientRect();
+			const rootEl = rootRef.current;
+			const rootRect = rootEl.getBoundingClientRect();
 			const elRect = el.getBoundingClientRect();
-			const centerX = elRect.left - rootRect.left + elRect.width / 2;
+			const scale =
+				rootEl.offsetWidth > 0 ? rootRect.width / rootEl.offsetWidth : 1;
+			const centerX = (elRect.left - rootRect.left + elRect.width / 2) / scale;
 			setCardTarget({ key, page: targetPage, centerX });
 		},
 		[renderPagePeek, disabled, openPeekId],
@@ -1626,48 +1635,51 @@ export function PaginationRail({
 				<AnimatePresence>
 					{cardPageState && renderPagePeek && !openPeekId ? (
 						<motion.div
-							animate={{ opacity: 1, scale: 1, y: 0 }}
 							className={cn(
 								"pointer-events-none absolute left-0 z-30",
 								popoverPositionClass,
-								popoverOriginClass,
 							)}
-							exit={{
-								opacity: 0,
-								scale: shouldReduceMotion ? 1 : 0.96,
-								y: shouldReduceMotion ? 0 : popoverEnterY,
-								transition: {
-									duration: shouldReduceMotion ? 0 : 0.1,
-									ease: POPOVER_EASE,
-								},
-							}}
-							initial={{
-								opacity: 0,
-								scale: shouldReduceMotion ? 1 : 0.96,
-								y: shouldReduceMotion ? 0 : popoverEnterY,
-							}}
 							key="page-peek-card"
 							style={{
 								x: cardX,
 							}}
-							transition={{
-								duration: shouldReduceMotion ? 0 : 0.15,
-								ease: POPOVER_EASE,
-							}}
 						>
-							<div
-								className={cn(
-									"w-max max-w-[240px] rounded-xl border border-border/80 bg-popover/95 px-2.5 py-1.5 text-popover-foreground text-xs shadow-black/[0.08] shadow-md backdrop-blur-md dark:border-border dark:bg-popover/95 dark:shadow-black/35 [@media(prefers-reduced-transparency:reduce)]:bg-popover [@media(prefers-reduced-transparency:reduce)]:backdrop-blur-none",
-									classNames?.peekCard,
-								)}
-								data-slot="pagination-rail-peek-card"
-								ref={cardRef}
-								style={{
-									transform: `translateX(calc(-50% + ${cardShiftX}px))`,
+							<motion.div
+								animate={{ opacity: 1, scale: 1, y: 0 }}
+								className={popoverOriginClass}
+								exit={{
+									opacity: 0,
+									scale: shouldReduceMotion ? 1 : 0.96,
+									y: shouldReduceMotion ? 0 : popoverEnterY,
+									transition: {
+										duration: shouldReduceMotion ? 0 : 0.1,
+										ease: POPOVER_EASE,
+									},
+								}}
+								initial={{
+									opacity: 0,
+									scale: shouldReduceMotion ? 1 : 0.96,
+									y: shouldReduceMotion ? 0 : popoverEnterY,
+								}}
+								transition={{
+									duration: shouldReduceMotion ? 0 : 0.15,
+									ease: POPOVER_EASE,
 								}}
 							>
-								{renderPagePeek(cardPageState)}
-							</div>
+								<div
+									className={cn(
+										"w-max max-w-[240px] rounded-xl border border-border/80 bg-popover/95 px-2.5 py-1.5 text-popover-foreground text-xs shadow-black/[0.08] shadow-md backdrop-blur-md dark:border-border dark:bg-popover/95 dark:shadow-black/35 [@media(prefers-reduced-transparency:reduce)]:bg-popover [@media(prefers-reduced-transparency:reduce)]:backdrop-blur-none",
+										classNames?.peekCard,
+									)}
+									data-slot="pagination-rail-peek-card"
+									ref={cardRef}
+									style={{
+										transform: `translateX(calc(-50% + ${cardShiftX}px))`,
+									}}
+								>
+									{renderPagePeek(cardPageState)}
+								</div>
+							</motion.div>
 						</motion.div>
 					) : null}
 				</AnimatePresence>
