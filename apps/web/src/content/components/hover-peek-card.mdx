@@ -1,0 +1,282 @@
+---
+title: Hover Peek Card
+description: A React hover peek card component for shadcn/ui that lifts a rich preview card on pointer hover, keyboard focus, or touch long-press without opening a full dialog.
+seoTitle: React Hover Peek Card Component for shadcn/ui
+seoDescription: Hover Peek Card is a React preview card component for shadcn/ui with origin-aware spring elevation, safe-corridor hover bridges, group skip-delay handoffs, and touch long-press support.
+createdAt: 2026-11-21
+updatedAt: 2026-11-21
+---
+
+<ComponentPreview name="hover-peek-card-preview" />
+
+Hover Peek Card is a React hover and long-press preview card component for
+shadcn/ui that lifts rich context directly out of an inline link, pill, or
+mention without interrupting flow with a full modal dialog. TentUI is free and
+source-available: coordinate sibling cards with zero-delay handoffs, interact
+with quick actions inside the card over a safe hover bridge, and support touch
+long-press and keyboard focus out of the box.
+
+## Example
+
+<ComponentPreview name="hover-peek-card-demo" />
+
+## Features
+
+- Lifts from the trigger's exact anchor edge (`transform-origin` projected from
+  the trigger center onto the card) on a critically damped `motion/react` spring
+  with subtle blur materialization and a faster asymmetric exit.
+- Coordinates sibling triggers via `HoverPeekCardGroup` so gliding from one
+  mention or link to another skips the initial hover delay and hands off cleanly
+  without overlapping cards.
+- Combines an invisible gap bridge with safe-corridor pointer geometry so moving
+  diagonally from a compact trigger toward interactive actions inside the card
+  never drops the preview prematurely.
+- Supports first-class touch long-press (`420 ms` default, cancelled immediately
+  if the finger moves past `10 px` so scrolling stays native), suppressing the
+  underlying click on release and adding a light tap-outside dismiss scrim.
+- Auto-flips across viewport edges (`top`, `bottom`, `left`, `right`) and clamps
+  cleanly within `collisionPadding` on narrow mobile screens.
+- Ships three restrained surface variants (`elevated`, `glass`, `minimal`),
+  subtle spring-smoothed pointer tilt and specular sheen on desktop fine
+  pointers, and full `prefers-reduced-motion` and `prefers-reduced-transparency`
+  fallbacks.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/hover-peek-card
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="hover-peek-card"
+  title="components/hover-peek-card.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  HoverPeekCard,
+  HoverPeekCardContent,
+  HoverPeekCardDescription,
+  HoverPeekCardFooter,
+  HoverPeekCardGroup,
+  HoverPeekCardHeader,
+  HoverPeekCardMedia,
+  HoverPeekCardMeta,
+  HoverPeekCardTitle,
+  HoverPeekCardTrigger,
+} from "@/components/hover-peek-card";
+```
+
+Wrap a trigger and its floating content inside `HoverPeekCard`. Use the optional
+slot primitives (`HoverPeekCardMedia`, `HoverPeekCardHeader`,
+`HoverPeekCardTitle`, `HoverPeekCardDescription`, `HoverPeekCardMeta`,
+`HoverPeekCardFooter`) or render any custom JSX inside `HoverPeekCardContent`.
+
+```tsx
+<HoverPeekCard>
+  <HoverPeekCardTrigger>Edge Cache v3</HoverPeekCardTrigger>
+  <HoverPeekCardContent>
+    <HoverPeekCardHeader>
+      <HoverPeekCardTitle>Edge Cache v3</HoverPeekCardTitle>
+      <HoverPeekCardDescription>
+        Stale-while-revalidate across 34 regions with sub-12ms p95 invalidation.
+      </HoverPeekCardDescription>
+      <HoverPeekCardMeta>
+        <span>Live</span>
+        <span>&middot;</span>
+        <span>11.4 ms p95</span>
+      </HoverPeekCardMeta>
+    </HoverPeekCardHeader>
+  </HoverPeekCardContent>
+</HoverPeekCard>
+```
+
+### Coordinating sibling triggers
+
+Wrap adjacent mentions, links, or table cells in `HoverPeekCardGroup`. Once one
+card has opened, hovering a sibling trigger within `skipDelayDuration` opens the
+next card immediately without repeating the initial hover delay.
+
+```tsx
+<HoverPeekCardGroup openDelay={240} closeDelay={160} skipDelayDuration={350}>
+  <HoverPeekCard>
+    <HoverPeekCardTrigger>Release v2.14</HoverPeekCardTrigger>
+    <HoverPeekCardContent>...</HoverPeekCardContent>
+  </HoverPeekCard>
+  <HoverPeekCard>
+    <HoverPeekCardTrigger>Design Tokens</HoverPeekCardTrigger>
+    <HoverPeekCardContent>...</HoverPeekCardContent>
+  </HoverPeekCard>
+</HoverPeekCardGroup>
+```
+
+### Custom trigger element with `asChild`
+
+Pass `asChild` to `HoverPeekCardTrigger` to attach hover, focus, and touch
+long-press handlers directly to an existing link, avatar button, or badge
+without introducing an extra wrapper element.
+
+```tsx
+<HoverPeekCard>
+  <HoverPeekCardTrigger asChild>
+    <a href="/team/maya">@maya</a>
+  </HoverPeekCardTrigger>
+  <HoverPeekCardContent variant="glass" side="bottom">
+    <HoverPeekCardHeader>
+      <HoverPeekCardTitle>Maya Chen</HoverPeekCardTitle>
+      <HoverPeekCardDescription>
+        Staff Design Engineer &middot; Systems
+      </HoverPeekCardDescription>
+    </HoverPeekCardHeader>
+  </HoverPeekCardContent>
+</HoverPeekCard>
+```
+
+### Controlled state
+
+Pass `open` and `onOpenChange` to synchronize the peek state with external UI or
+lazy-load preview metadata only when a user opens the card.
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<HoverPeekCard open={open} onOpenChange={setOpen}>
+  <HoverPeekCardTrigger>Inspect metrics</HoverPeekCardTrigger>
+  <HoverPeekCardContent>...</HoverPeekCardContent>
+</HoverPeekCard>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Hover pointer over trigger | Waits `openDelay` (`260 ms` default, `0 ms` inside an active group) then lifts the peek card from the trigger edge |
+| Move pointer toward card | Invisible gap bridge and safe-corridor geometry keep the card open while reaching interactive actions inside it |
+| Move pointer across card | Applies a subtle spring-smoothed tilt and specular sheen on fine desktop pointers (`interactiveTilt`) |
+| Press and hold on touch | Scales the trigger subtly during the hold and lifts the card after `longPressDelay` (`420 ms`), cancelling cleanly if the finger scrolls past `10 px` |
+| Tap outside (touch) | Dismisses the touch-opened peek card via a light backdrop scrim |
+| `Tab` focus on trigger | Opens the preview immediately with zero animation lag |
+| `Escape` | Closes the open peek card and restores focus to its trigger |
+
+## Accessibility
+
+Triggers set `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls`
+pointing to the portaled `role="dialog"` container (non-modal, so background
+content remains reachable). Rendering `HoverPeekCardTitle` automatically wires
+`aria-labelledby` onto the card dialog; otherwise pass `aria-label` to
+`HoverPeekCardContent`.
+
+Keyboard focus (`:focus-visible`) opens the peek card immediately without waiting
+for `openDelay` or entrance motion, and pressing `Escape` closes the card and
+returns focus to the trigger. Interactive elements inside the card keep the
+preview open while focused.
+
+With `prefers-reduced-motion: reduce`, spring scale, directional travel, blur,
+and pointer tilt are disabled in favor of a quick opacity crossfade. With
+`prefers-reduced-transparency: reduce`, `variant="glass"` and the touch scrim
+drop backdrop blur and fall back to solid popover surfaces.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/hover-peek-card/hover-peek-card.tsx"
+  name="HoverPeekCardProps"
+/>
+
+### HoverPeekCardGroup
+
+<AutoTypeTable
+  path="src/registry/components/hover-peek-card/hover-peek-card.tsx"
+  name="HoverPeekCardGroupProps"
+/>
+
+### HoverPeekCardTrigger
+
+<AutoTypeTable
+  path="src/registry/components/hover-peek-card/hover-peek-card.tsx"
+  name="HoverPeekCardTriggerProps"
+/>
+
+### HoverPeekCardContent
+
+<AutoTypeTable
+  path="src/registry/components/hover-peek-card/hover-peek-card.tsx"
+  name="HoverPeekCardContentProps"
+/>
+
+### HoverPeekCardMedia
+
+<AutoTypeTable
+  path="src/registry/components/hover-peek-card/hover-peek-card.tsx"
+  name="HoverPeekCardMediaProps"
+/>
+
+## FAQ
+
+### How do I install Hover Peek Card with shadcn?
+
+Run `npx shadcn@latest add @tentui/hover-peek-card` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or
+copy `hover-peek-card.tsx` manually. The CLI copies the source directly into
+your project and installs `motion`.
+
+### How does Hover Peek Card work on touch devices?
+
+On touch screens, pressing and holding a trigger for `longPressDelay` (default
+`420 ms`) lifts the preview card with a tap-outside dismiss scrim and suppresses
+the synthetic click on release. Quick taps still fire normal link navigation or
+click handlers, and drifting more than `10 px` cancels the long press so page
+scrolling is never blocked.
+
+### Is Hover Peek Card keyboard and screen-reader accessible?
+
+Yes. Focusing a trigger with the keyboard opens the non-modal `role="dialog"`
+preview immediately with zero delay, `HoverPeekCardTitle` wires
+`aria-labelledby` automatically, and `Escape` dismisses the card and returns
+focus to the trigger. Both `prefers-reduced-motion` and
+`prefers-reduced-transparency` are respected out of the box.
+
+### Can I control Hover Peek Card or style it with custom content?
+
+Yes. Pass `open` and `onOpenChange` for controlled state, wrap siblings in
+`HoverPeekCardGroup` for zero-delay handoffs, and pick from `elevated`, `glass`,
+or `minimal` variants on `HoverPeekCardContent`. You can compose the built-in
+media, header, meta, and footer slots or render any custom JSX and Tailwind
+classes inside the card.
+
+### Is Hover Peek Card free to use?
+
+Yes. Hover Peek Card is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license does not allow
+redistributing or reselling the component itself.
