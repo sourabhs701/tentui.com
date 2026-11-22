@@ -91,6 +91,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"ripple-reveal",
 			"scratch-card",
 			"scribbled-text",
+			"text-scramble",
 			"tile-field",
 			"variable-font-hover",
 		],

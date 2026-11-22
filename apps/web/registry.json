@@ -463,6 +463,28 @@
       "type": "registry:block"
     },
     {
+      "name": "text-scramble",
+      "title": "Text Scramble",
+      "description": "Letters scramble in place through optical-width-matched glyphs and decelerate cleanly onto the final word with zero layout shift while keeping the real text selectable and readable.",
+      "files": [
+        {
+          "path": "src/registry/components/text-scramble/text-scramble.tsx",
+          "type": "registry:component",
+          "target": "@components/text-scramble.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-22",
+        "image": "https://cdn.tentui.com/images/components/text-scramble?v=1",
+        "video": "https://cdn.tentui.com/videos/components/text-scramble?v=1"
+      },
+      "docs": "https://tentui.com/components/text-scramble",
+      "categories": [
+        "typography"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "pagination-rail",
       "title": "Pagination Rail",
       "description": "Page numbers on a constant-width rail with a spring-driven sliding current-page pill, edge-masked peeks into hidden pages, interactive peek trays, and horizontal drag scrubbing.",
