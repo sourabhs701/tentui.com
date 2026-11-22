@@ -2,6 +2,33 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "range-span",
+		type: "registry:component",
+		title: "Range Span",
+		description:
+			"A two-handle range control with a stretchy selected fill, draggable span panning, rubber-band limits, and live min and max labels that merge before colliding.",
+		dependencies: [
+			"@number-flow/react",
+			"@rexa-developer/tiks",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/range-span/range-span.tsx",
+				type: "registry:component",
+				target: "@components/range-span.tsx",
+			},
+		],
+		categories: ["inputs"],
+		meta: {
+			createdAt: "2026-11-20",
+			image: "https://cdn.tentui.com/images/components/range-span?v=1",
+			video: "https://cdn.tentui.com/videos/components/range-span?v=1",
+		},
+		docs: "https://tentui.com/components/range-span",
+	},
+	{
 		name: "pagination-rail",
 		type: "registry:component",
 		title: "Pagination Rail",

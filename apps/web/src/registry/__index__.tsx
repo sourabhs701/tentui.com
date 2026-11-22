@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"range-span": {
+		name: "range-span",
+		title: "Range Span",
+		description: "A two-handle range control with a stretchy selected fill, draggable span panning, rubber-band limits, and live min and max labels that merge before colliding.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/range-span/range-span.tsx","type":"registry:component","target":"@components/range-span.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/range-span/range-span")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for range-span");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-11-20","image":"https://cdn.tentui.com/images/components/range-span?v=1","video":"https://cdn.tentui.com/videos/components/range-span?v=1"},
+	},
 	"pagination-rail": {
 		name: "pagination-rail",
 		title: "Pagination Rail",
@@ -1066,6 +1084,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"range-span-preview": {
+		name: "range-span-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/range-span-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/range-span-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for range-span-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"range-span-demo": {
+		name: "range-span-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/range-span-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/range-span-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for range-span-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
 	},
 	"pagination-rail-preview": {
 		name: "pagination-rail-preview",

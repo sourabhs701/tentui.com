@@ -463,6 +463,34 @@
       "type": "registry:block"
     },
     {
+      "name": "range-span",
+      "title": "Range Span",
+      "description": "A two-handle range control with a stretchy selected fill, draggable span panning, rubber-band limits, and live min and max labels that merge before colliding.",
+      "dependencies": [
+        "@number-flow/react",
+        "@rexa-developer/tiks",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/range-span/range-span.tsx",
+          "type": "registry:component",
+          "target": "@components/range-span.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-20",
+        "image": "https://cdn.tentui.com/images/components/range-span?v=1",
+        "video": "https://cdn.tentui.com/videos/components/range-span?v=1"
+      },
+      "docs": "https://tentui.com/components/range-span",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "pagination-rail",
       "title": "Pagination Rail",
       "description": "Page numbers on a constant-width rail with a spring-driven sliding current-page pill, edge-masked peeks into hidden pages, interactive peek trays, and horizontal drag scrubbing.",

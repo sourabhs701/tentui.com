@@ -4,6 +4,34 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "range-span-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("range-span")],
+		files: [
+			{
+				path: "examples/range-span-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "range-span-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("range-span")],
+		files: [
+			{
+				path: "examples/range-span-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "pagination-rail-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("pagination-rail")],
