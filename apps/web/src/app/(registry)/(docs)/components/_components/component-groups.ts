@@ -72,6 +72,13 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		],
 	},
 	{
+		id: "charts-and-data",
+		title: "Charts and data",
+		description:
+			"Inspect activity patterns and time-series data with tactile precision.",
+		components: ["contribution-heat"],
+	},
+	{
 		id: "feedback-and-status",
 		title: "Feedback and status",
 		description: "Show that something is working, and how much has been done.",

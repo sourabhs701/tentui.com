@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "contribution-heat",
+		type: "registry:component",
+		title: "Contribution Heat",
+		description:
+			"A calendar heatmap with a spring-driven optical hover loupe, zero-shift day-by-day readout, click-to-pin inspection, and interactive intensity filtering.",
+		dependencies: ["motion"],
+		files: [
+			{
+				path: "components/contribution-heat/contribution-heat.tsx",
+				type: "registry:component",
+				target: "@components/contribution-heat.tsx",
+			},
+		],
+		categories: ["data display"],
+		meta: {
+			createdAt: "2026-11-22",
+			image: "https://cdn.tentui.com/images/components/contribution-heat?v=1",
+			video: "https://cdn.tentui.com/videos/components/contribution-heat?v=1",
+		},
+		docs: "https://tentui.com/components/contribution-heat",
+	},
+	{
 		name: "pagination-rail",
 		type: "registry:component",
 		title: "Pagination Rail",
