@@ -1,0 +1,244 @@
+---
+title: Chart Brush
+description: A React chart brush for shadcn/ui that inks in the time range between two draggable handles, rolls the change in the header, and ticks at every data point the handles cross.
+seoTitle: React Chart Brush Component for shadcn/ui
+seoDescription: Chart Brush is a React range-selection chart for shadcn/ui. Drag two handles to ink in a time range and read the change, with ticks, haptics, and keyboard support.
+createdAt: 2026-11-20
+updatedAt: 2026-11-23
+---
+
+<ComponentPreview name="chart-brush-preview" />
+
+Chart Brush is a React area or line chart for shadcn/ui where you drag two
+handles to pick a time range. The selected stretch is drawn in full ink, the
+rest fades back, and the header rolls the change from the first selected point
+to the last. Use it for revenue, signups, latency, or any series where people
+ask "how did we do over these weeks?". It needs no chart library.
+
+## Example
+
+<ComponentPreview name="chart-brush-demo" />
+
+## Features
+
+- Drag a handle to resize the range, drag inside it to slide the whole window,
+  or drag on the empty plot to sweep a new range from where you pressed. A tap
+  on the empty plot moves the nearer handle there, and a double-click resets.
+- Handles always land on data points, never cross, and keep at least
+  `minSpan` steps apart. Between points they glide along the curve.
+- The selected stretch is a clip over a full-ink copy of the chart, moved with
+  motion values, so the ink follows the handles every frame without
+  re-rendering React.
+- The header shows the change and a percent badge with rolling digits, the
+  length of the range, and its first and last values.
+  `positive="down"` colors a fall as good, for latency, costs, or errors.
+  The arrow and sign carry direction too, so color is never the only cue.
+- Date chips sit under each handle, tick through the dates as a handle
+  glides, stay inside the chart, and merge into one "start – end" chip when
+  they would touch.
+- With a mouse, hovering shows a crosshair and the point's date and value in
+  the header.
+- The curve is a monotone cubic, so it never overshoots a peak between points.
+  Points are placed by time, so gaps in the data stay visible.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/chart-brush
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @number-flow/react @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="chart-brush" title="components/chart-brush.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ChartBrush } from "@/components/chart-brush";
+```
+
+```tsx
+<ChartBrush
+  label="Revenue"
+  data={[
+    { date: "2026-08-01", value: 3200 },
+    { date: "2026-08-02", value: 3460 },
+    // …
+  ]}
+  valueFormat={{ style: "currency", currency: "USD", maximumFractionDigits: 0 }}
+/>
+```
+
+`data` is one series of `{ date, value }` points. `date` can be a `Date`, an
+ISO string, or a timestamp, and the points are sorted by date for you. Points
+with an invalid date or value are skipped.
+
+The selection is a pair of point indices, `{ start, end }`, in date order.
+Without `defaultValue` every point is selected. Use `value` and
+`onValueChange` to control it. `onValueChange` fires on every change while
+you drag. `onValueCommit` fires once when a drag or tap lands, and on every
+key press that moves the selection. While a drag is in progress the brush
+ignores `value`, then follows it again after release. A `value` that is out of
+range, reversed, or narrower than `minSpan` is corrected for display, and
+`onValueChange` is not called.
+
+```tsx
+const [range, setRange] = useState({ start: 42, end: 55 });
+
+<ChartBrush
+  label="Signups"
+  data={signups}
+  value={range}
+  onValueChange={setRange}
+  onValueCommit={saveRange}
+  minSpan={6}
+/>
+```
+
+`valueFormat` and `dateFormat` take `Intl` options, so currencies, units, and
+time zones format in the given `locale` and the digits still roll. For a
+metric where lower is better, set `positive="down"`.
+
+```tsx
+<ChartBrush
+  label="p95 latency"
+  data={latency}
+  variant="line"
+  positive="down"
+  valueFormat={{ style: "unit", unit: "millisecond", unitDisplay: "narrow" }}
+  dateFormat={{ weekday: "short", hour: "numeric" }}
+  height={140}
+/>
+```
+
+If the first selected value is `0`, the percent badge shows "—" and the change
+is still shown. With fewer than two valid points the brush shows "Not enough
+data" and is disabled. A flat series sits in the middle of the plot.
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Drag a handle | Moves that end of the range, point by point |
+| Drag inside the range | Slides the whole window, keeping its length |
+| Drag on the empty plot | Sweeps a new range from the press point |
+| Tap the empty plot | Moves the nearer handle there |
+| Double-click | Resets to `defaultValue`, or every point |
+| `Escape` during a drag | Cancels the drag and puts the range back |
+| `→` / `↑`, `←` / `↓` | Moves the focused handle or window by one point |
+| `Shift` + arrow, `PageUp` / `PageDown` | Moves by a tenth of the points |
+| `Home` / `End` | Moves as far as it can go |
+| `Escape` on the window | Resets to `defaultValue`, or every point |
+
+Pressing a handle or the window focuses it, so you can switch to the keyboard
+without tabbing. A second finger is ignored. The plot uses
+`touch-action: pan-y`, so vertical swipes still scroll the page. On a touch
+screen a press only becomes a drag once it moves sideways.
+
+## Sound and haptics
+
+Each time a handle or the window crosses a data point it plays a soft tiks
+click with a `selection` haptic. With more than 60 points, ticks fall about 40
+times across the chart instead of on every point. The first and last points
+play a slightly brighter click. Ticks are limited to one per 35 ms, so a fast
+drag never buzzes. Pushing a handle into the other one, a handle off the end
+of the chart, or the window against either end plays a low thunk with a
+`rigid` haptic, once per push. A commit plays a `light` haptic unless a tick
+just played one.
+
+Sound and haptics only follow user input. The first render, server rendering,
+and changes to the `value` prop are silent, and nothing plays while the tab is
+hidden. `sound={false}` and `haptics={false}` turn each off independently.
+
+## Accessibility
+
+The chart is a `group` named by `label`. It holds three sliders: "Range
+start", "Range end", and "Selected range", which slides the window. Each has
+`aria-valuemin`, `aria-valuemax`, `aria-valuenow`, and an `aria-valuetext`
+with the date and value, or for the window, the dates and the change ("Sep 12
+to Sep 25, up 18.2%"). A polite live region announces the range after a
+pointer drag or tap. The focus ring shows only for keyboard focus, never after
+a click or drag. With `hideLabel`, the label stays available to screen
+readers.
+
+With reduced motion enabled, the handles jump instead of gliding, the grips
+don't grow, and the digits don't roll. Sound and haptics stay on because they
+confirm input rather than decorate movement.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/chart-brush/chart-brush.tsx"
+  name="ChartBrushProps"
+/>
+
+## FAQ
+
+### How do I install the Chart Brush with shadcn?
+
+Run `npx shadcn@latest add @tentui/chart-brush` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or
+run `npx shadcn@latest add https://tentui.com/r/chart-brush.json` without it.
+The CLI copies `chart-brush.tsx` into your project and installs `motion`,
+`@number-flow/react`, `lucide-react`, `web-haptics`, and
+`@rexa-developer/tiks`.
+
+### Do I need Recharts or another chart library?
+
+No. The Chart Brush draws its own SVG curve, grid, and handles, so it works
+without Recharts, visx, or d3. Pass one series of `{ date, value }` points and
+it scales them to the container width.
+
+### Is the Chart Brush keyboard accessible?
+
+Yes. The start handle, end handle, and selected window are each a `slider`
+with an `aria-valuetext` that reads the dates and values. The arrow keys move
+by one point, `Shift` with an arrow or `PageUp` and `PageDown` move by a tenth
+of the points, `Home` and `End` go to the limits, and `Escape` resets the
+window.
+
+### How do I read or control the selected range?
+
+Pass `value` and `onValueChange` to control it as `{ start, end }` point
+indices, or use `onValueCommit` to react only when a drag lands, for example
+to refetch a table for those dates. Look up the points with
+`data[range.start]` and `data[range.end]` after sorting your data by date.
+
+### Can I show a metric where going down is good?
+
+Yes. Set `positive="down"` and a fall is colored green and a rise red, which
+suits latency, costs, or error rates. The arrow and sign show direction either
+way.
+
+### Is the Chart Brush free to use?
+
+Yes. The Chart Brush is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

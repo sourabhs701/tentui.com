@@ -2,6 +2,34 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "chart-brush",
+		type: "registry:component",
+		title: "Chart Brush",
+		description:
+			"An area or line chart with two draggable handles for picking a time range. The selected stretch is inked in while the rest fades back, the change rolls in the header, and every point the handles cross ticks.",
+		dependencies: [
+			"@number-flow/react",
+			"@rexa-developer/tiks",
+			"lucide-react",
+			"motion",
+			"web-haptics",
+		],
+		files: [
+			{
+				path: "components/chart-brush/chart-brush.tsx",
+				type: "registry:component",
+				target: "@components/chart-brush.tsx",
+			},
+		],
+		categories: ["charts"],
+		meta: {
+			createdAt: "2026-11-20",
+			image: "https://cdn.tentui.com/images/components/chart-brush?v=1",
+			video: "https://cdn.tentui.com/videos/components/chart-brush?v=1",
+		},
+		docs: "https://tentui.com/components/chart-brush",
+	},
+	{
 		name: "pagination-rail",
 		type: "registry:component",
 		title: "Pagination Rail",
