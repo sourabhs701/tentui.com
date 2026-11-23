@@ -909,4 +909,26 @@ export const scenarios = {
 			await d.wait(1100);
 		},
 	},
+
+	"text-scramble": {
+		rest: { x: 410, y: 315 },
+		async run(d) {
+			const trigger = '[data-slot="text-scramble-capture-trigger"]';
+			await d.wait(500);
+			// Hover onto Precision to scramble it in place.
+			await d.move(trigger, 600, { x: 0.52, y: 0.55 });
+			await d.wait(1100);
+			// Click to morph Precision -> Clarity.
+			await d.click();
+			await d.wait(1250);
+			// Click to morph Clarity -> Velocity.
+			await d.click();
+			await d.wait(1250);
+			// Click to morph Velocity -> Precision so the clip loops on frame 1.
+			await d.click();
+			await d.wait(1100);
+			await d.move(d.rest, 650);
+			await d.wait(500);
+		},
+	},
 };
