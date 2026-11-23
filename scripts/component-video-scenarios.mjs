@@ -1044,4 +1044,33 @@ export const scenarios = {
 			await d.wait(500);
 		},
 	},
+
+	"glass-lens-zoom": {
+		rest: { x: 432, y: 318 },
+		async run(d) {
+			const lens = '[data-slot="glass-lens-zoom-lens"]';
+			const frame = '[data-slot="glass-lens-zoom-frame"]';
+
+			await d.wait(450);
+			// Glide onto the floating glass lens and pick it up.
+			await d.move(lens, 600, { x: 0.52, y: 0.52 });
+			await d.wait(150);
+			const start = await d.point(lens, { x: 0.52, y: 0.52 });
+			await d.down();
+			await d.wait(120);
+			// Drag gently toward the upper-left poppies so bezel refraction bends the petals.
+			await d.move(frame, 880, { x: 0.3, y: 0.36 });
+			await d.wait(380);
+			// Sweep smoothly across to inspect the lower-right blooms.
+			await d.move(frame, 1080, { x: 0.72, y: 0.62 });
+			await d.wait(400);
+			// Glide back to the exact starting point and release for a seamless loop.
+			await d.move(start, 780);
+			await d.wait(140);
+			await d.up();
+			await d.wait(320);
+			await d.move(d.rest, 620);
+			await d.wait(480);
+		},
+	},
 };

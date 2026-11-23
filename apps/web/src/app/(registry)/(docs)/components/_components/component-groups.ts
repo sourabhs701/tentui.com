@@ -96,6 +96,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"before-after-compare",
 			"bubble-wrap",
 			"email-dock",
+			"glass-lens-zoom",
 			"interactive-sprite",
 			"ripple-reveal",
 			"scratch-card",

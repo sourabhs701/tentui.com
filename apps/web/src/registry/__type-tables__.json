@@ -3527,6 +3527,476 @@
 			]
 		}
 	],
+	"src/registry/components/glass-lens-zoom/glass-lens-zoom.tsx#GlassLensZoomClassNames#": [
+		{
+			"id": "glass-lens-zoom.tsx-GlassLensZoomClassNames",
+			"name": "GlassLensZoomClassNames",
+			"description": "",
+			"entries": [
+				{
+					"name": "frame",
+					"description": "Clipped frame wrapping the base image and interactive lens.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "image",
+					"description": "Base image element.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "lens",
+					"description": "Interactive floating glass lens surface.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "badge",
+					"description": "Magnification indicator badge inside the lens.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/glass-lens-zoom/glass-lens-zoom.tsx#GlassLensZoomHandle#": [
+		{
+			"id": "glass-lens-zoom.tsx-GlassLensZoomHandle",
+			"name": "GlassLensZoomHandle",
+			"description": "",
+			"entries": [
+				{
+					"name": "moveTo",
+					"description": "Smoothly glides the lens to a normalized `(x, y)` coordinate (`0`–`1`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(point: GlassLensZoomPoint) => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "reset",
+					"description": "Returns the lens to `defaultPosition` and `defaultZoom`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "() => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/glass-lens-zoom/glass-lens-zoom.tsx#GlassLensZoomPoint#": [
+		{
+			"id": "glass-lens-zoom.tsx-GlassLensZoomPoint",
+			"name": "GlassLensZoomPoint",
+			"description": "",
+			"entries": [
+				{
+					"name": "x",
+					"description": "Normalized horizontal position across the image, from `0` (left) to `1` (right).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "y",
+					"description": "Normalized vertical position across the image, from `0` (top) to `1` (bottom).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/glass-lens-zoom/glass-lens-zoom.tsx#GlassLensZoomProps#": [
+		{
+			"id": "glass-lens-zoom.tsx-GlassLensZoomProps",
+			"name": "GlassLensZoomProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "src",
+					"description": "Source URL for the base image.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "zoomSrc",
+					"description": "Optional higher-resolution image URL rendered inside the magnified lens. Falls back to `src`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "alt",
+					"description": "Accessible description of the image.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "mode",
+					"description": "Interaction mode: draggable floating loupe (`\"drag\"`) or pointer-following loupe (`\"hover\"`). Defaults to `\"drag\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "GlassLensZoomMode | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "shape",
+					"description": "Lens outline geometry. Defaults to `\"circle\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "GlassLensZoomShape | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "lensSize",
+					"description": "Lens diameter (or width/height for `\"rounded\"`) in pixels. Scales down automatically on narrow frames. Defaults to `156`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "zoom",
+					"description": "Controlled magnification factor (e.g. `2.2`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultZoom",
+					"description": "Initial magnification factor when uncontrolled. Defaults to `2.2`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "minZoom",
+					"description": "Minimum magnification factor when adjusting zoom. Defaults to `1.4`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "maxZoom",
+					"description": "Maximum magnification factor when adjusting zoom. Defaults to `4`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "zoomStep",
+					"description": "Step applied by keyboard `+`/`-` zoom controls. Defaults to `0.3`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onZoomChange",
+					"description": "Called whenever magnification changes.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((zoom: number) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "position",
+					"description": "Controlled normalized lens position (`0`–`1` on each axis).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "GlassLensZoomPoint | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultPosition",
+					"description": "Initial normalized lens position when uncontrolled. Defaults to `{ x: 0.5, y: 0.5 }`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "GlassLensZoomPoint | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onPositionChange",
+					"description": "Called continuously as the lens moves.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((position: GlassLensZoomPoint) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onPositionCommit",
+					"description": "Called once a drag, click-to-glide, or keyboard step settles.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((position: GlassLensZoomPoint) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "refraction",
+					"description": "Optical bezel refraction mode. `\"auto\"` enables SVG bezel displacement and chromatic dispersion in supported browsers; `\"off\"` uses pure crisp magnification. Defaults to `\"auto\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "GlassLensZoomRefraction | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "refractionStrength",
+					"description": "Intensity of optical bezel bending from `0` to `1`. Defaults to `0.65`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "chromaticAberration",
+					"description": "Intensity of chromatic dispersion (RGB spectral fringe) along the glass bezel from `0` to `1`. Defaults to `0.45`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showZoomBadge",
+					"description": "Whether to always show the magnification readout pill inside the lens. When `false`, it appears briefly while magnification changes. Defaults to `false`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "Disables dragging, click-to-glide, hover tracking, and keyboard interaction. Defaults to `false`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "classNames",
+					"description": "Optional custom class names for internal slots.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "GlassLensZoomClassNames | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "ref",
+					"description": "Imperative handle exposing `moveTo()` and `reset()`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Ref<GlassLensZoomHandle> | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/glass-toggle/glass-toggle.tsx#GlassToggleProps#": [
 		{
 			"id": "glass-toggle.tsx-GlassToggleProps",
