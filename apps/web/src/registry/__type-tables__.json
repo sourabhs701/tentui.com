@@ -1842,6 +1842,723 @@
 			]
 		}
 	],
+	"src/registry/components/contribution-heat/contribution-heat.tsx#ContributionHeatClassNames#": [
+		{
+			"id": "contribution-heat.tsx-ContributionHeatClassNames",
+			"name": "ContributionHeatClassNames",
+			"description": "",
+			"entries": [
+				{
+					"name": "root",
+					"description": "Outer component root container.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "header",
+					"description": "Header container holding the day-by-day readout and contextual badge.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "readout",
+					"description": "Primary readout text region.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "gridViewport",
+					"description": "Horizontally scrollable viewport wrapping the calendar grid.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "grid",
+					"description": "Interactive calendar cell grid container.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "cell",
+					"description": "Individual day cell button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "loupe",
+					"description": "Floating optical hover loupe ring.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "footer",
+					"description": "Footer row containing summary context and intensity legend.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "legend",
+					"description": "Legend swatch strip (`Less` ... `More`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/contribution-heat/contribution-heat.tsx#ContributionHeatDay#": [
+		{
+			"id": "contribution-heat.tsx-ContributionHeatDay",
+			"name": "ContributionHeatDay",
+			"description": "",
+			"entries": [
+				{
+					"name": "date",
+					"description": "ISO calendar date (`YYYY-MM-DD`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "count",
+					"description": "Non-negative activity count recorded on this day.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "level",
+					"description": "Optional explicit intensity level (`0`–`4`). Auto-derived from thresholds when omitted.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ContributionHeatLevel | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "label",
+					"description": "Optional short note shown in the day readout (for example, a release or milestone).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/contribution-heat/contribution-heat.tsx#ContributionHeatProps#": [
+		{
+			"id": "contribution-heat.tsx-ContributionHeatProps",
+			"name": "ContributionHeatProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "data",
+					"description": "Activity records keyed by ISO date (`YYYY-MM-DD`). Missing dates auto-fill as `0`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ContributionHeatDay[]",
+					"simplifiedType": "array",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "startDate",
+					"description": "Optional inclusive start ISO date (`YYYY-MM-DD`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "endDate",
+					"description": "Optional inclusive end ISO date (`YYYY-MM-DD`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "weeks",
+					"description": "Number of weeks to display when `startDate` is omitted. Defaults to the data span (fallback 26).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "weekStartsOn",
+					"description": "First day of each week column: `0` for Sunday (default) or `1` for Monday.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "0 | 1 | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "thresholds",
+					"description": "Optional 4-value threshold tuple `[l1, l2, l3, l4]` mapping positive counts to levels `1`–`4`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "[number, number, number, number] | undefined",
+					"simplifiedType": "tuple",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "tone",
+					"description": "Curated 5-step color ramp. Defaults to `\"emerald\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ContributionHeatTone | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "Container presentation style. Defaults to `\"card\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ContributionHeatVariant | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "Cell geometry and typography scale. Defaults to `\"md\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ContributionHeatSize | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "value",
+					"description": "Controlled pinned/selected ISO date (`YYYY-MM-DD`), or `null`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | null | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultValue",
+					"description": "Initial pinned/selected ISO date when uncontrolled.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | null | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onValueChange",
+					"description": "Called whenever a day is pinned or unpinned.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((day: ContributionHeatDay | null) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onActiveDayChange",
+					"description": "Called as pointer hover or keyboard focus moves between days.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((day: ContributionHeatDay | null) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "loupe",
+					"description": "Show the spring-driven optical hover loupe over the grid. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showMonthLabels",
+					"description": "Show month labels aligned above week columns. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showWeekdayLabels",
+					"description": "Show compact weekday labels (`Mon`, `Wed`, `Fri`) beside rows. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showLegend",
+					"description": "Show the interactive `Less`–`More` intensity legend below the grid. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showReadout",
+					"description": "Show the integrated day-by-day readout header. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "unit",
+					"description": "Unit label for counts: a single string or `[singular, plural]`. Defaults to `[\"contribution\", \"contributions\"]`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | [string, string] | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "summaryLabel",
+					"description": "Optional idle period label shown beside the total (for example, `\"Last 20 weeks\"`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "formatDate",
+					"description": "Custom formatter for day dates in the readout and accessible labels.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((date: Date, iso: string) => string) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "renderReadout",
+					"description": "Custom renderer for the readout bar.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((state: ContributionHeatReadoutState) => ReactNode) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "classNames",
+					"description": "Slot-level class overrides.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ContributionHeatClassNames | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/contribution-heat/contribution-heat.tsx#ContributionHeatReadoutState#": [
+		{
+			"id": "contribution-heat.tsx-ContributionHeatReadoutState",
+			"name": "ContributionHeatReadoutState",
+			"description": "",
+			"entries": [
+				{
+					"name": "activeDay",
+					"description": "Currently inspected day (hovered, keyboard-focused, or pinned), or `null` at rest.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ContributionHeatResolvedDay | null",
+					"simplifiedType": "union",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "selectedDay",
+					"description": "Currently pinned/selected day, or `null` when nothing is pinned.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ContributionHeatResolvedDay | null",
+					"simplifiedType": "union",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "isPinned",
+					"description": "Whether `activeDay` is pinned.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean",
+					"simplifiedType": "union",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "filteredLevel",
+					"description": "Active legend intensity filter (`0`–`4`), or `null` when unfiltered.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ContributionHeatLevel | null",
+					"simplifiedType": "union",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "summary",
+					"description": "Period summary metrics for the rendered range.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ContributionHeatSummary",
+					"simplifiedType": "object",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/contribution-heat/contribution-heat.tsx#ContributionHeatSummary#": [
+		{
+			"id": "contribution-heat.tsx-ContributionHeatSummary",
+			"name": "ContributionHeatSummary",
+			"description": "",
+			"entries": [
+				{
+					"name": "total",
+					"description": "Sum of counts across all in-range days.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "activeDays",
+					"description": "Number of in-range days with `count > 0`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "totalDays",
+					"description": "Total number of in-range calendar days.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "longestStreak",
+					"description": "Longest consecutive run of days with `count > 0`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "peakDay",
+					"description": "Highest single-day count in the range, or `null` when empty.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ContributionHeatResolvedDay | null",
+					"simplifiedType": "union",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "startDate",
+					"description": "First in-range ISO date (`YYYY-MM-DD`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "endDate",
+					"description": "Last in-range ISO date (`YYYY-MM-DD`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/copy-button/copy-button.tsx#CopyButtonProps#": [
 		{
 			"id": "copy-button.tsx-CopyButtonProps",

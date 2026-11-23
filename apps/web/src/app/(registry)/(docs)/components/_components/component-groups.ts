@@ -77,8 +77,8 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		id: "charts-and-data",
 		title: "Charts and data",
 		description:
-			"Read a series over time and pick out the stretch that matters.",
-		components: ["chart-brush"],
+			"Read a series over time, inspect activity patterns, and pick out the stretch that matters.",
+		components: ["chart-brush", "contribution-heat"],
 	},
 	{
 		id: "feedback-and-status",

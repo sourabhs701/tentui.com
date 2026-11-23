@@ -1007,4 +1007,41 @@ export const scenarios = {
 			await d.wait(620);
 		},
 	},
+
+	"contribution-heat": {
+		rest: { x: 432, y: 318 },
+		async run(d) {
+			const cell = (iso) =>
+				`[data-slot="contribution-heat-cell"][data-date="${iso}"]`;
+			const legendLevel = (lvl) =>
+				`[data-slot="contribution-heat-legend-swatch"][data-level="${lvl}"]`;
+
+			await d.wait(450);
+			// Glide into the calendar from the left and sweep across a sprint cluster.
+			await d.move(cell("2026-08-14"), 640, { x: 0.5, y: 0.5 });
+			await d.wait(420);
+			await d.move(cell("2026-09-18"), 720, { x: 0.5, y: 0.5 });
+			await d.wait(420);
+			await d.move(cell("2026-10-29"), 740, { x: 0.5, y: 0.5 });
+			await d.wait(450);
+			// Pin the release milestone day, then glide over to the latest sprint ship.
+			await d.click();
+			await d.wait(480);
+			await d.move(cell("2026-11-12"), 520, { x: 0.5, y: 0.5 });
+			await d.wait(420);
+			// Unpin via the header pill so the resting frame matches frame 1 cleanly.
+			await d.move('[data-slot="contribution-heat-pin-clear"]', 480, {
+				x: 0.5,
+				y: 0.5,
+			});
+			await d.wait(160);
+			await d.click();
+			await d.wait(280);
+			// Briefly preview level 4 peak days on the interactive legend.
+			await d.move(legendLevel(4), 520, { x: 0.5, y: 0.5 });
+			await d.wait(650);
+			await d.move(d.rest, 600);
+			await d.wait(500);
+		},
+	},
 };
