@@ -30,6 +30,28 @@ export const components: Registry["items"] = [
 		docs: "https://tentui.com/components/chart-brush",
 	},
 	{
+		name: "pagination-rail",
+		type: "registry:component",
+		title: "Pagination Rail",
+		description:
+			"Page numbers on a constant-width rail with a spring-driven sliding current-page pill, edge-masked peeks into hidden pages, interactive peek trays, and horizontal drag scrubbing.",
+		dependencies: ["lucide-react", "motion"],
+		files: [
+			{
+				path: "components/pagination-rail/pagination-rail.tsx",
+				type: "registry:component",
+				target: "@components/pagination-rail.tsx",
+			},
+		],
+		categories: ["navigation"],
+		meta: {
+			createdAt: "2026-11-21",
+			image: "https://cdn.tentui.com/images/components/pagination-rail?v=1",
+			video: "https://cdn.tentui.com/videos/components/pagination-rail?v=1",
+		},
+		docs: "https://tentui.com/components/pagination-rail",
+	},
+	{
 		name: "variable-font-hover",
 		type: "registry:component",
 		title: "Variable Font Hover",

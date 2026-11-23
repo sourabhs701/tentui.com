@@ -58,20 +58,30 @@ function initials(name: string) {
 }
 
 export function getBlogPostMetadata(post: BlogPost): Metadata {
-	const { title, description, image, createdAt, updatedAt, author } =
-		post.metadata;
+	const {
+		title,
+		description,
+		seoTitle: seoTitleOverride,
+		seoDescription: seoDescriptionOverride,
+		image,
+		createdAt,
+		updatedAt,
+		author,
+	} = post.metadata;
+	const seoTitle = seoTitleOverride || title;
+	const seoDescription = seoDescriptionOverride || description;
 	const url = getBlogHref(post.slug);
 	const ogImage =
 		image ||
 		`/og/simple?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
 
 	return {
-		title,
-		description,
+		title: seoTitle,
+		description: seoDescription,
 		alternates: { canonical: url },
 		openGraph: {
-			title,
-			description,
+			title: seoTitle,
+			description: seoDescription,
 			type: "article",
 			url,
 			publishedTime: new Date(createdAt).toISOString(),
@@ -81,8 +91,8 @@ export function getBlogPostMetadata(post: BlogPost): Metadata {
 		},
 		twitter: {
 			card: "summary_large_image",
-			title,
-			description,
+			title: seoTitle,
+			description: seoDescription,
 			images: [ogImage],
 		},
 	};
@@ -99,7 +109,7 @@ function articleJsonLd(post: BlogPost) {
 		"@type": "BlogPosting",
 		"@id": absoluteUrl(url),
 		headline: post.metadata.title,
-		description: post.metadata.description,
+		description: post.metadata.seoDescription || post.metadata.description,
 		image: absoluteUrl(image),
 		url: absoluteUrl(url),
 		datePublished: new Date(post.metadata.createdAt).toISOString(),

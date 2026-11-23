@@ -293,6 +293,24 @@ export const Index = {
 		categories: ["charts"],
 		meta: {"createdAt":"2026-11-20","image":"https://cdn.tentui.com/images/components/chart-brush?v=1","video":"https://cdn.tentui.com/videos/components/chart-brush?v=1"},
 	},
+	"pagination-rail": {
+		name: "pagination-rail",
+		title: "Pagination Rail",
+		description: "Page numbers on a constant-width rail with a spring-driven sliding current-page pill, edge-masked peeks into hidden pages, interactive peek trays, and horizontal drag scrubbing.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/pagination-rail/pagination-rail.tsx","type":"registry:component","target":"@components/pagination-rail.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/pagination-rail/pagination-rail")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for pagination-rail");
+			}
+			return { default: module.default };
+		}),
+		categories: ["navigation"],
+		meta: {"createdAt":"2026-11-21","image":"https://cdn.tentui.com/images/components/pagination-rail?v=1","video":"https://cdn.tentui.com/videos/components/pagination-rail?v=1"},
+	},
 	"variable-font-hover": {
 		name: "variable-font-hover",
 		title: "Variable Font Hover",
@@ -1102,6 +1120,42 @@ export const Index = {
 		}),
 		categories: undefined,
 		meta: {"demoClassName":"min-h-96 place-items-center content-center px-4"},
+	},
+	"pagination-rail-preview": {
+		name: "pagination-rail-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/pagination-rail-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/pagination-rail-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for pagination-rail-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"pagination-rail-demo": {
+		name: "pagination-rail-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/pagination-rail-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/pagination-rail-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for pagination-rail-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[34rem] place-items-center content-center px-4"},
 	},
 	"variable-font-hover-preview": {
 		name: "variable-font-hover-preview",

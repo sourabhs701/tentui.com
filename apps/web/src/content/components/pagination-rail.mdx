@@ -1,0 +1,237 @@
+---
+title: Pagination Rail
+description: A React pagination component for shadcn/ui with a spring-driven sliding current-page pill, edge-masked peeks into upcoming pages, interactive peek trays, and horizontal drag scrubbing.
+seoTitle: React Pagination Rail Component for shadcn/ui
+seoDescription: Pagination Rail is a React pagination component for shadcn/ui with a sliding current-page pill, interactive peeks at collapsed pages, keyboard navigation, and drag scrubbing.
+createdAt: 2026-11-21
+updatedAt: 2026-11-21
+---
+
+<ComponentPreview name="pagination-rail-preview" />
+
+Pagination Rail is a React pagination component for shadcn/ui that keeps a
+steady rail width across large page counts, glides an interruptible active pill
+between pages, and replaces static ellipses with edge-masked peeks into hidden
+pages. TentUI is free and source-available: click, drag-scrub, open a peek tray
+for upcoming pages, navigate with a keyboard, and style every slot with
+Tailwind CSS.
+
+## Example
+
+<ComponentPreview name="pagination-rail-demo" />
+
+## Features
+
+- Keeps a constant slot count from page `1` through `totalPages`, preventing
+  the rail and its Previous/Next controls from shifting sideways as you step
+  through pages.
+- Drives the sliding current-page pill on a critically damped `motion/react`
+  spring with a hardware-accelerated dual-layer `clip-path` on `pill` and
+  `ghost` variants, inverting digits pixel-by-pixel as the capsule passes over
+  them with zero border-radius distortion.
+- Replaces dead `…` ellipses with directional edge-masked peek slots showing
+  the immediate next or earlier hidden page numbers right on the rail. Hover or
+  tap a peek slot to open a viewport-clamped Peek Tray for one-click jumping,
+  including deeper stepping inside large ranges.
+- Supports an optional `renderPagePeek` callback so hovering or focusing any
+  visible page, arrow button, or peek-tray item displays a live floating
+  preview of what waits on that page.
+- Allows horizontal pointer scrubbing across visible page buttons with a 7 px
+  movement threshold while yielding vertical touch swipes to native page
+  scrolling.
+- Ships three restrained monochrome variants (`pill`, `surface`, `ghost`) and
+  three sizes (`sm`, `md`, `lg`) that adapt cleanly to light mode, dark mode,
+  and 390 px mobile viewports.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/pagination-rail
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion lucide-react
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="pagination-rail"
+  title="components/pagination-rail.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { PaginationRail } from "@/components/pagination-rail";
+```
+
+Pass `totalPages` for an uncontrolled rail, or control it with `page` and
+`onPageChange`.
+
+```tsx
+<PaginationRail totalPages={24} defaultPage={2} />
+```
+
+### Live page previews
+
+Supply `renderPagePeek` to preview what lives on each page when users hover or
+keyboard-focus page buttons, arrow controls, or items inside an open peek tray.
+
+```tsx
+<PaginationRail
+  totalPages={12}
+  page={page}
+  onPageChange={setPage}
+  renderPagePeek={({ page: targetPage }) => (
+    <span>
+      Page {targetPage} &middot; Items {(targetPage - 1) * 10 + 1}&ndash;
+      {targetPage * 10}
+    </span>
+  )}
+/>
+```
+
+### Variants and sizes
+
+Choose between `pill` (default recessed track with solid active capsule),
+`surface` (rounded segmented control with an elevated card pill), and `ghost`
+(minimal borderless track), paired with `sm`, `md`, or `lg`.
+
+```tsx
+<PaginationRail
+  totalPages={24}
+  defaultPage={6}
+  variant="surface"
+  size="sm"
+/>
+```
+
+### Controlled state
+
+Pass `page` and `onPageChange` to synchronize the rail with URL search
+parameters, TanStack Query, or React state. Out-of-bounds values are clamped
+safely to `[1, totalPages]`.
+
+```tsx
+const [page, setPage] = useState(1);
+
+<PaginationRail
+  totalPages={40}
+  page={page}
+  onPageChange={setPage}
+  peekCount={5}
+/>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Click or tap a page | Glides the active pill to that page on a critically damped spring |
+| Drag horizontally across track | Scrubs across visible pages and commits on release (yields vertical swipes on touch) |
+| Hover or tap a peek slot | Opens the floating Peek Tray listing the next or earlier hidden pages |
+| Click arrows inside Peek Tray | Steps deeper through long collapsed ranges without closing the tray |
+| `←` / `→` | Moves focus between rail buttons, or between pages inside an open Peek Tray |
+| `Home` / `End` | Jumps immediately to page `1` or `totalPages` (or first/last page inside a Peek Tray) |
+| `Enter` / `Space` | Activates the focused page or toggles the focused peek trigger |
+| `Escape` | Closes an open Peek Tray and returns focus to its trigger |
+
+## Accessibility
+
+The root element is a `<nav>` landmark named by `aria-label` (defaulting to
+`"Pagination"`), with `aria-current="page"` on the active page button and a
+polite `aria-live="polite"` status region announcing committed page changes
+(such as `"Page 4 of 24"`).
+
+Peek triggers expose `aria-haspopup="true"`, `aria-expanded`, `aria-controls`,
+and descriptive range labels (for example, `"Peek next pages 6 to 23"`). All
+controls show an unclipped `focus-visible` ring and respond immediately to
+keyboard activation without delaying behind motion.
+
+With `prefers-reduced-motion: reduce`, spring slides, hover pill glides,
+popover scale shifts, and button press scales switch to direct updates. With
+`prefers-reduced-transparency: reduce`, floating peek trays and preview cards
+fall back to solid popover surfaces without backdrop blur.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/pagination-rail/pagination-rail.tsx"
+  name="PaginationRailProps"
+/>
+
+### PaginationRailPeekRenderState
+
+<AutoTypeTable
+  path="src/registry/components/pagination-rail/pagination-rail.tsx"
+  name="PaginationRailPeekRenderState"
+/>
+
+### PaginationRailClassNames
+
+<AutoTypeTable
+  path="src/registry/components/pagination-rail/pagination-rail.tsx"
+  name="PaginationRailClassNames"
+/>
+
+## FAQ
+
+### How do I install Pagination Rail with shadcn?
+
+Run `npx shadcn@latest add @tentui/pagination-rail` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or
+copy the component source directly. The CLI copies `pagination-rail.tsx` into
+your project and installs `motion` and `lucide-react`.
+
+### How does the peek at the next pages work?
+
+When `totalPages` exceeds the visible rail slots, collapsed ranges display an
+edge-masked preview of the adjacent hidden page numbers instead of a static
+ellipsis. Hovering or tapping that peek slot opens a floating Peek Tray with up
+to `peekCount` hidden pages (default `5`), optional deeper stepping for long
+ranges, and live previews when `renderPagePeek` is provided.
+
+### Is Pagination Rail keyboard and touch accessible?
+
+Yes. It renders a semantic `<nav>` landmark with `aria-current="page"`,
+`aria-live="polite"` page announcements, arrow-key and `Home`/`End` navigation,
+`Escape` dismissal for open peek trays, and unclipped `focus-visible` rings. On
+touch devices, tapping a peek slot toggles the tray cleanly and vertical swipes
+yield to native page scrolling.
+
+### Can I control Pagination Rail from URL params or React state?
+
+Yes. Pass `page` and `onPageChange` for controlled usage with Next.js search
+params, React state, or data tables, or pass `defaultPage` to run uncontrolled.
+Any out-of-range page number or shrinking `totalPages` value is clamped safely
+between `1` and `totalPages`.
+
+### Is Pagination Rail free to use?
+
+Yes. Pagination Rail is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

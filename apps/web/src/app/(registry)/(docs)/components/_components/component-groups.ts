@@ -64,6 +64,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"morph-dialog",
 			"morph-lightbox",
 			"liquid-glass-menu",
+			"pagination-rail",
 			"scroll-accordion",
 			"search-command",
 			"snap-sheet",

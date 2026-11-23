@@ -45,14 +45,20 @@ function getComponentHref(slug: string): Route {
 	return `/components/${slug}` as Route;
 }
 
+function getComponentOgImage(doc: Doc) {
+	const params = new URLSearchParams({
+		title: doc.metadata.title,
+		description: doc.metadata.description,
+	});
+	return `/og/component?${params}`;
+}
+
 export function getComponentPageMetadata(doc: Doc): Metadata {
-	const { title, description, image, createdAt, updatedAt } = doc.metadata;
+	const { title, image, createdAt, updatedAt } = doc.metadata;
 	const url = getComponentHref(doc.slug);
 	const seoTitle = getComponentSeoTitle(doc);
 	const seoDescription = getComponentSeoDescription(doc);
-	const ogImage =
-		image ||
-		`/og/simple?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
+	const ogImage = image || getComponentOgImage(doc);
 
 	return {
 		title: { absolute: seoTitle },
@@ -78,9 +84,7 @@ export function getComponentPageMetadata(doc: Doc): Metadata {
 
 function softwareSourceCodeJsonLd(doc: Doc) {
 	const url = getComponentHref(doc.slug);
-	const ogImage =
-		doc.metadata.image ||
-		`/og/simple?title=${encodeURIComponent(doc.metadata.title)}&description=${encodeURIComponent(doc.metadata.description)}`;
+	const ogImage = doc.metadata.image || getComponentOgImage(doc);
 
 	return {
 		"@context": "https://schema.org",

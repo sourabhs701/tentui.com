@@ -1,3 +1,4 @@
+import { blockCategories } from "@/config/registry";
 import { SITE_INFO } from "@/config/site";
 import { getAllBlocks } from "@/lib/blocks";
 import { getBlogPosts, getComponentDocs, getDocs } from "@/lib/documents";
@@ -84,6 +85,8 @@ ${docsContent.join("\n\n")}
 ${componentContent.join("\n\n")}
 
 ## Blocks
+
+${blockCategories.map((category) => `- [${category.heading}](${SITE_INFO.url}/blocks/${category.name}): ${category.description}`).join("\n")}
 
 ${blockContent.join("\n\n")}
 

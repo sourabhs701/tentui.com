@@ -32,6 +32,34 @@ export const examples: Registry["items"] = [
 		},
 	},
 	{
+		name: "pagination-rail-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("pagination-rail")],
+		files: [
+			{
+				path: "examples/pagination-rail-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "pagination-rail-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("pagination-rail")],
+		files: [
+			{
+				path: "examples/pagination-rail-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[34rem] place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "variable-font-hover-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("variable-font-hover")],

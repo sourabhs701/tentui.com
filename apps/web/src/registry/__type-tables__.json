@@ -4936,6 +4936,485 @@
 			]
 		}
 	],
+	"src/registry/components/pagination-rail/pagination-rail.tsx#PaginationRailClassNames#": [
+		{
+			"id": "pagination-rail.tsx-PaginationRailClassNames",
+			"name": "PaginationRailClassNames",
+			"description": "",
+			"entries": [
+				{
+					"name": "root",
+					"description": "Outer `<nav>` container.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "rail",
+					"description": "Recessed or hairline rail wrapping controls and page slots.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "pill",
+					"description": "Sliding current-page capsule pill.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "hoverPill",
+					"description": "Subtle pointer hover indicator inside the track.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "pageButton",
+					"description": "Individual page number button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "navButton",
+					"description": "Previous and Next arrow buttons.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "peekTrigger",
+					"description": "Collapsed-range edge peek trigger button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "peekTray",
+					"description": "Floating peek tray listing collapsed hidden pages.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "peekCard",
+					"description": "Floating preview card rendered when `renderPagePeek` is provided.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/pagination-rail/pagination-rail.tsx#PaginationRailPeekRenderState#": [
+		{
+			"id": "pagination-rail.tsx-PaginationRailPeekRenderState",
+			"name": "PaginationRailPeekRenderState",
+			"description": "",
+			"entries": [
+				{
+					"name": "page",
+					"description": "1-indexed page number being previewed.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "totalPages",
+					"description": "Total number of pages in the rail.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "currentPage",
+					"description": "Currently active 1-indexed page number.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "isCurrent",
+					"description": "Whether the previewed page is currently active.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean",
+					"simplifiedType": "union",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "direction",
+					"description": "Position of the previewed page relative to the active page.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"next\" | \"previous\" | \"current\"",
+					"simplifiedType": "union",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/pagination-rail/pagination-rail.tsx#PaginationRailProps#": [
+		{
+			"id": "pagination-rail.tsx-PaginationRailProps",
+			"name": "PaginationRailProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "totalPages",
+					"description": "Total number of pages (clamped to a minimum of `1`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number",
+					"simplifiedType": "number",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "page",
+					"description": "Controlled 1-indexed active page.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultPage",
+					"description": "Initial 1-indexed active page when uncontrolled. Defaults to `1`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onPageChange",
+					"description": "Called whenever the active page changes.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((page: number) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "siblingCount",
+					"description": "Number of visible sibling pages on each side of the current page. Defaults to `1`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "boundaryCount",
+					"description": "Number of pages pinned at the start and end of the rail. Defaults to `1`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "peekCount",
+					"description": "Maximum number of hidden pages shown at once inside a peek tray. Defaults to `5`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "Visual treatment of the rail and sliding pill. Defaults to `\"pill\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "PaginationRailVariant | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "Height and typography scale. Defaults to `\"md\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "PaginationRailSize | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showControls",
+					"description": "Show Previous and Next arrow buttons. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showPeek",
+					"description": "Show interactive edge-masked peek slots and floating peek trays for collapsed ranges. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "peekSide",
+					"description": "Side of the rail where floating peek trays and preview cards appear. Defaults to `\"top\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "PaginationRailPeekSide | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "scrubbable",
+					"description": "Allow dragging horizontally across the rail to scrub between visible pages. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "renderPagePeek",
+					"description": "Optional preview content shown in a floating card when hovering or focusing a page.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((state: PaginationRailPeekRenderState) => ReactNode) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "getPageAriaLabel",
+					"description": "Custom accessible label for each page button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((page: number, isCurrent: boolean) => string) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "Disable all navigation, peeking, and scrubbing interactions. Defaults to `false`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "aria-label",
+					"description": "Accessible name for the `<nav>` landmark. Defaults to `\"Pagination\"`.",
+					"tags": [
+						{
+							"name": "see",
+							"text": "aria-labelledby."
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "classNames",
+					"description": "Granular class name overrides for internal slots.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "PaginationRailClassNames | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/peeping-button/peeping-button.tsx#PeepingButtonProps#": [
 		{
 			"id": "peeping-button.tsx-PeepingButtonProps",

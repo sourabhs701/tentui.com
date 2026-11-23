@@ -53,6 +53,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"liquid-glass-menu": {},
 	"number-stepper": { zoom: 1.6 },
 	"otp-field": { zoom: 1.2 },
+	"pagination-rail": { zoom: 1.15 },
 	"peeping-button": { zoom: 1.35 },
 	// Starts near the top so the suggestion list opens below the field.
 	"prompt-chip-input": { className: "items-start px-6 pt-10" },
@@ -60,8 +61,11 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"ripple-reveal": { zoom: 1.2 },
 	"rotary-knob": { zoom: 1.5 },
 	"scratch-card": { zoom: 1.3 },
-	// A tall panel; framed at 1:1 so the reading band keeps its proportions.
-	"scroll-accordion": { className: "place-items-center content-center px-8" },
+	// A tall panel; scaled down so the whole card, tray edge to edge, fits.
+	"scroll-accordion": {
+		zoom: 0.8,
+		className: "place-items-center content-center px-8",
+	},
 	"search-command": { zoom: 2 },
 	"snap-sheet": {},
 	"star-rating": { zoom: 1.5 },

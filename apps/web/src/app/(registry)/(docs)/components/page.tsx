@@ -71,7 +71,7 @@ export default function ComponentsPage() {
 				])}
 			/>
 
-			<header className="px-2 pt-6 pb-8 sm:pt-10 sm:pb-10">
+			<header className="px-2 pt-12 pb-8 sm:pb-10 lg:pt-10">
 				<h1 className="max-w-3xl text-balance font-medium text-3xl tracking-tight sm:text-4xl">
 					{title}
 				</h1>

@@ -35,6 +35,14 @@ const nextConfig: NextConfig = {
 	},
 	async redirects() {
 		return [
+			// OpenNext returns the destination uncompiled when no param matched,
+			// so "/" on www would redirect to a literal "/:path*" (a 404).
+			{
+				source: "/",
+				has: [{ type: "host", value: "www\\.tentui\\.com" }],
+				destination: "https://tentui.com/",
+				statusCode: 301,
+			},
 			{
 				source: "/:path*",
 				has: [{ type: "host", value: "www\\.tentui\\.com" }],
