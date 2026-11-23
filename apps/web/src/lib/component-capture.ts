@@ -24,6 +24,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	// The capture scene sizes the headline itself, so the art stays at 1:1.
 	"ascii-decode-text": { className: "px-6" },
 	"animated-tabs": { zoom: 1.6 },
+	"contribution-heat": { zoom: 1.08, className: "px-4" },
 	"copy-button": { zoom: 1.8 },
 	"dynamic-island": { zoom: 1.4 },
 	"elastic-slider": { zoom: 1.5 },

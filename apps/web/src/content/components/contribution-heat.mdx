@@ -1,0 +1,248 @@
+---
+title: Contribution Heat
+description: A React calendar heatmap component for shadcn/ui with a spring-driven optical hover loupe, zero-shift day-by-day readout, interactive intensity filtering, and full keyboard navigation.
+seoTitle: React Contribution Heatmap Component for shadcn/ui
+seoDescription: Contribution Heat is a React calendar heatmap component for shadcn/ui featuring a spring-driven optical hover loupe, clear day-by-day readout, intensity level filtering, and keyboard navigation.
+createdAt: 2026-11-22
+updatedAt: 2026-11-23
+---
+
+<ComponentPreview name="contribution-heat-preview" />
+
+Contribution Heat is a React calendar heatmap component for shadcn/ui that pairs
+a dense activity grid with a spring-driven optical hover loupe and a steady
+day-by-day readout bar. TentUI is free and source-available: sweep across weeks
+with zero layout shift, pin days to inspect milestones, filter intensity levels
+from the legend, navigate with arrow keys, and style every slot with Tailwind
+CSS.
+
+## Example
+
+<ComponentPreview name="contribution-heat-demo" />
+
+## Features
+
+- Renders a deterministic UTC calendar grid for any ISO date range or week
+  count, automatically backfilling missing dates with zero-activity cells and
+  aligning non-colliding month labels above week columns.
+- Tracks pointer movement with an interruptible, critically damped `motion/react`
+  optical loupe that magnifies the surrounding 5×5 neighborhood continuously
+  without flicker or clipping on top, bottom, or side grid edges.
+- Displays a zero-layout-shift readout bar that summarizes total activity and
+  longest streak at rest, then switches immediately to the exact count, formatted
+  date, and optional milestone note on hover, focus, or click.
+- Supports click-to-pin selection, pointer drag scrubbing across cells, and
+  interactive `Less`–`More` legend swatches that isolate any intensity level
+  (`0`–`4`) on hover or click.
+- Ships four calibrated light/dark color ramps (`emerald`, `graphite`, `amber`,
+  `cobalt`), two container variants (`card`, `plain`), and three size presets
+  (`sm`, `md`, `lg`).
+- Implements roving `tabIndex` keyboard navigation (`Arrow` keys, `PageUp` /
+  `PageDown`, `Home` / `End`, `Enter` / `Space`, `Escape`), full `aria-label`
+  day descriptions, and `prefers-reduced-motion` / `prefers-reduced-transparency`
+  support.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/contribution-heat
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="contribution-heat"
+  title="components/contribution-heat.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ContributionHeat } from "@/components/contribution-heat";
+```
+
+Pass an array of `{ date, count }` records using ISO `YYYY-MM-DD` strings.
+Missing days within the range are automatically filled as zero-count cells.
+
+```tsx
+<ContributionHeat
+  data={[
+    { date: "2026-11-10", count: 4 },
+    { date: "2026-11-11", count: 9 },
+    { date: "2026-11-12", count: 16, label: "v2.8 release" },
+  ]}
+  weeks={20}
+  unit={["commit", "commits"]}
+/>
+```
+
+### Tones, variants, and sizes
+
+Pick from `emerald` (default), `graphite`, `amber`, or `cobalt`, combine with
+`card` or `plain` containers, and adjust density with `sm`, `md`, or `lg`.
+
+```tsx
+<ContributionHeat
+  data={activity}
+  tone="graphite"
+  variant="plain"
+  size="sm"
+  weekStartsOn={1}
+/>
+```
+
+### Controlled selection and custom readout
+
+Control the pinned date with `value` and `onValueChange`, or customize the
+header summary with `renderReadout`.
+
+```tsx
+const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+<ContributionHeat
+  data={activity}
+  value={selectedDate}
+  onValueChange={(day) => setSelectedDate(day?.date ?? null)}
+  renderReadout={({ activeDay, summary }) =>
+    activeDay ? (
+      <span>
+        {activeDay.count} deploys on {activeDay.date}
+      </span>
+    ) : (
+      <span>{summary.total} total deploys</span>
+    )
+  }
+/>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Hover across the grid | Glides the optical loupe over cells and updates the day-by-day readout |
+| Click or tap a day | Pins or unpins that day in the readout bar (on touch, also previews the loupe) |
+| Click and drag across cells | Scrubs continuously through days and pins the release day |
+| Hover or click a legend swatch | Highlights days matching that intensity level (`0`–`4`) and dims all others |
+| `←` / `→` | Moves focus to the same weekday in the previous or next week |
+| `↑` / `↓` | Moves focus to the previous or next calendar day |
+| `PageUp` / `PageDown` | Jumps focus backward or forward by four weeks |
+| `Home` / `End` | Jumps focus to the first or last day in the range |
+| `Enter` / `Space` | Pins or unpins the currently focused day |
+| `Escape` | Clears any pinned day or active intensity level filter |
+
+## Accessibility
+
+The component renders a `<section>` landmark named by `aria-label` (defaulting
+to `"Contribution activity"`) containing a `role="grid"` matrix of
+`role="gridcell"` buttons. A roving `tabIndex` keeps the entire heatmap to a
+single Tab stop while arrow keys, `PageUp`/`PageDown`, and `Home`/`End` move
+directly between days with zero animation delay.
+
+Every cell exposes a human-readable `aria-label` combining the formatted date,
+activity count, and optional milestone note, along with `aria-selected` when
+pinned. The readout bar uses `aria-live="polite"` for calm updates, and legend
+filter buttons expose `aria-pressed` and day counts for each level.
+
+With `prefers-reduced-motion: reduce`, the optical loupe snaps directly to the
+pointer without spring lag and uses a short opacity cross-fade instead of scale
+motion. With `prefers-reduced-transparency: reduce`, the loupe switches to an
+opaque surface without specular sheen.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/contribution-heat/contribution-heat.tsx"
+  name="ContributionHeatProps"
+/>
+
+### ContributionHeatDay
+
+<AutoTypeTable
+  path="src/registry/components/contribution-heat/contribution-heat.tsx"
+  name="ContributionHeatDay"
+/>
+
+### ContributionHeatReadoutState
+
+<AutoTypeTable
+  path="src/registry/components/contribution-heat/contribution-heat.tsx"
+  name="ContributionHeatReadoutState"
+/>
+
+### ContributionHeatSummary
+
+<AutoTypeTable
+  path="src/registry/components/contribution-heat/contribution-heat.tsx"
+  name="ContributionHeatSummary"
+/>
+
+### ContributionHeatClassNames
+
+<AutoTypeTable
+  path="src/registry/components/contribution-heat/contribution-heat.tsx"
+  name="ContributionHeatClassNames"
+/>
+
+## FAQ
+
+### How do I install Contribution Heat with shadcn?
+
+Run `npx shadcn@latest add @tentui/contribution-heat` after configuring the
+`@tentui` registry in `components.json` ([installation guide](/docs/installation)),
+or copy the component source directly. The CLI copies `contribution-heat.tsx`
+into your project and installs `motion`.
+
+### How are intensity levels calculated from my data?
+
+When a day record omits an explicit `level` (`0`–`4`), Contribution Heat
+automatically computes four thresholds from the distribution of positive counts
+in your dataset. You can override those cutoffs at any time by passing a
+four-number `thresholds` tuple or setting `level` directly on individual days.
+
+### Is Contribution Heat keyboard and screen-reader accessible?
+
+Yes. The calendar grid uses a single roving `tabIndex` with arrow keys,
+`PageUp`/`PageDown`, `Home`/`End`, `Enter`/`Space` to pin a day, and `Escape` to
+clear selection or level filters. Every cell announces its formatted date and
+count via `aria-label`, and `prefers-reduced-motion` replaces spring motion with
+direct updates.
+
+### Can I control the selected day or customize the readout?
+
+Yes. Pass `value` and `onValueChange` (with an ISO `YYYY-MM-DD` string or
+`null`) to control pinned selection in React state, URL search params, or forms,
+or use `defaultValue` for uncontrolled usage. You can also supply `formatDate`,
+`unit`, or `renderReadout` to tailor the day-by-day summary.
+
+### Is Contribution Heat free to use?
+
+Yes. Contribution Heat is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license). The license doesn't allow
+redistributing or reselling the component itself.

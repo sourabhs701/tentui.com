@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"contribution-heat": {
+		name: "contribution-heat",
+		title: "Contribution Heat",
+		description: "A calendar heatmap with a spring-driven optical hover loupe, zero-shift day-by-day readout, click-to-pin inspection, and interactive intensity filtering.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/contribution-heat/contribution-heat.tsx","type":"registry:component","target":"@components/contribution-heat.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/contribution-heat/contribution-heat")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for contribution-heat");
+			}
+			return { default: module.default };
+		}),
+		categories: ["data display"],
+		meta: {"createdAt":"2026-11-22","image":"https://cdn.tentui.com/images/components/contribution-heat?v=1","video":"https://cdn.tentui.com/videos/components/contribution-heat?v=1"},
+	},
 	"pagination-rail": {
 		name: "pagination-rail",
 		title: "Pagination Rail",
@@ -1066,6 +1084,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"contribution-heat-preview": {
+		name: "contribution-heat-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/contribution-heat-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/contribution-heat-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for contribution-heat-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"contribution-heat-demo": {
+		name: "contribution-heat-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/contribution-heat-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/contribution-heat-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for contribution-heat-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[30rem] place-items-center content-center px-4"},
 	},
 	"pagination-rail-preview": {
 		name: "pagination-rail-preview",
