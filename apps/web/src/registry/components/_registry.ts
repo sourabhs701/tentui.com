@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "glass-lens-zoom",
+		type: "registry:component",
+		title: "Glass Lens Zoom",
+		description:
+			"A draggable optical glass lens that magnifies images with convex bezel refraction, subtle chromatic dispersion, and momentum drag physics.",
+		dependencies: ["motion"],
+		files: [
+			{
+				path: "components/glass-lens-zoom/glass-lens-zoom.tsx",
+				type: "registry:component",
+				target: "@components/glass-lens-zoom.tsx",
+			},
+		],
+		categories: ["media"],
+		meta: {
+			createdAt: "2026-11-23",
+			image: "https://cdn.tentui.com/images/components/glass-lens-zoom?v=1",
+			video: "https://cdn.tentui.com/videos/components/glass-lens-zoom?v=1",
+		},
+		docs: "https://tentui.com/components/glass-lens-zoom",
+	},
+	{
 		name: "contribution-heat",
 		type: "registry:component",
 		title: "Contribution Heat",

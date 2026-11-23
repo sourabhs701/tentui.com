@@ -463,6 +463,31 @@
       "type": "registry:block"
     },
     {
+      "name": "glass-lens-zoom",
+      "title": "Glass Lens Zoom",
+      "description": "A draggable optical glass lens that magnifies images with convex bezel refraction, subtle chromatic dispersion, and momentum drag physics.",
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/glass-lens-zoom/glass-lens-zoom.tsx",
+          "type": "registry:component",
+          "target": "@components/glass-lens-zoom.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-23",
+        "image": "https://cdn.tentui.com/images/components/glass-lens-zoom?v=1",
+        "video": "https://cdn.tentui.com/videos/components/glass-lens-zoom?v=1"
+      },
+      "docs": "https://tentui.com/components/glass-lens-zoom",
+      "categories": [
+        "media"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "contribution-heat",
       "title": "Contribution Heat",
       "description": "A calendar heatmap with a spring-driven optical hover loupe, zero-shift day-by-day readout, click-to-pin inspection, and interactive intensity filtering.",

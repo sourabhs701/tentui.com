@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"glass-lens-zoom": {
+		name: "glass-lens-zoom",
+		title: "Glass Lens Zoom",
+		description: "A draggable optical glass lens that magnifies images with convex bezel refraction, subtle chromatic dispersion, and momentum drag physics.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/glass-lens-zoom/glass-lens-zoom.tsx","type":"registry:component","target":"@components/glass-lens-zoom.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/glass-lens-zoom/glass-lens-zoom")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for glass-lens-zoom");
+			}
+			return { default: module.default };
+		}),
+		categories: ["media"],
+		meta: {"createdAt":"2026-11-23","image":"https://cdn.tentui.com/images/components/glass-lens-zoom?v=1","video":"https://cdn.tentui.com/videos/components/glass-lens-zoom?v=1"},
+	},
 	"contribution-heat": {
 		name: "contribution-heat",
 		title: "Contribution Heat",
@@ -1156,6 +1174,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"glass-lens-zoom-preview": {
+		name: "glass-lens-zoom-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/glass-lens-zoom-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/glass-lens-zoom-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for glass-lens-zoom-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-96 place-items-center content-center px-4 py-6"},
+	},
+	"glass-lens-zoom-demo": {
+		name: "glass-lens-zoom-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/glass-lens-zoom-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/glass-lens-zoom-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for glass-lens-zoom-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[34rem] place-items-center content-center px-4 py-6"},
 	},
 	"contribution-heat-preview": {
 		name: "contribution-heat-preview",

@@ -29,6 +29,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"dynamic-island": { zoom: 1.4 },
 	"elastic-slider": { zoom: 1.5 },
 	"email-dock": { zoom: 1.2 },
+	"glass-lens-zoom": { className: "place-items-center content-center p-5" },
 	"glass-toggle": { zoom: 3 },
 	// The bubble is portaled outside the stage, so it takes the trigger's zoom.
 	"fluid-tooltip": { zoom: 1.7, className: "pt-[58px]" },

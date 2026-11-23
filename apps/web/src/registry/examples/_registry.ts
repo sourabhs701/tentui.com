@@ -4,6 +4,35 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "glass-lens-zoom-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("glass-lens-zoom")],
+		files: [
+			{
+				path: "examples/glass-lens-zoom-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 place-items-center content-center px-4 py-6",
+		},
+	},
+	{
+		name: "glass-lens-zoom-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("glass-lens-zoom")],
+		files: [
+			{
+				path: "examples/glass-lens-zoom-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName:
+				"min-h-[34rem] place-items-center content-center px-4 py-6",
+		},
+	},
+	{
 		name: "contribution-heat-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("contribution-heat")],

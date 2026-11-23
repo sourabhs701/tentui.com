@@ -1,0 +1,175 @@
+---
+title: Glass Lens Zoom
+description: A React draggable glass lens component for shadcn/ui that magnifies images with convex optical bezel refraction, subtle chromatic dispersion, and momentum drag physics.
+seoTitle: "React Glass Lens Zoom Component for shadcn/ui"
+seoDescription: Glass Lens Zoom is a React magnifying loupe for shadcn/ui with optical bezel refraction, chromatic dispersion, momentum drag physics, and keyboard controls.
+createdAt: 2026-11-23
+updatedAt: 2026-11-23
+---
+
+<ComponentPreview name="glass-lens-zoom-preview" />
+
+Glass Lens Zoom is a free and source-available React image magnifier for shadcn/ui that renders a draggable optical glass lens with convex bezel refraction, subtle chromatic dispersion, and fluid momentum physics. Install it with `npx shadcn@latest add @tentui/glass-lens-zoom` for product photography, editorial galleries, artwork inspection, and tactile visual showcases.
+
+## Example
+
+<ComponentPreview name="glass-lens-zoom-demo" />
+
+## Features
+
+- Optical bezel refraction and dispersion. The central aperture stays completely clear for crisp detail inspection while the curved outer rim bends the magnified image inward with an SVG displacement map and optional RGB chromatic fringe in Chromium, falling back cleanly to pure glass optics elsewhere.
+- Razor-sharp magnification with optional high-resolution `zoomSrc`. The inner magnified layer is pre-sized at full magnification and positioned with GPU-composited `translate3d` and `scale` transforms so dragging and zooming stay at 60 fps with zero layout thrash or blurry upscaling.
+- Physical drag, click-to-glide, and rubber-band limits. Grabbing the lens preserves the exact grab offset with a subtle lift response, releasing a quick flick carries gentle weighted momentum, dragging past the frame edges rubber-bands softly, and tapping anywhere on the photo glides the lens there on a critically damped spring.
+- Dual interaction modes and lens geometries. Switch between `mode="drag"` (a persistent floating loupe) and `mode="hover"` (an origin-anchored loupe that tracks the pointer on hover), and choose between `shape="circle"` and `shape="rounded"` with a specular rim that adapts to both.
+- Responsive, touch-friendly, and keyboard accessible. The lens scales proportionately on narrow mobile viewports, uses `touch-action: pan-y` on the frame so vertical page scrolling is never trapped, and supports full keyboard navigation and magnification controls.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/glass-lens-zoom
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependency</Step>
+
+```bash
+npm install motion
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="glass-lens-zoom"
+  title="components/glass-lens-zoom.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { GlassLensZoom } from "@/components/glass-lens-zoom";
+```
+
+```tsx
+<GlassLensZoom
+  src="/images/studio-still.jpg"
+  zoomSrc="/images/studio-still-4k.jpg"
+  alt="Macro photograph of a brushed aluminum watch dial"
+  defaultZoom={2.4}
+/>
+```
+
+Pass `zoomSrc` when you have a higher-resolution asset to show inside the lens while keeping the base `src` lightweight. By default the frame uses an `aspect-[4/3]` ratio; override it through `classNames={{ frame: "aspect-[16/10]" }}`.
+
+### Hover mode and rounded shape
+
+Switch to `mode="hover"` for a pointer-following inspection loupe, or use `shape="rounded"` for a squircle optical window.
+
+```tsx
+<GlassLensZoom
+  src="/images/architecture.jpg"
+  alt="Brutalist concrete facade in afternoon light"
+  mode="hover"
+  shape="rounded"
+  lensSize={168}
+  showZoomBadge
+/>
+```
+
+### Controlled position, zoom, and imperative handle
+
+Control magnification with `zoom` and `onZoomChange`, sync coordinates with `position` and `onPositionChange`, or attach a `ref` to call `moveTo()` and `reset()`.
+
+```tsx
+const lensRef = useRef<GlassLensZoomHandle>(null);
+
+<GlassLensZoom
+  ref={lensRef}
+  src="/images/botanical.jpg"
+  alt="Close-up botanical print"
+  zoom={zoom}
+  onZoomChange={setZoom}
+  onPositionCommit={(point) => console.log(point.x, point.y)}
+/>
+<button onClick={() => lensRef.current?.reset()}>Reset lens</button>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Drag the lens (mouse or touch) | Tracks 1:1 from the exact grab point with edge rubber-banding and gentle flick momentum |
+| Click or tap anywhere on the image (`mode="drag"`) | Glides the lens smoothly to that spot on a critically damped spring |
+| Double-click the lens | Toggles smoothly between `defaultZoom` and boosted magnification |
+| Hover across the image (`mode="hover"`) | Reveals the lens at the cursor and follows smoothly until pointer leave |
+| `Arrow` keys (hold `Shift` for larger steps) | Moves the lens directly across the image with zero animation lag |
+| `+` / `-` keys | Increases or decreases magnification within `minZoom` and `maxZoom` |
+| `0` or `Home` | Resets the lens to `defaultPosition` and `defaultZoom` |
+
+## Accessibility
+
+The base image retains its semantic `alt` text while the magnified optical layer is marked `aria-hidden="true"` so screen readers do not announce duplicate images. The lens itself is keyboard focusable with a high-contrast `focus-visible` ring, descriptive `aria-label` including the live zoom factor, and direct arrow/zoom/reset key bindings.
+
+Under `prefers-reduced-motion: reduce`, spring glides, lift scaling, and flick momentum are disabled in favor of immediate positioning and crisp transitions. Under `prefers-reduced-transparency: reduce` or `refraction="off"`, SVG bezel displacement is bypassed while keeping crisp magnification and glass framing.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/glass-lens-zoom/glass-lens-zoom.tsx"
+  name="GlassLensZoomProps"
+/>
+
+<AutoTypeTable
+  path="src/registry/components/glass-lens-zoom/glass-lens-zoom.tsx"
+  name="GlassLensZoomPoint"
+/>
+
+<AutoTypeTable
+  path="src/registry/components/glass-lens-zoom/glass-lens-zoom.tsx"
+  name="GlassLensZoomClassNames"
+/>
+
+<AutoTypeTable
+  path="src/registry/components/glass-lens-zoom/glass-lens-zoom.tsx"
+  name="GlassLensZoomHandle"
+/>
+
+## FAQ
+
+### How do I install Glass Lens Zoom with shadcn?
+
+Run `npx shadcn@latest add @tentui/glass-lens-zoom` after adding the `@tentui` registry to `components.json` ([installation guide](/docs/installation)). The CLI copies `glass-lens-zoom.tsx` into your project and installs `motion`.
+
+### Does the optical bezel refraction work in Safari and Firefox?
+
+In Chromium-based browsers, Glass Lens Zoom applies a GPU-accelerated SVG displacement map and subtle RGB chromatic dispersion along the outer bezel while keeping the center aperture sharp. In Safari, Firefox, and when `prefers-reduced-transparency: reduce` or `refraction="off"` is set, it falls back seamlessly to crisp magnification with specular glass rim lighting and zero visual glitches.
+
+### Can I load a higher-resolution image inside the magnified lens?
+
+Yes. Pass your lightweight display image to `src` and a full-resolution asset to `zoomSrc`. The component automatically renders `zoomSrc` inside the lens aperture so magnified details remain sharp even at 3× or 4× zoom.
+
+### Does Glass Lens Zoom work on mobile touch screens and keyboards?
+
+Yes. Dragging the lens captures touch input cleanly while vertical swipes outside the lens still scroll the page naturally, and the lens diameter scales down automatically on compact viewports. Keyboard users can focus the lens to pan with arrow keys, adjust magnification with `+` and `-`, and press `0` or `Home` to reset.
+
+### Is Glass Lens Zoom free to use?
+
+Yes. Glass Lens Zoom is free and source-available: the shadcn CLI copies its source into your project, and you can use it in unlimited personal and client projects under the [TentUI License](/license).
