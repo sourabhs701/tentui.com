@@ -463,6 +463,28 @@
       "type": "registry:block"
     },
     {
+      "name": "typing-indicator",
+      "title": "Typing Indicator",
+      "description": "A typing state drawn as a looping calligraphic ink stroke, spring-coupled dots, or cadence wave with multi-user avatars and zero runtime dependencies.",
+      "files": [
+        {
+          "path": "src/registry/components/typing-indicator/typing-indicator.tsx",
+          "type": "registry:component",
+          "target": "@components/typing-indicator.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-23",
+        "image": "https://cdn.tentui.com/images/components/typing-indicator?v=1",
+        "video": "https://cdn.tentui.com/videos/components/typing-indicator?v=1"
+      },
+      "docs": "https://tentui.com/components/typing-indicator",
+      "categories": [
+        "feedback"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "contribution-heat",
       "title": "Contribution Heat",
       "description": "A calendar heatmap with a spring-driven optical hover loupe, zero-shift day-by-day readout, click-to-pin inspection, and interactive intensity filtering.",

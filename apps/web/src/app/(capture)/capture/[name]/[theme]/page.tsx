@@ -14,6 +14,7 @@ import { MorphLightboxCapture } from "@/components/capture/morph-lightbox-captur
 import { PromptChipInputCapture } from "@/components/capture/prompt-chip-input-capture";
 import { ScrollAccordionCapture } from "@/components/capture/scroll-accordion-capture";
 import { TextScrambleCapture } from "@/components/capture/text-scramble-capture";
+import { TypingIndicatorCapture } from "@/components/capture/typing-indicator-capture";
 import {
 	COMPONENT_CAPTURE_FRAME,
 	COMPONENT_CAPTURE_FRAMING,
@@ -44,6 +45,7 @@ const captureScenes: Record<string, ComponentType> = {
 	"liquid-glass-menu": LiquidGlassMenuCapture,
 	"scroll-accordion": ScrollAccordionCapture,
 	"text-scramble": TextScrambleCapture,
+	"typing-indicator": TypingIndicatorCapture,
 };
 
 export const dynamic = "force-static";

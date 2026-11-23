@@ -2,6 +2,27 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "typing-indicator",
+		type: "registry:component",
+		title: "Typing Indicator",
+		description:
+			"A typing state drawn as a looping calligraphic ink stroke, spring-coupled dots, or cadence wave with multi-user avatars and zero runtime dependencies.",
+		files: [
+			{
+				path: "components/typing-indicator/typing-indicator.tsx",
+				type: "registry:component",
+				target: "@components/typing-indicator.tsx",
+			},
+		],
+		categories: ["feedback"],
+		meta: {
+			createdAt: "2026-11-23",
+			image: "https://cdn.tentui.com/images/components/typing-indicator?v=1",
+			video: "https://cdn.tentui.com/videos/components/typing-indicator?v=1",
+		},
+		docs: "https://tentui.com/components/typing-indicator",
+	},
+	{
 		name: "contribution-heat",
 		type: "registry:component",
 		title: "Contribution Heat",

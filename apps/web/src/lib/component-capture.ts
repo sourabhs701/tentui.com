@@ -79,6 +79,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"theme-toggle": { zoom: 2.4 },
 	"tick-ruler": { zoom: 1.15 },
 	"time-ring": { zoom: 1.1 },
+	"typing-indicator": { zoom: 1.15, className: "px-6" },
 	"variable-font-hover": { className: "px-6" },
 	"wheel-picker": { zoom: 1.3 },
 };

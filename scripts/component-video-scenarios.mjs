@@ -1044,4 +1044,30 @@ export const scenarios = {
 			await d.wait(500);
 		},
 	},
+
+	"typing-indicator": {
+		rest: { x: 430, y: 315 },
+		async run(d) {
+			const mode = (id) => `[data-typing-mode="${id}"]`;
+
+			// Let the calligraphic ink stroke complete a full expressive pass.
+			await d.wait(1550);
+			// Switch to spring-coupled dots and multi-user presence ("Maya and Sam").
+			await d.move(mode("dots"), 560, { x: 0.5, y: 0.55 });
+			await d.wait(140);
+			await d.click();
+			await d.wait(1650);
+			// Switch to rhythmic wave bars.
+			await d.move(mode("wave"), 460, { x: 0.5, y: 0.55 });
+			await d.wait(140);
+			await d.click();
+			await d.wait(1450);
+			// Return to the calligraphic ink stroke so the loop matches frame 1 cleanly.
+			await d.move(mode("ink"), 500, { x: 0.5, y: 0.55 });
+			await d.wait(140);
+			await d.click();
+			await d.move(d.rest, 580);
+			await d.wait(450);
+		},
+	},
 };

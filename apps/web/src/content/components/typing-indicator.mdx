@@ -1,0 +1,156 @@
+---
+title: Typing Indicator
+description: A React typing indicator for shadcn/ui drawn as a looping calligraphic ink stroke, spring-coupled dots, or cadence wave with multi-user avatars and zero runtime dependencies.
+seoTitle: "React Typing Indicator Component for shadcn/ui"
+seoDescription: A React typing indicator for shadcn/ui with a calligraphic ink stroke, spring dots, cadence wave, multi-user avatars, and reduced-motion support.
+createdAt: 2026-11-23
+updatedAt: 2026-11-23
+---
+
+<ComponentPreview name="typing-indicator-preview" />
+
+Typing Indicator is a free and source-available React typing status component for shadcn/ui that renders an organic looping calligraphic ink stroke, spring-coupled dots, or rhythmic cadence bars while someone types. Install it with `npx shadcn@latest add @tentui/typing-indicator` for chat threads, AI assistants, collaborative editors, and live presence bars with zero extra npm dependencies.
+
+## Example
+
+<ComponentPreview name="typing-indicator-demo" />
+
+## Features
+
+- Three handcrafted marks via `variant`: `ink` draws a continuous six-segment calligraphic stroke with a live wet-ink nib gliding along an arc-length-parameterized curve; `dots` animates three dots on an asymmetric spring-like impulse wave; and `wave` ripples four slender cadence bars using GPU-only `scaleY` transforms.
+- Three ready-to-use surfaces (`plain`, `bubble`, `pill`) and three optical sizes (`sm`, `md`, `lg`) that inherit `currentColor` and adapt cleanly to light and dark themes.
+- Automatic multi-user presence formatting. Pass `users` as names or `{ name, avatar, initials, color }` objects to render compact overlapping avatars and natural phrasing like `"Maya is typing"`, `"Maya and Sam are typing"`, or `"Maya, Sam, and 2 others are typing"`.
+- Smooth presence lifecycle with `active`. Toggling `active` fades and settles the indicator cleanly without `scale(0)` pops and immediately stops the animation loop when idle.
+- Idle-stopping performance with zero external dependencies. A single `requestAnimationFrame` loop updates SVG and transform refs directly with zero per-frame React re-renders, and pauses automatically when off screen or in a hidden tab.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/typing-indicator
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="typing-indicator"
+  title="components/typing-indicator.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { TypingIndicator } from "@/components/typing-indicator";
+```
+
+By default, `TypingIndicator` renders the calligraphic `ink` mark inline with zero required props.
+
+```tsx
+<TypingIndicator />
+```
+
+### Chat bubble and dots variant
+
+Pair `surface="bubble"` with `variant="ink"` or `variant="dots"` for incoming chat messages.
+
+```tsx
+<TypingIndicator
+  variant="dots"
+  surface="bubble"
+  size="lg"
+  ariaLabel="Maya is typing"
+/>
+```
+
+### Multi-user presence with avatars
+
+Pass `users` to automatically format the status text and render compact overlapping avatars. Use `maxUsers` (default `2`) to control when extra names collapse into `"and N others"`.
+
+```tsx
+<TypingIndicator
+  variant="ink"
+  surface="pill"
+  users={[
+    { name: "Maya", color: "#0284c7" },
+    { name: "Sam", color: "#059669" },
+    { name: "Kai", color: "#d97706" },
+  ]}
+/>
+```
+
+### Controlled presence and click action
+
+Drive visibility with `active` and optionally pass `onClick` to turn the indicator into a focusable button (for example, jumping to the bottom of a conversation).
+
+```tsx
+<TypingIndicator
+  active={isPeerTyping}
+  surface="pill"
+  speed="brisk"
+  label="Maya is replying"
+  onClick={scrollToLatest}
+/>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Toggle `active` | Smoothly transitions the indicator in or out and pauses the animation loop when idle |
+| Update `users` or `label` | Updates overlapping avatars, truncated copy, and the polite live-region announcement |
+| Click / tap (when `onClick` is set) | Triggers the callback with subtle press feedback (`scale(0.97)`) and a touch-friendly hit target |
+| `Tab` / `Enter` / `Space` (when `onClick` is set) | Focuses the button with a `focus-visible` ring and activates the handler |
+
+## Accessibility
+
+When non-interactive, `TypingIndicator` renders a `role="status"` container with `aria-live="polite"` and `aria-atomic="true"` so screen readers announce the active typist cleanly without interrupting speech, while the SVG ink stroke, dots, wave bars, and decorative avatars stay `aria-hidden="true"`. When `onClick` is provided, it renders a semantic `<button>` with `aria-label` and an internal polite status region, and disables focus automatically while `active` is `false`.
+
+Under `prefers-reduced-motion: reduce` or `animated={false}`, the `requestAnimationFrame` loop does not run. Instead, the mark holds a calm static posture (a resting calligraphic stroke, stepped dot opacities, or stepped wave heights) paired with a gentle opacity-only pulse when `animated` is enabled, and enter/exit transitions drop positional movement. In right-to-left layouts, the ink stroke mirrors horizontally and bubble corners flip logically.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/typing-indicator/typing-indicator.tsx"
+  name="TypingIndicatorProps"
+/>
+
+## FAQ
+
+### How do I install Typing Indicator with shadcn?
+
+Run `npx shadcn@latest add @tentui/typing-indicator` after adding the `@tentui` registry to `components.json` ([installation guide](/docs/installation)). The CLI copies `typing-indicator.tsx` directly into your project with zero additional npm dependencies to install.
+
+### What animation variants and surfaces are included?
+
+Typing Indicator ships with three marks via `variant` (`"ink"`, `"dots"`, and `"wave"`), three container treatments via `surface` (`"plain"`, `"bubble"`, and `"pill"`), three sizes (`"sm"`, `"md"`, `"lg"`), and three animation speeds (`"calm"`, `"normal"`, `"brisk"`). All marks inherit `currentColor` so you can tint them with standard Tailwind text classes.
+
+### How does multi-user presence formatting work?
+
+Pass an array of names or `{ name, avatar, initials, color }` objects to `users`, and Typing Indicator renders compact overlapping avatars along with natural phrasing such as `"Maya is typing"`, `"Maya and Sam are typing"`, or `"Maya, Sam, and 2 others are typing"`. You can adjust the name limit with `maxUsers` or supply a custom `label` to override the generated copy.
+
+### Does Typing Indicator support screen readers and reduced motion?
+
+Yes. It exposes a polite `role="status"` live region announcing the active label or `ariaLabel` while hiding decorative graphics from assistive technology. Under `prefers-reduced-motion: reduce` or `animated={false}`, continuous movement stops completely and falls back to a calm static posture with gentle opacity feedback.
+
+### Is Typing Indicator free to use?
+
+Yes. Typing Indicator is free and source-available: the shadcn CLI copies its source into your project, and you can use it in unlimited personal and client projects under the [TentUI License](/license).

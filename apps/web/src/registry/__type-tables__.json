@@ -11009,6 +11009,275 @@
 			]
 		}
 	],
+	"src/registry/components/typing-indicator/typing-indicator.tsx#TypingIndicatorProps#": [
+		{
+			"id": "typing-indicator.tsx-TypingIndicatorProps",
+			"name": "TypingIndicatorProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "variant",
+					"description": "Visual style of the animated typing mark.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "\"ink\""
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "TypingIndicatorVariant | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "surface",
+					"description": "Container treatment around the mark and optional label.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "\"plain\""
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "TypingIndicatorSurface | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "Optical size of the mark, spacing, avatars, and label.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "\"md\""
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "TypingIndicatorSize | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "speed",
+					"description": "Rhythm of the typing animation.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "\"normal\""
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "TypingIndicatorSpeed | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "active",
+					"description": "Whether someone is currently typing. Switching to `false` smoothly settles\nthe indicator out and stops the animation loop.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "true"
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "label",
+					"description": "Explicit status copy rendered beside the mark (e.g. `\"Maya is typing\"`).\nOverrides the automatic phrasing generated from `users`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "users",
+					"description": "Active typists used to render compact overlapping avatars and automatic\npresence copy such as `\"Maya and Sam are typing\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "TypingIndicatorUser[] | undefined",
+					"simplifiedType": "array",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "maxUsers",
+					"description": "Maximum number of user names listed before grouping into `\"and N others\"`.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "2"
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showAvatars",
+					"description": "Render compact overlapping avatars when `users` is supplied.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "true"
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "markPosition",
+					"description": "Placement of the animated mark relative to the label.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "\"start\""
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"start\" | \"end\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "ariaLabel",
+					"description": "Screen reader announcement override when `active` is `true`.\nDefaults to the formatted `users` copy, string `label`, or `\"Typing\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "animated",
+					"description": "Enable or disable continuous motion. Also respects `prefers-reduced-motion`.",
+					"tags": [
+						{
+							"name": "default",
+							"text": "true"
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onClick",
+					"description": "Optional click handler. When provided, the indicator renders as a focusable\nbutton with subtle press feedback.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "MouseEventHandler<HTMLButtonElement> | undefined",
+					"simplifiedType": "MouseEventHandler<object>",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "className",
+					"description": "Additional classes merged onto the root container.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "markClassName",
+					"description": "Additional classes merged onto the animated mark wrapper.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "labelClassName",
+					"description": "Additional classes merged onto the label wrapper.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/variable-font-hover/variable-font-hover.tsx#VariableFontHoverProps#": [
 		{
 			"id": "variable-font-hover.tsx-VariableFontHoverProps",
