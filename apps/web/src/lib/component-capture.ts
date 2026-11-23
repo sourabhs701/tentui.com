@@ -66,6 +66,7 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"star-rating": { zoom: 1.5 },
 	"stateful-button": { zoom: 1.5 },
 	"swipe-actions": { zoom: 1.1 },
+	"text-scramble": { className: "px-6" },
 	"theme-toggle": { zoom: 2.4 },
 	"tick-ruler": { zoom: 1.15 },
 	"time-ring": { zoom: 1.1 },

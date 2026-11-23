@@ -8141,6 +8141,248 @@
 			]
 		}
 	],
+	"src/registry/components/text-scramble/text-scramble.tsx#TextScrambleHandle#": [
+		{
+			"id": "text-scramble.tsx-TextScrambleHandle",
+			"name": "TextScrambleHandle",
+			"description": "",
+			"entries": [
+				{
+					"name": "scramble",
+					"description": "Play a fresh scramble from start to settled text.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "() => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "replay",
+					"description": "Alias for `scramble()` for consistency with TentUI text animations.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "() => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "reset",
+					"description": "Immediately stop scrambling and settle on the final text.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "() => void",
+					"simplifiedType": "function",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/text-scramble/text-scramble.tsx#TextScrambleProps#": [
+		{
+			"id": "text-scramble.tsx-TextScrambleProps",
+			"name": "TextScrambleProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "children",
+					"description": "Plain string to scramble and settle. Updating `children` automatically scrambles to the new text.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "as",
+					"description": "Semantic HTML element to render. Defaults to `\"span\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "TextScrambleElement | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "Optional display typography scale preset. Omit to inherit surrounding font styling.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "trigger",
+					"description": "When the scramble runs: `\"view\"` on entering viewport, `\"mount\"` immediately, `\"hover\"` on pointer enter, keyboard focus, or tap, or `\"manual\"` via `active` or ref. Defaults to `\"view\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "TextScrambleTrigger | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "direction",
+					"description": "Sweep order in which characters lock into place. Defaults to `\"ltr\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "TextScrambleDirection | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "duration",
+					"description": "Total scramble duration in milliseconds (150–5000). Defaults to `650`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "speed",
+					"description": "Base interval in milliseconds between glyph flips before deceleration (16–200). Defaults to `38`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "characterSet",
+					"description": "Character preset (`\"alphanumeric\"`, `\"letters\"`, `\"uppercase\"`, `\"lowercase\"`, `\"numeric\"`, `\"binary\"`, `\"symbols\"`) or a custom string of glyphs. Defaults to `\"alphanumeric\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "TextScrambleCharacterSet | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "active",
+					"description": "Controlled trigger for `trigger=\"manual\"`: setting `true` runs a scramble and `false` settles immediately.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "animated",
+					"description": "Set to `false` to disable all animation and render static text. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "scrambleClassName",
+					"description": "Extra class name applied to glyphs while they are actively scrambling.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onScrambleComplete",
+					"description": "Called when a scramble run finishes settling on the final text.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "ref",
+					"description": "Imperative handle exposing `scramble()`, `replay()`, and `reset()`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "Ref<TextScrambleHandle> | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/theme-toggle/theme-toggle.tsx#ThemeToggleProps#": [
 		{
 			"id": "theme-toggle.tsx-ThemeToggleProps",

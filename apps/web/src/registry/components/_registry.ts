@@ -2,6 +2,27 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "text-scramble",
+		type: "registry:component",
+		title: "Text Scramble",
+		description:
+			"Letters scramble in place through optical-width-matched glyphs and decelerate cleanly onto the final word with zero layout shift while keeping the real text selectable and readable.",
+		files: [
+			{
+				path: "components/text-scramble/text-scramble.tsx",
+				type: "registry:component",
+				target: "@components/text-scramble.tsx",
+			},
+		],
+		categories: ["typography"],
+		meta: {
+			createdAt: "2026-11-22",
+			image: "https://cdn.tentui.com/images/components/text-scramble?v=1",
+			video: "https://cdn.tentui.com/videos/components/text-scramble?v=1",
+		},
+		docs: "https://tentui.com/components/text-scramble",
+	},
+	{
 		name: "pagination-rail",
 		type: "registry:component",
 		title: "Pagination Rail",

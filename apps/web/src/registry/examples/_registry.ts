@@ -4,6 +4,34 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "text-scramble-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("text-scramble")],
+		files: [
+			{
+				path: "examples/text-scramble-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "text-scramble-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("text-scramble")],
+		files: [
+			{
+				path: "examples/text-scramble-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[34rem] place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "pagination-rail-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("pagination-rail")],

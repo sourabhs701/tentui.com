@@ -1,0 +1,217 @@
+---
+title: Text Scramble
+description: A React text scramble component for shadcn/ui whose letters cycle in place through width-matched glyphs and decelerate cleanly onto the final word with zero layout shift.
+seoTitle: "React Text Scramble Component for shadcn/ui"
+seoDescription: Text Scramble is a React typography animation for shadcn/ui that cycles letters in place with optical width locking, decelerating settle motion, and full accessibility.
+createdAt: 2026-11-22
+updatedAt: 2026-11-23
+---
+
+<ComponentPreview name="text-scramble-preview" />
+
+Text Scramble is a free and source-available React typography animation for shadcn/ui where letters scramble in place and decelerate smoothly onto the final word with zero layout shift. Install it with `npx shadcn@latest add @tentui/text-scramble` for interactive headings, status labels, navigation links, and phrase transitions.
+
+## Example
+
+<ComponentPreview name="text-scramble-demo" />
+
+## Features
+
+- Optical width-locked glyph slots. Each grapheme is measured directly from the
+  rendered text via `Intl.Segmenter` and `Range.getClientRects()`, and candidate
+  scramble characters are matched to each slot's advance width so proportional
+  sans-serif headlines never jitter, collide, or reflow across lines.
+- Decelerating mechanical settle. As the resolve front approaches each
+  character, its flip cadence slows down and brightens before locking into place
+  with a crisp 110 ms vertical settle (`transform` and `opacity` only).
+- Smart word-to-word morphing. Updating `children` automatically scrambles to
+  the new string while keeping any shared word-boundary prefix (such as
+  `"Status: "`) calmly anchored in place.
+- Curated presets and case matching. Choose from `alphanumeric`, `letters`,
+  `uppercase`, `lowercase`, `numeric`, `binary`, `symbols`, or any custom glyph
+  string. In `alphanumeric` and `letters` modes, uppercase targets cycle through
+  uppercase letters, lowercase through lowercase, digits through digits, and
+  punctuation stays anchored.
+- Idle-stopping performance with zero runtime dependencies. A single
+  `requestAnimationFrame` loop runs only while glyphs are actively scrambling
+  and tears down the overlay completely once settled, leaving native kerned text
+  at rest with zero CPU usage and no extra npm packages.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/text-scramble
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="text-scramble"
+  title="components/text-scramble.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { TextScramble } from "@/components/text-scramble";
+```
+
+```tsx
+<TextScramble as="h2" size="lg">
+  Precision in motion
+</TextScramble>
+```
+
+`children` must be a plain string so the component can measure each grapheme
+from the browser's own layout. By default it renders an inline `span` that
+inherits surrounding typography, making it effortless inside buttons, links, and
+status badges. Pass `as` (`h1` through `h4`, `p`, `span`, or `div`) and optional
+display scale `size` (`sm`, `md`, `lg`, `xl`) for headings.
+
+### Triggers
+
+By default `trigger="view"` runs once when 35% of the text enters the viewport.
+Use `trigger="mount"` to scramble immediately, `trigger="hover"` to scramble on
+pointer enter, keyboard focus, or touch tap, or `trigger="manual"` to drive runs
+explicitly with `active` or an imperative ref.
+
+```tsx
+<TextScramble trigger="hover" duration={440} speed={30} tabIndex={0}>
+  Engineering
+</TextScramble>
+```
+
+### Dynamic text morphing
+
+Whenever `children` changes, `TextScramble` smoothly scrambles into the new
+word. If the previous and next strings share a word-boundary prefix, that prefix
+remains steady while only the changed portion scrambles.
+
+```tsx
+const [status, setStatus] = useState("Deploying");
+
+<TextScramble as="h3" size="md" trigger="manual">
+  {`Status: ${status}`}
+</TextScramble>
+```
+
+### Directions, character sets, and imperative control
+
+Control sweep order with `direction` (`ltr`, `rtl`, `center`, or `random`), pick
+a `characterSet` preset or custom string, and attach a `ref` for `scramble()`,
+`replay()`, and `reset()`.
+
+```tsx
+const ref = useRef<TextScrambleHandle>(null);
+
+<TextScramble
+  ref={ref}
+  direction="center"
+  characterSet="binary"
+  onScrambleComplete={() => console.log("Settled")}
+>
+  SIGNAL 0101 LOCKED
+</TextScramble>
+<button onClick={() => ref.current?.replay()}>Replay</button>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Enter viewport (`trigger="view"`) | Scrambles in place once and settles on the final word |
+| Hover with a mouse or pen (`trigger="hover"`) | Replays the scramble in place and settles cleanly |
+| Tap on touch (`trigger="hover"`) | Scrambles on clean tap without triggering while scrolling |
+| Focus via keyboard (`trigger="hover"` + `tabIndex={0}`) | Shows a `focus-visible` ring and plays the scramble |
+| Press and drag with a mouse | Steps the visual overlay aside so native text selection works |
+| Change `children` prop | Scrambles smoothly into the new string with zero layout shift |
+
+## Accessibility
+
+The real string always stays intact as a single unbroken text node inside the
+chosen semantic element from the first paint, so screen readers announce one
+clean word or sentence, search engines index the real copy, find-in-page works
+normally, and text stays copyable even mid-scramble. The visual glyph layer is
+marked `aria-hidden="true"`, `pointer-events-none`, and `select-none`.
+
+Under `prefers-reduced-motion: reduce` or `animated={false}`, no glyph cycling,
+overlay spans, or frame loop run. Dynamic updates to `children` use a gentle
+180 ms opacity crossfade instead, and `onScrambleComplete` still fires when
+triggered imperatively or via `active`. In right-to-left text, `direction="ltr"`
+automatically sweeps from the logical start of the line.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/text-scramble/text-scramble.tsx"
+  name="TextScrambleProps"
+/>
+
+<AutoTypeTable
+  path="src/registry/components/text-scramble/text-scramble.tsx"
+  name="TextScrambleHandle"
+/>
+
+## FAQ
+
+### How do I install Text Scramble with shadcn?
+
+Run `npx shadcn@latest add @tentui/text-scramble` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)). The
+CLI copies `text-scramble.tsx` into your project with zero extra npm
+dependencies to install.
+
+### Does Text Scramble cause layout shift or horizontal jitter?
+
+No. The real text remains unbroken in document flow to lock bounding boxes and
+line breaks, and each scrambling slot measures its grapheme width via
+`Range.getClientRects()` and picks width-matched glyphs centered on the slot's
+optical midpoint, eliminating horizontal jitter even in proportional fonts.
+
+### Is the text readable by screen readers and selectable while animating?
+
+Yes. Assistive technologies always read the single unbroken real text node from
+the first paint while the animated layer stays `aria-hidden`. Pressing with a
+mouse to select text immediately steps the visual overlay aside so native
+copy-and-paste works cleanly.
+
+### How is Text Scramble different from ASCII Decode Text?
+
+Text Scramble swaps each letter in place through single width-matched glyphs and
+decelerates onto the final word, making it ideal for inline labels, links,
+status readouts, and phrase transitions. [ASCII Decode Text](/components/ascii-decode-text)
+rasterises display headlines into a multi-cell canvas ASCII art grid with an
+interactive pointer lens.
+
+### Does Text Scramble respect reduced motion and touch devices?
+
+Yes. Under `prefers-reduced-motion: reduce` or `animated={false}`, glyph
+cycling is disabled completely and dynamic text updates use a brief opacity
+crossfade. On touch devices with `trigger="hover"`, clean taps replay the
+scramble while scroll drags are ignored and never leave a sticky hover state.
+
+### Is Text Scramble free to use?
+
+Yes. Text Scramble is free and source-available: the shadcn CLI copies its
+source into your project, and you can use it in unlimited personal and client
+projects under the [TentUI License](/license).

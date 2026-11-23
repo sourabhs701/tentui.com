@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"text-scramble": {
+		name: "text-scramble",
+		title: "Text Scramble",
+		description: "Letters scramble in place through optical-width-matched glyphs and decelerate cleanly onto the final word with zero layout shift while keeping the real text selectable and readable.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/text-scramble/text-scramble.tsx","type":"registry:component","target":"@components/text-scramble.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/text-scramble/text-scramble")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for text-scramble");
+			}
+			return { default: module.default };
+		}),
+		categories: ["typography"],
+		meta: {"createdAt":"2026-11-22","image":"https://cdn.tentui.com/images/components/text-scramble?v=1","video":"https://cdn.tentui.com/videos/components/text-scramble?v=1"},
+	},
 	"pagination-rail": {
 		name: "pagination-rail",
 		title: "Pagination Rail",
@@ -1066,6 +1084,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"text-scramble-preview": {
+		name: "text-scramble-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/text-scramble-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/text-scramble-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for text-scramble-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4"},
+	},
+	"text-scramble-demo": {
+		name: "text-scramble-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/text-scramble-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/text-scramble-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for text-scramble-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[34rem] place-items-center content-center px-4"},
 	},
 	"pagination-rail-preview": {
 		name: "pagination-rail-preview",
