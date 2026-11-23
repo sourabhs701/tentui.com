@@ -44,10 +44,10 @@ const TOUCH_TAP_SLOP_PX = 10;
 
 /** Display scale presets: leading tightens and tracking narrows with size. */
 const sizes = {
-	sm: "text-2xl leading-[1.2] tracking-[-0.02em] font-semibold",
-	md: "text-4xl leading-[1.12] tracking-[-0.025em] font-semibold",
-	lg: "text-4xl leading-[1.1] tracking-[-0.025em] font-semibold sm:text-5xl sm:leading-[1.06] sm:tracking-[-0.03em]",
-	xl: "text-5xl leading-[1.06] tracking-[-0.03em] font-semibold sm:text-6xl sm:tracking-[-0.035em]",
+	sm: "text-xl leading-[1.2] tracking-[-0.02em] font-semibold sm:text-2xl",
+	md: "text-3xl leading-[1.14] tracking-[-0.025em] font-semibold sm:text-4xl sm:leading-[1.12]",
+	lg: "text-3xl leading-[1.12] tracking-[-0.025em] font-semibold sm:text-5xl sm:leading-[1.06] sm:tracking-[-0.03em]",
+	xl: "text-4xl leading-[1.08] tracking-[-0.03em] font-semibold sm:text-6xl sm:tracking-[-0.035em]",
 } as const;
 
 export type TextScrambleElement =
@@ -1042,7 +1042,7 @@ export function TextScramble({
 			data-slot="text-scramble"
 			data-state="settled"
 			className={cn(
-				"relative rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+				"relative max-w-full rounded-sm outline-none [-webkit-tap-highlight-color:transparent] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
 				isInlineTag ? "inline-block" : "block",
 				size ? sizes[size] : undefined,
 				className,

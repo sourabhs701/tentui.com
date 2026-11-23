@@ -27,7 +27,7 @@ function TextScramblePreview() {
 						scrambleRef.current?.replay();
 					}
 				}}
-				className="cursor-pointer rounded-md outline-none transition-transform duration-150 ease-out focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-offset-4 focus-visible:ring-offset-background active:scale-[0.985]"
+				className="min-h-11 max-w-full cursor-pointer rounded-md px-2 py-2 outline-none transition-transform duration-150 ease-out [-webkit-tap-highlight-color:transparent] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-offset-4 focus-visible:ring-offset-background active:scale-[0.985] sm:py-1"
 				aria-label="Cycle scrambled headline"
 			>
 				<TextScramble

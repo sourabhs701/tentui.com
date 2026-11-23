@@ -62,7 +62,7 @@ function ReplayButton({ onClick }: { onClick: () => void }) {
 		<button
 			type="button"
 			onClick={onClick}
-			className="h-7 shrink-0 cursor-pointer rounded-md border bg-background px-2.5 font-medium text-foreground text-xs shadow-xs outline-none transition-[background-color,transform] duration-150 ease-out hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.97]"
+			className="min-h-10 shrink-0 cursor-pointer rounded-md border bg-background px-3.5 font-medium text-foreground text-xs shadow-xs outline-none transition-[background-color,transform] duration-150 ease-out [-webkit-tap-highlight-color:transparent] hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.97] sm:min-h-7 sm:px-2.5"
 		>
 			Replay
 		</button>
@@ -108,7 +108,7 @@ function TextScrambleDemo() {
 		CHARSET_OPTIONS[0]!;
 
 	return (
-		<div className="flex w-full max-w-xl flex-col items-center gap-12 px-4 py-6">
+		<div className="flex w-full max-w-xl flex-col items-center gap-10 px-3 py-5 sm:gap-12 sm:px-4 sm:py-6">
 			<Section
 				title="Dynamic text morphing"
 				description="Switch states and watch the shared prefix stay anchored while the new word settles."
@@ -125,7 +125,7 @@ function TextScrambleDemo() {
 							aria-pressed={status === option}
 							onClick={() => setStatus(option)}
 							className={cn(
-								"h-7 cursor-pointer rounded-md px-2.5 font-medium text-xs outline-none transition-colors focus-visible:ring-3 focus-visible:ring-ring/50",
+								"min-h-10 cursor-pointer rounded-md px-3 font-medium text-xs outline-none transition-colors [-webkit-tap-highlight-color:transparent] focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-7 sm:px-2.5",
 								status === option
 									? "bg-background text-foreground shadow-xs"
 									: "text-muted-foreground hover:text-foreground",
@@ -183,7 +183,7 @@ function TextScrambleDemo() {
 								requestAnimationFrame(() => charsetRef.current?.replay());
 							}}
 							className={cn(
-								"h-7 cursor-pointer rounded-md px-2.5 font-medium text-xs outline-none transition-colors focus-visible:ring-3 focus-visible:ring-ring/50",
+								"min-h-10 cursor-pointer rounded-md px-3 font-medium text-xs outline-none transition-colors [-webkit-tap-highlight-color:transparent] focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-7 sm:px-2.5",
 								charset === option.value
 									? "bg-background text-foreground shadow-xs"
 									: "text-muted-foreground hover:text-foreground",
@@ -194,7 +194,7 @@ function TextScrambleDemo() {
 					))}
 				</div>
 
-				<div className="flex items-center gap-3 rounded-lg border bg-muted/20 px-4 py-2.5">
+				<div className="flex max-w-full flex-wrap items-center justify-center gap-3 rounded-lg border bg-muted/20 px-3.5 py-2.5 sm:flex-nowrap sm:px-4">
 					<TextScramble
 						ref={charsetRef}
 						as="span"
@@ -213,7 +213,7 @@ function TextScrambleDemo() {
 				title="Hover navigation"
 				description="Fast, restrained in-place scrambles on pointer enter, tap, or keyboard focus."
 			>
-				<div className="flex w-full max-w-xs flex-col items-center gap-2">
+				<div className="flex w-full max-w-xs flex-col items-center gap-1 sm:gap-2">
 					{["Typography", "Interaction", "Engineering"].map((item) => (
 						<TextScramble
 							key={item}
@@ -223,7 +223,7 @@ function TextScrambleDemo() {
 							duration={440}
 							speed={30}
 							tabIndex={0}
-							className="cursor-default"
+							className="cursor-pointer px-3 py-2 sm:py-0.5"
 						>
 							{item}
 						</TextScramble>
