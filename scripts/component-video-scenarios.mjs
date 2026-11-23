@@ -263,6 +263,57 @@ export const scenarios = {
 		},
 	},
 
+	"chart-brush": {
+		rest: { x: 440, y: 330 },
+		async run(d) {
+			const plot = await d.page
+				.locator('[data-slot="chart-brush-plot"]')
+				.boundingBox();
+			const grip = (edge) =>
+				`[data-slot="chart-brush-${edge}"] [data-slot="chart-brush-grip"]`;
+			// The preview has 90 evenly spaced days inside a 12px inset.
+			const inset = (12 / 400) * plot.width;
+			const xAt = (index) =>
+				plot.x + inset + (index / 89) * (plot.width - inset * 2);
+			const y = plot.y + plot.height * 0.45;
+			await d.wait(500);
+			// Pull the end handle back through the dip: the ink retracts, the
+			// change rolls from +38% into the red, and each day ticks.
+			await d.move(grip("end"), 800);
+			await d.wait(150);
+			await d.down();
+			await d.move({ x: xAt(50), y: (await d.point(grip("end"))).y }, 900);
+			await d.wait(120);
+			await d.up();
+			await d.wait(700);
+			// Grab the window and slide it along the climb.
+			await d.move({ x: xAt(42), y }, 600);
+			await d.wait(150);
+			await d.down();
+			await d.move({ x: xAt(64), y }, 1100);
+			await d.wait(120);
+			await d.up();
+			await d.wait(700);
+			// Sweep a fresh range on the empty plot before the dip.
+			await d.move({ x: xAt(8), y }, 650);
+			await d.wait(150);
+			await d.down();
+			await d.move({ x: xAt(30), y }, 800);
+			await d.up();
+			await d.wait(700);
+			// Double-click glides back to the default range, so the clip loops.
+			// The second press needs clickCount 2 for the browser to fire dblclick.
+			await d.click(70);
+			await d.wait(60);
+			await d.page.mouse.down({ clickCount: 2 });
+			await d.wait(70);
+			await d.page.mouse.up({ clickCount: 2 });
+			await d.wait(1000);
+			await d.move(d.rest, 700);
+			await d.wait(400);
+		},
+	},
+
 	"tick-ruler": {
 		async run(d) {
 			const track = '[data-slot="tick-ruler-track"]';

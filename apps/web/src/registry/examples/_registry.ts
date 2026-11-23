@@ -4,6 +4,34 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "chart-brush-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("chart-brush")],
+		files: [
+			{
+				path: "examples/chart-brush-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-96 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "chart-brush-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("chart-brush")],
+		files: [
+			{
+				path: "examples/chart-brush-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			demoClassName: "min-h-96 place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "text-scramble-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("text-scramble")],
