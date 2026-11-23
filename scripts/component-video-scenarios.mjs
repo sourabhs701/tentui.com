@@ -982,4 +982,29 @@ export const scenarios = {
 			await d.wait(500);
 		},
 	},
+
+	"hover-peek-card": {
+		rest: { x: 432, y: 318 },
+		async run(d) {
+			const first = '[data-peek-trigger="edge-cache"]';
+			const second = '[data-peek-trigger="surface-tokens"]';
+			const card = '[data-slot="hover-peek-card-content"]';
+
+			await d.wait(400);
+			// Hover the first inline pill so the preview card lifts out of it.
+			await d.move(first, 620, { x: 0.5, y: 0.5 });
+			await d.wait(650);
+			// Drift smoothly onto the open card to show the safe bridge and subtle sheen.
+			await d.move(card, 520, { x: 0.72, y: 0.36 });
+			await d.wait(220);
+			await d.move(card, 560, { x: 0.28, y: 0.52 });
+			await d.wait(280);
+			// Glide to the sibling pill for an instant zero-delay group handoff.
+			await d.move(second, 560, { x: 0.5, y: 0.5 });
+			await d.wait(900);
+			// Return to rest so the card settles closed and the loop starts clean.
+			await d.move(d.rest, 640);
+			await d.wait(620);
+		},
+	},
 };

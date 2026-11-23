@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "hover-peek-card",
+		type: "registry:component",
+		title: "Hover Peek Card",
+		description:
+			"Hover or long-press lifts a rich preview card from its trigger on an origin-aware spring, with safe-corridor hover bridges, group skip-delay handoffs, and touch dismiss scrims.",
+		dependencies: ["motion"],
+		files: [
+			{
+				path: "components/hover-peek-card/hover-peek-card.tsx",
+				type: "registry:component",
+				target: "@components/hover-peek-card.tsx",
+			},
+		],
+		categories: ["overlays"],
+		meta: {
+			createdAt: "2026-11-21",
+			image: "https://cdn.tentui.com/images/components/hover-peek-card?v=1",
+			video: "https://cdn.tentui.com/videos/components/hover-peek-card?v=1",
+		},
+		docs: "https://tentui.com/components/hover-peek-card",
+	},
+	{
 		name: "range-span",
 		type: "registry:component",
 		title: "Range Span",

@@ -31,6 +31,8 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"glass-toggle": { zoom: 3 },
 	// The bubble is portaled outside the stage, so it takes the trigger's zoom.
 	"fluid-tooltip": { zoom: 1.7, className: "pt-[58px]" },
+	// The peek card is portaled out of the stage, so it is framed at 1:1 with full stage height.
+	"hover-peek-card": { className: "p-0" },
 	"brand-context-menu": { zoom: 2 },
 	"bubble-wrap": { zoom: 1.2 },
 	// The docs preview's min-h-96 is taller than the frame; center the chart instead.

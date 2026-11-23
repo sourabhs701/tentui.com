@@ -6,6 +6,7 @@ import { AgentThinkingCapture } from "@/components/capture/agent-thinking-captur
 import { AsciiDecodeTextCapture } from "@/components/capture/ascii-decode-text-capture";
 import { ComponentCaptureStage } from "@/components/capture/component-capture-stage";
 import { FluidTooltipCapture } from "@/components/capture/fluid-tooltip-capture";
+import { HoverPeekCardCapture } from "@/components/capture/hover-peek-card-capture";
 import { InkFilterBarCapture } from "@/components/capture/ink-filter-bar-capture";
 import { LiquidGlassMenuCapture } from "@/components/capture/liquid-glass-menu-capture";
 import { MorphDialogCapture } from "@/components/capture/morph-dialog-capture";
@@ -34,6 +35,7 @@ const captureIndex = Index as Record<string, CaptureIndexItem>;
 const captureScenes: Record<string, ComponentType> = {
 	"agent-thinking": AgentThinkingCapture,
 	"fluid-tooltip": FluidTooltipCapture,
+	"hover-peek-card": HoverPeekCardCapture,
 	"ascii-decode-text": AsciiDecodeTextCapture,
 	"ink-filter-bar": InkFilterBarCapture,
 	"morph-dialog": MorphDialogCapture,
