@@ -4,6 +4,35 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "hover-peek-card-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("hover-peek-card")],
+		files: [
+			{
+				path: "examples/hover-peek-card-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName:
+				"min-h-[22rem] place-items-center content-end px-4 pb-10",
+		},
+	},
+	{
+		name: "hover-peek-card-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("hover-peek-card")],
+		files: [
+			{
+				path: "examples/hover-peek-card-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[30rem] place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "pagination-rail-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("pagination-rail")],

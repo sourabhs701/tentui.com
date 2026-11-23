@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"hover-peek-card": {
+		name: "hover-peek-card",
+		title: "Hover Peek Card",
+		description: "Hover or long-press lifts a rich preview card from its trigger on an origin-aware spring, with safe-corridor hover bridges, group skip-delay handoffs, and touch dismiss scrims.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/hover-peek-card/hover-peek-card.tsx","type":"registry:component","target":"@components/hover-peek-card.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/hover-peek-card/hover-peek-card")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for hover-peek-card");
+			}
+			return { default: module.default };
+		}),
+		categories: ["overlays"],
+		meta: {"createdAt":"2026-11-21","image":"https://cdn.tentui.com/images/components/hover-peek-card?v=1","video":"https://cdn.tentui.com/videos/components/hover-peek-card?v=1"},
+	},
 	"pagination-rail": {
 		name: "pagination-rail",
 		title: "Pagination Rail",
@@ -1066,6 +1084,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"hover-peek-card-preview": {
+		name: "hover-peek-card-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/hover-peek-card-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/hover-peek-card-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for hover-peek-card-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[22rem] place-items-center content-end px-4 pb-10"},
+	},
+	"hover-peek-card-demo": {
+		name: "hover-peek-card-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/hover-peek-card-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/hover-peek-card-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for hover-peek-card-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[30rem] place-items-center content-center px-4"},
 	},
 	"pagination-rail-preview": {
 		name: "pagination-rail-preview",

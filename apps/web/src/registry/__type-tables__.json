@@ -2777,6 +2777,569 @@
 			]
 		}
 	],
+	"src/registry/components/hover-peek-card/hover-peek-card.tsx#HoverPeekCardContentProps#": [
+		{
+			"id": "hover-peek-card.tsx-HoverPeekCardContentProps",
+			"name": "HoverPeekCardContentProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "side",
+					"description": "Overrides the root `side` for this card.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "HoverPeekCardSide | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "align",
+					"description": "Overrides the root `align` for this card.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "HoverPeekCardAlign | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sideOffset",
+					"description": "Overrides the root `sideOffset` in px.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "collisionPadding",
+					"description": "Minimum clearance in px from viewport edges. Defaults to `12`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "Visual surface treatment. Defaults to root value or `\"elevated\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "HoverPeekCardVariant | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "aria-label",
+					"description": "Accessible label when no `HoverPeekCardTitle` is rendered inside the card.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "className",
+					"description": "Additional classes applied to the card surface.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/hover-peek-card/hover-peek-card.tsx#HoverPeekCardGroupProps#": [
+		{
+			"id": "hover-peek-card.tsx-HoverPeekCardGroupProps",
+			"name": "HoverPeekCardGroupProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "openDelay",
+					"description": "Delay in ms before opening on pointer hover. Defaults to `260`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "closeDelay",
+					"description": "Delay in ms before closing after the pointer leaves trigger and card. Defaults to `160`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "skipDelayDuration",
+					"description": "Window in ms after one card closes during which sibling cards open instantly. Defaults to `350`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "longPressDelay",
+					"description": "Long-press duration in ms on touch devices. Defaults to `420`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "side",
+					"description": "Default preferred side for cards in this group. Defaults to `\"top\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "HoverPeekCardSide | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "align",
+					"description": "Default alignment for cards in this group. Defaults to `\"center\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "HoverPeekCardAlign | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sideOffset",
+					"description": "Default gap in px between trigger and card. Defaults to `10`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "Default surface variant for cards in this group. Defaults to `\"elevated\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "HoverPeekCardVariant | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "interactiveTilt",
+					"description": "Enable subtle pointer-driven tilt and surface sheen on fine pointers. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/hover-peek-card/hover-peek-card.tsx#HoverPeekCardMediaProps#": [
+		{
+			"id": "hover-peek-card.tsx-HoverPeekCardMediaProps",
+			"name": "HoverPeekCardMediaProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "src",
+					"description": "Optional image URL to render inside the media frame.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "alt",
+					"description": "Accessible alt text when `src` is provided.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "aspect",
+					"description": "Aspect ratio utility preset. Defaults to `\"16/9\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "\"auto\" | \"16/9\" | \"2/1\" | \"4/3\" | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "overlay",
+					"description": "Optional badge or caption overlaid cleanly in the media frame.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/hover-peek-card/hover-peek-card.tsx#HoverPeekCardProps#": [
+		{
+			"id": "hover-peek-card.tsx-HoverPeekCardProps",
+			"name": "HoverPeekCardProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "open",
+					"description": "Controlled open state.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultOpen",
+					"description": "Initial open state for uncontrolled usage. Defaults to `false`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onOpenChange",
+					"description": "Called whenever the peek card opens or closes.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((open: boolean) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "openDelay",
+					"description": "Delay in ms before opening on pointer hover. Defaults to group value or `260`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "closeDelay",
+					"description": "Delay in ms before closing after leaving trigger and card. Defaults to group value or `160`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "longPressDelay",
+					"description": "Hold duration in ms on touch devices to lift the peek card. Defaults to group value or `420`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "side",
+					"description": "Preferred placement side. Defaults to group value or `\"top\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "HoverPeekCardSide | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "align",
+					"description": "Alignment along the trigger edge. Defaults to group value or `\"center\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "HoverPeekCardAlign | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sideOffset",
+					"description": "Distance in px between the trigger and the card. Defaults to group value or `10`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "Surface visual style. Defaults to group value or `\"elevated\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "HoverPeekCardVariant | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "interactiveTilt",
+					"description": "Subtle spring-smoothed tilt and light sheen on desktop hover. Defaults to group value or `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "Prevents the peek card from opening on hover, focus, or long-press. Defaults to `false`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/hover-peek-card/hover-peek-card.tsx#HoverPeekCardTriggerProps#": [
+		{
+			"id": "hover-peek-card.tsx-HoverPeekCardTriggerProps",
+			"name": "HoverPeekCardTriggerProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "asChild",
+					"description": "Merge props onto the single child element instead of rendering a wrapper button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/ink-filter-bar/ink-filter-bar.tsx#InkFilterBarProps#": [
 		{
 			"id": "ink-filter-bar.tsx-InkFilterBarProps",
