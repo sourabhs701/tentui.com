@@ -26,6 +26,10 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"animated-tabs": { zoom: 1.6 },
 	"contribution-heat": { zoom: 1.08, className: "px-4" },
 	"copy-button": { zoom: 1.8 },
+	"date-scrub-field": {
+		zoom: 1.25,
+		className: "place-items-center content-center",
+	},
 	"dynamic-island": { zoom: 1.4 },
 	"elastic-slider": { zoom: 1.5 },
 	"email-dock": { zoom: 1.2 },

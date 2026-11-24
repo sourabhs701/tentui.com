@@ -35,8 +35,9 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 		id: "inputs-and-pickers",
 		title: "Inputs and pickers",
 		description:
-			"Write a prompt with chips, enter a code, filter a list, or pick a number, rating, or time by dragging, scrolling, or typing.",
+			"Write a prompt with chips, enter a code, filter a list, or pick a date, number, rating, or time by dragging, scrolling, or typing.",
 		components: [
+			"date-scrub-field",
 			"elastic-slider",
 			"ink-filter-bar",
 			"number-stepper",

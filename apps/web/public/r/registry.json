@@ -463,6 +463,35 @@
       "type": "registry:block"
     },
     {
+      "name": "date-scrub-field",
+      "title": "Date Scrub Field",
+      "description": "A React date input for shadcn/ui where you drag month, day, or year horizontally to scrub with a vernier loupe, rolling digits, and rubber-band bounds.",
+      "dependencies": [
+        "@number-flow/react",
+        "@rexa-developer/tiks",
+        "lucide-react",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/date-scrub-field/date-scrub-field.tsx",
+          "type": "registry:component",
+          "target": "@components/date-scrub-field.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-24",
+        "image": "https://cdn.tentui.com/images/components/date-scrub-field?v=1",
+        "video": "https://cdn.tentui.com/videos/components/date-scrub-field?v=1"
+      },
+      "docs": "https://tentui.com/components/date-scrub-field",
+      "categories": [
+        "inputs"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "contribution-heat",
       "title": "Contribution Heat",
       "description": "A calendar heatmap with a spring-driven optical hover loupe, zero-shift day-by-day readout, click-to-pin inspection, and interactive intensity filtering.",

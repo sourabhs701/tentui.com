@@ -1,0 +1,199 @@
+---
+title: Date Scrub Field
+description: A React date input for shadcn/ui where you drag month, day, or year horizontally to scrub with a vernier loupe, rolling digits, and rubber-band bounds.
+seoTitle: React Date Scrub Field Component for shadcn/ui
+seoDescription: Date Scrub Field is a React date input for shadcn/ui with click-and-drag scrubbing on month, day, or year, rolling digits, and full keyboard editing.
+createdAt: 2026-11-24
+updatedAt: 2026-11-24
+---
+
+<ComponentPreview name="date-scrub-field-preview" />
+
+Date Scrub Field is a free and source-available React date input for shadcn/ui
+that lets you click any date part and drag horizontally to scrub the month, day,
+or year directly in place. Instead of opening a heavy calendar popover, each
+segment behaves like a tactile mechanical dial with a floating vernier ruler
+loupe, rolling digits, calendar-aware rollover, and full keyboard typing.
+Install it with `npx shadcn@latest add @tentui/date-scrub-field`.
+
+## Example
+
+<ComponentPreview name="date-scrub-field-demo" />
+
+## Features
+
+- Scrubs month, day, and year 1:1 with the pointer: drag horizontally on any
+  segment to step through dates while holding `Shift` for faster coarse jumps or
+  `Alt` for fine precision.
+- Lifts a floating vernier loupe above the active segment: displays adjacent
+  values and a GPU-translated tick scale that glides directly with your pointer,
+  clamped inside the viewport on narrow mobile screens.
+- Rolls digits and short month names smoothly in the direction you scrub using
+  NumberFlow and zero-shift locale-measured month slots, with a live weekday
+  readout that stays in sync.
+- Respects real calendar arithmetic: rolling past the last day of a month
+  advances into the next month (or clamps when `rollover={false}`), leap years
+  are handled accurately, and changing month or year clamps days like `31` or
+  Feb `29` automatically.
+- Pushes back with rubber-band resistance at `min` and `max` bounds, paired with
+  throttled `@rexa-developer/tiks` audio ticks and `web-haptics` cues that can
+  be toggled independently.
+- Supports direct keyboard editing: click any segment to focus it, type digits
+  or month initials with smart auto-advance, step with arrow keys, or submit the
+  ISO `YYYY-MM-DD` value in a native form via `name`.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/date-scrub-field
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @number-flow/react @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="date-scrub-field" title="components/date-scrub-field.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { DateScrubField } from "@/components/date-scrub-field";
+```
+
+```tsx
+<DateScrubField label="Release date" defaultValue="2026-05-14" />
+```
+
+Pass `value` and `onValueChange` to control the field with either a `Date`
+instance or a timezone-safe ISO `YYYY-MM-DD` string. `onValueChange` fires on
+every step while scrubbing or typing, while `onValueCommit` fires once the
+pointer releases or a keyboard edit finishes.
+
+```tsx
+const [date, setDate] = useState("2026-05-14");
+
+<DateScrubField
+  label="Target date"
+  value={date}
+  onValueChange={(_, iso) => setDate(iso)}
+  min="2026-01-01"
+  max="2026-12-31"
+/>
+```
+
+Customize the display order and month format for regional or technical
+interfaces with `order` (`"mdy"`, `"dmy"`, `"ymd"`), `monthFormat` (`"short"`,
+`"2-digit"`, `"numeric"`), and `locale`.
+
+```tsx
+<DateScrubField
+  label="Invoice date"
+  defaultValue="2026-05-14"
+  order="ymd"
+  monthFormat="2-digit"
+  variant="filled"
+  showWeekday={false}
+/>
+```
+
+## Accessibility
+
+The outer wrapper carries `role="group"` named by `label`, and each segment is a
+focusable `spinbutton` with `aria-label`, `aria-valuenow`, `aria-valuemin`,
+`aria-valuemax`, and `aria-valuetext`.
+
+- `ArrowUp` and `ArrowDown` step the focused segment by one unit; hold `Shift`
+  or press `PageUp` / `PageDown` to jump by 7 days, 3 months, or 10 years.
+- `ArrowLeft` and `ArrowRight` move focus cleanly across segments.
+- `Home` and `End` jump a segment to its minimum or maximum within `min` and
+  `max`.
+- Typing digits directly updates the focused segment with automatic segment
+  advance; `Escape` cancels an in-progress draft and `Enter` commits it.
+- Settled date changes are announced through a polite live region using the full
+  localized date string.
+
+When `prefers-reduced-motion: reduce` is enabled, rolling digits, month slide
+transitions, rubber-band displacement, and loupe scaling are replaced with
+instant updates and a simple opacity fade. Sound and haptics remain optional via
+`sound` and `haptics`.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/date-scrub-field/date-scrub-field.tsx"
+  name="DateScrubFieldProps"
+/>
+
+## FAQ
+
+### How do I install the Date Scrub Field with shadcn?
+
+Run `npx shadcn@latest add @tentui/date-scrub-field` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/date-scrub-field.json` directly. The
+CLI copies `date-scrub-field.tsx` into your project and installs
+`@number-flow/react`, `@rexa-developer/tiks`, `lucide-react`, `motion`, and
+`web-haptics`.
+
+### How does Date Scrub Field work on touch devices and mobile?
+
+Each segment uses `touch-action: pan-y` so vertical page scrolling works
+normally while dragging horizontally across month, day, or year scrubs the
+value. A vertical swipe cancels scrubbing automatically, touch targets expand on
+coarse pointers, and the floating vernier loupe clamps inside the viewport so it
+never clips on narrow screens.
+
+### Is the Date Scrub Field accessible with a keyboard and screen readers?
+
+Yes. Month, day, and year are individual `spinbutton` controls inside a labeled
+`group` with live `aria-valuenow` and `aria-valuetext` attributes. Users can
+step with arrow keys, hold `Shift` or use `PageUp` and `PageDown` for larger
+jumps, navigate between parts with left and right arrows, or type digits and
+month initials directly.
+
+### How do I use it as a controlled input or with React Hook Form?
+
+Pass a `Date` or `YYYY-MM-DD` string to `value` and handle updates in
+`onValueChange(date, iso)` or `onValueCommit(date, iso)`. With React Hook Form,
+bind `field.value` and `(_, iso) => field.onChange(iso)` inside a `Controller`,
+or pass `name` to submit the ISO date string through a hidden input in a native
+HTML form.
+
+### How does it handle month lengths, leap years, and min or max limits?
+
+Date Scrub Field uses pure calendar arithmetic without UTC timezone drift, so
+changing a month or year clamps days like `31` or February `29` to valid dates
+automatically. With `rollover` enabled by default, scrubbing past the end of a
+month rolls seamlessly into the next month, while `min` and `max` stop scrubbing
+at a rubber-band soft wall.
+
+### Is the Date Scrub Field free to use?
+
+Yes. Date Scrub Field is free and source-available: the shadcn CLI copies the
+source code into your project, and you can use it in unlimited personal and
+client projects under the [TentUI License](/license). The license does not allow
+redistributing or reselling the component itself.

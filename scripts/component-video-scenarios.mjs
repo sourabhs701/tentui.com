@@ -1044,4 +1044,44 @@ export const scenarios = {
 			await d.wait(500);
 		},
 	},
+
+	"date-scrub-field": {
+		rest: { x: 424, y: 318 },
+		async run(d) {
+			const seg = (part) =>
+				`[data-slot="date-scrub-segment"][data-part="${part}"]`;
+			const scrub = async (part, forwardPx, returnPx, durationMs = 780) => {
+				await d.move(seg(part), 520, { x: 0.5, y: 0.55 });
+				await d.wait(160);
+				const start = await d.point(seg(part), { x: 0.5, y: 0.55 });
+				await d.down();
+				await d.wait(90);
+				await d.move({ x: start.x + forwardPx, y: start.y }, durationMs);
+				await d.wait(260);
+				await d.move(
+					{ x: start.x + forwardPx - returnPx, y: start.y },
+					durationMs,
+				);
+				await d.wait(160);
+				await d.up();
+				await d.wait(300);
+			};
+
+			await d.wait(450);
+			// Scrub day forward 5 steps (+94px past 4px deadzone) and back 5 steps (-90px).
+			await scrub("day", 94, 90, 820);
+			// Scrub month forward 3 steps (4 + 3 * 24.3 = 77px) and back 3 steps (-73px).
+			await scrub("month", 78, 73, 760);
+			// Scrub year forward 2 steps (4 + 2 * 20.7 = 46px) and back 2 steps (-42px).
+			await scrub("year", 47, 42, 640);
+			// Blur focus so the resting frame matches frame 1 identically.
+			await d.page.evaluate(() => {
+				if (document.activeElement instanceof HTMLElement) {
+					document.activeElement.blur();
+				}
+			});
+			await d.move(d.rest, 580);
+			await d.wait(500);
+		},
+	},
 };
