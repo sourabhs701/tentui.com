@@ -1,0 +1,227 @@
+---
+title: Wizard Rail
+description: A React step wizard for shadcn/ui with a spring-driven growing connector, directional step transitions, validation guards, and Back/Next actions.
+seoTitle: React Wizard Rail Component for shadcn/ui
+seoDescription: Wizard Rail is a React horizontal step wizard for shadcn/ui with a growing spring connector, clickable visited steps, and Back and Next actions.
+createdAt: 2026-11-24
+updatedAt: 2026-11-24
+---
+
+<ComponentPreview name="wizard-rail-preview" />
+
+Wizard Rail is a horizontal multi-step wizard component for React and shadcn/ui
+with a spring-driven growing connector, directional step content transitions,
+clickable visited milestones, and clear Back, Skip, and Continue actions.
+TentUI is free and source-available: control the active step from React state
+or forms, run sync or async step validation guards, and style every slot with
+Tailwind CSS.
+
+## Example
+
+<ComponentPreview name="wizard-rail-demo" />
+
+## Features
+
+- Drives a continuous horizontal progress connector between step centers on a
+  critically damped `motion/react` spring (`scaleX` on GPU), paired with a
+  subtle hover preview bar when pointing at reachable milestones on fine
+  pointers.
+- Transitions each step indicator cleanly from upcoming index to active halo
+  (`layoutId` spring glide) to completed checkmark (`pathLength` draw-in) with
+  zero layout shift.
+- Supports linear progression (`linear={true}` by default) so visited steps
+  remain clickable while unvisited future steps stay locked until reached, or
+  `linear={false}` for free-jump navigation.
+- Runs sync or async `onBeforeNext` validation guards with inline `role="alert"`
+  error messaging, subtle active-node shake feedback, and loading spinner state
+  on the primary action button.
+- Animates step content directionally with smooth `ResizeObserver`-measured
+  height interpolation, optional `Skip` controls for `optional` steps, and
+  built-in completion plus `Start over` reset handling.
+- Adapts cleanly to 390 px mobile viewports and narrow containers via CSS
+  container queries (`@container`), shipping three monochrome variants
+  (`default`, `segmented`, `minimal`) and two densities (`sm`, `md`).
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/wizard-rail
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion lucide-react
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource
+  name="wizard-rail"
+  title="components/wizard-rail.tsx"
+/>
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { WizardRail, type WizardRailStep } from "@/components/wizard-rail";
+```
+
+Pass an ordered `steps` array for an uncontrolled wizard with built-in Back and
+Continue actions:
+
+```tsx
+const steps: WizardRailStep[] = [
+  { id: "account", title: "Account", content: <AccountFields /> },
+  { id: "workspace", title: "Workspace", content: <WorkspaceFields /> },
+  { id: "launch", title: "Launch", nextLabel: "Create", content: <Summary /> },
+];
+
+<WizardRail steps={steps} onComplete={() => console.log("Done")} />
+```
+
+### Step validation guards
+
+Provide `onBeforeNext` to block advancement until the current step passes sync
+or async validation. Returning `false` keeps the user on the active step and
+surfaces `errorMessage` (or a default alert message).
+
+```tsx
+<WizardRail
+  steps={steps}
+  errorMessage={error}
+  onBeforeNext={async (stepIndex) => {
+    if (stepIndex === 0 && !workspaceName.trim()) {
+      setError("Enter a workspace name before continuing.");
+      return false;
+    }
+    setError(undefined);
+    return true;
+  }}
+/>
+```
+
+### Variants and rail-only mode
+
+Switch between `default` (card with hairline dividers), `segmented` (pill chips
+linked by a continuous growing rail), and `minimal` (borderless for dialogs or
+custom layouts). Omit `content` on your steps to render a standalone rail and
+footer bar.
+
+```tsx
+<WizardRail
+  steps={steps}
+  variant="segmented"
+  linear={false}
+  size="sm"
+/>
+```
+
+## Interaction
+
+| Input | Action |
+| --- | --- |
+| Click `Continue` / `Complete` | Runs `onBeforeNext` (if provided) and advances to the next enabled step or completes the wizard |
+| Click `Back` | Returns to the previous enabled step (or back to the final step from completion) |
+| Click `Skip` | Advances past a step marked `optional: true` |
+| Click a step node | Jumps directly to any visited step (or any enabled step when `linear={false}`) |
+| Hover a reachable future step | Previews the connector span on fine pointers without committing |
+| `←` / `→` on rail | Moves keyboard focus between step buttons immediately without animation delay |
+| `Home` / `End` on rail | Moves focus to the first or last step button |
+| `Enter` / `Space` | Activates the focused step or footer action button |
+
+## Accessibility
+
+The step rail renders inside a `<nav>` landmark named by `aria-label`
+(defaulting to `"Wizard steps"`) with an ordered `<ol>` list of step buttons.
+The active step exposes `aria-current="step"`, locked future steps set
+`aria-disabled="true"`, and each step button carries a descriptive label
+stating its position, title, and state (`completed`, `active`, or `upcoming`).
+
+Committed step transitions and completion are announced through a polite
+`aria-live="polite"` region, while blocked validation attempts render an
+accessible `role="alert"` message. All interactive buttons show unclipped
+`focus-visible` rings.
+
+With `prefers-reduced-motion: reduce`, spring connector motion, directional
+panel slides, blur transitions, validation nudges, and press scale transforms
+switch to quick opacity and direct state updates.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/wizard-rail/wizard-rail.tsx"
+  name="WizardRailProps"
+/>
+
+### WizardRailStep
+
+<AutoTypeTable
+  path="src/registry/components/wizard-rail/wizard-rail.tsx"
+  name="WizardRailStep"
+/>
+
+### WizardRailClassNames
+
+<AutoTypeTable
+  path="src/registry/components/wizard-rail/wizard-rail.tsx"
+  name="WizardRailClassNames"
+/>
+
+## FAQ
+
+### How do I install Wizard Rail with shadcn?
+
+Run `npx shadcn@latest add @tentui/wizard-rail` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or
+copy the component source directly. The CLI copies `wizard-rail.tsx` into your
+project and installs `motion` and `lucide-react`.
+
+### Can I control Wizard Rail with React state or React Hook Form?
+
+Yes. Pass `activeStep` and `onStepChange` to control the current 0-based step
+externally, and pair them with `onBeforeNext` to trigger React Hook Form's
+`trigger()` validation before advancing. Return `false` from `onBeforeNext` to
+keep the user on the current step and display `errorMessage`.
+
+### How do linear and non-linear step navigation differ?
+
+By default, `linear` is `true`, so users can click back to any milestone they
+have already visited while unvisited future steps remain locked until reached
+through `Continue` or `Skip`. Set `linear={false}` to let users jump directly
+to any non-disabled step along the rail at any time.
+
+### Is Wizard Rail keyboard accessible and reduced-motion friendly?
+
+Yes. The rail uses a semantic `<nav>` and `<ol>` with `aria-current="step"`,
+arrow-key plus `Home`/`End` focus movement across milestones, `aria-live="polite"`
+step announcements, and `role="alert"` validation errors. When
+`prefers-reduced-motion: reduce` is enabled, sliding and spring motion switches
+to instant or gentle opacity transitions.
+
+### Is Wizard Rail free to use?
+
+Yes. Wizard Rail is free and source-available: the shadcn CLI copies its source
+into your project, and you can use it in unlimited personal and client projects
+under the [TentUI License](/license). The license doesn't allow redistributing
+or reselling the component itself.

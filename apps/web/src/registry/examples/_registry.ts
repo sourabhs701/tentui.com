@@ -4,6 +4,34 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "wizard-rail-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("wizard-rail")],
+		files: [
+			{
+				path: "examples/wizard-rail-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-80 place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "wizard-rail-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("wizard-rail")],
+		files: [
+			{
+				path: "examples/wizard-rail-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[34rem] place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "contribution-heat-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("contribution-heat")],

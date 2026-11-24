@@ -71,6 +71,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"search-command",
 			"snap-sheet",
 			"swipe-actions",
+			"wizard-rail",
 		],
 	},
 	{
