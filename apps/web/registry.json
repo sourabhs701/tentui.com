@@ -463,6 +463,32 @@
       "type": "registry:block"
     },
     {
+      "name": "wizard-rail",
+      "title": "Wizard Rail",
+      "description": "A horizontal step wizard with a spring-driven growing connector, directional step transitions, validation guards, and clear Back and Next actions.",
+      "dependencies": [
+        "lucide-react",
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/wizard-rail/wizard-rail.tsx",
+          "type": "registry:component",
+          "target": "@components/wizard-rail.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-24",
+        "image": "https://cdn.tentui.com/images/components/wizard-rail?v=1",
+        "video": "https://cdn.tentui.com/videos/components/wizard-rail?v=1"
+      },
+      "docs": "https://tentui.com/components/wizard-rail",
+      "categories": [
+        "navigation"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "contribution-heat",
       "title": "Contribution Heat",
       "description": "A calendar heatmap with a spring-driven optical hover loupe, zero-shift day-by-day readout, click-to-pin inspection, and interactive intensity filtering.",

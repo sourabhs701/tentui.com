@@ -1044,4 +1044,58 @@ export const scenarios = {
 			await d.wait(500);
 		},
 	},
+
+	"wizard-rail": {
+		rest: { x: 432, y: 318 },
+		async run(d) {
+			const nextBtn = '[data-slot="wizard-rail-next"]';
+			const backBtn = '[data-slot="wizard-rail-back"]';
+			const skipBtn = '[data-slot="wizard-rail-skip"]';
+			const resetBtn = '[data-slot="wizard-rail-reset"]';
+			const stepBtn = (i) =>
+				`[data-slot="wizard-rail-step"][data-step-index="${i}"]`;
+
+			await d.wait(450);
+			// Advance to Step 2 (Region) via Continue.
+			await d.move(nextBtn, 520, { x: 0.5, y: 0.5 });
+			await d.wait(160);
+			await d.click();
+			await d.wait(560);
+			// Advance to Step 3 (Domain, optional).
+			await d.click();
+			await d.wait(520);
+			// Step back briefly via the Back button to show reversible motion.
+			await d.move(backBtn, 560, { x: 0.5, y: 0.5 });
+			await d.wait(150);
+			await d.click();
+			await d.wait(500);
+			// Jump forward directly to visited step 3 by clicking its node.
+			await d.move(stepBtn(2), 520, { x: 0.5, y: 0.35 });
+			await d.wait(220);
+			await d.click();
+			await d.wait(480);
+			// Skip optional step 3 to reach Launch.
+			await d.move(skipBtn, 480, { x: 0.5, y: 0.5 });
+			await d.wait(150);
+			await d.click();
+			await d.wait(560);
+			// Complete the wizard via Deploy.
+			await d.move(nextBtn, 420, { x: 0.5, y: 0.5 });
+			await d.wait(160);
+			await d.click();
+			await d.wait(720);
+			// Restart cleanly so the loop returns to exact frame 1.
+			await d.move(resetBtn, 420, { x: 0.5, y: 0.5 });
+			await d.wait(150);
+			await d.click();
+			await d.wait(520);
+			await d.page.evaluate(() => {
+				if (document.activeElement instanceof HTMLElement) {
+					document.activeElement.blur();
+				}
+			});
+			await d.move(d.rest, 560);
+			await d.wait(500);
+		},
+	},
 };

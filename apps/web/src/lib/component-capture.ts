@@ -81,6 +81,9 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 	"time-ring": { zoom: 1.1 },
 	"variable-font-hover": { className: "px-6" },
 	"wheel-picker": { zoom: 1.3 },
+	"wizard-rail": {
+		className: "place-items-center content-center px-6",
+	},
 };
 
 export const componentCaptureNames = components.map((component) =>

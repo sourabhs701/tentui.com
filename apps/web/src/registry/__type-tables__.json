@@ -11604,5 +11604,624 @@
 				}
 			]
 		}
+	],
+	"src/registry/components/wizard-rail/wizard-rail.tsx#WizardRailClassNames#": [
+		{
+			"id": "wizard-rail.tsx-WizardRailClassNames",
+			"name": "WizardRailClassNames",
+			"description": "",
+			"entries": [
+				{
+					"name": "root",
+					"description": "Outer wizard root container.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "rail",
+					"description": "Navigation landmark wrapping the step rail.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "track",
+					"description": "Background connector track spanning between step centers.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "connector",
+					"description": "Animated foreground connector bar showing current progress.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "step",
+					"description": "Individual step button along the rail.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "indicator",
+					"description": "Circular step indicator node holding the number, icon, or checkmark.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "label",
+					"description": "Step title text beneath or inside each step item.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "panel",
+					"description": "Animated content panel displaying the active step body.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "actions",
+					"description": "Bottom action bar containing Back, step count, Skip, and Next controls.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "backButton",
+					"description": "Back navigation button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "nextButton",
+					"description": "Primary Continue / Complete action button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/wizard-rail/wizard-rail.tsx#WizardRailProps#": [
+		{
+			"id": "wizard-rail.tsx-WizardRailProps",
+			"name": "WizardRailProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "steps",
+					"description": "Ordered list of wizard steps.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "WizardRailStep[]",
+					"simplifiedType": "array",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "activeStep",
+					"description": "Controlled 0-based active step index.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultStep",
+					"description": "Initial 0-based active step index when uncontrolled. Defaults to `0`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onStepChange",
+					"description": "Called whenever the active step changes.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((stepIndex: number, step: WizardRailStep) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onBeforeNext",
+					"description": "Sync or async guard run before advancing from the current step.\nReturn `false` to prevent advancing and trigger inline validation feedback.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((stepIndex: number, step: WizardRailStep) => boolean | Promise<boolean>) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onComplete",
+					"description": "Called when the user completes the final step.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void | Promise<void>) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onReset",
+					"description": "Called when the user restarts the wizard from the completed state.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "(() => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "completed",
+					"description": "Controlled completion state.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "completedContent",
+					"description": "Optional view rendered in the panel once all steps are completed.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "linear",
+					"description": "When `true` (default), clicking unvisited future steps is locked until\nearlier steps are reached, while visited steps stay clickable.\nSet to `false` to allow jumping to any non-disabled step.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "Visual presentation style. Defaults to `\"default\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "WizardRailVariant | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "Control density. Defaults to `\"md\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "WizardRailSize | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showActions",
+					"description": "Whether to render the built-in Back / Next action bar. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showStepCount",
+					"description": "Whether to display the tabular step counter in the action bar. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showDescriptions",
+					"description": "Whether to display step descriptions below titles on wider containers. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "backLabel",
+					"description": "Label for the Back button. Defaults to `\"Back\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "nextLabel",
+					"description": "Default label for the Next button. Defaults to `\"Continue\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "completeLabel",
+					"description": "Label for the primary button on the final step. Defaults to `\"Complete\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "skipLabel",
+					"description": "Label for the optional Skip button. Defaults to `\"Skip\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "resetLabel",
+					"description": "Label for the Restart button shown after completion. Defaults to `\"Start over\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "errorMessage",
+					"description": "Inline validation message shown below the active step content.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "aria-label",
+					"description": "Accessible label for the step navigation landmark. Defaults to `\"Wizard steps\"`.",
+					"tags": [
+						{
+							"name": "see",
+							"text": "aria-labelledby."
+						},
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "classNames",
+					"description": "Granular Tailwind class overrides for internal slots.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "WizardRailClassNames | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/wizard-rail/wizard-rail.tsx#WizardRailStep#": [
+		{
+			"id": "wizard-rail.tsx-WizardRailStep",
+			"name": "WizardRailStep",
+			"description": "",
+			"entries": [
+				{
+					"name": "id",
+					"description": "Unique identifier for the step.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "title",
+					"description": "Concise display title shown on the rail.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "description",
+					"description": "Optional subtitle shown beneath the title on wider containers.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "icon",
+					"description": "Optional icon rendered inside the step node while active or upcoming.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "content",
+					"description": "Optional panel content displayed when this step is active.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "optional",
+					"description": "Marks the step as optional, enabling a Skip action when active.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "Prevents navigating to or through this step.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "nextLabel",
+					"description": "Overrides the primary Next/Complete button label on this step.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
 	]
 }

@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"wizard-rail": {
+		name: "wizard-rail",
+		title: "Wizard Rail",
+		description: "A horizontal step wizard with a spring-driven growing connector, directional step transitions, validation guards, and clear Back and Next actions.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/wizard-rail/wizard-rail.tsx","type":"registry:component","target":"@components/wizard-rail.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/wizard-rail/wizard-rail")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wizard-rail");
+			}
+			return { default: module.default };
+		}),
+		categories: ["navigation"],
+		meta: {"createdAt":"2026-11-24","image":"https://cdn.tentui.com/images/components/wizard-rail?v=1","video":"https://cdn.tentui.com/videos/components/wizard-rail?v=1"},
+	},
 	"contribution-heat": {
 		name: "contribution-heat",
 		title: "Contribution Heat",
@@ -1156,6 +1174,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"wizard-rail-preview": {
+		name: "wizard-rail-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/wizard-rail-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/wizard-rail-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wizard-rail-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-80 place-items-center content-center px-4"},
+	},
+	"wizard-rail-demo": {
+		name: "wizard-rail-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/wizard-rail-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/wizard-rail-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for wizard-rail-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[34rem] place-items-center content-center px-4"},
 	},
 	"contribution-heat-preview": {
 		name: "contribution-heat-preview",

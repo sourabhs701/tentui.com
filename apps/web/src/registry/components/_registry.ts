@@ -2,6 +2,28 @@ import type { Registry } from "shadcn/schema";
 
 export const components: Registry["items"] = [
 	{
+		name: "wizard-rail",
+		type: "registry:component",
+		title: "Wizard Rail",
+		description:
+			"A horizontal step wizard with a spring-driven growing connector, directional step transitions, validation guards, and clear Back and Next actions.",
+		dependencies: ["lucide-react", "motion"],
+		files: [
+			{
+				path: "components/wizard-rail/wizard-rail.tsx",
+				type: "registry:component",
+				target: "@components/wizard-rail.tsx",
+			},
+		],
+		categories: ["navigation"],
+		meta: {
+			createdAt: "2026-11-24",
+			image: "https://cdn.tentui.com/images/components/wizard-rail?v=1",
+			video: "https://cdn.tentui.com/videos/components/wizard-rail?v=1",
+		},
+		docs: "https://tentui.com/components/wizard-rail",
+	},
+	{
 		name: "contribution-heat",
 		type: "registry:component",
 		title: "Contribution Heat",
