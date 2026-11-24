@@ -4,6 +4,34 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "date-scrub-field-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("date-scrub-field")],
+		files: [
+			{
+				path: "examples/date-scrub-field-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-72 place-items-center content-center px-4 pt-12",
+		},
+	},
+	{
+		name: "date-scrub-field-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("date-scrub-field")],
+		files: [
+			{
+				path: "examples/date-scrub-field-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[34rem] place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "contribution-heat-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("contribution-heat")],

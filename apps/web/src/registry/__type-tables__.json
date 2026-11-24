@@ -2652,6 +2652,351 @@
 			]
 		}
 	],
+	"src/registry/components/date-scrub-field/date-scrub-field.tsx#DateScrubFieldProps#": [
+		{
+			"id": "date-scrub-field.tsx-DateScrubFieldProps",
+			"name": "DateScrubFieldProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "value",
+					"description": "Controlled date value (`Date` or `YYYY-MM-DD`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "DateValue | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultValue",
+					"description": "Initial date value when uncontrolled (`Date` or `YYYY-MM-DD`). Defaults to `\"2026-05-14\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "DateValue | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onValueChange",
+					"description": "Called continuously as the date changes during scrubbing, keyboard stepping, or typing.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((date: Date, iso: string) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onValueCommit",
+					"description": "Called once a scrub releases, a keyboard step finishes, or a typed segment commits.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((date: Date, iso: string) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "min",
+					"description": "Earliest selectable date (`Date` or `YYYY-MM-DD`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "DateValue | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "max",
+					"description": "Latest selectable date (`Date` or `YYYY-MM-DD`).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "DateValue | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "order",
+					"description": "Segment order: `\"mdy\"` (May 14, 2026), `\"dmy\"` (14 May 2026), or `\"ymd\"` (2026-05-14).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "DateOrder | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "monthFormat",
+					"description": "Format for the month segment (`\"short\"`, `\"2-digit\"`, or `\"numeric\"`). Defaults to `\"short\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "MonthFormat | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "locale",
+					"description": "BCP 47 locale for month names, weekday names, and screen-reader announcements. Defaults to `\"en-US\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sensitivity",
+					"description": "Horizontal pointer travel in pixels per scrub step. Defaults to `18`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "rollover",
+					"description": "Roll day across month/year boundaries when scrubbing past month edges. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showIcon",
+					"description": "Show the leading calendar icon. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showWeekday",
+					"description": "Show the live abbreviated weekday suffix (e.g. `Thu`). Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showLoupe",
+					"description": "Show the floating vernier ruler loupe above the active segment while scrubbing. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "wheel",
+					"description": "Allow scrolling the mouse wheel over a focused segment to step it. Defaults to `false`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "size",
+					"description": "Size preset (`\"sm\"`, `\"md\"`, or `\"lg\"`). Defaults to `\"md\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "DateScrubSize | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "Surface variant (`\"outline\"`, `\"filled\"`, or `\"ghost\"`). Defaults to `\"outline\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "DateScrubVariant | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play mechanical tick sounds on steps and a soft pop at limits. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger haptic cues on supported devices. Defaults to `true`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "disabled",
+					"description": "Disable pointer scrubbing, typing, and keyboard interaction.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "readOnly",
+					"description": "Keep the field readable and focusable while preventing edits.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "name",
+					"description": "Submits the ISO `YYYY-MM-DD` string in a native form via a hidden input.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "label",
+					"description": "Accessible group label for the date field. Defaults to `\"Date\"`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "className",
+					"description": "Additional class names for the outer field wrapper.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/dynamic-island/dynamic-island.tsx#DynamicIslandProps#": [
 		{
 			"id": "dynamic-island.tsx-DynamicIslandProps",

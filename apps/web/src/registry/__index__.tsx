@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"date-scrub-field": {
+		name: "date-scrub-field",
+		title: "Date Scrub Field",
+		description: "A React date input for shadcn/ui where you drag month, day, or year horizontally to scrub with a vernier loupe, rolling digits, and rubber-band bounds.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/date-scrub-field/date-scrub-field.tsx","type":"registry:component","target":"@components/date-scrub-field.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/date-scrub-field/date-scrub-field")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for date-scrub-field");
+			}
+			return { default: module.default };
+		}),
+		categories: ["inputs"],
+		meta: {"createdAt":"2026-11-24","image":"https://cdn.tentui.com/images/components/date-scrub-field?v=1","video":"https://cdn.tentui.com/videos/components/date-scrub-field?v=1"},
+	},
 	"contribution-heat": {
 		name: "contribution-heat",
 		title: "Contribution Heat",
@@ -1156,6 +1174,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"date-scrub-field-preview": {
+		name: "date-scrub-field-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/date-scrub-field-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/date-scrub-field-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for date-scrub-field-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-72 place-items-center content-center px-4 pt-12"},
+	},
+	"date-scrub-field-demo": {
+		name: "date-scrub-field-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/date-scrub-field-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/date-scrub-field-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for date-scrub-field-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[34rem] place-items-center content-center px-4"},
 	},
 	"contribution-heat-preview": {
 		name: "contribution-heat-preview",
