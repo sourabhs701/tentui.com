@@ -1,0 +1,251 @@
+---
+title: Share Sheet
+description: A React share sheet for shadcn/ui with destinations, one-tap copy, and grouped actions that adapts from an anchored popover to a compact bottom tray.
+seoTitle: React Share Sheet Component for shadcn/ui
+seoDescription: Share Sheet is a compact React share menu for shadcn/ui with a destination rail, copy-link pill, grouped actions, origin-aware springs, and drag-to-dismiss on mobile.
+createdAt: 2026-11-25
+updatedAt: 2026-11-25
+---
+
+<ComponentPreview name="share-sheet-preview" />
+
+Share Sheet is a compact React share menu for shadcn/ui built for destinations,
+one-tap link copying, and secondary actions, distinct from a full-page bottom
+sheet. On desktop it springs from its trigger as an origin-aware floating card;
+on mobile viewports it rises as a compact floating bottom tray you can flick to
+dismiss. TentUI is free and source-available, so installing it copies the full
+component source into your project.
+
+## Example
+
+<ComponentPreview name="share-sheet-demo" />
+
+## Features
+
+- Adapts automatically (`placement="auto"`) between an origin-aware floating
+  popover on desktop (`>= 640px`) and a compact floating bottom tray on narrow
+  mobile screens, or locks to `"popover"` or `"sheet"`.
+- Measures the trigger's exact anchor point to project `transform-origin`,
+  auto-flips between `top` and `bottom` when viewport room is tight, and clamps
+  within `collisionPadding`.
+- Ships a built-in `ShareSheetLink` bar with one-tap clipboard copy, blur-masked
+  `Copy` to `Copied` morph with zero layout shift, and a `document.execCommand`
+  fallback.
+- Pairs a horizontally scrollable `ShareSheetTargets` rail (with dynamic edge
+  masks, roving arrow-key focus, and inline delivery checkmarks) with grouped
+  `ShareSheetActions` rows supporting shortcuts, toggle states, and inline
+  confirmations.
+- Tracks 1:1 vertical drag-to-dismiss with upward rubber-banding and release
+  velocity projection in mobile sheet mode without blocking horizontal target
+  scrolling.
+- Includes three restrained surface treatments (`surface`, `glass`, `minimal`),
+  subtle Web Audio ticks and haptics (`sound` and `haptics` props), and full
+  `prefers-reduced-motion` and `prefers-reduced-transparency` fallbacks.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @tentui/share-sheet
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @rexa-developer/tiks lucide-react motion web-haptics
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="share-sheet" title="components/share-sheet.tsx" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  ShareSheet,
+  ShareSheetAction,
+  ShareSheetActions,
+  ShareSheetContent,
+  ShareSheetFooter,
+  ShareSheetHeader,
+  ShareSheetLink,
+  ShareSheetTarget,
+  ShareSheetTargets,
+  ShareSheetTrigger,
+} from "@/components/share-sheet";
+```
+
+You can also access every primitive via dot notation on `ShareSheet` (for
+example `ShareSheet.Trigger`, `ShareSheet.Content`, `ShareSheet.Targets`).
+
+```tsx
+<ShareSheet
+  url="https://tentui.com/components/share-sheet"
+  title="TentUI Share Sheet"
+>
+  <ShareSheetTrigger>Share</ShareSheetTrigger>
+  <ShareSheetContent>
+    <ShareSheetHeader subtitle="tentui.com/components/share-sheet" />
+    <ShareSheetLink />
+    <ShareSheetTargets>
+      <ShareSheetTarget label="Slack" icon={<SlackIcon />} />
+      <ShareSheetTarget label="Mail" icon={<MailIcon />} />
+    </ShareSheetTargets>
+    <ShareSheetActions>
+      <ShareSheetAction feedbackLabel="Copied" onSelect={copyMarkdown}>
+        Copy Markdown
+      </ShareSheetAction>
+    </ShareSheetActions>
+  </ShareSheetContent>
+</ShareSheet>
+```
+
+### Controlled state
+
+Pass `open` and `onOpenChange` to control visibility from parent state, and set
+`closeOnSelect` if you want selecting a link, destination, or action to close
+the sheet after its confirmation beat.
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<ShareSheet
+  open={open}
+  onOpenChange={setOpen}
+  closeOnSelect
+  url="https://tentui.com/components/share-sheet"
+  title="Design Spec"
+>
+  {/* ... */}
+</ShareSheet>
+```
+
+### Surface variants and placement
+
+Switch between `variant="surface"` (default), `variant="glass"` (translucent
+vibrancy material), and `variant="minimal"` (flat hairline border). Override
+`placement` with `"popover"` or `"sheet"` when you want a fixed presentation
+across breakpoints.
+
+### Inside a container
+
+Pass `container` to `ShareSheetContent` to portal and position the share sheet
+inside a specific frame or preview card instead of the viewport, paired with
+`modal={false}` when surrounding UI should remain interactive.
+
+## Accessibility
+
+`ShareSheetContent` renders `role="dialog"` wired to `ShareSheetHeader` via
+`aria-labelledby` and `aria-describedby`, with a polite `aria-live` region that
+announces copy and target confirmations. In modal mode (`modal={true}`), `Tab`
+and `Shift+Tab` stay trapped inside the sheet, `Escape` closes it and returns
+focus to `ShareSheetTrigger`, and pointer opens keep focus rings hidden until
+keyboard navigation begins.
+
+Inside `ShareSheetTargets`, `ArrowLeft`, `ArrowRight`, `Home`, and `End` move
+between destinations. Inside `ShareSheetActions`, `ArrowUp` and `ArrowDown`
+move between action rows, and toggle actions expose `aria-pressed`. With
+`prefers-reduced-motion: reduce`, spring and blur entrances collapse to a 120 ms
+opacity cross-fade; with `prefers-reduced-transparency: reduce`, the `glass`
+surface switches to an opaque background.
+
+## API reference
+
+<AutoTypeTable
+  path="src/registry/components/share-sheet/share-sheet.tsx"
+  name="ShareSheetProps"
+/>
+
+### ShareSheetContent
+
+<AutoTypeTable
+  path="src/registry/components/share-sheet/share-sheet.tsx"
+  name="ShareSheetContentProps"
+/>
+
+### ShareSheetHeader
+
+<AutoTypeTable
+  path="src/registry/components/share-sheet/share-sheet.tsx"
+  name="ShareSheetHeaderProps"
+/>
+
+### ShareSheetLink
+
+<AutoTypeTable
+  path="src/registry/components/share-sheet/share-sheet.tsx"
+  name="ShareSheetLinkProps"
+/>
+
+### ShareSheetTarget
+
+<AutoTypeTable
+  path="src/registry/components/share-sheet/share-sheet.tsx"
+  name="ShareSheetTargetProps"
+/>
+
+### ShareSheetAction
+
+<AutoTypeTable
+  path="src/registry/components/share-sheet/share-sheet.tsx"
+  name="ShareSheetActionProps"
+/>
+
+## FAQ
+
+### How do I install the Share Sheet with shadcn?
+
+Run `npx shadcn@latest add @tentui/share-sheet` after adding the `@tentui`
+registry to `components.json` ([installation guide](/docs/installation)), or run
+`npx shadcn@latest add https://tentui.com/r/share-sheet.json` directly. The CLI
+copies `share-sheet.tsx` into your project and installs `@rexa-developer/tiks`,
+`lucide-react`, `motion`, and `web-haptics`.
+
+### How is Share Sheet different from Snap Sheet?
+
+Share Sheet is a compact, purpose-built overlay for share destinations, link
+copying, and quick actions rather than a multi-detent full-page drawer. On
+desktop it anchors directly to the Share trigger as an origin-aware floating
+card, and on mobile it rises as a compact floating tray sized to its content.
+
+### Is the Share Sheet accessible with keyboard and screen readers?
+
+Yes. `ShareSheetContent` uses `role="dialog"`, links its title and subtitle via
+`aria-labelledby` and `aria-describedby`, traps focus in modal mode, closes on
+`Escape` while returning focus to the trigger, and announces copy and target
+confirmations via an `aria-live="polite"` region. Arrow keys navigate across
+`ShareSheetTargets` and `ShareSheetActions`.
+
+### Can I control the open state and customize the appearance?
+
+Yes. Pass `open` and `onOpenChange` for controlled visibility, `closeOnSelect`
+to auto-dismiss after a selection, `placement` (`"auto"`, `"popover"`, or
+`"sheet"`), and `variant` (`"surface"`, `"glass"`, or `"minimal"`). Every slot
+also accepts a standard `className` prop for Tailwind styling.
+
+### Is the Share Sheet free to use?
+
+Yes. Share Sheet is free and source-available: the shadcn CLI copies its source
+into your project, and you can use it in unlimited personal and client projects
+under the [TentUI License](/license). The license doesn't allow redistributing
+or reselling the component itself.

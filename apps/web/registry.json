@@ -463,6 +463,35 @@
       "type": "registry:block"
     },
     {
+      "name": "share-sheet",
+      "title": "Share Sheet",
+      "description": "A compact share sheet of destinations, one-tap link copy, and grouped actions that adapts from an anchored popover to a floating bottom tray.",
+      "dependencies": [
+        "@rexa-developer/tiks",
+        "lucide-react",
+        "motion",
+        "web-haptics"
+      ],
+      "files": [
+        {
+          "path": "src/registry/components/share-sheet/share-sheet.tsx",
+          "type": "registry:component",
+          "target": "@components/share-sheet.tsx"
+        }
+      ],
+      "meta": {
+        "createdAt": "2026-11-25",
+        "image": "https://cdn.tentui.com/images/components/share-sheet?v=1",
+        "video": "https://cdn.tentui.com/videos/components/share-sheet?v=1"
+      },
+      "docs": "https://tentui.com/components/share-sheet",
+      "categories": [
+        "overlays",
+        "menus"
+      ],
+      "type": "registry:component"
+    },
+    {
       "name": "contribution-heat",
       "title": "Contribution Heat",
       "description": "A calendar heatmap with a spring-driven optical hover loupe, zero-shift day-by-day readout, click-to-pin inspection, and interactive intensity filtering.",

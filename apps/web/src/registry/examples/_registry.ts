@@ -4,6 +4,34 @@ import { getRegistryItemUrl } from "@/utils/registry";
 
 export const examples: Registry["items"] = [
 	{
+		name: "share-sheet-preview",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("share-sheet")],
+		files: [
+			{
+				path: "examples/share-sheet-preview.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[24rem] place-items-center content-center px-4",
+		},
+	},
+	{
+		name: "share-sheet-demo",
+		type: "registry:example",
+		registryDependencies: [getRegistryItemUrl("share-sheet")],
+		files: [
+			{
+				path: "examples/share-sheet-demo.tsx",
+				type: "registry:example",
+			},
+		],
+		meta: {
+			previewClassName: "min-h-[22rem] place-items-center content-center px-4",
+		},
+	},
+	{
 		name: "contribution-heat-preview",
 		type: "registry:example",
 		registryDependencies: [getRegistryItemUrl("contribution-heat")],

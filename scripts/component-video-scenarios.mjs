@@ -1044,4 +1044,50 @@ export const scenarios = {
 			await d.wait(500);
 		},
 	},
+
+	"share-sheet": {
+		rest: { x: 420, y: 318 },
+		async run(d) {
+			const trigger = '[data-slot="share-sheet-trigger"]';
+			const copyBtn = '[data-slot="share-sheet-copy-button"]';
+			const slackTarget =
+				'[data-slot="share-sheet-target"][data-target="Slack"]';
+			const markdownAction =
+				'[data-slot="share-sheet-action"]:has-text("Copy Markdown")';
+			const closeBtn = '[data-slot="share-sheet-close"]';
+
+			await d.wait(420);
+			// Click the Share trigger so the compact sheet springs out of it.
+			await d.move(trigger, 560, { x: 0.5, y: 0.5 });
+			await d.wait(160);
+			await d.click();
+			await d.wait(560);
+
+			// Copy the link: button morphs cleanly from Copy to Copied.
+			await d.move(copyBtn, 500, { x: 0.5, y: 0.5 });
+			await d.wait(160);
+			await d.click();
+			await d.wait(640);
+
+			// Tap Slack on the destinations rail to show the inline delivery badge.
+			await d.move(slackTarget, 500, { x: 0.5, y: 0.42 });
+			await d.wait(160);
+			await d.click();
+			await d.wait(640);
+
+			// Tap Copy Markdown in the grouped actions tray.
+			await d.move(markdownAction, 500, { x: 0.5, y: 0.5 });
+			await d.wait(160);
+			await d.click();
+			await d.wait(680);
+
+			// Close back into the trigger so the clip loops cleanly on frame 1.
+			await d.move(closeBtn, 540, { x: 0.5, y: 0.5 });
+			await d.wait(140);
+			await d.click();
+			await d.wait(420);
+			await d.move(d.rest, 580);
+			await d.wait(450);
+		},
+	},
 };
