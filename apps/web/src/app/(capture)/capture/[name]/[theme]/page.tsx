@@ -13,6 +13,7 @@ import { MorphDialogCapture } from "@/components/capture/morph-dialog-capture";
 import { MorphLightboxCapture } from "@/components/capture/morph-lightbox-capture";
 import { PromptChipInputCapture } from "@/components/capture/prompt-chip-input-capture";
 import { ScrollAccordionCapture } from "@/components/capture/scroll-accordion-capture";
+import { ShareSheetCapture } from "@/components/capture/share-sheet-capture";
 import { TextScrambleCapture } from "@/components/capture/text-scramble-capture";
 import {
 	COMPONENT_CAPTURE_FRAME,
@@ -43,6 +44,7 @@ const captureScenes: Record<string, ComponentType> = {
 	"prompt-chip-input": PromptChipInputCapture,
 	"liquid-glass-menu": LiquidGlassMenuCapture,
 	"scroll-accordion": ScrollAccordionCapture,
+	"share-sheet": ShareSheetCapture,
 	"text-scramble": TextScrambleCapture,
 };
 

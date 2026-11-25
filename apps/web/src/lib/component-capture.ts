@@ -71,6 +71,8 @@ export const COMPONENT_CAPTURE_FRAMING: Record<
 		className: "place-items-center content-center px-8",
 	},
 	"search-command": { zoom: 2 },
+	// The share sheet is scoped inside its stage at 1:1 for clean 4:3 framing.
+	"share-sheet": { className: "p-0" },
 	"snap-sheet": {},
 	"star-rating": { zoom: 1.5 },
 	"stateful-button": { zoom: 1.5 },

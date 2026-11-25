@@ -69,6 +69,7 @@ export const COMPONENT_GROUP_DEFINITIONS: ComponentGroupDefinition[] = [
 			"pagination-rail",
 			"scroll-accordion",
 			"search-command",
+			"share-sheet",
 			"snap-sheet",
 			"swipe-actions",
 		],

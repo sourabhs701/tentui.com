@@ -275,6 +275,24 @@ export const Index = {
 		categories: ["404"],
 		meta: {"createdAt":"2026-06-25","iframeHeight":900,"previewClassName":"min-h-screen","company":"Figma","tags":["SVG","Bezier","Editor"],"source":"https://figma.com"},
 	},
+	"share-sheet": {
+		name: "share-sheet",
+		title: "Share Sheet",
+		description: "A compact share sheet of destinations, one-tap link copy, and grouped actions that adapts from an anchored popover to a floating bottom tray.",
+		type: "registry:component",
+		files: [{"path":"src/registry/components/share-sheet/share-sheet.tsx","type":"registry:component","target":"@components/share-sheet.tsx"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/components/share-sheet/share-sheet")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for share-sheet");
+			}
+			return { default: module.default };
+		}),
+		categories: ["overlays","menus"],
+		meta: {"createdAt":"2026-11-25","image":"https://cdn.tentui.com/images/components/share-sheet?v=1","video":"https://cdn.tentui.com/videos/components/share-sheet?v=1"},
+	},
 	"contribution-heat": {
 		name: "contribution-heat",
 		title: "Contribution Heat",
@@ -1156,6 +1174,42 @@ export const Index = {
 		}),
 		categories: ["typography"],
 		meta: {"createdAt":"2026-07-20","image":"https://cdn.tentui.com/images/components/scribbled-text","video":"https://cdn.tentui.com/videos/components/scribbled-text"},
+	},
+	"share-sheet-preview": {
+		name: "share-sheet-preview",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/share-sheet-preview.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/share-sheet-preview")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for share-sheet-preview");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[24rem] place-items-center content-center px-4"},
+	},
+	"share-sheet-demo": {
+		name: "share-sheet-demo",
+		title: undefined,
+		description: "",
+		type: "registry:example",
+		files: [{"path":"src/registry/examples/share-sheet-demo.tsx","type":"registry:example"}],
+		component: React.lazy(async () => {
+			const module = (await import("@/registry/examples/share-sheet-demo")) as unknown as {
+				default?: React.ComponentType;
+			};
+			if (!module.default) {
+				throw new Error("No default export found for share-sheet-demo");
+			}
+			return { default: module.default };
+		}),
+		categories: undefined,
+		meta: {"previewClassName":"min-h-[22rem] place-items-center content-center px-4"},
 	},
 	"contribution-heat-preview": {
 		name: "contribution-heat-preview",

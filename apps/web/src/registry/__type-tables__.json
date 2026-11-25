@@ -9077,6 +9077,704 @@
 			]
 		}
 	],
+	"src/registry/components/share-sheet/share-sheet.tsx#ShareSheetActionProps#": [
+		{
+			"id": "share-sheet.tsx-ShareSheetActionProps",
+			"name": "ShareSheetActionProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "icon",
+					"description": "Leading icon for the action row.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "description",
+					"description": "Optional quiet secondary label displayed beside the action title.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "shortcut",
+					"description": "Optional keyboard shortcut hint rendered on the trailing edge.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "feedbackLabel",
+					"description": "Brief confirmation text shown on the trailing edge after clicking.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "active",
+					"description": "When provided, displays a crisp toggled state indicator (useful for\noptions like \"Include timestamp\" or \"Public link\").",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "destructive",
+					"description": "Subtle destructive styling for actions that revoke or remove access.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onSelect",
+					"description": "Called when the action row is activated.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((payload: SharePayload) => void | Promise<void>) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/share-sheet/share-sheet.tsx#ShareSheetContentProps#": [
+		{
+			"id": "share-sheet.tsx-ShareSheetContentProps",
+			"name": "ShareSheetContentProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "container",
+					"description": "Optional container element to portal and position inside instead of the\nviewport. Useful for embedded frames and previews.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "RefObject<HTMLElement | null> | undefined",
+					"simplifiedType": "object",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showHandle",
+					"description": "Show the subtle drag handle pill when rendered in compact sheet mode.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "dismissible",
+					"description": "Allow Escape, backdrop press, and downward drag to dismiss the sheet.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/share-sheet/share-sheet.tsx#ShareSheetHeaderProps#": [
+		{
+			"id": "share-sheet.tsx-ShareSheetHeaderProps",
+			"name": "ShareSheetHeaderProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "title",
+					"description": "Heading displayed in the sheet header. Falls back to root `title`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "subtitle",
+					"description": "Quiet subtitle such as host, path, or visibility note.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "thumbnail",
+					"description": "Optional compact 36×36 thumbnail, app glyph, or preview badge.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "badge",
+					"description": "Optional compact status badge aligned beside the subtitle or title.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "showClose",
+					"description": "Render the compact close icon button on the trailing edge.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/share-sheet/share-sheet.tsx#ShareSheetLinkProps#": [
+		{
+			"id": "share-sheet.tsx-ShareSheetLinkProps",
+			"name": "ShareSheetLinkProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "url",
+					"description": "URL to display and copy. Falls back to the root `url`.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "copyLabel",
+					"description": "Idle label for the copy button.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "copiedLabel",
+					"description": "Confirmation label shown immediately after copying.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "copiedDuration",
+					"description": "Milliseconds to hold the copied state before resetting.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onCopy",
+					"description": "Called with the copied URL after a successful clipboard write.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((url: string) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/share-sheet/share-sheet.tsx#ShareSheetProps#": [
+		{
+			"id": "share-sheet.tsx-ShareSheetProps",
+			"name": "ShareSheetProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "open",
+					"description": "Controlled open state.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "defaultOpen",
+					"description": "Initial open state when uncontrolled.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onOpenChange",
+					"description": "Called when the sheet opens or closes.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((open: boolean) => void) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "url",
+					"description": "URL being shared; used by `ShareSheetLink` and target/action callbacks.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "title",
+					"description": "Title of the resource being shared.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "text",
+					"description": "Optional description or share message passed to callbacks.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "placement",
+					"description": "How the sheet is presented. `\"auto\"` anchors as a compact popover on\ndesktop (`>= 640px`) and rises as a compact floating tray on mobile.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ShareSheetPlacement | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "side",
+					"description": "Preferred side relative to the trigger in popover mode.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ShareSheetSide | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "align",
+					"description": "Horizontal alignment relative to the trigger in popover mode.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ShareSheetAlign | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sideOffset",
+					"description": "Gap in pixels between the trigger and popover.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "collisionPadding",
+					"description": "Minimum margin in pixels from the viewport or container edges.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "number | undefined",
+					"simplifiedType": "number",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "variant",
+					"description": "Visual surface treatment of the sheet.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ShareSheetVariant | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "modal",
+					"description": "Whether backdrop dimming, focus trapping, and outside-click dismissal are\nactive. Set `false` for non-blocking embedded previews.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "closeOnSelect",
+					"description": "Close the sheet automatically after a target or action runs (after a short\nconfirmation beat).",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "sound",
+					"description": "Play subtle tactile audio cues on open, copy, and selection.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "haptics",
+					"description": "Trigger subtle haptics on supported touch devices.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "boolean | undefined",
+					"simplifiedType": "union",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "children",
+					"description": "",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				}
+			]
+		}
+	],
+	"src/registry/components/share-sheet/share-sheet.tsx#ShareSheetTargetProps#": [
+		{
+			"id": "share-sheet.tsx-ShareSheetTargetProps",
+			"name": "ShareSheetTargetProps",
+			"description": "",
+			"entries": [
+				{
+					"name": "label",
+					"description": "Destination name displayed below the icon tile.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string",
+					"simplifiedType": "string",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "icon",
+					"description": "Icon or avatar rendered inside the destination tile.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": true,
+					"deprecated": false
+				},
+				{
+					"name": "accentClassName",
+					"description": "Optional accent classes applied to the circular destination tile.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "badge",
+					"description": "Optional small badge pinned to the corner of the icon tile.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "ReactNode",
+					"simplifiedType": "ReactNode",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "href",
+					"description": "Optional external URL opened in a new tab when activated.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "feedbackLabel",
+					"description": "Brief confirmation label announced and shown on the tile when clicked.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "string | undefined",
+					"simplifiedType": "string",
+					"required": false,
+					"deprecated": false
+				},
+				{
+					"name": "onSelect",
+					"description": "Called when the destination is selected.",
+					"tags": [
+						{
+							"name": "component-prop",
+							"text": ""
+						}
+					],
+					"type": "((payload: SharePayload) => void | Promise<void>) | undefined",
+					"simplifiedType": "function",
+					"required": false,
+					"deprecated": false
+				}
+			]
+		}
+	],
 	"src/registry/components/snap-sheet/snap-sheet.tsx#SnapSheetContentProps#": [
 		{
 			"id": "snap-sheet.tsx-SnapSheetContentProps",
